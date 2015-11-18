@@ -23,11 +23,11 @@ class MutableSeqSpec extends org.specs2.mutable.Specification {
 
     val paragraph3 = monadic[Binding] { "Paragraph3" }
 
-    def page: Binding[ArrayBuffer[String]] = MutableSeq[ArrayBuffer].mutableSequence[Binding, String](ArrayBuffer(
+    def page: Binding[ArrayBuffer[String]] = MutableSeq[ArrayBuffer].mutableSequence[Binding, String](
       paragraph1,
       paragraph2,
       paragraph3
-    ))
+    )
 
     /*
      <p>{paragraph1}</p>
