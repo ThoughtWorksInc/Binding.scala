@@ -10,8 +10,8 @@ import scalaz._
 @RunWith(classOf[JUnitRunner])
 class DataBindingSpec extends org.specs2.mutable.Specification {
 
-  "xxxx" >> {
-    "xxx" >> {
+  "data binding" >> {
+    "should be supported by scalaz" >> {
 
       var reset3Option: Option[Int => Unit] = None
 
