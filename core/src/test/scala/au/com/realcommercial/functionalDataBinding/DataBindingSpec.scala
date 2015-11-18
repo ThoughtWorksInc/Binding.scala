@@ -33,10 +33,13 @@ class DataBindingSpec extends org.specs2.mutable.Specification {
       }
 
       val results = Buffer.empty[Int]
+      results must equalTo(Buffer.empty)
 
       var1 { newValue =>
         results += newValue
       }
+
+      results must equalTo(Buffer(32100))
 
       val Some(reset3) = reset3Option
       reset3(4000)
