@@ -6,11 +6,15 @@ name := """functional-data-binding-demo"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = project in file(".") dependsOn core
+lazy val root = project in file(".") dependsOn coreJvm
 
-lazy val js = project dependsOn core
+lazy val js = project dependsOn coreJs
 
-lazy val core = project
+lazy val core = crossProject.crossType(CrossType.Pure)
+
+lazy val coreJvm = core.jvm.addSbtFiles(file("../build.sbt"))
+
+lazy val coreJs = core.js.addSbtFiles(file("../build.sbt"))
 
 scalaJSProjects := Seq(js)
 

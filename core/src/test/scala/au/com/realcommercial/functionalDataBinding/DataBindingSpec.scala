@@ -1,17 +1,15 @@
 package au.com.realcommercial.functionalDataBinding
 
 import com.thoughtworks.each.Monadic._
-import org.junit.runner.RunWith
 import scala.collection.mutable.Buffer
-import org.specs2.runner.JUnitRunner
+import utest._
 
 import scalaz._
 
-@RunWith(classOf[JUnitRunner])
-class DataBindingSpec extends org.specs2.mutable.Specification {
+object DataBindingTest extends TestSuite {
+  def tests = TestSuite {
 
-  "data binding" >> {
-    "should be supported by scalaz" >> {
+    'DataBindingShouldBeSupportedByScalaz {
 
       var reset3Option: Option[Int => Unit] = None
 
@@ -33,18 +31,18 @@ class DataBindingSpec extends org.specs2.mutable.Specification {
       }
 
       val results = Buffer.empty[Int]
-      results must equalTo(Buffer.empty)
+      assert(results == Buffer.empty)
 
       var1 { newValue =>
         results += newValue
       }
 
-      results must equalTo(Buffer(32100))
+      assert(results == Buffer(32100))
 
       val Some(reset3) = reset3Option
       reset3(4000)
 
-      results must equalTo(Buffer(32100, 34100))
+      assert(results == Buffer(32100, 34100))
 
     }
   }

@@ -1,4 +1,5 @@
 package au.com.realcommercial.functionalDataBinding
+package dom
 
 import com.thoughtworks.each.Monadic._
 import utest._
@@ -6,10 +7,10 @@ import utest._
 import scala.collection.mutable.ArrayBuffer
 import scalaz._
 
-object MutableSeqTest extends TestSuite {
+object DomSeqTest extends TestSuite {
 
   def tests = TestSuite {
-    'TestMutableSeq {
+    'TestDom {
       val paragraph1 = monadic[Binding] { "Paragraph1" }
 
       var resetParagraph2Option: Option[String => Unit] = None
