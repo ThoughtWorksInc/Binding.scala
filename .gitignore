@@ -18,3 +18,5 @@ project/plugins/project/
 
 .idea/
 .iml
+.sbtserver.lock
+.sbtserver
