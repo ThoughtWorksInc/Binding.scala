@@ -29,24 +29,33 @@ object MutableSeq {
 
         val result = Applicative[G].point(model)
 
-        def applyAll(i: Int): G[ArrayBuffer[A]] = {
+        @tailrec
+        def curriedSetter(i: Int, result: Any): A => Any = {
+          val next = { a: A =>
+            model(i) = a
+            result
+          }
+
           if (i == fga.length - 1) {
-            fga(i).map { a =>
-              model(i) = a
-              model
-            }
+            next
           } else {
-            fga(i) <*> applyAll(i + 1).map { model =>
-              { a =>
-                model(i) = a
-                model
-              }
-            }
+            curriedSetter(i + 1, next)
           }
         }
 
-        applyAll(0)
+        val f = curriedSetter(0, model)
 
+        @tailrec
+        def applyAll(i: Int, result: G[Any]): G[ArrayBuffer[A]] = {
+          val next = fga(i) <*> result.asInstanceOf[G[A => Any]]
+          if (i == 0) {
+            next.asInstanceOf[G[ArrayBuffer[A]]]
+          } else {
+            applyAll(i - 1, next)
+          }
+        }
+
+        applyAll(fga.length - 2, fga.last.map(f.asInstanceOf[A => Any]))
       }
 
     }
