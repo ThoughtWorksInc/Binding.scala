@@ -15,3 +15,7 @@ libraryDependencies += "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
 jsDependencies += RuntimeDOM
 
 skip in packageJSDependencies := false
+
+persistLauncher in Compile := true
+
+persistLauncher in Test := false
