@@ -2,24 +2,28 @@ package au.com.realcommercial.functionalDataBinding
 package demo
 
 import au.com.realcommercial.functionalDataBinding.dom._
-import org.scalajs.dom._
-import com.thoughtworks.each.Monadic._
+import org.scalajs.dom.Element
+import org.scalajs.dom.Event
+import org.scalajs.dom.document
 import org.scalajs.dom.html.Input
+import com.thoughtworks.each.Monadic._
+import scalaz.std.list._
 
 import scala.collection.mutable
 import scala.scalajs.js.annotation.JSExport
+import scalatags.JsDom.all._
 
 @JSExport
 object Demo2 {
 
   @JSExport
-  def add(firstName: String, lastName: String, age: Int): Unit = {
-    users.value :+= User(BindableVariable(firstName), BindableVariable(lastName), BindableVariable(age))
+  def add(firstName: String, lastName: String, age: String): Unit = {
+    users.value :+= User(BindableVariable(firstName), BindableVariable(lastName), BindableVariable(age.toInt))
   }
 
   @JSExport
   def filter(pattern: String): Unit = {
-    users.value = users.value.filter(_.firstName.value.toLowerCase().contains(pattern.toLowerCase()))
+    filterPattern.value = pattern
   }
 
   /*
@@ -30,6 +34,8 @@ object Demo2 {
 
 
   final case class User(firstName: BindableVariable[String], lastName: BindableVariable[String], age: BindableVariable[Int])
+
+  val filterPattern = BindableVariable("")
 
   val users = BindableVariable(List(
     User(BindableVariable("Steve"), BindableVariable("Jobs"), BindableVariable(10)),
@@ -65,97 +71,66 @@ object Demo2 {
   </table>
    */
 
-  private def bindUsersTable: Binding[Element] = monadic[Binding] {
-    createElement(
-      "table",
-      DomAttributeMap(),
-      MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](
-        monadic[Binding](
-          createElement(
-            "thead",
-            DomAttributeMap(),
-            DomNodeSeq(
-              createElement(
-                "tr",
-                DomAttributeMap(),
-                DomNodeSeq(
-                  createElement(
-                    "td",
-                    DomAttributeMap(),
-                    DomNodeSeq("First Name")
-                  ),
-                  createElement(
-                    "td",
-                    DomAttributeMap(),
-                    DomNodeSeq("Second Name")
-                  ),
-                  createElement(
-                    "td",
-                    DomAttributeMap(),
-                    DomNodeSeq("Age")
-                  )
-                )
-              )
-            )
-          )
-        ),
-        monadic[Binding](
-          createElement(
-            "tbody",
-            DomAttributeMap(),
-            MutableSeq[DomNodeSeq].mutableSequence[Binding, Element](
-              (for (user <- users.binding.each) yield {
-                monadic[Binding] {
-                  createElement(
-                    "tr",
-                    DomAttributeMap(),
-                    MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](
-                      monadic[Binding] {
-                        createElement(
-                          "td",
-                          DomAttributeMap(),
-                          MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](monadic[Binding] {
-                            user.firstName.binding.each
-                          }).each
-                        )
-                      },
-                      monadic[Binding] {
-                        createElement(
-                          "td",
-                          DomAttributeMap(),
-                          MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](monadic[Binding] {
-                            val input = createElement(
-                              "input",
-                              DomAttributeMap(),
-                              MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](monadic[Binding] {
-                                user.lastName.binding.each
-                              }).each
-                            )
-                            input.asInstanceOf[Input].onchange = { _: Event =>
-                              user.lastName.value = input.asInstanceOf[Input].value
-                            }
-                            input
-                          }).each
-                        )
-                      },
-                      monadic[Binding] {
-                        createElement(
-                          "td",
-                          DomAttributeMap(),
-                          MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](monadic[Binding] {
-                            user.age.binding.each
-                          }).each
-                        )
-                      }
-                    ).each
-                  )
-                }
-              }): _*
-            ).each
-          )
+  private def bindTr(user: User): Binding[Modifier] = monadic[Binding] {
+    tr(
+      td(user.firstName.binding.each),
+      td(
+        input(
+          `type` := "text",
+           onchange := { event: Event =>
+             user.lastName.value = event.srcElement.asInstanceOf[Input].value
+           },
+           value := user.lastName.binding.each // TODO: support attribute level data binding
         )
-      ).each
+      ),
+      td(user.age.binding.each)
     )
+  }
+
+  private def shouldShow(pattern: String, user: User): Binding[Boolean] = monadic[Binding] {
+    if (pattern == "") {
+      true
+    } else if (user.firstName.binding.each.toLowerCase.contains(pattern)) {
+      true
+    } else if (user.lastName.binding.each.toLowerCase.contains(pattern)) {
+      true
+    } else {
+      false
+    }
+  }
+
+  private def bindUsersTable: Binding[Element] = monadic[Binding] {
+    val pattern = filterPattern.binding.each
+    table(
+      thead(
+        tr(
+          td("First Name"),
+          td("Second Name"),
+          td("Age")
+        )
+      ),
+      tbody(
+        (for {
+          user <- users.binding.each.monadicLoop
+          if shouldShow(pattern, user).each
+        } yield tr(
+          td(user.firstName.binding.each),
+          td(
+            input(
+              `type` := "text",
+               onkeydown := { event: Event =>
+                 user.lastName.value = event.srcElement.asInstanceOf[Input].value
+               },
+               onchange := { event: Event =>
+                 user.lastName.value = event.srcElement.asInstanceOf[Input].value
+               },
+               value := user.lastName.binding.each // TODO: support attribute level data binding
+            )
+          ),
+          td(user.age.binding.each)
+        )).underlying: _*
+      )
+    ).render
   }
 
   @JSExport
@@ -166,7 +141,7 @@ object Demo2 {
       if (parent.childElementCount == 0) {
         parent.appendChild(element)
       } else if (parent.firstChild != element) {
-        parent.replaceChild(parent.firstChild, element)
+        parent.replaceChild(element, parent.firstChild)
       }
     }
   }

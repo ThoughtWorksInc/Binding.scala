@@ -5,10 +5,9 @@ import scalaz.Cont
 final case class BindableVariable[A](private var internalValue: A) {
 
   def value_=(a: A): Unit = {
-    if (internalValue != a) {
-      internalValue = a
-      listener(a)
-    }
+    // TODO: reenter check
+    internalValue = a
+    listener(a)
   }
 
   def value = internalValue
@@ -16,6 +15,7 @@ final case class BindableVariable[A](private var internalValue: A) {
   private var listener: A => Unit = null
 
   val binding: Binding[A] = Cont[Unit, A]{ continue =>
+    // TODO: should not
     listener = continue
     this.value = internalValue
   }

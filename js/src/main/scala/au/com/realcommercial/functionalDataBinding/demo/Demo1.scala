@@ -3,6 +3,7 @@ package demo
 
 import com.thoughtworks.each.Monadic._
 import org.scalajs.dom._
+import org.scalajs.dom.html.Input
 
 import scala.scalajs.js.annotation.JSExport
 import scalaz.Cont
@@ -42,6 +43,7 @@ object Demo1 {
 
     expr1 { newValue: Int =>
       demo1Content.innerHTML = newValue.toString
+      demo1Content.appendChild(new Input())
     }
   }
 
