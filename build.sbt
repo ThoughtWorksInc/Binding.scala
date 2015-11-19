@@ -16,7 +16,7 @@ lazy val coreJvm = core.jvm.addSbtFiles(file("../build.sbt"))
 
 lazy val coreJs = core.js.addSbtFiles(file("../build.sbt"))
 
-scalaJSProjects := Seq(js, coreJs)
+scalaJSProjects := Seq(js)
 
 scalaVersion in ThisBuild := "2.11.7"
 
