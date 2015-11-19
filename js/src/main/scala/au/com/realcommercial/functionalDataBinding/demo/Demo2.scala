@@ -11,21 +11,21 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 object Demo2 {
-  @JSExport
-  def filter(pattern: String): Unit = {
-
-  }
 
   @JSExport
   def add(firstName: String, lastName: String, age: Int): Unit = {
     users.value :+= User(BindableVariable(firstName), BindableVariable(lastName), BindableVariable(age))
   }
 
+  @JSExport
+  def filter(pattern: String): Unit = {
+    users.value = users.value.filter(_.firstName.value.toLowerCase().contains(pattern.toLowerCase()))
+  }
+
   /*
   page { result: Element =>
     results += result
   }
-
   */
 
 
@@ -114,7 +114,9 @@ object Demo2 {
                         createElement(
                           "td",
                           DomAttributeMap(),
-                          MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](monadic[Binding] { user.firstName.binding.each }).each
+                          MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](monadic[Binding] {
+                            user.firstName.binding.each
+                          }).each
                         )
                       },
                       monadic[Binding] {
@@ -140,13 +142,15 @@ object Demo2 {
                         createElement(
                           "td",
                           DomAttributeMap(),
-                          MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](monadic[Binding] { user.age.binding.each }).each
+                          MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](monadic[Binding] {
+                            user.age.binding.each
+                          }).each
                         )
                       }
                     ).each
                   )
                 }
-              }) : _*
+              }): _*
             ).each
           )
         )
