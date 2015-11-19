@@ -1,12 +1,7 @@
 package au.com.realcommercial.functionalDataBinding
 package dom
 
-import com.thoughtworks.each.Monadic._
-import org.scalajs.dom.Element
 import utest._
-
-import scala.collection.mutable.ArrayBuffer
-import scalaz._
 
 object DomNodeSeqTest extends TestSuite {
 
