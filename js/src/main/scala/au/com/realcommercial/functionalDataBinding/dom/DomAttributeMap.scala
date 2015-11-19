@@ -6,6 +6,6 @@ class DomAttributeMap {
 
 object DomAttributeMap {
 
-  def apply(attributes: (String, String)*): DomAttributeMap = ???
+  def apply(attributes: (String, Any)*): DomAttributeMap = ???
 
 }

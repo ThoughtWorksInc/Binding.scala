@@ -23,7 +23,7 @@ object DomNodeSeqTest extends TestSuite {
         resetParagraph2Option = Some(callback)
       }
 
-      val p3 = monadic[Binding] {
+      val p3: Binding[String] = monadic[Binding] {
         createElement(
           "p",
           DomAttributeMap(),

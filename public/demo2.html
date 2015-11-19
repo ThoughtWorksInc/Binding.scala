@@ -98,16 +98,17 @@
                 <label>Add User</label>
             </li>
             <li>
-                <input type="text" placeholder="First Name"/>
+                <input type="text" id="first-name" placeholder="First Name"/>
             </li>
             <li>
-                <input type="text" placeholder="Second Name"/>
+                <input type="text" id="second-name" placeholder="Second Name"/>
             </li>
             <li>
-                <input type="number" placeholder="10"/>
+                <input type="number" id="age"  placeholder="10"/>
             </li>
             <li>
-                <input type="submit" value="Add"/>
+                <input type="button" value="Add"
+                       onclick="au.com.realcommercial.functionalDataBinding.demo.Demo2().add(document.getElementById('first-name').value, document.getElementById('second-name').value, document.getElementById('age').value)"/>
             </li>
         </ul>
     </form>
@@ -118,36 +119,16 @@
                 <label>Filter</label>
             </li>
             <li>
-                <input type="text"/>
+                <input type="text" onchange="au.com.realcommercial.functionalDataBinding.demo.Demo2().filter(this.value)"/>
             </li>
         </ul>
     </form>
-    <table id="users-table">
-        <thead>
-        <tr>
-            <td>First Name</td>
-            <td>Second Name</td>
-            <td>Age</td>
-        </tr>
-        </thead>
-        <tbody id="users-table-body">
-        <tr>
-            <td>Steve</td>
-            <td>Jobs</td>
-            <td>10</td>
-        </tr>
-        <tr>
-            <td>Tim</td>
-            <td>Cook</td>
-            <td>12</td>
-        </tr>
-        <tr>
-            <td>Jeff</td>
-            <td>Lauren</td>
-            <td>13</td>
-        </tr>
-        </tbody>
-    </table>
+    <div id="users-table-parent"></div>
+
 </div>
+<script type="text/javascript" src="js-fastopt.js"></script>
+<script type="text/javascript">
+    au.com.realcommercial.functionalDataBinding.demo.Demo2().main();
+</script>
 </body>
 </html>
