@@ -13,27 +13,27 @@ object DataBindingTest extends TestSuite {
 
       var reset3Option: Option[Int => Unit] = None
 
-      val var3: Binding[Int] = Cont { (callback: Int => Unit) =>
-        callback(2000)
-        reset3Option = Some(callback)
+      val expr3: Binding[Int] = Cont { (reset3: Int => Unit) =>
+        reset3(2000)
+        reset3Option = Some(reset3)
       }
 
-      val var4: Binding[Int] = monadic[Binding] {
+      val expr4: Binding[Int] = monadic[Binding] {
         30000
       }
 
-      val var2: Binding[Int] = monadic[Binding] {
-        var3.each + var4.each
+      val expr2: Binding[Int] = monadic[Binding] {
+        expr3.each + expr4.each
       }
 
-      val var1: Binding[Int] = monadic[Binding] {
-       var2.each + 100
+      val expr1: Binding[Int] = monadic[Binding] {
+        expr2.each + 100
       }
 
       val results = Buffer.empty[Int]
       assert(results == Buffer.empty)
 
-      var1 { newValue =>
+      expr1 { newValue: Int =>
         results += newValue
       }
 

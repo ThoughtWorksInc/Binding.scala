@@ -13,27 +13,35 @@ object DomNodeSeqTest extends TestSuite {
   override def tests = TestSuite {
     'TestDom {
       var resetParagraph2Option: Option[String => Unit] = None
+
+      val p1 = monadic[Binding] {
+        createElement(
+          "p",
+          DomAttributeMap(),
+          DomNodeSeq("Paragraph1")
+        )
+      }
+
       val p2: Binding[String] = Cont { (callback: String => Unit) =>
         callback("Paragraph2")
         resetParagraph2Option = Some(callback)
       }
 
+      val p3 = monadic[Binding] {
+        createElement(
+          "p",
+          DomAttributeMap(),
+          DomNodeSeq("Paragraph3")
+        )
+      }
       def page: Binding[Element] = monadic[Binding] {
         createElement(
           "div",
           DomAttributeMap(),
           MutableSeq[DomNodeSeq].mutableSequence[Binding, Any](
-            monadic[Binding](createElement(
-              "p",
-              DomAttributeMap("onclick"->"xxx()"),
-              DomNodeSeq("Paragraph1")
-            )),
+            p1,
             p2,
-            monadic[Binding](createElement(
-              "p",
-              DomAttributeMap(),
-              DomNodeSeq("Paragraph3")
-            ))
+            p3
           ).each
         )
       }
@@ -50,7 +58,7 @@ object DomNodeSeqTest extends TestSuite {
       assert(results == ArrayBuffer.empty)
 
 
-      page { result =>
+      page { result: Element =>
         results += result
       }
 
