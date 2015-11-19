@@ -1,1 +1,1 @@
-enablePlugins(ScalaJSPlugin)
+enablePlugins(ScalaJSPlay)
