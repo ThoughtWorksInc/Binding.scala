@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="stylesheets/normalize.css" type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        header {
+            padding: 20px 50px;
+            font-size: 24px;
+            color: #cc9900;
+            border-bottom: solid 1px #c0c0c0;
+        }
+
+        .light {
+            padding: 10px 50px;
+        }
+
+        .light ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .light ul > li {
+            float: left;
+            line-height: 30px;
+            padding: 5px;
+        }
+
+        .light label {
+            display: block;
+            width: 100px;
+        }
+
+        .light input {
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            border: solid 1px #c0c0c0;
+            padding: 3px;
+            line-height: 24px;
+        }
+
+        .light input:focus {
+            outline: medium none;
+        }
+
+        .light input[type=submit],
+        .light input[type=button] {
+            background: #c0c0c0;
+            color: #000;
+            padding: 3px 20px;
+        }
+
+        #user-form {
+            border-bottom: solid 1px #c0c0c0;
+        }
+
+        .light ul:after {
+            content: ' ';
+            display: block;
+            clear: both;
+            height: 0;
+            line-height: 0;
+        }
+
+        #users-table {
+            margin: 0 50px;
+        }
+
+        #users-table thead {
+            color: #cc9900;
+        }
+
+        #users-table td {
+            border: solid 1px #c0c0c0;
+            padding: 5px;
+        }
+
+        #filter-form {
+        }
+    </style>
+    <title>Data Binding Monad</title>
+</head>
+<body>
+<div>
+    <header>
+        Data Binding Monad Demo
+    </header>
+    <form action="#" id="user-form" class="light">
+        <ul>
+            <li>
+                <label>Add User</label>
+            </li>
+            <li>
+                <input type="text" placeholder="First Name"/>
+            </li>
+            <li>
+                <input type="text" placeholder="Second Name"/>
+            </li>
+            <li>
+                <input type="number" placeholder="10"/>
+            </li>
+            <li>
+                <input type="submit" value="Add"/>
+            </li>
+        </ul>
+    </form>
+
+    <form action="#" id="filter-form" class="light">
+        <ul>
+            <li>
+                <label>Filter</label>
+            </li>
+            <li>
+                <input type="text"/>
+            </li>
+        </ul>
+    </form>
+    <table id="users-table">
+        <thead>
+        <tr>
+            <td>First Name</td>
+            <td>Second Name</td>
+            <td>Age</td>
+        </tr>
+        </thead>
+        <tbody id="users-table-body">
+        <tr>
+            <td>Steve</td>
+            <td>Jobs</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <td>Tim</td>
+            <td>Cook</td>
+            <td>12</td>
+        </tr>
+        <tr>
+            <td>Jeff</td>
+            <td>Lauren</td>
+            <td>13</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
