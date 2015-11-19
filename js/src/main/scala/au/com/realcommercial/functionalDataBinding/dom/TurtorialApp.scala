@@ -2,7 +2,6 @@ package au.com.realcommercial.functionalDataBinding.dom
 
 import org.scalajs.dom
 import org.scalajs.dom.document
-import org.scalajs.jquery.jQuery
 
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
@@ -10,11 +9,8 @@ import scala.scalajs.js.annotation.JSExport
 object TutorialApp extends JSApp {
 
   def main(): Unit = {
-    appendPar(document.body, "Hello World")
-    jQuery("body").append("<p>[message]</p>")
-    jQuery(setupUI)
+    setupUI()
   }
-
 
   def appendPar(targetNode: dom.Node, text: String): Unit = {
     val parNode = document.createElement("p")
@@ -29,7 +25,6 @@ object TutorialApp extends JSApp {
   }
 
   def setupUI(): Unit = {
-    jQuery("#click-me-button").click(addClickedMessage _)
-    jQuery("body").append("<p>Hello Worldlalala</p>")
+    appendPar(document.body, "Hello World")
   }
 }
