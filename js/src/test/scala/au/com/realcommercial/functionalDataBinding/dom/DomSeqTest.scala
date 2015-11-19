@@ -9,7 +9,7 @@ import scalaz._
 
 object DomSeqTest extends TestSuite {
 
-  def tests = TestSuite {
+  override def tests = TestSuite {
     'TestDom {
       val paragraph1 = monadic[Binding] { "Paragraph1" }
 

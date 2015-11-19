@@ -8,7 +8,7 @@ import scalaz._
 
 object MutableSeqTest extends TestSuite {
 
-  def tests = TestSuite {
+  override def tests = TestSuite {
     'TestMutableSeq {
       val paragraph1 = monadic[Binding] { "Paragraph1" }
 
@@ -22,10 +22,10 @@ object MutableSeqTest extends TestSuite {
       val paragraph3 = monadic[Binding] { "Paragraph3" }
 
       def page: Binding[ArrayBuffer[String]] = MutableSeq[ArrayBuffer].mutableSequence[Binding, String](
-      paragraph1,
-      paragraph2,
-      paragraph3
-    )
+        paragraph1,
+        paragraph2,
+        paragraph3
+      )
 
       /*
        <p>{paragraph1}</p>
