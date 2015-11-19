@@ -1,8 +1,9 @@
-package com.tw
+package au.com.realcommercial.functionalDataBinding.dom
 
 import org.scalajs.dom
 import org.scalajs.dom.document
 import org.scalajs.jquery.jQuery
+
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 
