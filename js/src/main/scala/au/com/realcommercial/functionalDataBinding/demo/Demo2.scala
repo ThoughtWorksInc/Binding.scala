@@ -26,13 +26,6 @@ object Demo2 {
     filterPattern.value = pattern
   }
 
-  /*
-  page { result: Element =>
-    results += result
-  }
-  */
-
-
   final case class User(firstName: BindableVariable[String], lastName: BindableVariable[String], age: BindableVariable[Int])
 
   val filterPattern = BindableVariable("")
@@ -58,13 +51,7 @@ object Demo2 {
   private def bindUsersTable: Binding[Element] = monadic[Binding] {
     val pattern = filterPattern.binding.each
     table(
-      thead(
-        tr(
-          td("First Name"),
-          td("Second Name"),
-          td("Age")
-        )
-      ),
+      thead(tr(td("First Name"), td("Second Name"), td("Age"))),
       tbody(
         (for {
           user <- users.binding.each.monadicLoop
