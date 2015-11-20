@@ -71,15 +71,7 @@ object Demo2 {
           if shouldShow(pattern, user).each
         } yield tr(
           td(user.firstName.binding.each),
-          td(
-            input(
-              `type` := "text",
-               onchange := { event: Event =>
-                 user.lastName.value = event.srcElement.asInstanceOf[Input].value
-               },
-               value := user.lastName.binding.each // TODO: support attribute level data binding
-            )
-          ),
+          td(user.lastName.binding.each),
           td(user.age.binding.each)
         )).underlying: _*
       )
