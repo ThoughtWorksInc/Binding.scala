@@ -42,50 +42,6 @@ object Demo2 {
     User(BindableVariable("Tim"), BindableVariable("Cook"), BindableVariable(12)),
     User(BindableVariable("Jeff"), BindableVariable("Lauren"), BindableVariable(13))
   ))
-  /*
-      <table id="users-table">
-      <thead>
-      <tr>
-          <td>First Name</td>
-          <td>Second Name</td>
-          <td>Age</td>
-      </tr>
-      </thead>
-      <tbody id="users-table-body">
-      <tr>
-          <td>Steve</td>
-          <td>Jobs</td>
-          <td>10</td>
-      </tr>
-      <tr>
-          <td>Tim</td>
-          <td>Cook</td>
-          <td>12</td>
-      </tr>
-      <tr>
-          <td>Jeff</td>
-          <td>Lauren</td>
-          <td>13</td>
-      </tr>
-      </tbody>
-  </table>
-   */
-
-  private def bindTr(user: User): Binding[Modifier] = monadic[Binding] {
-    tr(
-      td(user.firstName.binding.each),
-      td(
-        input(
-          `type` := "text",
-           onchange := { event: Event =>
-             user.lastName.value = event.srcElement.asInstanceOf[Input].value
-           },
-           value := user.lastName.binding.each // TODO: support attribute level data binding
-        )
-      ),
-      td(user.age.binding.each)
-    )
-  }
 
   private def shouldShow(pattern: String, user: User): Binding[Boolean] = monadic[Binding] {
     if (pattern == "") {
@@ -118,9 +74,6 @@ object Demo2 {
           td(
             input(
               `type` := "text",
-               onkeydown := { event: Event =>
-                 user.lastName.value = event.srcElement.asInstanceOf[Input].value
-               },
                onchange := { event: Event =>
                  user.lastName.value = event.srcElement.asInstanceOf[Input].value
                },
