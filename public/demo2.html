@@ -37,7 +37,8 @@
             width: 100px;
         }
 
-        .light input {
+        .light input,
+        #users-table-parent table td input {
             -webkit-border-radius: 4px;
             -moz-border-radius: 4px;
             border-radius: 4px;
@@ -69,15 +70,18 @@
             line-height: 0;
         }
 
-        #users-table {
+        #users-table-parent {
             margin: 0 50px;
         }
 
-        #users-table thead {
+        #users-table-parent table {
+        }
+
+        #users-table-parent table thead {
             color: #cc9900;
         }
 
-        #users-table td {
+        #users-table-parent table td {
             border: solid 1px #c0c0c0;
             padding: 5px;
         }
@@ -104,7 +108,7 @@
                 <input type="text" id="second-name" placeholder="Second Name"/>
             </li>
             <li>
-                <input type="number" id="age"  placeholder="10"/>
+                <input type="number" id="age" placeholder="10"/>
             </li>
             <li>
                 <input type="button" value="Add"
@@ -119,7 +123,7 @@
                 <label>Filter</label>
             </li>
             <li>
-                <input type="text"
+                <input type="text" placeholder="Search"
                        onchange="au.com.realcommercial.functionalDataBinding.demo.Demo2().filter(this.value)"/>
             </li>
         </ul>
