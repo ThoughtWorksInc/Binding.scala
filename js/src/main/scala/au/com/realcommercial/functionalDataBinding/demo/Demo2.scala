@@ -26,13 +26,6 @@ object Demo2 {
     filterPattern.value = pattern
   }
 
-  /*
-  page { result: Element =>
-    results += result
-  }
-  */
-
-
   final case class User(firstName: BindableVariable[String], lastName: BindableVariable[String], age: BindableVariable[Int])
 
   val filterPattern = BindableVariable("")
@@ -90,5 +83,4 @@ object Demo2 {
       }
     }
   }
-
 }
