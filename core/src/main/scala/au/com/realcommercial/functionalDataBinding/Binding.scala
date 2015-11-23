@@ -30,8 +30,6 @@ object Binding {
 
     override def subscribe(subscriber: () => Unit): Unit = {}
 
-    override def unsubscribeFromUpstream(): Unit = {}
-
   }
 
   final class BindableVariable[A](private var cache: A) extends Publisher with Binding[A] {
@@ -48,8 +46,6 @@ object Binding {
         }
       }
     }
-
-    override def unsubscribeFromUpstream(): Unit = {}
 
   }
 
@@ -71,7 +67,7 @@ object Binding {
 
     override def apply(): Unit = {
       val oldValue = cache.value
-      cache.unsubscribeFromUpstream()
+      cache.unsubscribe(cacheChangeHandler)
       val newCache = f(upstream.value)
       cache = newCache
       if (oldValue != newCache.value) {
@@ -102,9 +98,6 @@ object Binding {
       }
     }
 
-    override def unsubscribeFromUpstream(): Unit = {
-      upstream.unsubscribe(this)
-    }
   }
 
   implicit object BindingInstances extends Monad[Binding] {
@@ -119,8 +112,6 @@ object Binding {
 trait Binding[A] {
 
   def value: A
-
-  def unsubscribeFromUpstream(): Unit
 
   def unsubscribe(subscriber: () => Unit): Unit
 
