@@ -1,5 +1,6 @@
 package au.com.realcommercial.functionalDataBinding
 
+import au.com.realcommercial.functionalDataBinding.Binding.BindableVariable
 import com.thoughtworks.each.Monadic._
 import scala.collection.mutable.Buffer
 import utest._
@@ -13,10 +14,7 @@ object DataBindingTest extends TestSuite {
 
       var reset3Option: Option[Int => Unit] = None
 
-      val expr3: Binding[Int] = Cont { (reset3: Int => Unit) =>
-        reset3(2000)
-        reset3Option = Some(reset3)
-      }
+      val expr3: BindableVariable[Int] = BindableVariable(2000)
 
       val expr4: Binding[Int] = monadic[Binding] {
         30000
@@ -30,19 +28,25 @@ object DataBindingTest extends TestSuite {
         expr2.each + 100
       }
 
-      val results = Buffer.empty[Int]
-      assert(results == Buffer.empty)
 
-      expr1 { newValue: Int =>
-        results += newValue
+      var resultChanged = false
+
+      val expr1Value0 = expr1.value
+
+      expr1.subscribe { () =>
+        resultChanged = true
       }
 
-      assert(results == Buffer(32100))
+      assert(!resultChanged)
+      assert(expr1.value == expr1Value0)
+      assert(expr1.value == 32100)
 
-      val Some(reset3) = reset3Option
-      reset3(4000)
+      expr3.value = 4000
 
-      assert(results == Buffer(32100, 34100))
+
+      assert(resultChanged)
+      assert(expr1.value != expr1Value0)
+      assert(expr1.value == 34100)
 
     }
   }

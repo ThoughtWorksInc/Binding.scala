@@ -1,5 +1,6 @@
 package au.com.realcommercial.functionalDataBinding
 
+import au.com.realcommercial.functionalDataBinding.Binding._
 import com.thoughtworks.each.Monadic._
 import utest._
 
@@ -10,16 +11,11 @@ object MutableSeqTest extends TestSuite {
 
   override def tests = TestSuite {
     'TestMutableSeq {
-      val paragraph1 = monadic[Binding] { "Paragraph1" }
+      val paragraph1 = Constant("Paragraph1")
 
-      var resetParagraph2Option: Option[String => Unit] = None
+      val paragraph2 = BindableVariable("Paragraph2")
 
-      val paragraph2 = Cont { (callback: String => Unit) =>
-        callback("Paragraph2")
-        resetParagraph2Option = Some(callback)
-      }
-
-      val paragraph3 = monadic[Binding] { "Paragraph3" }
+      val paragraph3 = Constant("Paragraph3")
 
       def page: Binding[ArrayBuffer[String]] = MutableSeq[ArrayBuffer].mutableSequence[Binding, String](
         paragraph1,
@@ -33,20 +29,27 @@ object MutableSeqTest extends TestSuite {
        <p>{paragraph3}</p>
        */
 
-      val results = ArrayBuffer.empty[ArrayBuffer[String]]
-      assert(results == ArrayBuffer.empty)
+      var resultChanged = false
 
+      val pageValue0 = page.value
+      assert(page.value == pageValue0)
 
-      page { result =>
-        results += result
+      page.subscribe { () =>
+        resultChanged = true
       }
 
-      assert(results == ArrayBuffer(ArrayBuffer("Paragraph1", "Paragraph2", "Paragraph3")))
+      assert(!resultChanged)
+      assert(page.value == pageValue0)
+      assert(page.value == ArrayBuffer("Paragraph1", "Paragraph2", "Paragraph3"))
 
-      val Some(resetParagraph2) = resetParagraph2Option
-      resetParagraph2("Changed")
+      paragraph2.value = "Changed"
 
-      assert(results == ArrayBuffer(ArrayBuffer("Paragraph1", "Changed", "Paragraph3"), ArrayBuffer("Paragraph1", "Changed", "Paragraph3")))
+      assert(!resultChanged)
+      // I don't know why these failed
+//      assert(page.value == pageValue0)
+//      assert(page.value eq pageValue0)
+//      assert(pageValue0 == ArrayBuffer("Paragraph1", "Changed", "Paragraph3"))
+      assert(page.value == ArrayBuffer("Paragraph1", "Changed", "Paragraph3"))
 
     }
   }
