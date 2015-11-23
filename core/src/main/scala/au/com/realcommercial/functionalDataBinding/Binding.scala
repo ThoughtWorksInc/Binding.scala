@@ -77,6 +77,7 @@ object Binding {
       val oldValue = cache.value
       cache.unsubscribe(cacheChangeHandler)
       val newCache = f(upstream.value)
+      newCache.subscribe(cacheChangeHandler)
       cache = newCache
       if (oldValue != newCache.value) {
         for ((subscriber, _) <- this) {
