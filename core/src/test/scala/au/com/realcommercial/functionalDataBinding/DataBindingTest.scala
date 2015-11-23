@@ -29,22 +29,22 @@ object DataBindingTest extends TestSuite {
       }
 
 
-      var resultChanged = false
+      var resultChanged = 0
 
       val expr1Value0 = expr1.value
 
       expr1.subscribe { () =>
-        resultChanged = true
+        resultChanged += 1
       }
 
-      assert(!resultChanged)
+      assert(resultChanged == 0)
       assert(expr1.value == expr1Value0)
       assert(expr1.value == 32100)
 
       expr3.value = 4000
 
 
-      assert(resultChanged)
+      assert(resultChanged == 1)
       assert(expr1.value != expr1Value0)
       assert(expr1.value == 34100)
 

@@ -1,30 +1,40 @@
 package au.com.realcommercial.functionalDataBinding
 
+import scala.annotation.tailrec
 import scalaz.Monad
 
 object Binding {
+
+  class Publisher extends collection.mutable.HashMap[() => Unit, Int] {
+    override def default(key: () => Unit) = 0
+
+    def subscribe(key: () => Unit): Unit = {
+      this (key) += 1
+    }
+
+    def unsubscribe(key: () => Unit): Unit = {
+      val oldValue = this (key)
+      val newValue = oldValue - 1
+      if (newValue == 0) {
+        this -= key
+      } else {
+        this (key) = newValue
+      }
+    }
+
+  }
 
   final case class Constant[A](override val value: A) extends Binding[A] {
 
     override def unsubscribe(subscriber: () => Unit): Unit = {}
 
     override def subscribe(subscriber: () => Unit): Unit = {}
-    
+
     override def unsubscribeFromUpstream(): Unit = {}
 
   }
 
-  final case class BindableVariable[A](private var cache: A) extends Binding[A] {
-
-    val subscribers = collection.mutable.HashSet.empty[() => Unit]
-
-    override def unsubscribe(subscriber: () => Unit): Unit = {
-      subscribers -= subscriber
-    }
-
-    override def subscribe(subscriber: () => Unit): Unit = {
-      subscribers += subscriber
-    }
+  final case class BindableVariable[A](private var cache: A) extends Publisher with Binding[A] {
 
     override def value: A = {
       cache
@@ -33,7 +43,7 @@ object Binding {
     def value_=(a: A): Unit = {
       if (cache != a) {
         cache = a
-        for (subscriber <- subscribers) {
+        for ((subscriber, _) <- this) {
           subscriber()
         }
       }
@@ -43,14 +53,20 @@ object Binding {
 
   }
 
-  final case class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Binding[B] with (() => Unit) {
-    val subscribers = collection.mutable.HashSet.empty[() => Unit]
+  final case class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Publisher with Binding[B] with (() => Unit) {
+
+    val cacheChangeHandler = { () =>
+      for ((subscriber, _) <- this) {
+        subscriber()
+      }
+    }
 
     override def subscribe(subscriber: () => Unit): Unit = {
-      if (subscribers.isEmpty) {
+      if (super.isEmpty) {
         upstream.subscribe(this)
+        cache.subscribe(cacheChangeHandler)
       }
-      subscribers += subscriber
+      super.subscribe(subscriber)
     }
 
     override def apply(): Unit = {
@@ -59,7 +75,7 @@ object Binding {
       val newCache = f(upstream.value)
       cache = newCache
       if (oldValue != newCache.value) {
-        for (subscriber <- subscribers) {
+        for ((subscriber, _) <- this) {
           subscriber()
         }
       }
@@ -67,12 +83,23 @@ object Binding {
 
     var cache: Binding[B] = f(upstream.value)
 
-    override def value: B = cache.value
+    @tailrec
+    private def tailrecGetValue(binding: Binding[B]): B = {
+      binding match {
+        case flatMap: FlatMap[_, B] => tailrecGetValue(flatMap.cache)
+        case _ => binding.value
+      }
+    }
+
+    override final def value: B = {
+      tailrecGetValue(cache)
+    }
 
     override def unsubscribe(subscriber: () => Unit): Unit = {
-      subscribers -= subscriber
-      if (subscribers.isEmpty) {
+      super.unsubscribe(subscriber)
+      if (super.isEmpty) {
         upstream.unsubscribe(this)
+        cache.unsubscribe(cacheChangeHandler)
       }
     }
 
