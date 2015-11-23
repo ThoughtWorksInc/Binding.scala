@@ -14,7 +14,7 @@ object DataBindingTest extends TestSuite {
 
       var reset3Option: Option[Int => Unit] = None
 
-      val expr3: BindableVariable[Int] = BindableVariable(2000)
+      val expr3: BindableVariable[Int] = new BindableVariable(2000)
 
       val expr4: Binding[Int] = monadic[Binding] {
         30000

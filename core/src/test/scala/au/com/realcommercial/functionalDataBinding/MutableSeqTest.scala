@@ -13,7 +13,7 @@ object MutableSeqTest extends TestSuite {
     'TestMutableSeq {
       val paragraph1 = Constant("Paragraph1")
 
-      val paragraph2 = BindableVariable("Paragraph2")
+      val paragraph2 = new BindableVariable("Paragraph2")
 
       val paragraph3 = Constant("Paragraph3")
 
