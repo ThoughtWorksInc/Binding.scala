@@ -6,19 +6,27 @@ import scalaz.Monad
 object Binding {
 
   private[Binding] class Publisher extends collection.mutable.HashMap[() => Unit, Int] {
-    override def default(key: () => Unit) = 0
+    override def default(subscriber: () => Unit) = 0
 
-    def subscribe(key: () => Unit): Unit = {
-      this (key) += 1
+    def subscribe(subscriber: () => Unit): Unit = {
+      val oldValue = this (subscriber)
+      if (oldValue < 0) {
+        throw new IllegalStateException()
+      }
+      val newValue = oldValue + 1
+      this (subscriber) = newValue
     }
 
-    def unsubscribe(key: () => Unit): Unit = {
-      val oldValue = this (key)
+    def unsubscribe(subscriber: () => Unit): Unit = {
+      val oldValue = this (subscriber)
+      if (oldValue <= 0) {
+        throw new IllegalStateException()
+      }
       val newValue = oldValue - 1
       if (newValue == 0) {
-        this -= key
+        this -= subscriber
       } else {
-        this (key) = newValue
+        this (subscriber) = newValue
       }
     }
 
