@@ -5,7 +5,7 @@ import scalaz.Monad
 
 object Binding {
 
-  class Publisher extends collection.mutable.HashMap[() => Unit, Int] {
+  private[Binding] class Publisher extends collection.mutable.HashMap[() => Unit, Int] {
     override def default(key: () => Unit) = 0
 
     def subscribe(key: () => Unit): Unit = {
@@ -34,7 +34,7 @@ object Binding {
 
   }
 
-  final case class BindableVariable[A](private var cache: A) extends Publisher with Binding[A] {
+  final class BindableVariable[A](private var cache: A) extends Publisher with Binding[A] {
 
     override def value: A = {
       cache
@@ -53,9 +53,9 @@ object Binding {
 
   }
 
-  final case class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Publisher with Binding[B] with (() => Unit) {
+  final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Publisher with Binding[B] with (() => Unit) {
 
-    val cacheChangeHandler = { () =>
+    private val cacheChangeHandler = { () =>
       for ((subscriber, _) <- this) {
         subscriber()
       }
@@ -83,15 +83,14 @@ object Binding {
 
     var cache: Binding[B] = f(upstream.value)
 
-    @tailrec
-    private def tailrecGetValue(binding: Binding[B]): B = {
-      binding match {
-        case flatMap: FlatMap[_, B] => tailrecGetValue(flatMap.cache)
-        case _ => binding.value
-      }
-    }
-
     override final def value: B = {
+      @tailrec
+      def tailrecGetValue(binding: Binding[B]): B = {
+        binding match {
+          case flatMap: FlatMap[_, B] => tailrecGetValue(flatMap.cache)
+          case _ => binding.value
+        }
+      }
       tailrecGetValue(cache)
     }
 
@@ -109,7 +108,7 @@ object Binding {
   }
 
   implicit object BindingInstances extends Monad[Binding] {
-    override def bind[A, B](fa: Binding[A])(f: (A) => Binding[B]): Binding[B] = FlatMap[A, B](fa, f)
+    override def bind[A, B](fa: Binding[A])(f: (A) => Binding[B]): Binding[B] = new FlatMap[A, B](fa, f)
 
     override def point[A](a: => A): Binding[A] = Constant(a)
   }
