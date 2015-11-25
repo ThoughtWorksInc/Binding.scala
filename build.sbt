@@ -1,7 +1,9 @@
-lazy val cross = crossProject.crossType(CrossType.Pure) in file(".")
+lazy val core = crossProject.crossType(CrossType.Pure)
 
-lazy val js = cross.js.addSbtFiles(file("../build.sbt.shared"))
+lazy val dom = project dependsOn coreJS
 
-lazy val jvm = cross.jvm.addSbtFiles(file("../build.sbt.shared"))
+lazy val coreJS = core.js.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val coreJVM = core.jvm.addSbtFiles(file("../build.sbt.shared"))
 
 scalaVersion in ThisBuild := "2.11.7"
