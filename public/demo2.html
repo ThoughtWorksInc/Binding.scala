@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="stylesheets/normalize.css" type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        header {
+            padding: 20px 50px;
+            font-size: 24px;
+            color: #cc9900;
+            border-bottom: solid 1px #c0c0c0;
+        }
+
+        .light {
+            padding: 10px 50px;
+        }
+
+        .light ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .light ul > li {
+            float: left;
+            line-height: 30px;
+            padding: 5px;
+        }
+
+        .light label {
+            display: block;
+            width: 100px;
+        }
+
+        .light input,
+        #users-table-parent table td input {
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            border: solid 1px #c0c0c0;
+            padding: 3px;
+            line-height: 24px;
+        }
+
+        .light input:focus {
+            outline: medium none;
+        }
+
+        .light input[type=submit],
+        .light input[type=button] {
+            background: #c0c0c0;
+            color: #000;
+            padding: 3px 20px;
+        }
+
+        #user-form {
+            border-bottom: solid 1px #c0c0c0;
+        }
+
+        .light ul:after {
+            content: ' ';
+            display: block;
+            clear: both;
+            height: 0;
+            line-height: 0;
+        }
+
+        #users-table-parent {
+            margin: 0 50px;
+        }
+
+        #users-table-parent table {
+        }
+
+        #users-table-parent table thead {
+            color: #cc9900;
+        }
+
+        #users-table-parent table td {
+            border: solid 1px #c0c0c0;
+            padding: 5px;
+        }
+
+        #filter-form {
+        }
+    </style>
+    <title>Data Binding Monad</title>
+</head>
+<body>
+<div>
+    <header>
+        Data Binding Monad Demo
+    </header>
+    <form action="#" id="user-form" class="light">
+        <ul>
+            <li>
+                <label>Add User</label>
+            </li>
+            <li>
+                <input type="text" id="first-name" placeholder="First Name"/>
+            </li>
+            <li>
+                <input type="text" id="second-name" placeholder="Second Name"/>
+            </li>
+            <li>
+                <input type="number" id="age" placeholder="10"/>
+            </li>
+            <li>
+                <input type="button" value="Add"
+                       onclick="au.com.realcommercial.functionalDataBinding.demo.Demo2().add(document.getElementById('first-name').value, document.getElementById('second-name').value, document.getElementById('age').value)"/>
+            </li>
+        </ul>
+    </form>
+
+    <form action="#" id="filter-form" class="light">
+        <ul>
+            <li>
+                <label>Filter</label>
+            </li>
+            <li>
+                <input type="text" placeholder="Search"
+                       onkeyup="au.com.realcommercial.functionalDataBinding.demo.Demo2().filter(this.value)"/>
+            </li>
+        </ul>
+    </form>
+    <div id="users-table-parent"></div>
+
+</div>
+<script type="text/javascript" src="js-fastopt.js"></script>
+<script type="text/javascript">
+    au.com.realcommercial.functionalDataBinding.demo.Demo2().main();
+</script>
+</body>
+</html>
