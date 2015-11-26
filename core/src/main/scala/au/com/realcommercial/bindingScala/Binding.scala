@@ -5,33 +5,6 @@ import scalaz.Monad
 
 object Binding {
 
-  private[Binding] class Publisher extends collection.mutable.HashMap[() => Unit, Int] {
-    override def default(subscriber: () => Unit) = 0
-
-    def subscribe(subscriber: () => Unit): Unit = {
-      val oldValue = this (subscriber)
-      if (oldValue < 0) {
-        throw new IllegalStateException()
-      }
-      val newValue = oldValue + 1
-      this (subscriber) = newValue
-    }
-
-    def unsubscribe(subscriber: () => Unit): Unit = {
-      val oldValue = this (subscriber)
-      if (oldValue <= 0) {
-        throw new IllegalStateException()
-      }
-      val newValue = oldValue - 1
-      if (newValue == 0) {
-        this -= subscriber
-      } else {
-        this (subscriber) = newValue
-      }
-    }
-
-  }
-
   final case class Constant[A](override val value: A) extends Binding[A] {
 
     override def unsubscribe(subscriber: () => Unit): Unit = {}
@@ -40,7 +13,7 @@ object Binding {
 
   }
 
-  final class BindableVariable[A](private var cache: A) extends Publisher with Binding[A] {
+  final class BindableVariable[A](private var cache: A) extends Publisher[() => Unit] with Binding[A] {
 
     override def value: A = {
       cache
@@ -57,7 +30,7 @@ object Binding {
 
   }
 
-  final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Publisher with Binding[B] with (() => Unit) {
+  final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Publisher[() => Unit] with Binding[B] with (() => Unit) {
 
     private val cacheChangeHandler = { () =>
       for ((subscriber, _) <- this) {
