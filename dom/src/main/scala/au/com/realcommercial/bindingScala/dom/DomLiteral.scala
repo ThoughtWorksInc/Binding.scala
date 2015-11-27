@@ -232,7 +232,7 @@ object DomLiteral {
 
     def transform(tree: Tree): Tree = {
       val output = transformer.transform(tree)
-      c.info(c.enclosingPosition, show(output), true)
+      // c.info(c.enclosingPosition, show(output), true)
       c.untypecheck(output)
     }
 
