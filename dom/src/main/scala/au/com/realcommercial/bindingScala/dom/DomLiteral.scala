@@ -86,8 +86,11 @@ object DomLiteral {
     binding.subscribe(render)
   }
 
+  /**
+   * Enable XML literal for Binding.scala
+   */
   @compileTimeOnly("enable macro paradise to expand macro annotations")
-  class binding extends StaticAnnotation {
+  final class bindingDom extends StaticAnnotation {
     def macroTransform(annottees: Any*): Any = macro bindingImpl
   }
 

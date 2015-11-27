@@ -4,12 +4,12 @@ import au.com.realcommercial.bindingScala.Binding
 import au.com.realcommercial.bindingScala.Binding.BindableVariable
 import utest._
 import utest.framework.TestSuite
-import DomLiteral.binding
+import DomLiteral.bindingDom
 import com.thoughtworks.each.Monadic._
 
 object DomLiteralTest extends TestSuite {
 
-  @binding
+  @bindingDom
   override def tests = TestSuite {
     'TestLiteral {
       val title = new BindableVariable("Old title")
