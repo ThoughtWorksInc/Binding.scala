@@ -2,6 +2,7 @@ package au.com.realcommercial.bindingScala.dom
 
 import au.com.realcommercial.bindingScala.Binding
 import au.com.realcommercial.bindingScala.Binding.BindableVariable
+import org.scalajs.dom.Event
 import utest._
 import utest.framework.TestSuite
 import DomLiteral.bindingDom
@@ -16,7 +17,7 @@ object DomLiteralTest extends TestSuite {
       val html = monadic[Binding]{
 <html>
   <body title={title.each}>
-    <button>Hello, World!</button>
+    <button onclick={ event: Event => println("Clicked") }>Hello, World!</button>
     {
       "lowercase".toUpperCase
     }
@@ -35,7 +36,8 @@ object DomLiteralTest extends TestSuite {
 
       val oldHtmlElement = html.value
       val oldOuterHTML = html.value.outerHTML
-      assert(oldOuterHTML ==
+      assert(
+        oldOuterHTML ==
         """<html>
   <body title="Old title">
     <button>Hello, World!</button>
