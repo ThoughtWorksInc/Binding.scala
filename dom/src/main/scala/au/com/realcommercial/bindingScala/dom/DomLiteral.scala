@@ -1,10 +1,12 @@
 package au.com.realcommercial.bindingScala.dom
 
-import au.com.realcommercial.bindingScala.BindableRope.Subscriber
+import au.com.realcommercial.bindingScala.BindableRope.{Single, Subscriber}
 import au.com.realcommercial.bindingScala.{BindableRope, Binding}
 import org.scalajs.dom._
 import org.scalajs.dom.raw.Node
 
+import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 import scala.language.experimental.macros
 import scala.annotation.StaticAnnotation
 import scala.annotation.compileTimeOnly
@@ -20,16 +22,25 @@ object DomLiteral {
   object DomRope {
 
     @inline
-    def apply(domRope: DomRope): DomRope = domRope
+    def apply(domRope: DomRope) = domRope
 
     @inline
-    def apply(text: String): DomRope = new BindableRope.Single[Node](document.createTextNode(text))
+    def apply(text: String) = new BindableRope.Single[Node](document.createTextNode(text))
 
     @inline
-    def apply(node: Node): DomRope = new BindableRope.Single[Node](node)
+    def apply(node: Node) = new BindableRope.Single[Node](node)
 
     @inline
-    def apply(array: Array[BindableRope[Node]]): DomRope = new BindableRope.Fixed[Node](array)
+    def apply(array: Array[BindableRope[Node]]) = new BindableRope.Fixed[Node](array)
+
+    @inline
+    def apply(buffer: mutable.Buffer[BindableRope[Node]]) = new BindableRope.Growable[Node](buffer)
+
+    // FIXME: It should be a lazy view
+    @inline
+    def apply[N <: Node](buffer: Seq[N])(implicit dummy: Any => Any) = {
+      new BindableRope.Growable[Node](buffer.map(new Single[Node](_))(collection.breakOut(ArrayBuffer.canBuildFrom)))
+    }
 
   }
 
@@ -42,8 +53,12 @@ object DomLiteral {
         host.insertBefore(newChild, refChild)
       }
 
-      override def removeChild(parent: BindableRope[Node], element: Node): Unit = {
-        host.removeChild(element)
+      override def removeChild(parent: BindableRope[Node], oldChild: Node): Unit = {
+        host.removeChild(oldChild)
+      }
+
+      override def replaceChild(parent: BindableRope[Node], newChild: Node, oldChild: Node): Unit = {
+        host.replaceChild(newChild, oldChild)
       }
 
       override def appendChild(parent: BindableRope[Node], newChild: Node): Unit = {
@@ -58,9 +73,9 @@ object DomLiteral {
     Binding.Constant(())
   }
 
-  final def renderInto(binding: Binding[TypedTag[Element]], parent: Element): Unit = {
+  final def renderInto(binding: Binding[Element], parent: Element): Unit = {
     def render(): Unit = {
-      val element = binding.value.render
+      val element = binding.value
       if (parent.childElementCount == 0) {
         parent.appendChild(element)
       } else if (parent.firstChild != element) {
@@ -127,17 +142,17 @@ object DomLiteral {
             val size = pushChildrenTree.size
             val sizeExpr = c.Expr[Int](Literal(Constant(size)))
             atPos(tree.pos)(Block(
-            ValDef(
-              NoMods,
-              bufferName,
-              TypeTree(),
-              reify(new _root_.scala.Array[_root_.au.com.realcommercial.bindingScala.dom.DomLiteral.DomRope](sizeExpr.splice)).tree
-            ) :: (for {
-              (Apply(Select(Ident(TermName("$buf")), TermName("$amp$plus")), List(child)), i) <- pushChildrenTree.view.zipWithIndex
-            } yield {
-              val updateExpr = c.Expr[Unit](
+              ValDef(
+                NoMods,
+                bufferName,
+                TypeTree(),
+                reify(_root_.au.com.realcommercial.bindingScala.dom.DomLiteral.DomRope(new _root_.scala.Array[_root_.au.com.realcommercial.bindingScala.dom.DomLiteral.DomRope](sizeExpr.splice))).tree
+              ) :: (for {
+                (Apply(Select(Ident(TermName("$buf")), TermName("$amp$plus")), List(child)), i) <- pushChildrenTree.view.zipWithIndex
+              } yield {
+                  val updateExpr = c.Expr[Unit](
                 Apply(
-                  Select(Ident(TermName(bufferName)), TermName("update")),
+                  Select(Ident(TermName(bufferName)), TermName("updateRaw")),
                   List(
                     Literal(Constant(i)),
                     Apply(
@@ -147,14 +162,12 @@ object DomLiteral {
                   )
                 )
               )
-              reify(
-                _root_.com.thoughtworks.each.Monadic.EachOps[_root_.au.com.realcommercial.bindingScala.Binding, _root_.scala.Unit](
+                  reify(
+                    _root_.com.thoughtworks.each.Monadic.EachOps[_root_.au.com.realcommercial.bindingScala.Binding, _root_.scala.Unit](
                 _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.bindingScala.Binding].apply[_root_.scala.Unit](updateExpr.splice)).each
-              ).tree
-            }).toList, {
-              val arrayExpr = c.Expr[Array[BindableRope[Node]]](Ident(TermName(bufferName)))
-              reify(_root_.au.com.realcommercial.bindingScala.dom.DomLiteral.DomRope(arrayExpr.splice)).tree
-            }
+                  ).tree
+                }).toList,
+              Ident(TermName(bufferName))
             ))
           case
             Block(
@@ -173,10 +186,6 @@ object DomLiteral {
             val extractedAttributes = for {
               Assign(Ident(TermName("$md")), Apply(Select(New(Select(Select(Select(Ident(termNames.ROOTPKG), TermName("scala")), TermName("xml")), TypeName("UnprefixedAttribute"))), termNames.CONSTRUCTOR), List(Literal(Constant(key: String)), value, Ident(TermName("$md"))))) <- attributes
             } yield key -> value
-            val childrenOption = child match    {
-              case Typed(expr, Ident(typeNames.WILDCARD_STAR)) :: Nil => Some(expr)
-              case _ => None
-            }
             makeElement(tree.pos, label, extractedAttributes, extractChildren.lift(child))
           case
             Apply(
