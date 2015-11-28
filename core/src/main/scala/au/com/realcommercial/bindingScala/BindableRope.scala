@@ -105,7 +105,8 @@ object BindableRope {
     }
   }
 
-  abstract class Multiple[A] extends BindableRope[A] {
+  abstract sealed class Tree[A] extends BindableRope[A] {
+
     protected def underlyingSeq: mutable.Seq[BindableRope[A]]
 
     @tailrec
@@ -150,21 +151,58 @@ object BindableRope {
       }
     }
 
-    object forwarder extends Publisher[Subscriber[A]] with Subscriber[A] {
-      override def insertBefore(parent: BindableRope[A], newChild: A, refChild: A): Unit = ???
+    private object forwarder extends Publisher[Subscriber[A]] with Subscriber[A] {
+      override def insertBefore(parent: BindableRope[A], newChild: A, refChild: A): Unit = {
+        for ((parentSubscriber, _) <- this) {
+          parentSubscriber.insertBefore(Tree.this, newChild, refChild)
+        }
+      }
 
-      override def removeChild(parent: BindableRope[A], element: A): Unit = ???
+      override def removeChild(parent: BindableRope[A], element: A): Unit = {
+        for ((parentSubscriber, _) <- this) {
+          parentSubscriber.removeChild(Tree.this, element)
+        }
+      }
 
-      override def appendChild(parent: BindableRope[A], newChild: A): Unit = ???
+      override def appendChild(parent: BindableRope[A], newChild: A): Unit = {
+        val i = underlyingSeq.iterator
+        underlyingSeq.iterator.dropWhile(_ != parent)
+
+        @tailrec
+        def findHead(): Option[A] = {
+          if (i.hasNext) {
+            val current = i.next
+            val headOption = current.toSeq.headOption
+            if (headOption.isDefined) {
+              headOption
+            } else {
+              findHead()
+            }
+          } else {
+            None
+          }
+        }
+
+        findHead() match {
+          case None =>
+            for ((parentSubscriber, _) <- this) {
+              parentSubscriber.appendChild(Tree.this, newChild)
+            }
+          case Some(refChild) =>
+            for ((parentSubscriber, _) <- this) {
+              parentSubscriber.insertBefore(Tree.this, newChild, refChild)
+            }
+        }
+      }
 
       override def replaceChild(parent: BindableRope[A], newChild: A, oldChild: A): Unit = {
-        for ((parent, _) <- this) {
-          parent.replaceChild(Multiple.this, newChild, oldChild)
+        for ((parentSubscriber, _) <- this) {
+          parentSubscriber.replaceChild(Tree.this, newChild, oldChild)
         }
       }
     }
 
-    def subscribe(subscriber: Subscriber[A]): Unit = {
+    override def subscribe(subscriber: Subscriber[A]): Unit = {
       if (forwarder.isEmpty) {
         for (child <- underlyingSeq) {
           child.subscribe(forwarder)
@@ -173,7 +211,7 @@ object BindableRope {
       forwarder.subscribe(subscriber)
     }
 
-    def unsubscribe(subscriber: Subscriber[A]): Unit = {
+    override def unsubscribe(subscriber: Subscriber[A]): Unit = {
       forwarder.unsubscribe(subscriber)
       if (forwarder.isEmpty) {
         for (child <- underlyingSeq) {
@@ -182,35 +220,25 @@ object BindableRope {
       }
     }
 
-    class RopeSeq extends mutable.Seq[A] {
-
-      val forwarder = new Publisher[Subscriber[A]] with Subscriber[A] {
-        override def insertBefore(parent: BindableRope[A], newChild: A, refChild: A): Unit = ???
-
-        override def removeChild(parent: BindableRope[A], element: A): Unit = ???
-
-        override def appendChild(parent: BindableRope[A], newChild: A): Unit = ???
-
-        override def replaceChild(parent: BindableRope[A], newChild: A, oldChild: A): Unit = ???
-      }
-
-      @tailrec
-      private def update(i: Int, rest: Int, elem: A): Unit = {
-        if (i < underlyingSeq.length) {
-          val child = underlyingSeq(i)
-          val childLength = child.toSeq.length
-          if (childLength > rest) {
-            child.toSeq.update(rest, elem)
-          } else {
-            update(i + 1, rest - childLength, elem)
-          }
-        } else {
-          throw new IndexOutOfBoundsException
-        }
-      }
+    private[BindableRope] class RopeSeq extends mutable.Seq[A] {
 
       override def update(idx: Int, elem: A): Unit = {
-        update(0, idx, elem)
+        val i = underlyingSeq.iterator
+        @tailrec
+        def loop(rest: Int, elem: A): Unit = {
+          if (i.hasNext) {
+            val child = i.next().toSeq
+            val childLength = child.length
+            if (childLength > rest) {
+              child.update(rest, elem)
+            } else {
+              loop(rest - childLength, elem)
+            }
+          } else {
+            throw new IndexOutOfBoundsException
+          }
+        }
+        loop(idx, elem)
       }
 
       override def length: Int = {
@@ -246,18 +274,65 @@ object BindableRope {
 
   }
 
-  final class Fixed[A](data: Array[BindableRope[A]]) extends Multiple[A] {
-    override protected def underlyingSeq = data
+  abstract sealed class Leaf[A] extends BindableRope[A] {
+    protected def underlyingSeq: mutable.Seq[A]
 
-    override def toSeq = new RopeSeq
+    val publisher = new Publisher[Subscriber[A]]
+
+    override def subscribe(subscriber: Subscriber[A]): Unit = {
+      publisher.subscribe(subscriber)
+    }
+
+    override def unsubscribe(subscriber: Subscriber[A]): Unit = {
+      publisher.unsubscribe(subscriber)
+    }
+
+    private[BindableRope] class RopeSeq extends mutable.Seq[A] {
+
+      override def update(idx: Int, elem: A): Unit = {
+        val oldChild = underlyingSeq(idx)
+        if (oldChild != elem) {
+          for ((subscriber, _) <- publisher) {
+            subscriber.replaceChild(Leaf.this, elem, oldChild)
+          }
+          underlyingSeq.update(idx, elem)
+        }
+      }
+
+      override def length: Int = {
+        underlyingSeq.length
+      }
+
+      override def apply(idx: Int): A = {
+        underlyingSeq.apply(idx)
+      }
+
+      override def iterator: Iterator[A] = {
+        underlyingSeq.iterator
+      }
+
+    }
 
   }
 
-  final class Growable[A](data: mutable.Buffer[BindableRope[A]]) extends Multiple[A] {
+  final class FixedLeaf[A](data: Array[A]) extends Leaf[A] {
+    override def underlyingSeq = data
 
-    override protected def underlyingSeq = data
+    override def toSeq: RopeSeq with mutable.Seq[A] = new RopeSeq
+  }
 
-    override def toSeq = new RopeSeq with mutable.Buffer[A] {
+  final class FixedTree[A](data: Array[BindableRope[A]]) extends Tree[A] {
+
+    override def underlyingSeq = data
+
+    override def toSeq: RopeSeq with mutable.Seq[A] = new RopeSeq
+
+  }
+
+
+  sealed trait Growable[A] {
+
+    private[BindableRope] trait GraowableSeq extends mutable.Buffer[A] {
 
       override def +=(elem: A): this.type = ???
 
@@ -269,14 +344,24 @@ object BindableRope {
 
       override def insertAll(n: Int, elems: Traversable[A]): Unit = ???
     }
+
+  }
+
+  final class GrowableTree[A](override protected val underlyingSeq: mutable.Buffer[BindableRope[A]])
+    extends Tree[A] with Growable[A] {
+
+
+    override def toSeq: RopeSeq with GraowableSeq with mutable.Seq[A] = new RopeSeq with GraowableSeq
+  }
+
+  final class GrowableLeaf[A](override protected val underlyingSeq: mutable.Buffer[A])
+    extends Leaf[A] with Growable[A] {
+
+    override def toSeq: RopeSeq with GraowableSeq with mutable.Seq[A] = new RopeSeq with GraowableSeq
   }
 
   def sourceSeq[A](elements: A*): mutable.Buffer[A] = {
-    val data = ArrayBuffer.empty[BindableRope[A]]
-    for (a <- elements) {
-      data += new Single(a)
-    }
-    new Growable(data).toSeq
+    new GrowableLeaf(mutable.Buffer(elements: _*)).toSeq
   }
 
 }
