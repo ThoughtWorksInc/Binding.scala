@@ -3,7 +3,7 @@ package au.com.realcommercial.bindingScala.dom
 import au.com.realcommercial.bindingScala.BindableRope.{Single, Subscriber}
 import au.com.realcommercial.bindingScala.{BindableRope, Binding}
 import org.scalajs.dom._
-import org.scalajs.dom.raw.Node
+import org.scalajs.dom.raw.{HTMLElement, Node}
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -25,44 +25,84 @@ object DomLiteral {
     def apply(domRope: DomRope) = domRope
 
     @inline
-    def apply(text: String) = new BindableRope.Single[Node](document.createTextNode(text))
+    def apply(text: String) = new BindableRope.Single(document.createTextNode(text))
 
     @inline
-    def apply(node: Node) = new BindableRope.Single[Node](node)
+    def apply(node: Node) = new BindableRope.Single(node)
 
     @inline
-    def apply(array: Array[BindableRope[Node]]) = new BindableRope.Fixed[Node](array)
-
-    @inline
-    def apply(buffer: mutable.Buffer[BindableRope[Node]]) = new BindableRope.Growable[Node](buffer)
-
-    // FIXME: It should be a lazy view
-    @inline
-    def apply[N <: Node](buffer: Seq[N])(implicit dummy: Any => Any) = {
-      new BindableRope.Growable[Node](buffer.map(new Single[Node](_))(collection.breakOut(ArrayBuffer.canBuildFrom)))
+    def apply(array: Array[DomRope]) = {
+      new BindableRope.ArrayTree(array)
     }
 
+    @inline
+    def apply(array: Array[Node]) = {
+      new BindableRope.ArrayLeaf(array)
+    }
+
+    @inline
+    def apply(buffer: mutable.Buffer[Node])(implicit v: Any => Any) = {
+      new BindableRope.BufferLeaf(buffer)
+    }
+
+    @inline
+    def apply(buffer: mutable.Buffer[DomRope]) = {
+      new BindableRope.BufferTree(buffer)
+    }
   }
 
-  implicit def mount(host: Node, rope: DomRope): Unit = {
-    for (child <- rope.toSeq) {
+  def mount[N <: Node](host: Node, rope: BindableRope[N]): Unit = {
+    for (child <- rope.flatten) {
       host.appendChild(child)
     }
-    rope.subscribe(new Subscriber[Node] {
-      override def insertBefore(parent: BindableRope[Node], newChild: Node, refChild: Node): Unit = {
-        host.insertBefore(newChild, refChild)
+    rope.subscribe(new Subscriber[N] {
+      override def insert(target: BindableRope[N], index: Int, newChildren: N*): Unit = {
+        val targetSeq = target.flatten
+        val size = targetSeq.size
+        if (index < size) {
+          val refChild = targetSeq(index)
+          for (newChild <- newChildren) {
+            host.insertBefore(newChild, refChild)
+          }
+        } else if (index == size) {
+          for (newChild <- newChildren) {
+            host.appendChild(newChild)
+          }
+        } else {
+          throw new IndexOutOfBoundsException
+        }
       }
 
-      override def removeChild(parent: BindableRope[Node], oldChild: Node): Unit = {
-        host.removeChild(oldChild)
-      }
-
-      override def replaceChild(parent: BindableRope[Node], newChild: Node, oldChild: Node): Unit = {
+      override def update(target: BindableRope[N], index: Int, newChild: N): Unit = {
+        val targetSeq = target.flatten
+        val oldChild = targetSeq(index)
         host.replaceChild(newChild, oldChild)
       }
 
-      override def appendChild(parent: BindableRope[Node], newChild: Node): Unit = {
-        host.appendChild(newChild)
+      override def remove(target: BindableRope[N], index: Int): Unit = {
+        val targetSeq = target.flatten
+        val oldChild = targetSeq(index)
+        host.removeChild(oldChild)
+      }
+
+      override def splice(target: BindableRope[N], index: Int, numberOfOldChildren: Int, newChildren: N*): Unit = {
+        val targetSeq = target.flatten
+        val oldChildren = targetSeq.view(index, numberOfOldChildren)
+        oldChildren.foreach(host.removeChild)
+        val size = targetSeq.size
+        val refIndex = index + numberOfOldChildren
+        if (refIndex < size) {
+          val refChild = targetSeq(refIndex)
+          for (newChild <- newChildren) {
+            host.insertBefore(newChild, refChild)
+          }
+        } else if (refIndex == size) {
+          for (newChild <- newChildren) {
+            host.appendChild(newChild)
+          }
+        } else {
+          throw new IndexOutOfBoundsException
+        }
       }
     })
   }
@@ -149,13 +189,13 @@ object DomLiteral {
                 NoMods,
                 bufferName,
                 TypeTree(),
-                reify(_root_.au.com.realcommercial.bindingScala.dom.DomLiteral.DomRope(new _root_.scala.Array[_root_.au.com.realcommercial.bindingScala.dom.DomLiteral.DomRope](sizeExpr.splice))).tree
+                reify(_root_.au.com.realcommercial.bindingScala.dom.DomLiteral.DomRope(_root_.scala.Array.fill[_root_.au.com.realcommercial.bindingScala.dom.DomLiteral.DomRope](sizeExpr.splice)(_root_.au.com.realcommercial.bindingScala.BindableRope.Empty))).tree
               ) :: (for {
                 (Apply(Select(Ident(TermName("$buf")), TermName("$amp$plus")), List(child)), i) <- pushChildrenTree.view.zipWithIndex
               } yield {
                   val updateExpr = c.Expr[Unit](
                 Apply(
-                  Select(Ident(TermName(bufferName)), TermName("updateRaw")),
+                  Select(Ident(TermName(bufferName)), TermName("update")),
                   List(
                     Literal(Constant(i)),
                     Apply(
