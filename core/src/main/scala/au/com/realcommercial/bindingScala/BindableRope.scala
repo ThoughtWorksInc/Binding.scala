@@ -3,9 +3,12 @@ package au.com.realcommercial.bindingScala
 import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import scala.reflect.ClassTag
+import scalaz.{Monad, Applicative}
+import scala.language.experimental.macros
+import scala.language.higherKinds
 
-
-sealed trait BindableRope[+A] {
+sealed abstract class BindableRope[+A] {
 
   def flatten: Seq[A]
 
@@ -15,11 +18,51 @@ sealed trait BindableRope[+A] {
 
   def unsubscribe(subscriber: Subscriber[A]): Unit
 
-  def map[B](f: A => B): BindableRope[B] = new Mapped(this, f)
+  def map[B](f: A => B): BindableRope[B] = macro BindableRope.Macros.map
+
+  final def traverse[F[_] : Monad, B: ClassTag](f: A => F[B]): F[BindableRope[B]] = {
+    import scalaz.syntax.monad._
+    val cache: BindableRope[B] = new ArrayLeaf[B](new Array[B](flatten.size))
+    flatten.view.zipWithIndex.foldLeft(Monad[F].point(cache)) { case (cacheF, (a, index)) =>
+      cacheF.flatMap { cache =>
+        // TODO: subscribe
+        f(a).map { b =>
+          cache.asInstanceOf[ArrayLeaf[B]](index) = b
+          cache
+        }
+      }
+    }
+  }
 
 }
 
 object BindableRope {
+
+  private[BindableRope] object Macros {
+
+    //        def map(c: scala.reflect.macros.whitebox.Context)(f: c.Expr[_ => _]): c.Expr[BindableRope[_]] = ???
+    def map(c: scala.reflect.macros.blackbox.Context)(f: c.Tree): c.Tree = {
+      import c.universe._
+      val Apply(
+      TypeApply(Select(thisTree, TermName("map")), List(typeTreeB)),
+      List(Function(List(valDefTree), body))
+      ) = c.macroApplication
+
+      val bodyExpr = c.Expr[Nothing](body)
+      val transformed = Select(Apply(Select(reify(_root_.com.thoughtworks.each.Monadic).tree, TermName("EachOps")), List(
+        Apply(
+          TypeApply(Select(thisTree, TermName("traverse")), List(typeTreeB)),
+          List(Function(List(valDefTree),
+            reify(_root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.bindingScala.Binding](
+              bodyExpr.splice
+            )).tree))
+        )
+      )), TermName("each"))
+      c.untypecheck(transformed)
+      transformed
+    }
+
+  }
 
   trait Subscriber[-A] {
 

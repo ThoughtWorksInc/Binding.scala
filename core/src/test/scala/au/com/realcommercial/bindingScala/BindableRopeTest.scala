@@ -1,5 +1,6 @@
 package au.com.realcommercial.bindingScala
 
+import com.thoughtworks.each.Monadic._
 import au.com.realcommercial.bindingScala.BindableRope._
 import utest._
 
@@ -44,12 +45,6 @@ object BindableRopeTest extends TestSuite {
       assert(rope.flatten == Seq(300, 105, 200))
     }
 
-    'TestMap {
-      val rope = new Single(5)
-      assert(rope.flatten == Seq(5))
-      val mappedRope = rope.map(_.toString)
-      assert(mappedRope.flatten == Seq("5"))
-    }
 
     'TestUpdate {
       val leaf0 = new BufferLeaf(ArrayBuffer(0, 1, 2, 3))
