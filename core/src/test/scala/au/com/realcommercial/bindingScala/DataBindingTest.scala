@@ -1,6 +1,6 @@
 package au.com.realcommercial.bindingScala
 
-import au.com.realcommercial.bindingScala.Binding.BindableVariable
+import au.com.realcommercial.bindingScala.Binding.{Constant, BindableVariable}
 import com.thoughtworks.each.Monadic._
 import scala.collection.mutable.Buffer
 import utest._
@@ -11,8 +11,6 @@ object DataBindingTest extends TestSuite {
   def tests = TestSuite {
 
     'DataBindingShouldBeSupportedByScalaz {
-
-      var reset3Option: Option[Int => Unit] = None
 
       val expr3: BindableVariable[Int] = new BindableVariable(2000)
 
@@ -49,6 +47,27 @@ object DataBindingTest extends TestSuite {
       assert(expr1.value == 34100)
 
     }
+
+    'CacheShouldBeUpdated {
+      val source = new BindableVariable(2.0)
+      val constant = new Constant(1.0)
+      val result = monadic[Binding] {
+        val sourceValue = source.each
+        val one =  sourceValue / sourceValue / constant.each
+        one / sourceValue
+      }
+      var resultChanged = 0
+
+      result.subscribe { () =>
+        resultChanged += 1
+      }
+      assert(result.value == 0.5)
+      assert(resultChanged == 0)
+      source.value = 4.0
+      assert(result.value == 0.25)
+      assert(resultChanged == 1)
+    }
+    
   }
 
 }
