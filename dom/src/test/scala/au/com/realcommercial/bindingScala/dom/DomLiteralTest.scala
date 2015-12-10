@@ -2,7 +2,7 @@ package au.com.realcommercial.bindingScala.dom
 
 import au.com.realcommercial.bindingScala.BindableRope.Subscriber
 import au.com.realcommercial.bindingScala.{BindableRope, Binding}
-import au.com.realcommercial.bindingScala.Binding.BindableVariable
+import au.com.realcommercial.bindingScala.Binding.Var
 import com.thoughtworks.each.Monadic
 import org.scalajs.dom.{Node, Event, document}
 import utest._
@@ -50,7 +50,7 @@ object DomLiteralTest extends TestSuite {
 
     'TestSimpleText {
 
-      val title = new BindableVariable("Old text");
+      val title = new Var("Old text");
       val bufferVariable = monadic[Binding] {
         val buffer = DomLiteral.DomRope(new Array[Node](1));
         monadic[Binding].apply[Unit](
@@ -69,7 +69,7 @@ object DomLiteralTest extends TestSuite {
 
     'TestText {
 
-      val title = new BindableVariable("Old text");
+      val title = new Var("Old text");
 
       val bufferVariable = monadic[Binding] {
         val buffer$macro$2 = DomLiteral.DomRope(Array.fill[DomLiteral.DomRope](1)(BindableRope.Empty));
@@ -105,7 +105,7 @@ object DomLiteralTest extends TestSuite {
       val recorder1 = new Recorder[Node]
 
       var numBuffersCreated = 0
-      val title = new BindableVariable("Old text");
+      val title = new Var("Old text");
       val html = monadic[Binding] {
         val element = DomLiteral.TagsAndTags2.p().render
         val buffer = DomLiteral.DomRope(Array.fill[DomLiteral.DomRope](1)(BindableRope.Empty))
@@ -141,7 +141,7 @@ object DomLiteralTest extends TestSuite {
     }
 
     'TestLiteral {
-      val title = new BindableVariable("Old title")
+      val title = new Var("Old title")
       val html = monadic[Binding] {
 <html>
   <body title={title.each}>

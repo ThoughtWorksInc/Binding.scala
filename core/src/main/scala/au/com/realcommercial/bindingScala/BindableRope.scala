@@ -1,5 +1,5 @@
 package au.com.realcommercial.bindingScala
-
+/*
 import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -410,3 +410,4 @@ object BindableRope {
 
 }
 
+*/
