@@ -11,3 +11,5 @@ testFrameworks += new TestFramework("utest.runner.Framework")
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 scalacOptions += "-feature"
+
+scalacOptions in doc in Compile += "-groups"

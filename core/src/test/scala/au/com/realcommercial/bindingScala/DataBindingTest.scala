@@ -1,8 +1,8 @@
 package au.com.realcommercial.bindingScala
 
-import au.com.realcommercial.bindingScala.Binding.{Constant, Var}
+import au.com.realcommercial.bindingScala.Binding._
 import com.thoughtworks.each.Monadic._
-import scala.collection.mutable.Buffer
+import scala.collection.mutable.{ArrayBuffer, Buffer}
 import utest._
 
 import scalaz._
@@ -29,22 +29,24 @@ object DataBindingTest extends TestSuite {
 
       var resultChanged = 0
 
-      val expr1Value0 = expr1.value
+      val expr1Value0 = expr1.get
 
-      expr1.subscribe { () =>
-        resultChanged += 1
-      }
+      expr1.addChangedListener(new ChangedListener[Any] {
+        override def changed(event: ChangedEvent[Any]): Unit = {
+          resultChanged += 1
+        }
+      })
 
       assert(resultChanged == 0)
-      assert(expr1.value == expr1Value0)
-      assert(expr1.value == 32100)
+      assert(expr1.get == expr1Value0)
+      assert(expr1.get == 32100)
 
-      expr3.value = 4000
+      expr3.:=(4000)
 
 
       assert(resultChanged == 1)
-      assert(expr1.value != expr1Value0)
-      assert(expr1.value == 34100)
+      assert(expr1.get != expr1Value0)
+      assert(expr1.get == 34100)
 
     }
 
@@ -53,19 +55,39 @@ object DataBindingTest extends TestSuite {
       val constant = new Constant(1.0)
       val result = monadic[Binding] {
         val sourceValue = source.each
-        val one =  sourceValue / sourceValue / constant.each
+        val one = sourceValue / sourceValue / constant.each
         one / sourceValue
       }
       var resultChanged = 0
 
-      result.subscribe { () =>
-        resultChanged += 1
-      }
-      assert(result.value == 0.5)
+      result.addChangedListener(new ChangedListener[Any] {
+        override def changed(event: ChangedEvent[Any]): Unit = {
+          resultChanged += 1
+        }
+      })
+      assert(result.get == 0.5)
       assert(resultChanged == 0)
-      source.value = 4.0
-      assert(result.value == 0.25)
+      source.:=(4.0)
+      assert(result.get == 0.25)
       assert(resultChanged == 1)
+    }
+
+    'VarBuffer {
+
+      val source = new VarBuffer(1, 2, 3)
+      val events = ArrayBuffer.empty[ChangedEvent[Seq[Int]]]
+      source.addChangedListener(new ChangedListener[Seq[Int]] {
+        override def changed(event: ChangedEvent[Seq[Int]]): Unit = {
+          events += event
+        }
+      })
+      assert(events == ArrayBuffer.empty)
+      source := Seq(2, 3, 4)
+      assert(events.length == 1)
+      assert(events(0).getSource == source)
+      assert(events(0).oldValue == Seq(1, 2, 3))
+      assert(events(0).newValue == Seq(2, 3, 4))
+
     }
 
   }

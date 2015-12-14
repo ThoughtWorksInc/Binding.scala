@@ -62,9 +62,9 @@ object DomLiteralTest extends TestSuite {
       bufferVariable.subscribe { () =>
         assert(false) // Must not trigger!
       }
-      assert(bufferVariable.value.flatten(0).textContent == "Old text");
-      title.value = "New text";
-      assert(bufferVariable.value.flatten(0).textContent == "New text");
+      assert(bufferVariable.get.flatten(0).textContent == "Old text");
+      title.get = "New text";
+      assert(bufferVariable.get.flatten(0).textContent == "New text");
     }
 
     'TestText {
@@ -87,12 +87,12 @@ object DomLiteralTest extends TestSuite {
       val recorder = new Recorder[Node]
 
 
-      bufferVariable.value.subscribe(recorder)
+      bufferVariable.get.subscribe(recorder)
 
       //      assert(recorder.records == Seq())
-      assert(bufferVariable.value.flatten(0).textContent == "Old text");
-      title.value = "New text";
-      assert(bufferVariable.value.flatten(0).textContent == "New text");
+      assert(bufferVariable.get.flatten(0).textContent == "Old text");
+      title.get = "New text";
+      assert(bufferVariable.get.flatten(0).textContent == "New text");
       //      assert(recorder.records.length == 2)
       //      assert(recorder.records(0).asInstanceOf[Remove[Node]].index == 0)
       //      assert(recorder.records(1).asInstanceOf[Insert[Node]].index == 0)
@@ -127,8 +127,8 @@ object DomLiteralTest extends TestSuite {
       //      assert(recorder.records(0).asInstanceOf[Insert[Node]].index == 0)
       //      assert(recorder.records(0).asInstanceOf[Insert[Node]].newChildren.length == 1)
       //      assert(recorder.records(0).asInstanceOf[Insert[Node]].newChildren(0).textContent == "Old text")
-      assert(html.value.outerHTML == "<p>Old text</p>")
-      title.value = "New text"
+      assert(html.get.outerHTML == "<p>Old text</p>")
+      title.get = "New text"
       assert(numBuffersCreated == 1)
       //      assert(recorder.records.length == 3)
       //      assert(recorder.records(0).asInstanceOf[Insert[Node]].target == recorder.records(1).asInstanceOf[Remove[Node]].target)
@@ -137,7 +137,7 @@ object DomLiteralTest extends TestSuite {
       //      assert(recorder.records(1).asInstanceOf[Splice[Node]].numberOfOldChildren == 1)
       //      assert(recorder.records(1).asInstanceOf[Splice[Node]].newChildren.length == 1)
       //      assert(recorder.records(1).asInstanceOf[Splice[Node]].newChildren(0).textContent == "New text")
-      assert(html.value.outerHTML == "<p>New text</p>")
+      assert(html.get.outerHTML == "<p>New text</p>")
     }
 
     'TestLiteral {
@@ -158,8 +158,8 @@ object DomLiteralTest extends TestSuite {
       }
       assert(title.values.sum == 2)
 
-      val oldHtmlElement = html.value
-      val oldOuterHTML = html.value.outerHTML
+      val oldHtmlElement = html.get
+      val oldOuterHTML = html.get.outerHTML
       assert(
         oldOuterHTML == """<html>
   <body title="Old title">
@@ -169,8 +169,8 @@ object DomLiteralTest extends TestSuite {
   </body>
 </html>""")
 
-      title.value = "New title"
-      val newOuterHTML = html.value.outerHTML
+      title.get = "New title"
+      val newOuterHTML = html.get.outerHTML
       assert(
         newOuterHTML == """<html>
   <body title="New title">
@@ -180,7 +180,7 @@ object DomLiteralTest extends TestSuite {
   </body>
 </html>""")
 
-      assert(oldHtmlElement eq html.value)
+      assert(oldHtmlElement eq html.get)
       assert(changeCount == 0)
 
     }

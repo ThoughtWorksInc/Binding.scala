@@ -115,7 +115,7 @@ object DomLiteral {
 
   final def renderInto(binding: Binding[Element], parent: Element): Unit = {
     def render(): Unit = {
-      val element = binding.value
+      val element = binding.get
       if (parent.childElementCount == 0) {
         parent.appendChild(element)
       } else if (parent.firstChild != element) {
