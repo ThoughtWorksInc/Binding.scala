@@ -53,8 +53,8 @@ object Binding {
     * @group Events
     */
   private[bindingScala] final class ChangedEvent[+Value](source: AnyRef,
-                                                         @BeanProperty val oldValue: Value,
-                                                         @BeanProperty val newValue: Value) extends EventObject(source) {
+                                                         val oldValue: Value,
+                                                         val newValue: Value) extends EventObject(source) {
     override def toString = raw"""ChangedEvent[source=$source oldValue=$oldValue newValue=$newValue]"""
 
   }
@@ -63,10 +63,10 @@ object Binding {
     * @group Events
     */
   private[bindingScala] final class PatchedEvent[+Element](source: AnyRef,
-                                                           @BeanProperty val oldSeq: Seq[Element],
-                                                           @BeanProperty val from: Int,
-                                                           @BeanProperty val that: GenSeq[Element],
-                                                           @BeanProperty val replaced: Int) extends EventObject(source) {
+                                                           val oldSeq: Seq[Element],
+                                                           val from: Int,
+                                                           val that: GenSeq[Element],
+                                                           val replaced: Int) extends EventObject(source) {
     override def toString = raw"""PatchedEvent[source=$source oldSeq=$oldSeq from=$from that=$that replaced=$replaced]"""
   }
 
@@ -84,7 +84,10 @@ object Binding {
     private[bindingScala] def patched(event: PatchedEvent[Element]): Unit
   }
 
-  private[bindingScala] final case class Constant[A](override val get: A) extends Binding[A] {
+  /**
+    * @group expressions
+    */
+  final case class Constant[+A](override val get: A) extends Binding[A] {
     override private[bindingScala] def removeChangedListener(listener: ChangedListener[A]): Unit = {
       // Do nothing because this Constant never changes
     }
@@ -278,9 +281,6 @@ object Binding {
       }
     }
 
-    /**
-      * @group expressions
-      */
     final class MappedSeq[A, B](upstream: BindingSeq[A], f: A => Binding[B]) extends BindingSeq[B] {
 
       var cache: Vector[Binding[B]] = {
@@ -293,27 +293,7 @@ object Binding {
 
       private[bindingScala] val changedPublisher = new Publisher[ChangedListener[Seq[B]]]
 
-      private val resetListener = new ChangedListener[Seq[A]] {
-        override def changed(event: ChangedEvent[Seq[A]]): Unit = {
-          val newCache = (for {
-            a <- event.newValue
-          } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
-          for ((listener, _) <- changedPublisher) {
-            listener.changed(new ChangedEvent(MappedSeq.this, new ValueProxy(cache), new ValueProxy(newCache)))
-          }
-          for (oldChild <- cache) {
-            oldChild.removeChangedListener(partialListener)
-          }
-          for (newChild <- newCache) {
-            newChild.addChangedListener(partialListener)
-          }
-          cache = newCache
-        }
-      }
-
-      private[bindingScala] val patchedPublisher = new Publisher[PatchedListener[B]]
-
-      private val partialListener = new PatchedListener[A] with ChangedListener[B] {
+      private val upstreamListener = new PatchedListener[A] with ChangedListener[Seq[A]] {
         override def patched(event: PatchedEvent[A]): Unit = {
           val mappedNewChildren = (for {
             child <- event.that
@@ -322,13 +302,34 @@ object Binding {
             listener.patched(new PatchedEvent(MappedSeq.this, new ValueProxy(cache), event.from, new ValueProxy(mappedNewChildren), event.replaced))
           }
           for (oldChild <- cache.view(event.from, event.replaced)) {
-            oldChild.removeChangedListener(this)
+            oldChild.removeChangedListener(childListener)
           }
           for (newChild <- mappedNewChildren) {
-            newChild.addChangedListener(this)
+            newChild.addChangedListener(childListener)
           }
           cache = cache.patch(event.from, mappedNewChildren, event.replaced)
         }
+
+        override def changed(event: ChangedEvent[Seq[A]]): Unit = {
+          val newCache = (for {
+            a <- event.newValue
+          } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
+          for ((listener, _) <- changedPublisher) {
+            listener.changed(new ChangedEvent(MappedSeq.this, new ValueProxy(cache), new ValueProxy(newCache)))
+          }
+          for (oldChild <- cache) {
+            oldChild.removeChangedListener(childListener)
+          }
+          for (newChild <- newCache) {
+            newChild.addChangedListener(childListener)
+          }
+          cache = newCache
+        }
+      }
+
+      private[bindingScala] val patchedPublisher = new Publisher[PatchedListener[B]]
+
+      private val childListener = new ChangedListener[B] {
 
         override def changed(event: ChangedEvent[B]): Unit = {
           val index = cache.indexOf(event.getSource)
@@ -340,20 +341,20 @@ object Binding {
 
       private def checkForUpstreamSubscription(): Unit = {
         if (patchedPublisher.isEmpty && changedPublisher.isEmpty) {
-          upstream.addChangedListener(resetListener)
-          upstream.addPatchedListener(partialListener)
+          upstream.addChangedListener(upstreamListener)
+          upstream.addPatchedListener(upstreamListener)
           for (child <- cache) {
-            child.addChangedListener(partialListener)
+            child.addChangedListener(childListener)
           }
         }
       }
 
       private def checkForUpstreamUnsubscription(): Unit = {
         if (patchedPublisher.isEmpty && changedPublisher.isEmpty) {
-          upstream.removeChangedListener(resetListener)
-          upstream.removePatchedListener(partialListener)
+          upstream.removeChangedListener(upstreamListener)
+          upstream.removePatchedListener(upstreamListener)
           for (child <- cache) {
-            child.removeChangedListener(partialListener)
+            child.removeChangedListener(childListener)
           }
         }
       }
@@ -380,115 +381,163 @@ object Binding {
 
     }
 
-    private final class FlatProxy[B](underlying: Seq[BindingSeq[B]]) extends Seq[B] {
-      override def length: Int = ???
+    private[bindingScala] final class FlatProxy[B](underlying: Seq[BindingSeq[B]]) extends Seq[B] {
 
-      override def apply(idx: Int): B = ???
+      override def length: Int = {
+        underlying.view.map(_.get.length).sum
+      }
 
-      override def iterator: Iterator[B] = ???
+      override def apply(idx: Int): B = {
+        val i = underlying.iterator
+        @tailrec
+        def findIndex(restIndex: Int): B = {
+          if (i.hasNext) {
+            val subSeq = i.next().get
+            val currentLength = subSeq.length
+            if (currentLength > restIndex) {
+              subSeq(restIndex)
+            } else {
+              findIndex(restIndex - currentLength)
+            }
+          } else {
+            throw new IndexOutOfBoundsException()
+          }
+        }
+        findIndex(idx)
+      }
+
+      override def iterator: Iterator[B] = {
+        for {
+          subSeq <- underlying.iterator
+          element <- subSeq.get.iterator
+        } yield element
+      }
     }
 
-    /*
-        /**
-          * @group expressions
-          */
-        final class FlatMappedSeq[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B]) extends BindingSeq[B] {
 
-          var cache: Vector[BindingSeq[B]] = {
-            (for {
-              a <- upstream.get
-            } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
-          }
+    final class FlatMappedSeq[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B]) extends BindingSeq[B] {
 
-          override private[bindingScala] def get: Seq[B] = new FlatProxy(cache)
+      var cache: Vector[BindingSeq[B]] = {
+        (for {
+          a <- upstream.get
+        } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
+      }
 
-          private val changedPublisher = new Publisher[ChangedListener[Seq[B]]]
+      @inline
+      override private[bindingScala] def get = new FlatProxy(cache)
 
-          private val resetListener = new ChangedListener[Seq[A]] {
-            override def changed(event: ChangedEvent[Seq[A]]): Unit = {
-              val newCache = (for {
-                a <- event.newValue
-              } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
-              for ((listener, _) <- changedPublisher) {
-                listener.changed(new ChangedEvent(MappedSeq.this, new ValueProxy(cache), new ValueProxy(newCache)))
-              }
-              for (oldChild <- cache) {
-                oldChild.removeChangedListener(partialListener)
-              }
-              for (newChild <- newCache) {
-                newChild.addChangedListener(partialListener)
-              }
-              cache = newCache
+      private[bindingScala] val changedPublisher = new Publisher[ChangedListener[Seq[B]]]
+
+      @inline
+      private def flatIndex(upstreamBegin: Int, upstreamEnd: Int): Int = {
+        cache.view(upstreamBegin, upstreamEnd).map(_.get.length).sum
+      }
+
+      private val upstreamListener = new PatchedListener[A] with ChangedListener[Seq[A]] {
+        override private[bindingScala] def patched(event: PatchedEvent[A]): Unit = {
+          val mappedNewChildren = (for {
+            child <- event.that
+          } yield f(child)) (collection.breakOut(Seq.canBuildFrom))
+          val flatNewChildren = new FlatProxy(mappedNewChildren)
+          if (event.replaced != 0 || flatNewChildren.nonEmpty) {
+            for ((listener, _) <- patchedPublisher) {
+              val flattenFrom = flatIndex(0, event.from)
+              val flattenReplaced = flatIndex(event.from, event.from + event.replaced)
+              listener.patched(new PatchedEvent(FlatMappedSeq.this, get, flattenFrom, flatNewChildren, flattenReplaced))
             }
-          }
-
-          private val patchedPublisher = new Publisher[PatchedListener[B]]
-
-          private val partialListener = new PatchedListener[A] with ChangedListener[B] {
-            override def patched(event: PatchedEvent[A]): Unit = {
-              val mappedNewChildren = (for {
-                child <- event.that
-              } yield f(child)) (collection.breakOut(Seq.canBuildFrom))
-              for ((listener, _) <- patchedPublisher) {
-                listener.patched(new PatchedEvent(MappedSeq.this, new ValueProxy(cache), event.from, new ValueProxy(mappedNewChildren), event.replaced))
-              }
-              for (oldChild <- cache.view(event.from, event.replaced)) {
-                oldChild.removeChangedListener(this)
-              }
-              for (newChild <- mappedNewChildren) {
-                newChild.addChangedListener(this)
-              }
-              cache = cache.patch(event.from, mappedNewChildren, event.replaced)
+            for (oldChild <- cache.view(event.from, event.replaced)) {
+              oldChild.removeChangedListener(childListener)
+              oldChild.removePatchedListener(childListener)
             }
-
-            override def changed(event: ChangedEvent[B]): Unit = {
-              val index = cache.indexOf(event.getSource)
-              for ((listener, _) <- patchedPublisher) {
-                listener.patched(new PatchedEvent(MappedSeq.this, new ValueProxy(cache), index, SingleSeq(event.oldValue), 1))
-              }
+            for (newChild <- mappedNewChildren) {
+              newChild.addChangedListener(childListener)
+              newChild.addPatchedListener(childListener)
             }
+            cache = cache.patch(event.from, mappedNewChildren, event.replaced)
           }
+        }
 
-          private def checkForUpstreamSubscription(): Unit = {
-            if (patchedPublisher.isEmpty && changedPublisher.isEmpty) {
-              upstream.addChangedListener(resetListener)
-              upstream.addPatchedListener(partialListener)
-              for (child <- cache) {
-                child.addChangedListener(partialListener)
-              }
-            }
+        override private[bindingScala] def changed(event: ChangedEvent[Seq[A]]): Unit = {
+          val newCache = (for {
+            a <- event.newValue
+          } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
+          for ((listener, _) <- changedPublisher) {
+            listener.changed(new ChangedEvent(FlatMappedSeq.this, get, new FlatProxy(newCache)))
           }
+          for (oldChild <- cache) {
+            oldChild.removeChangedListener(childListener)
+            oldChild.removePatchedListener(childListener)
+          }
+          for (newChild <- newCache) {
+            newChild.addChangedListener(childListener)
+            newChild.addPatchedListener(childListener)
+          }
+          cache = newCache
+        }
+      }
 
-          private def checkForUpstreamUnsubscription(): Unit = {
-            if (patchedPublisher.isEmpty && changedPublisher.isEmpty) {
-              upstream.removeChangedListener(resetListener)
-              upstream.removePatchedListener(partialListener)
-              for (child <- cache) {
-                child.removeChangedListener(partialListener)
-              }
-            }
-          }
+      private[bindingScala] val patchedPublisher = new Publisher[PatchedListener[B]]
 
-          override private[bindingScala] def removePatchedListener(listener: PatchedListener[B]): Unit = {
-            patchedPublisher.unsubscribe(listener)
-            checkForUpstreamUnsubscription()
-          }
+      private val childListener = new PatchedListener[B] with ChangedListener[Seq[B]] {
 
-          override private[bindingScala] def addPatchedListener(listener: PatchedListener[B]): Unit = {
-            checkForUpstreamSubscription()
-            patchedPublisher.subscribe(listener)
+        override private[bindingScala] def changed(event: ChangedEvent[Seq[B]]): Unit = {
+          val index = flatIndex(0, cache.indexOf(event.getSource))
+          for ((listener, _) <- patchedPublisher) {
+            listener.patched(new PatchedEvent(FlatMappedSeq.this, get, index, event.newValue, event.oldValue.length))
           }
+        }
 
-          override private[bindingScala] def removeChangedListener(listener: ChangedListener[Seq[B]]): Unit = {
-            changedPublisher.unsubscribe(listener)
-            checkForUpstreamUnsubscription()
+        override private[bindingScala] def patched(event: PatchedEvent[B]): Unit = {
+          val source = event.getSource.asInstanceOf[BindingSeq[B]]
+          val index = flatIndex(0, cache.indexOf(source)) + event.from
+          for ((listener, _) <- patchedPublisher) {
+            listener.patched(new PatchedEvent(FlatMappedSeq.this, get, index, event.that, event.replaced))
           }
+        }
+      }
 
-          override private[bindingScala] def addChangedListener(listener: ChangedListener[Seq[B]]): Unit = {
-            checkForUpstreamSubscription()
-            changedPublisher.subscribe(listener)
+      private def checkForUpstreamSubscription(): Unit = {
+        if (patchedPublisher.isEmpty && changedPublisher.isEmpty) {
+          upstream.addChangedListener(upstreamListener)
+          upstream.addPatchedListener(upstreamListener)
+          for (child <- cache) {
+            child.addChangedListener(childListener)
+            child.addPatchedListener(childListener)
           }
-       }*/
+        }
+      }
+
+      private def checkForUpstreamUnsubscription(): Unit = {
+        if (patchedPublisher.isEmpty && changedPublisher.isEmpty) {
+          upstream.removeChangedListener(upstreamListener)
+          upstream.removePatchedListener(upstreamListener)
+          for (child <- cache) {
+            child.removeChangedListener(childListener)
+            child.addPatchedListener(childListener)
+          }
+        }
+      }
+
+      override private[bindingScala] def removePatchedListener(listener: PatchedListener[B]): Unit = {
+        patchedPublisher.unsubscribe(listener)
+        checkForUpstreamUnsubscription()
+      }
+
+      override private[bindingScala] def addPatchedListener(listener: PatchedListener[B]): Unit = {
+        checkForUpstreamSubscription()
+        patchedPublisher.subscribe(listener)
+      }
+
+      override private[bindingScala] def removeChangedListener(listener: ChangedListener[Seq[B]]): Unit = {
+        changedPublisher.unsubscribe(listener)
+        checkForUpstreamUnsubscription()
+      }
+
+      override private[bindingScala] def addChangedListener(listener: ChangedListener[Seq[B]]): Unit = {
+        checkForUpstreamSubscription()
+        changedPublisher.subscribe(listener)
+      }
+    }
 
   }
 
@@ -497,7 +546,7 @@ object Binding {
   /**
     * @group expressions
     */
-  trait BindingSeq[+A] extends Binding[Seq[A]] {
+  sealed trait BindingSeq[+A] extends Binding[Seq[A]] {
 
     private[bindingScala] def removePatchedListener(listener: PatchedListener[A]): Unit
 
@@ -533,25 +582,49 @@ object Binding {
   /**
     * @group expressions
     */
-  final class VarBuffer[A](initialValues: A*) extends BindingSeq[A] {
+  final case class Constants[+A](override val get: A*) extends BindingSeq[A] {
+
+    override private[bindingScala] def removePatchedListener(listener: PatchedListener[A]): Unit = {}
+
+    override private[bindingScala] def addPatchedListener(listener: PatchedListener[A]): Unit = {}
+
+    override private[bindingScala] def removeChangedListener(listener: ChangedListener[Seq[A]]): Unit = {}
+
+    override private[bindingScala] def addChangedListener(listener: ChangedListener[Seq[A]]): Unit = {}
+
+  }
+
+  /**
+    * @group expressions
+    */
+  object Vars {
+
+    def apply[A](initialValues: A*) = new Vars(Vector(initialValues: _*))
+
+    def empty[A] = new Vars(Vector.empty[A])
+
+  }
+
+  /**
+    * @group expressions
+    */
+  final class Vars[A] private(private var cache: Vector[A]) extends BindingSeq[A] {
 
     private[bindingScala] val patchedPublisher = new Publisher[PatchedListener[A]]
 
     private[bindingScala] val changedPublisher = new Publisher[ChangedListener[Seq[A]]]
-
-    private var cache = Vector(initialValues: _*)
 
     override def get: mutable.Buffer[A] = new Proxy
 
     def reset(newValues: A*): Unit = {
       val newCache = Vector(newValues: _*)
       for ((listener, _) <- changedPublisher) {
-        listener.changed(new ChangedEvent[Seq[A]](VarBuffer.this, cache, newCache))
+        listener.changed(new ChangedEvent[Seq[A]](Vars.this, cache, newCache))
       }
       cache = newCache
     }
 
-    class Proxy extends mutable.Buffer[A] {
+    private[bindingScala] final class Proxy extends mutable.Buffer[A] {
       override def apply(n: Int): A = {
         cache.apply(n)
       }
@@ -560,7 +633,7 @@ object Binding {
         for {
           (listener, _) <- patchedPublisher
         } {
-          listener.patched(new PatchedEvent(VarBuffer.this, cache, n, SingleSeq(newelem), 1))
+          listener.patched(new PatchedEvent(Vars.this, cache, n, SingleSeq(newelem), 1))
         }
         cache = cache.updated(n, newelem)
       }
@@ -569,7 +642,7 @@ object Binding {
         for {
           (listener, _) <- patchedPublisher
         } yield {
-          listener.patched(new PatchedEvent(VarBuffer.this, cache, 0, Nil, cache.length))
+          listener.patched(new PatchedEvent(Vars.this, cache, 0, Nil, cache.length))
         }
         cache = Vector.empty
       }
@@ -582,7 +655,7 @@ object Binding {
         for {
           (listener, _) <- patchedPublisher
         } yield {
-          listener.patched(new PatchedEvent(VarBuffer.this, cache, n, Nil, 1))
+          listener.patched(new PatchedEvent(Vars.this, cache, n, Nil, 1))
         }
         val result = cache(n)
         cache = cache.patch(n, Nil, 1)
@@ -593,7 +666,7 @@ object Binding {
         for {
           (listener, _) <- patchedPublisher
         } yield {
-          listener.patched(new PatchedEvent(VarBuffer.this, cache, 0, SingleSeq(elem), 0))
+          listener.patched(new PatchedEvent(Vars.this, cache, 0, SingleSeq(elem), 0))
         }
         cache = elem +: cache
         Proxy.this
@@ -603,7 +676,7 @@ object Binding {
         for {
           (listener, _) <- patchedPublisher
         } yield {
-          listener.patched(new PatchedEvent(VarBuffer.this, cache, cache.length, SingleSeq(elem), 0))
+          listener.patched(new PatchedEvent(Vars.this, cache, cache.length, SingleSeq(elem), 0))
         }
         cache = cache :+ elem
         Proxy.this
@@ -614,7 +687,7 @@ object Binding {
         for {
           (listener, _) <- patchedPublisher
         } {
-          listener.patched(new PatchedEvent(VarBuffer.this, cache, n, seq, 0))
+          listener.patched(new PatchedEvent(Vars.this, cache, n, seq, 0))
         }
         cache.patch(n, seq, 0)
       }

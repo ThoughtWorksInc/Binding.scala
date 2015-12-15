@@ -87,9 +87,104 @@ object DataBindingTest extends TestSuite {
       assert(resultChanged == 1)
     }
 
+    'FlatMappedVarBuffer {
+      val prefix = new Var("")
+      val source = Vars(1, 2, 3)
+      val mapped = new FlatMappedSeq(source, { sourceElement: Int =>
+        new MappedSeq(Constants((0 until sourceElement): _*), { i: Int =>
+          monadic[Binding] {
+            raw"""${prefix.each}$sourceElement"""
+          }
+        })
+      })
+      val mappedEvents = new BufferListener
+      val sourceEvents = new BufferListener
+      mapped.addChangedListener(mappedEvents.listener)
+      mapped.addPatchedListener(mappedEvents.listener)
+      assert(mapped.patchedPublisher.size == 1)
+      assert(mapped.changedPublisher.size == 1)
+      assert(source.patchedPublisher.size > 0)
+      assert(source.changedPublisher.size > 0)
+      source.addChangedListener(sourceEvents.listener)
+      source.addPatchedListener(sourceEvents.listener)
+      assert(mapped.patchedPublisher.size == 1)
+      assert(mapped.changedPublisher.size == 1)
+      assert(source.patchedPublisher.size > 1)
+      assert(source.changedPublisher.size > 1)
+
+      assert(sourceEvents == ArrayBuffer.empty)
+      source.reset(2, 3, 4)
+      assert(mappedEvents.length == 1)
+      assert(sourceEvents.length == 1)
+      sourceEvents(0) match {
+        case event: ChangedEvent[_] =>
+          assert(event.oldValue == Seq(1, 2, 3))
+          assert(event.newValue == Seq(2, 3, 4))
+          assert(event.getSource == source)
+      }
+      mappedEvents(0) match {
+        case event: ChangedEvent[_] =>
+          assert(event.getSource == mapped)
+          assert(event.oldValue == Seq("1", "2", "2", "3", "3", "3"))
+          assert(event.newValue == Seq("2", "2", "3", "3", "3", "4", "4", "4", "4"))
+      }
+      source.get += 0
+      assert(sourceEvents.length == 2)
+      assert(mappedEvents.length == 1)
+      sourceEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.getSource == source)
+          assert(event.from == 3)
+          assert(event.replaced == 0)
+          assert(event.that == Seq(0))
+          assert(event.oldSeq == Seq(2, 3, 4))
+      }
+      source.get += 3
+      assert(sourceEvents.length == 3)
+      assert(mappedEvents.length == 2)
+      sourceEvents(2) match {
+        case event: PatchedEvent[_] =>
+          assert(event.getSource == source)
+          assert(event.from == 4)
+          assert(event.replaced == 0)
+          assert(event.that == Seq(3))
+          assert(event.oldSeq == Seq(2, 3, 4, 0))
+      }
+      mappedEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.getSource == mapped)
+          assert(event.from == 9)
+          assert(event.replaced == 0)
+          assert(event.that == Seq("3", "3", "3"))
+          assert(event.oldSeq == Seq("2", "2", "3", "3", "3", "4", "4", "4", "4"))
+      }
+      prefix := "p"
+      assert(sourceEvents.length == 3)
+      assert(mappedEvents.length == 14)
+      val expected = Seq("p2", "p2", "p3", "p3", "p3", "p4", "p4", "p4", "p4", "p3", "p3", "p3")
+      for (i <- 0 until 12) {
+        mappedEvents(i + 2) match {
+          case event: PatchedEvent[_] =>
+            assert(event.getSource == mapped)
+            assert(event.replaced == 1)
+            assert(event.that == Seq(expected(event.from)))
+        }
+      }
+
+      mapped.removeChangedListener(mappedEvents.listener)
+      mapped.removePatchedListener(mappedEvents.listener)
+      source.removeChangedListener(sourceEvents.listener)
+      source.removePatchedListener(sourceEvents.listener)
+
+      assert(mapped.patchedPublisher.isEmpty)
+      assert(mapped.changedPublisher.isEmpty)
+      assert(source.patchedPublisher.isEmpty)
+      assert(source.changedPublisher.isEmpty)
+    }
+
     'MappedVarBuffer {
       val prefix = new Var("")
-      val source = new VarBuffer(1, 2, 3)
+      val source = Vars(1, 2, 3)
       val mapped = new MappedSeq(source, { a: Int =>
         monadic[Binding] {
           raw"""${prefix.each}${a}"""
@@ -167,7 +262,6 @@ object DataBindingTest extends TestSuite {
       }
       prefix := "p"
       assert(sourceEvents.length == 3)
-      println(mappedEvents)
       assert(mappedEvents.length == 8)
       val expected = Seq("p300", "p2", "p3", "p4", "p20")
       for (i <- 0 until 5) {
