@@ -12,4 +12,7 @@ libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 scalacOptions += "-feature"
 
+// Enable SAM type
+scalacOptions += "-Xexperimental"
+
 scalacOptions in doc in Compile += "-groups"
