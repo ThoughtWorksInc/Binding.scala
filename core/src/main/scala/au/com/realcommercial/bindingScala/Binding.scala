@@ -291,7 +291,7 @@ object Binding {
 
       override private[bindingScala] def get: Seq[B] = new ValueProxy(cache)
 
-      private val changedPublisher = new Publisher[ChangedListener[Seq[B]]]
+      private[bindingScala] val changedPublisher = new Publisher[ChangedListener[Seq[B]]]
 
       private val resetListener = new ChangedListener[Seq[A]] {
         override def changed(event: ChangedEvent[Seq[A]]): Unit = {
@@ -311,7 +311,7 @@ object Binding {
         }
       }
 
-      private val patchedPublisher = new Publisher[PatchedListener[B]]
+      private[bindingScala] val patchedPublisher = new Publisher[PatchedListener[B]]
 
       private val partialListener = new PatchedListener[A] with ChangedListener[B] {
         override def patched(event: PatchedEvent[A]): Unit = {
@@ -535,9 +535,9 @@ object Binding {
     */
   final class VarBuffer[A](initialValues: A*) extends BindingSeq[A] {
 
-    private val patchedPublisher = new Publisher[PatchedListener[A]]
+    private[bindingScala] val patchedPublisher = new Publisher[PatchedListener[A]]
 
-    private val changedPublisher = new Publisher[ChangedListener[Seq[A]]]
+    private[bindingScala] val changedPublisher = new Publisher[ChangedListener[Seq[A]]]
 
     private var cache = Vector(initialValues: _*)
 

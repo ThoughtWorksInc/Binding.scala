@@ -3,12 +3,26 @@ package au.com.realcommercial.bindingScala
 import au.com.realcommercial.bindingScala.Binding.Runtime._
 import au.com.realcommercial.bindingScala.Binding._
 import com.thoughtworks.each.Monadic._
+import scala.collection.GenSeq
 import scala.collection.mutable.{ArrayBuffer, Buffer}
 import utest._
 
 import scalaz._
 
 object DataBindingTest extends TestSuite {
+
+  final class BufferListener extends ArrayBuffer[Any] {
+    val listener = new ChangedListener[Seq[Any]] with PatchedListener[Any] {
+      override private[bindingScala] def changed(event: ChangedEvent[Seq[Any]]): Unit = {
+        BufferListener.this += event
+      }
+
+      override private[bindingScala] def patched(event: PatchedEvent[Any]): Unit = {
+        BufferListener.this += event
+      }
+    }
+  }
+
   def tests = TestSuite {
 
     'DataBindingShouldBeSupportedByScalaz {
@@ -73,24 +87,6 @@ object DataBindingTest extends TestSuite {
       assert(resultChanged == 1)
     }
 
-    'VarBuffer {
-
-      val source = new VarBuffer(1, 2, 3)
-      val events = ArrayBuffer.empty[ChangedEvent[Seq[Int]]]
-      source.addChangedListener(new ChangedListener[Seq[Int]] {
-        override def changed(event: ChangedEvent[Seq[Int]]): Unit = {
-          events += event
-        }
-      })
-      assert(events == ArrayBuffer.empty)
-      source.reset(2, 3, 4)
-      assert(events.length == 1)
-      assert(events(0).getSource == source)
-      assert(events(0).oldValue == Seq(1, 2, 3))
-      assert(events(0).newValue == Seq(2, 3, 4))
-
-    }
-
     'MappedVarBuffer {
       val prefix = new Var("")
       val source = new VarBuffer(1, 2, 3)
@@ -99,12 +95,21 @@ object DataBindingTest extends TestSuite {
           raw"""${prefix.each}${a}"""
         }
       })
-      val mappedEvents = ArrayBuffer.empty[Any]
-      val sourceEvents = ArrayBuffer.empty[Any]
-      mapped.addChangedListener(mappedEvents += _)
-      mapped.addPatchedListener(mappedEvents += _)
-      source.addChangedListener(sourceEvents += _)
-      source.addPatchedListener(sourceEvents += _)
+      val mappedEvents = new BufferListener
+      val sourceEvents = new BufferListener
+      mapped.addChangedListener(mappedEvents.listener)
+      mapped.addPatchedListener(mappedEvents.listener)
+      assert(mapped.patchedPublisher.size == 1)
+      assert(mapped.changedPublisher.size == 1)
+      assert(source.patchedPublisher.size > 0)
+      assert(source.changedPublisher.size > 0)
+      source.addChangedListener(sourceEvents.listener)
+      source.addPatchedListener(sourceEvents.listener)
+      assert(mapped.patchedPublisher.size == 1)
+      assert(mapped.changedPublisher.size == 1)
+      assert(source.patchedPublisher.size > 1)
+      assert(source.changedPublisher.size > 1)
+
       assert(sourceEvents == ArrayBuffer.empty)
       source.reset(2, 3, 4)
       assert(mappedEvents.length == 1)
@@ -173,6 +178,16 @@ object DataBindingTest extends TestSuite {
             assert(event.that == Seq(expected(event.from)))
         }
       }
+
+      mapped.removeChangedListener(mappedEvents.listener)
+      mapped.removePatchedListener(mappedEvents.listener)
+      source.removeChangedListener(sourceEvents.listener)
+      source.removePatchedListener(sourceEvents.listener)
+
+      assert(mapped.patchedPublisher.isEmpty)
+      assert(mapped.changedPublisher.isEmpty)
+      assert(source.patchedPublisher.isEmpty)
+      assert(source.changedPublisher.isEmpty)
     }
 
   }
