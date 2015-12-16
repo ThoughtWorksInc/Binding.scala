@@ -16,3 +16,5 @@ scalacOptions += "-feature"
 scalacOptions += "-Xexperimental"
 
 scalacOptions in doc in Compile += "-groups"
+
+scalacOptions in doc in Compile += "-implicits"

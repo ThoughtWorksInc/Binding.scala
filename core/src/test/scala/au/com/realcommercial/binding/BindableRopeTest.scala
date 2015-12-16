@@ -1,6 +1,6 @@
 //package au.com.realcommercial.bindingScala
 //
-//import au.com.realcommercial.bindingScala.BindableRope._
+//import au.com.realcommercial.binding.BindableRope._
 //import utest._
 //
 //import scala.collection.mutable.ArrayBuffer
