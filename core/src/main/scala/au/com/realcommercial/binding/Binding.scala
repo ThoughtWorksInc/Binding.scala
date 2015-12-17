@@ -18,8 +18,6 @@ import scala.language.experimental.macros
   * @groupdesc internal Implementation details for internal usage only
   * @groupname expressions Binding Expressions
   * @groupdesc expressions AST nodes of binding expressions
-  * @groupname sites Sites
-  * @groupdesc sites Placeholders that render the final results of binding expressions
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 object Binding {
@@ -98,6 +96,13 @@ object Binding {
     override private[binding] def addChangedListener(listener: ChangedListener[A]): Unit = {
       // Do nothing because this Constant never changes
     }
+  }
+
+  /**
+    * @group expressions
+    */
+  object Var {
+    def apply[A](initialValue: A) = new Var(initialValue)
   }
 
   /**
@@ -206,36 +211,35 @@ object Binding {
 
     def map(c: scala.reflect.macros.blackbox.Context)(f: c.Tree): c.Tree = {
       import c.universe._
-      val Apply(TypeApply(Select(self, TermName("map")), List(b)), List(Function(vparams, body))) = c.macroApplication
+      val apply@Apply(TypeApply(Select(self, TermName("map")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.each.Monadic.monadic[
           _root_.au.com.realcommercial.binding.Binding
         ].apply[$b]($body)"""
-      val monadicFunction = Function(vparams, monadicBody)
-      q"""$self.mapBinding[$b]($monadicFunction)"""
-
+      val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
+      atPos(apply.pos)( q"""$self.mapBinding[$b]($monadicFunction)""")
     }
 
     def flatMap(c: scala.reflect.macros.blackbox.Context)(f: c.Tree): c.Tree = {
       import c.universe._
-      val Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(Function(vparams, body))) = c.macroApplication
+      val apply@Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.each.Monadic.monadic[
           _root_.au.com.realcommercial.binding.Binding
         ].apply[_root_.au.com.realcommercial.binding.Binding.BindingSeq[$b]]($body)"""
-      val monadicFunction = Function(vparams, monadicBody)
-      q"""$self.flatMapBinding[$b]($monadicFunction)"""
+      val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
+      atPos(apply.pos)( q"""$self.flatMapBinding[$b]($monadicFunction)""")
     }
 
     def withFilter(c: scala.reflect.macros.blackbox.Context)(condition: c.Tree): c.Tree = {
       import c.universe._
-      val Apply(Select(self, TermName("withFilter")), List(Function(vparams, body))) = c.macroApplication
+      val apply@Apply(Select(self, TermName("withFilter")), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.each.Monadic.monadic[
           _root_.au.com.realcommercial.binding.Binding
         ].apply[_root_.scala.Boolean]($body)"""
-      val monadicFunction = Function(vparams, monadicBody)
-      q"""$self.withFilterBinding($monadicFunction)"""
+      val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
+      atPos(apply.pos)( q"""$self.withFilterBinding($monadicFunction)""")
     }
 
   }
@@ -269,27 +273,6 @@ object Binding {
 
     override private[binding] def addChangedListener(listener: ChangedListener[Seq[Nothing]]): Unit = {}
   }
-
-
-  /*
-  final class ProxySeq[A](underlying: Binding[immutable.Seq[A]]) extends BindingSeq[A] {
-
-    private object forwarder extends Publisher[PatchedListener[this.type]] {
-
-    }
-
-    override private[binding] def removePatchedListener(listener: PatchedListener[ProxySeq.this.type]): Unit = ???
-
-    override private[binding] def addPatchedListener(listener: PatchedListener[ProxySeq.this.type]): Unit = ???
-
-    override def getValue: A = ???
-
-    override def subscribe(listener: ValueSubscriber[,ProxySeq.this.type]): Unit = ???
-
-    override def unsubscribe(listener: ValueSubscriber[,ProxySeq.this.type]): Unit = ???
-  }
-*/
-
 
   private final class ValueProxy[B](underlying: Seq[Binding[B]]) extends Seq[B] {
     override def length: Int = {
@@ -778,15 +761,55 @@ object Binding {
   }
 
   /**
-    * @group sites
+    * @group expressions
     */
-  trait MultiSite[Element] {
+  sealed trait MountPoint extends Binding[Unit] {
+
+    private var referenceCount = 0
+
+    private[binding] def mount(): Unit
+
+    private[binding] def unmount(): Unit
+
+    override private[binding] def addChangedListener(listener: ChangedListener[Unit]): Unit = {
+      if (referenceCount == 0) {
+        mount()
+      }
+      referenceCount += 1
+    }
+
+    override private[binding] def removeChangedListener(listener: ChangedListener[Unit]): Unit = {
+      referenceCount -= 1
+      if (referenceCount == 0) {
+        unmount()
+      }
+    }
+
+    override private[binding] def get: Unit = ()
+
+  }
+
+  /**
+    * @group expressions
+    */
+  abstract class MultiMountPoint[Element](upstream: BindingSeq[Element]) extends MountPoint {
+
+    private[binding] final def mount(): Unit = {
+      set(upstream.get)
+      upstream.addChangedListener(upstreamListener)
+      upstream.addPatchedListener(upstreamListener)
+    }
+
+    private[binding] final def unmount(): Unit = {
+      upstream.removeChangedListener(upstreamListener)
+      upstream.removePatchedListener(upstreamListener)
+    }
 
     protected def set(newValue: Seq[Element]): Unit
 
     protected def splice(oldSeq: Seq[Element], from: Int, that: GenSeq[Element], replaced: Int): Unit
 
-    private val listener = new ChangedListener[Seq[Element]] with PatchedListener[Element] {
+    private val upstreamListener = new ChangedListener[Seq[Element]] with PatchedListener[Element] {
 
       override private[binding] def changed(event: ChangedEvent[Seq[Element]]): Unit = {
         set(event.newValue)
@@ -795,50 +818,35 @@ object Binding {
       override private[binding] def patched(event: PatchedEvent[Element]): Unit = {
         splice(event.oldSeq, event.from, event.that, event.replaced)
       }
+
     }
 
-    private var binding: BindingSeq[Element] = {
-      val binding = Empty
-      binding.addChangedListener(listener)
-      binding.addPatchedListener(listener)
-      binding
-    }
-
-    final def <<(newBinding: BindingSeq[Element]) = {
-      newBinding.addChangedListener(listener)
-      newBinding.addPatchedListener(listener)
-      binding.removeChangedListener(listener)
-      binding.removePatchedListener(listener)
-      binding = newBinding
-    }
   }
 
   /**
-    * @group sites
+    * @group expressions
     */
-  trait SingleSite[Value] {
+  abstract class SingleMountPoint[Value](upstream: Binding[Value]) extends MountPoint {
 
     protected def set(value: Value): Unit
 
-    protected def initialValue: Value
+    private var referenceCount = 0
 
-    private val listener = new ChangedListener[Value] {
+    private[binding] final def mount(): Unit = {
+      set(upstream.get)
+      upstream.addChangedListener(upstreamListener)
+    }
+
+    private[binding] final def unmount(): Unit = {
+      upstream.removeChangedListener(upstreamListener)
+    }
+
+    private val upstreamListener = new ChangedListener[Value] {
       override private[binding] def changed(event: ChangedEvent[Value]): Unit = {
         set(event.newValue)
       }
     }
 
-    private var binding: Binding[Value] = {
-      val binding = Constant(initialValue)
-      binding.addChangedListener(listener)
-      binding
-    }
-
-    final def <<(newBinding: Binding[Value]) = {
-      newBinding.addChangedListener(listener)
-      binding.removeChangedListener(listener)
-      binding = newBinding
-    }
   }
 
   /**
@@ -846,6 +854,10 @@ object Binding {
     */
   @inline
   implicit def eachOps[A](binding: Binding[A]): EachOps[Binding, A] = new EachOps[Binding, A](binding)
+
+  private[binding] object DummyListener extends ChangedListener[Any] {
+    override private[binding] def changed(event: ChangedEvent[Any]): Unit = {}
+  }
 
 }
 
@@ -859,6 +871,14 @@ sealed trait Binding[+A] {
   private[binding] def removeChangedListener(listener: Binding.ChangedListener[A]): Unit
 
   private[binding] def addChangedListener(listener: Binding.ChangedListener[A]): Unit
+
+  final def watch(): Unit = {
+    addChangedListener(Binding.DummyListener)
+  }
+
+  final def unwatch(): Unit = {
+    removeChangedListener(Binding.DummyListener)
+  }
 
 }
 

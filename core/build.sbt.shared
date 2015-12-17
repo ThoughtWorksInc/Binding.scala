@@ -18,3 +18,5 @@ scalacOptions += "-Xexperimental"
 scalacOptions in doc in Compile += "-groups"
 
 scalacOptions in doc in Compile += "-implicits"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
