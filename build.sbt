@@ -14,7 +14,7 @@ releaseCrossBuild := false
 
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
-publishTo := Some(if (isSnapshot.value) {
+publishTo in ThisBuild := Some(if (isSnapshot.value) {
   "snapshots" at "http://nexus.delivery.realestate.com.au/nexus/content/repositories/snapshots"
 } else {
   "releases" at "http://nexus.delivery.realestate.com.au/nexus/content/repositories/releases"
