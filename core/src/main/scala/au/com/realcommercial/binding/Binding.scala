@@ -77,11 +77,14 @@ object Binding {
     * An data binding expression that never changes.
     * @group expressions
     */
-  final case class Constant[+A](override val get: A) extends Binding[A] {
+  final case class Constant[+A](override val get: A) extends AnyVal with Binding[A] {
+
+    @inline
     override private[binding] def removeChangedListener(listener: ChangedListener[A]): Unit = {
       // Do nothing because this Constant never changes
     }
 
+    @inline
     override private[binding] def addChangedListener(listener: ChangedListener[A]): Unit = {
       // Do nothing because this Constant never changes
     }
@@ -552,7 +555,7 @@ object Binding {
     *
     * @group expressions
     */
-  sealed trait BindingSeq[+A] extends Binding[Seq[A]] {
+  sealed trait BindingSeq[+A] extends Any with Binding[Seq[A]] {
 
     private[binding] def removePatchedListener(listener: PatchedListener[A]): Unit
 
@@ -687,14 +690,18 @@ object Binding {
     * An data binding expression of sequence that never changes.
     * @group expressions
     */
-  final case class Constants[+A](override val get: A*) extends BindingSeq[A] {
+  final case class Constants[+A](override val get: A*) extends AnyVal with BindingSeq[A] {
 
+    @inline
     override private[binding] def removePatchedListener(listener: PatchedListener[A]): Unit = {}
 
+    @inline
     override private[binding] def addPatchedListener(listener: PatchedListener[A]): Unit = {}
 
+    @inline
     override private[binding] def removeChangedListener(listener: ChangedListener[Seq[A]]): Unit = {}
 
+    @inline
     override private[binding] def addChangedListener(listener: ChangedListener[Seq[A]]): Unit = {}
 
   }
@@ -704,8 +711,10 @@ object Binding {
     */
   object Vars {
 
+    @inline
     def apply[A](initialValues: A*) = new Vars(Vector(initialValues: _*))
 
+    @inline
     def empty[A] = new Vars(Vector.empty[A])
 
   }
@@ -946,7 +955,7 @@ object Binding {
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-sealed trait Binding[+A] {
+sealed trait Binding[+A] extends Any {
 
   private[binding] def get: A
 
