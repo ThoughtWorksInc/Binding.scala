@@ -20,3 +20,12 @@ libraryDependencies += "au.com.realcommercial.binding" %%% "core" % "1.0.1"
 libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.1"
 ```
 
+### Step2: create `Var` and `Vars` as source of data-binding expression
+
+``` scala
+object Sample {
+  case class Contact(name: Var[String], email: Var[String])
+  def data = Vars.empty[Contact]
+}
+```
+
