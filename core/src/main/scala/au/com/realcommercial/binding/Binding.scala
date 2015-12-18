@@ -145,7 +145,7 @@ object Binding {
         cache.removeChangedListener(FlatMap.this)
         val newCache = f(event.newValue)
         newCache.addChangedListener(FlatMap.this)
-        if (event.oldValue != newCache.get) {
+        if (cache.get != newCache.get) {
           for ((listener, _) <- publisher) {
             listener.changed(new ChangedEvent(FlatMap.this, cache.get, newCache.get))
           }
