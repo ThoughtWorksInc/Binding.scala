@@ -9,14 +9,14 @@
 For Scala JVM project::
 
 ``` scala
-libraryDependencies += "au.com.realcommercial.binding" %% "core"
+libraryDependencies += "au.com.realcommercial.binding" %% "core" % "1.0.1"
 ```
 
 For Scala.js projects:
 
 ``` scala
-libraryDependencies += "au.com.realcommercial.binding" %%% "core"
+libraryDependencies += "au.com.realcommercial.binding" %%% "core" % "1.0.1"
 
-libraryDependencies += "au.com.realcommercial.binding" %%% "dom"
+libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.1"
 ```
 
