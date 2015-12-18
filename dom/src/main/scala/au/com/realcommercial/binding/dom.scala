@@ -112,6 +112,7 @@ object dom {
   /**
     * Render a binding node into `parent`
     */
+  @inline
   def render(parent: Node, child: Binding[Node]): Unit = {
     new NodeSeqMountPoint(parent, child).watch()
   }
@@ -119,6 +120,7 @@ object dom {
   /**
     * Render a binding sequence of node into `parent`
     */
+  @inline
   def render(parent: Node, children: BindingSeq[Node]): Unit = {
     new NodeSeqMountPoint(parent, children).watch()
   }
@@ -126,6 +128,7 @@ object dom {
   /**
     * Render a binding sequence of node into `parent`
     */
+  @inline
   def render(parent: Node, children: Binding[BindingSeq[Node]], dummy: Unit = ()): Unit = {
     new NodeSeqMountPoint(parent, children).watch()
   }

@@ -685,7 +685,6 @@ object Binding {
 
   }
 
-
   /**
     * An data binding expression of sequence that never changes.
     * @group expressions
@@ -735,6 +734,7 @@ object Binding {
       * Whenever you change the returned buffer,
       * other binding expressions that depend on this [[Vars]] will be automatically changed.
       */
+    @inline
     override def get: Buffer[A] = new Proxy
 
     /**
@@ -940,6 +940,7 @@ object Binding {
   implicit def eachOps[A](binding: Binding[A]): EachOps[Binding, A] = new EachOps[Binding, A](binding)
 
   private[binding] object DummyListener extends ChangedListener[Any] {
+    @inline
     override private[binding] def changed(event: ChangedEvent[Any]): Unit = {}
   }
 
@@ -972,6 +973,7 @@ sealed trait Binding[+A] extends Any {
     *
     * @note This method is recursive, which means that the dependencies of this [[Binding]] will be watched as well.
     */
+  @inline
   final def watch(): Unit = {
     addChangedListener(Binding.DummyListener)
   }
@@ -981,6 +983,7 @@ sealed trait Binding[+A] extends Any {
     *
     * @note This method is recursive, which means that the dependencies of this [[Binding]] will be unwatched as well.
     */
+  @inline
   final def unwatch(): Unit = {
     removeChangedListener(Binding.DummyListener)
   }
