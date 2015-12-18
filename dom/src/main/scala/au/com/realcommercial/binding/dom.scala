@@ -158,7 +158,7 @@ object dom {
                     pushChild <- pushChildrenTree
                   } yield {
                     val q"$$buf.$$amp$$plus($child)" = pushChild
-                    atPos(pushChild.pos) {
+                    atPos(child.pos) {
                       q"""
                             _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.binding.Binding] {
                               _root_.au.com.realcommercial.binding.dom.Runtime.domBindingSeq(${transform(child)})
@@ -202,12 +202,12 @@ object dom {
                     case Seq() =>
                       Nil
                     case Seq(q"""$nodeBuffer: _*""") =>
-                      List(
+                      List(atPos(nodeBuffer.pos) {
                         q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
                           ${transform(nodeBuffer)}
                         ).each"""
-                      )
+                      })
                   }
                 }
                     $elementName
@@ -226,12 +226,12 @@ object dom {
                     case Seq() =>
                       Nil
                     case Seq(q"""$nodeBuffer: _*""") =>
-                      List(
+                      List(atPos(nodeBuffer.pos) {
                         q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
                           ${transform(nodeBuffer)}
                         ).each"""
-                      )
+                      })
                   }
                 }
                     $elementName
