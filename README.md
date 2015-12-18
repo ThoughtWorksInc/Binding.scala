@@ -20,7 +20,7 @@ libraryDependencies += "au.com.realcommercial.binding" %%% "core" % "1.0.1"
 libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.1"
 ```
 
-### Step2: create `Var` and `Vars` as source of data-binding expression
+### Step 2: create `Var` and `Vars` as source of data-binding expression
 
 ``` scala
 object Sample {
@@ -29,3 +29,4 @@ object Sample {
 }
 ```
 
+### Step 3: create `@dom` methods that contains data-binding expressions
