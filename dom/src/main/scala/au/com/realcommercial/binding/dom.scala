@@ -184,7 +184,7 @@ object dom {
                 atPos(attribute.pos) {
                   q"""
                     new _root_.au.com.realcommercial.binding.dom.Runtime.AttributeMountPoint(
-                      _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.binding.Binding]($value)
+                      _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.binding.Binding](${transform(value)})
                     )( value => $elementName.$keyName = value ).each
                   """
                 }
@@ -238,24 +238,10 @@ object dom {
             case q"""new _root_.scala.xml.Text($text)""" =>
               val textName = TermName(c.freshName("text"))
               atPos(tree.pos) {
-                q"""
-                  {
-                    val $textName = _root_.org.scalajs.dom.document.createTextNode("")
-                    new _root_.au.com.realcommercial.binding.dom.Runtime.TextMountPoint(
-                      $textName,
-                      _root_.com.thoughtworks.each.Monadic.monadic[
-                        _root_.au.com.realcommercial.binding.Binding
-                      ].apply[_root_.scala.Predef.String] {
-                        $text
-                      }
-                    ).each
-                    $textName
-                  }
-                """
+                transform(text)
               }
             case _ =>
               super.transform(tree)
-
           }
         }
       }

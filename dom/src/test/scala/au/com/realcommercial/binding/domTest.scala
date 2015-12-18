@@ -130,11 +130,11 @@ object domTest extends TestSuite {
 
     'NodeSeq {
       @dom def nodeSeq = {
-        <hr/><br/>
+        <hr/><table id="myId"> </table><br/>
       }
       val div = document.createElement("div")
       dom.render(div, nodeSeq)
-      assert(div.outerHTML == "<div><hr/><br/></div>")
+      assert(div.outerHTML == """<div><hr/><table id="myId"> </table><br/></div>""")
     }
 
   }
