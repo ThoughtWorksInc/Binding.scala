@@ -149,9 +149,7 @@ object dom {
             }""" =>
               atPos(tree.pos) {
                 q"""
-                  _root_.scala.Array[_root_.au.com.realcommercial.binding.Binding[
-                    _root_.au.com.realcommercial.binding.Binding.BindingSeq[org.scalajs.dom.Node]]
-                  ](
+                  _root_.au.com.realcommercial.binding.Binding.Constants(
                     ..${
                   for {
                     pushChild <- pushChildrenTree
@@ -166,11 +164,7 @@ object dom {
                     }
                   }
                 }
-                  ): _root_.scala.collection.Seq[
-                    _root_.au.com.realcommercial.binding.Binding[
-                      _root_.au.com.realcommercial.binding.Binding.BindingSeq[org.scalajs.dom.Node]
-                    ]
-                  ]
+                  ).flatMapBinding(_root_.scala.Predef.locally)
                 """
               }
             case q"""
@@ -201,14 +195,16 @@ object dom {
                     val $elementName = _root_.au.com.realcommercial.binding.dom.Runtime.TagsAndTags2.$labelName().render
                     ..$attributeMountPoints
                     ..${
-                  if (child.isEmpty) {
-                    Nil
-                  } else {
-                    List(
-                      q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
+                  child match {
+                    case Seq() =>
+                      Nil
+                    case Seq(q"""$nodeBuffer: _*""") =>
+                      List(
+                        q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
-                          _root_.au.com.realcommercial.binding.Binding.Constants(..${child.map(transform(_))}).flatMapBinding(_root_.scala.Predef.locally)
-                        ).each""")
+                          ${transform(nodeBuffer)}
+                        ).each"""
+                      )
                   }
                 }
                     $elementName
@@ -223,14 +219,16 @@ object dom {
                   {
                     val $elementName = _root_.au.com.realcommercial.binding.dom.Runtime.TagsAndTags2.$labelName().render
                     ..${
-                  if (child.isEmpty) {
-                    Nil
-                  } else {
-                    List(
-                      q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
+                  child match {
+                    case Seq() =>
+                      Nil
+                    case Seq(q"""$nodeBuffer: _*""") =>
+                      List(
+                        q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
-                          _root_.au.com.realcommercial.binding.Binding.Constants(..${child.map(transform(_))}).flatMapBinding(_root_.scala.Predef.locally)
-                        ).each""")
+                          ${transform(nodeBuffer)}
+                        ).each"""
+                      )
                   }
                 }
                     $elementName
@@ -262,11 +260,12 @@ object dom {
         }
       }
 
-      def transform(tree: Tree): Tree = {
-        val output = transformer.transform(tree)
-        // c.info(c.enclosingPosition, show(output), true)
-        c.untypecheck(output)
-      }
+      import transformer.transform
+//      def transform(tree: Tree): Tree = {
+//        val output = transformer.transform(tree)
+//        c.info(c.enclosingPosition, show(output), true)
+//        output
+//      }
 
       annottees match {
         case Seq(annottee@DefDef(mods, name, tparams, vparamss, tpt, rhs)) =>

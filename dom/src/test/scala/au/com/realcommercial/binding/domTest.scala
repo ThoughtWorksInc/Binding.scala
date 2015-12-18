@@ -1,7 +1,9 @@
 package au.com.realcommercial.binding
 
-import au.com.realcommercial.binding.Binding.{Vars, Var, Constant}
+import au.com.realcommercial.binding.Binding.{BindingSeq, Vars, Var, Constant}
+import org.scalajs.dom.document
 import org.scalajs.dom.html.{Div, BR}
+import org.scalajs.dom.raw.{Node, Event}
 import utest._
 
 /**
@@ -121,10 +123,18 @@ object domTest extends TestSuite {
         <table><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{tbodyBinding.each}</table>
       }
       tableBinding.watch()
-      println(tableBinding.get.outerHTML)
       assert(tableBinding.get.outerHTML == """<table><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
       filterPattern := "o"
       assert(tableBinding.get.outerHTML == """<table><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr></tbody></table>""")
+    }
+
+    'NodeSeq {
+      @dom def nodeSeq = {
+        <hr/><br/>
+      }
+      val div = document.createElement("div")
+      dom.render(div, nodeSeq)
+      assert(div.outerHTML == "<div><hr/><br/></div>")
     }
 
   }
