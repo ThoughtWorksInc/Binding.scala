@@ -12,7 +12,8 @@ releaseUseGlobalVersion := true
 
 releaseCrossBuild := false
 
-releasePublishArtifactsAction := PgpKeys.publishSigned.value
+// Do not publish signed artifacts as REA's Nexus refuses .asc files
+//releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
 publishTo in ThisBuild := Some(if (isSnapshot.value) {
   "snapshots" at "http://nexus.delivery.realestate.com.au/nexus/content/repositories/snapshots"
