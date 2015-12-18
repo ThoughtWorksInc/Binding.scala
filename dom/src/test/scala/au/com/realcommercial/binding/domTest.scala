@@ -80,6 +80,53 @@ object domTest extends TestSuite {
       assert(hr.get.outerHTML == """<hr id="newId"/>""")
     }
 
+    'ForYieldIf {
+
+      final case class User(firstName: Var[String], lastName: Var[String], age: Var[Int])
+
+      val filterPattern = Var("")
+
+      val users = Vars(
+        User(Var("Steve"), Var("Jobs"), Var(10)),
+        User(Var("Tim"), Var("Cook"), Var(12)),
+        User(Var("Jeff"), Var("Lauren"), Var(13))
+      )
+
+      @dom
+      def shouldShow(user: User): Binding[Boolean] = {
+        val pattern = filterPattern.each
+        if (pattern == "") {
+          true
+        } else if (user.firstName.each.toLowerCase.contains(pattern)) {
+          true
+        } else if (user.lastName.each.toLowerCase.contains(pattern)) {
+          true
+        } else {
+          false
+        }
+      }
+
+      @dom
+      def tbodyBinding = {
+        <tbody>{
+          for {
+            user <- users
+            if shouldShow(user).each
+          } yield <tr><td>{user.firstName.each}</td><td>{user.lastName.each}</td><td>{user.age.each.toString}</td></tr>
+        }</tbody>
+      }
+
+      @dom
+      val tableBinding = {
+        <table><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{tbodyBinding.each}</table>
+      }
+      tableBinding.watch()
+      println(tableBinding.get.outerHTML)
+      assert(tableBinding.get.outerHTML == """<table><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
+      filterPattern := "o"
+      assert(tableBinding.get.outerHTML == """<table><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr></tbody></table>""")
+    }
+
   }
 
 }

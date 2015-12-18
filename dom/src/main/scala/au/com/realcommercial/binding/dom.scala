@@ -63,25 +63,20 @@ object dom {
     }
 
     override protected def splice(oldSeq: Seq[Node], from: Int, that: GenSeq[Node], replaced: Int): Unit = {
-      val originalChildNodes = parent.childNodes
-      if (originalChildNodes.length > from) {
-        val refChild = originalChildNodes.item(from)
+      val i = oldSeq.iterator.drop(from)
+      for (_ <- 0 until replaced) {
+        if (i.hasNext) {
+          parent.removeChild(i.next())
+        } else {
+          throw new IllegalArgumentException
+        }
+      }
+      if (i.hasNext) {
+        val refChild = i.next()
         for (newChild <- that) {
           parent.insertBefore(newChild, refChild)
         }
-        @tailrec
-        def removeChild(child: Node, n: Int): Unit = {
-          if (n != 0) {
-            val nextSibling = child.nextSibling
-            parent.removeChild(child)
-            removeChild(nextSibling, n - 1)
-          }
-        }
-        removeChild(refChild, replaced)
       } else {
-        if (replaced != 0) {
-          throw new IllegalArgumentException()
-        }
         for (newChild <- that) {
           parent.appendChild(newChild)
         }
