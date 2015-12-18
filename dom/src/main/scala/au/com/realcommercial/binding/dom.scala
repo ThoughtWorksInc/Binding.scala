@@ -1,7 +1,8 @@
 package au.com.realcommercial.binding
 
 import au.com.realcommercial.binding.Binding.{SingleMountPoint, Constants, BindingSeq, MultiMountPoint}
-import org.scalajs.dom.{Text, Node}
+import au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint
+import org.scalajs.dom.raw.{Text, Node}
 
 import scala.annotation.{tailrec, StaticAnnotation, compileTimeOnly}
 import scala.collection.GenSeq
@@ -21,79 +22,113 @@ class dom extends StaticAnnotation {
 }
 
 /**
-  * Internal helpers for `@dom` annotation
+  * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 object dom {
 
-  final class AttributeMountPoint[Value](valueBinding: Binding[Value])(setter: Value => Unit)
-    extends SingleMountPoint[Value](valueBinding) {
-    override protected def set(value: Value): Unit = {
-      setter(value)
-    }
-  }
+  /**
+    * Internal helpers for `@dom` annotation
+    *
+    * @note Do not use methods and classes in this object.
+    */
+  object Runtime {
 
-  final class TextMountPoint(parent: Text, childBinding: Binding[String])
-    extends SingleMountPoint[String](childBinding) {
-    override protected def set(value: String): Unit = {
-      parent.textContent = value
-    }
-  }
-
-  final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
-    extends MultiMountPoint[Node](childrenBinding) {
-
-    def this(parent: Node, childBinding: Binding[Node]) = {
-      this(parent, Constants(()).mapBinding { _ => childBinding })
+    final class AttributeMountPoint[-Value](valueBinding: Binding[Value])(setter: Value => Unit)
+      extends SingleMountPoint[Value](valueBinding) {
+      override protected def set(value: Value): Unit = {
+        setter(value)
+      }
     }
 
-    @tailrec
-    private def removeAll(): Unit = {
-      val firstChild = parent.firstChild
-      if (firstChild != null) {
-        parent.removeChild(firstChild)
+    final class TextMountPoint(parent: Text, childBinding: Binding[String])
+      extends SingleMountPoint[String](childBinding) {
+      override protected def set(value: String): Unit = {
+        parent.textContent = value
+      }
+    }
+
+    final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
+      extends MultiMountPoint[Node](childrenBinding) {
+
+      def this(parent: Node, childBinding: Binding[BindingSeq[Node]], dummy: Unit = ()) = {
+        this(parent, Constants(()).flatMapBinding { _ => childBinding })
+      }
+
+      def this(parent: Node, childBinding: Binding[Node]) = {
+        this(parent, Constants(()).mapBinding { _ => childBinding })
+      }
+
+      @tailrec
+      private def removeAll(): Unit = {
+        val firstChild = parent.firstChild
+        if (firstChild != null) {
+          parent.removeChild(firstChild)
+          removeAll()
+        }
+      }
+
+      override protected def set(children: Seq[Node]): Unit = {
         removeAll()
+        for (child <- children) {
+          parent.appendChild(child)
+        }
       }
-    }
 
-    override protected def set(children: Seq[Node]): Unit = {
-      removeAll()
-      for (child <- children) {
-        parent.appendChild(child)
-      }
-    }
-
-    override protected def splice(oldSeq: Seq[Node], from: Int, that: GenSeq[Node], replaced: Int): Unit = {
-      val i = oldSeq.iterator.drop(from)
-      for (_ <- 0 until replaced) {
+      override protected def splice(oldSeq: Seq[Node], from: Int, that: GenSeq[Node], replaced: Int): Unit = {
+        val i = oldSeq.iterator.drop(from)
+        for (_ <- 0 until replaced) {
+          if (i.hasNext) {
+            parent.removeChild(i.next())
+          } else {
+            throw new IllegalArgumentException
+          }
+        }
         if (i.hasNext) {
-          parent.removeChild(i.next())
+          val refChild = i.next()
+          for (newChild <- that) {
+            parent.insertBefore(newChild, refChild)
+          }
         } else {
-          throw new IllegalArgumentException
+          for (newChild <- that) {
+            parent.appendChild(newChild)
+          }
         }
       }
-      if (i.hasNext) {
-        val refChild = i.next()
-        for (newChild <- that) {
-          parent.insertBefore(newChild, refChild)
-        }
-      } else {
-        for (newChild <- that) {
-          parent.appendChild(newChild)
-        }
-      }
+
     }
+
+    object TagsAndTags2 extends JsDom.Cap with jsdom.Tags with jsdom.Tags2
+
+    def domBindingSeq(bindingSeq: BindingSeq[Node]) = bindingSeq
+
+    def domBindingSeq(seq: Seq[Node]) = Constants(seq: _*)
+
+    def domBindingSeq(node: Node) = Constants(node)
+
+    def domBindingSeq(text: String) = Constants(document.createTextNode(text))
 
   }
 
-  object TagsAndTags2 extends JsDom.Cap with jsdom.Tags with jsdom.Tags2
+  /**
+    * Render a binding node into `parent`
+    */
+  def render(parent: Node, child: Binding[Node]): Unit = {
+    new NodeSeqMountPoint(parent, child).watch()
+  }
 
-  def domBindingSeq(bindingSeq: BindingSeq[Node]) = bindingSeq
+  /**
+    * Render a binding sequence of node into `parent`
+    */
+  def render(parent: Node, children: BindingSeq[Node]): Unit = {
+    new NodeSeqMountPoint(parent, children).watch()
+  }
 
-  def domBindingSeq(seq: Seq[Node]) = Constants(seq: _*)
-
-  def domBindingSeq(node: Node) = Constants(node)
-
-  def domBindingSeq(text: String) = Constants(document.createTextNode(text))
+  /**
+    * Render a binding sequence of node into `parent`
+    */
+  def render(parent: Node, children: Binding[BindingSeq[Node]]): Unit = {
+    new NodeSeqMountPoint(parent, children).watch()
+  }
 
   private[binding] object Macros {
 
@@ -121,11 +156,11 @@ object dom {
                   for {
                     pushChild <- pushChildrenTree
                   } yield {
-                    val q"$$buf.$$amp$$plus($child)" = pushChild
+                    val q"$$buf.$$ amp$$plus($child)" = pushChild
                     atPos(pushChild.pos) {
                       q"""
                             _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.binding.Binding] {
-                              _root_.au.com.realcommercial.binding.dom.domBindingSeq(${transform(child)})
+                              _root_.au.com.realcommercial.binding.dom.Runtime.domBindingSeq(${transform(child)})
                             }
                           """
                     }
@@ -154,7 +189,7 @@ object dom {
                 val keyName = TermName(key)
                 atPos(attribute.pos) {
                   q"""
-                    new _root_.au.com.realcommercial.binding.dom.AttributeMountPoint(
+                    new _root_.au.com.realcommercial.binding.dom.Runtime.AttributeMountPoint(
                       _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.binding.Binding]($value)
                     )( value => $elementName.$keyName = value ).each
                   """
@@ -163,14 +198,14 @@ object dom {
               atPos(tree.pos) {
                 q"""
                   {
-                    val $elementName = _root_.au.com.realcommercial.binding.dom.TagsAndTags2.$labelName().render
+                    val $elementName = _root_.au.com.realcommercial.binding.dom.Runtime.TagsAndTags2.$labelName().render
                     ..$attributeMountPoints
                     ..${
                   if (child.isEmpty) {
                     Nil
                   } else {
                     List(
-                      q"""new _root_.au.com.realcommercial.binding.dom.NodeSeqMountPoint(
+                      q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
                           _root_.au.com.realcommercial.binding.Binding.Constants(..${child.map(transform(_))}).flatMapBinding(_root_.scala.Predef.locally)
                         ).each""")
@@ -186,13 +221,13 @@ object dom {
               atPos(tree.pos) {
                 q"""
                   {
-                    val $elementName = _root_.au.com.realcommercial.binding.dom.TagsAndTags2.$labelName().render
+                    val $elementName = _root_.au.com.realcommercial.binding.dom.Runtime.TagsAndTags2.$labelName().render
                     ..${
                   if (child.isEmpty) {
                     Nil
                   } else {
                     List(
-                      q"""new _root_.au.com.realcommercial.binding.dom.NodeSeqMountPoint(
+                      q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
                           _root_.au.com.realcommercial.binding.Binding.Constants(..${child.map(transform(_))}).flatMapBinding(_root_.scala.Predef.locally)
                         ).each""")
@@ -208,7 +243,7 @@ object dom {
                 q"""
                   {
                     val $textName = _root_.org.scalajs.dom.document.createTextNode("")
-                    new _root_.au.com.realcommercial.binding.dom.TextMountPoint(
+                    new _root_.au.com.realcommercial.binding.dom.Runtime.TextMountPoint(
                       $textName,
                       _root_.com.thoughtworks.each.Monadic.monadic[
                         _root_.au.com.realcommercial.binding.Binding

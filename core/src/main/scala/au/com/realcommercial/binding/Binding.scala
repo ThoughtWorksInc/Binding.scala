@@ -7,15 +7,15 @@ import com.thoughtworks.each.Monadic._
 
 import scala.annotation.tailrec
 import scala.language.implicitConversions
-import scala.collection.{GenSeq, mutable, immutable}
+import scala.collection.GenSeq
+import scala.collection.Seq
+import scala.collection.mutable.Buffer
 import scalaz.Monad
 import scala.language.experimental.macros
 
 /**
   * @groupname typeClasses Type class instance
   * @groupname implicits Implicits Conversions
-  * @groupname internal Implementation Details
-  * @groupdesc internal Implementation details for internal usage only
   * @groupname expressions Binding Expressions
   * @groupdesc expressions AST nodes of binding expressions
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -50,9 +50,6 @@ object Binding {
 
   }
 
-  /**
-    * @group Events
-    */
   private[binding] final class ChangedEvent[+Value](source: AnyRef,
                                                     val oldValue: Value,
                                                     val newValue: Value) extends EventObject(source) {
@@ -60,9 +57,6 @@ object Binding {
 
   }
 
-  /**
-    * @group Events
-    */
   private[binding] final class PatchedEvent[+Element](source: AnyRef,
                                                       val oldSeq: Seq[Element],
                                                       val from: Int,
@@ -71,21 +65,16 @@ object Binding {
     override def toString = raw"""PatchedEvent[source=$source oldSeq=$oldSeq from=$from that=$that replaced=$replaced]"""
   }
 
-  /**
-    * @group Listeners
-    */
   private[binding] trait ChangedListener[-Value] {
     private[binding] def changed(event: ChangedEvent[Value]): Unit
   }
 
-  /**
-    * @group Listeners
-    */
   private[binding] trait PatchedListener[-Element] {
     private[binding] def patched(event: PatchedEvent[Element]): Unit
   }
 
   /**
+    * An data binding expression that never changes.
     * @group expressions
     */
   final case class Constant[+A](override val get: A) extends Binding[A] {
@@ -106,6 +95,17 @@ object Binding {
   }
 
   /**
+    * Source variable of data binding expression.
+    *
+    * You can manually change the value:
+    *
+    * {{{
+    * val bindingVar = Var("initial value")
+    * bindingVar := "changed value"
+    * }}}
+    *
+    * Then, any data binding expressions that depend on this [[Var]] will be changed automatically.
+    *
     * @group expressions
     */
   final class Var[A](private var value: A) extends Binding[A] {
@@ -192,6 +192,8 @@ object Binding {
   }
 
   /**
+    * Monad instances for [[Binding]].
+    *
     * @group typeClasses
     */
   implicit object BindingInstances extends Monad[Binding] {
@@ -546,6 +548,8 @@ object Binding {
   }
 
   /**
+    * Data binding expression of a sequence
+    *
     * @group expressions
     */
   sealed trait BindingSeq[+A] extends Binding[Seq[A]] {
@@ -554,13 +558,31 @@ object Binding {
 
     private[binding] def addPatchedListener(listener: PatchedListener[A]): Unit
 
+    /**
+      * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+      * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
+      */
     def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
+    /**
+      * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+      * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
+      */
     def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
+    /**
+      * Underlying implementation of [[#map]].
+      *
+      * @note Don't use this method in user code.
+      */
     @inline
     final def mapBinding[B](f: A => Binding[B]): BindingSeq[B] = new MapBinding[A, B](this, f)
 
+    /**
+      * Underlying implementation of [[#flatMap]].
+      *
+      * @note Don't use this method in user code.
+      */
     @inline
     final def flatMapBinding[B](f: A => Binding[BindingSeq[B]]): BindingSeq[B] = {
       new FlatMappedSeq[A, B](this, { a =>
@@ -568,21 +590,48 @@ object Binding {
       })
     }
 
+    /**
+      * Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+      */
     def withFilter(condition: A => Boolean): WithFilter = macro Macros.withFilter
 
+    /**
+      * Underlying implementation of [[#withFilter]].
+      *
+      * @note Don't use this method in user code.
+      */
     @inline
     final def withFilterBinding(condition: A => Binding[Boolean]): WithFilter = {
       new WithFilter(condition)
     }
 
-    sealed class WithFilter(condition: A => Binding[Boolean]) {
+    /**
+      * A helper to build complicated comprehension expressions for [[BindingSeq]]
+      */
+    final class WithFilter(condition: A => Binding[Boolean]) {
 
+      /**
+        * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+        * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
+        */
       def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
+      /**
+        * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+        * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
+        */
       def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
+      /**
+        * Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+        */
       def withFilter(condition: A => Boolean): WithFilter = macro Macros.withFilter
 
+      /**
+        * Underlying implementation of [[#withFilter]].
+        *
+        * @note Don't use this method in user code.
+        */
       final def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
         new WithFilter({ a =>
           monadic[Binding] {
@@ -595,6 +644,11 @@ object Binding {
         })
       }
 
+      /**
+        * Underlying implementation of [[#map]].
+        *
+        * @note Don't use this method in user code.
+        */
       final def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a =>
           monadic[Binding] {
@@ -607,6 +661,11 @@ object Binding {
         }
       }
 
+      /**
+        * Underlying implementation of [[#flatMap]].
+        *
+        * @note Don't use this method in user code.
+        */
       final def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a =>
           monadic[Binding] {
@@ -625,6 +684,7 @@ object Binding {
 
 
   /**
+    * An data binding expression of sequence that never changes.
     * @group expressions
     */
   final case class Constants[+A](override val get: A*) extends BindingSeq[A] {
@@ -651,6 +711,7 @@ object Binding {
   }
 
   /**
+    * Source sequence of data binding expression.
     * @group expressions
     */
   final class Vars[A] private(private var cache: Vector[A]) extends BindingSeq[A] {
@@ -659,8 +720,18 @@ object Binding {
 
     private[binding] val changedPublisher = new Publisher[ChangedListener[Seq[A]]]
 
-    override def get: mutable.Buffer[A] = new Proxy
+    /**
+      * Returns a [[scala.collection.mutable.Buffer]] that allow you change the content of this [[Vars]].
+      *
+      * Whenever you change the returned buffer,
+      * other binding expressions that depend on this [[Vars]] will be automatically changed.
+      */
+    override def get: Buffer[A] = new Proxy
 
+    /**
+      * Reset content of this [[Vars]]
+      * @param newValues
+      */
     def reset(newValues: A*): Unit = {
       val newCache = Vector(newValues: _*)
       for ((listener, _) <- changedPublisher) {
@@ -669,7 +740,7 @@ object Binding {
       cache = newCache
     }
 
-    private[binding] final class Proxy extends mutable.Buffer[A] {
+    private[binding] final class Proxy extends Buffer[A] {
       override def apply(n: Int): A = {
         cache.apply(n)
       }
@@ -761,6 +832,7 @@ object Binding {
   }
 
   /**
+    * A mount point that places the result of a data binding expression into DOM or other system.
     * @group expressions
     */
   sealed trait MountPoint extends Binding[Unit] {
@@ -790,9 +862,10 @@ object Binding {
   }
 
   /**
+    * A mount point that places the result of a data binding expression of a sequence into DOM or other system.
     * @group expressions
     */
-  abstract class MultiMountPoint[Element](upstream: BindingSeq[Element]) extends MountPoint {
+  abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element]) extends MountPoint {
 
     private[binding] final def mount(): Unit = {
       set(upstream.get)
@@ -824,9 +897,10 @@ object Binding {
   }
 
   /**
+    * A mount point that places the result of a data binding expression of a single value into DOM or other system.
     * @group expressions
     */
-  abstract class SingleMountPoint[Value](upstream: Binding[Value]) extends MountPoint {
+  abstract class SingleMountPoint[-Value](upstream: Binding[Value]) extends MountPoint {
 
     protected def set(value: Value): Unit
 
@@ -850,6 +924,7 @@ object Binding {
   }
 
   /**
+    * A implicit view to enable `.each` magic.
     * @group implicits
     */
   @inline
@@ -862,6 +937,13 @@ object Binding {
 }
 
 /**
+  * A data binding expression that represent a value that automatically re-calculates when its dependencies change.
+  *
+  * You may compose a data binding expression via `monadic[Binding]` block,
+  * or add `@dom` annotation to methods that produces a data binding expression.
+  *
+  * @see [[com.thoughtworks.each.Monadic]]
+  *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 sealed trait Binding[+A] {
@@ -872,10 +954,24 @@ sealed trait Binding[+A] {
 
   private[binding] def addChangedListener(listener: Binding.ChangedListener[A]): Unit
 
+  /**
+    * Enable automatically re-calculation.
+    *
+    * You may invoke this method more than once.
+    * Then, when you want to disable automatically re-calculation,
+    * you must invoke [[#unwatch]] same times as the number of calls to this method.
+    *
+    * @note This method is recursive, which means that the dependencies of this [[Binding]] will be watched as well.
+    */
   final def watch(): Unit = {
     addChangedListener(Binding.DummyListener)
   }
 
+  /**
+    * Disable automatically re-calculation.
+    *
+    * @note This method is recursive, which means that the dependencies of this [[Binding]] will be unwatched as well.
+    */
   final def unwatch(): Unit = {
     removeChangedListener(Binding.DummyListener)
   }
