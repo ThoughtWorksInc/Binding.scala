@@ -156,7 +156,7 @@ object dom {
                   for {
                     pushChild <- pushChildrenTree
                   } yield {
-                    val q"$$buf.$$ amp$$plus($child)" = pushChild
+                    val q"$$buf.$$amp$$plus($child)" = pushChild
                     atPos(pushChild.pos) {
                       q"""
                             _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.binding.Binding] {
