@@ -24,9 +24,69 @@ libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.1"
 
 ``` scala
 object Sample {
+
   case class Contact(name: Var[String], email: Var[String])
   def data = Vars.empty[Contact]
+
 }
 ```
 
 ### Step 3: create `@dom` methods that contains data-binding expressions
+
+``` scala
+object Sample {
+
+  case class Contact(name: Var[String], email: Var[String])
+  def data = Vars.empty[Contact]
+
+  @dom def table = <table>
+    <thead>
+      <tr><th>Name</th>
+      <th>E-mail</th></tr>
+    </thead>
+    <tbody>
+    {
+      for (contact <- data) yield {
+        <tr>
+          <td>{contact.name.value}</td>
+          <td>{contact.email.value}</td>
+        </tr>
+      }
+    }
+    </tbody>
+  </table>
+
+}
+```
+
+### Step 4: render the data-binding expressions to DOM
+
+``` scala
+object Sample {
+
+  case class Contact(name: Var[String], email: Var[String])
+  def data = Vars.empty[Contact]
+
+  @dom def table = <table>
+    <thead>
+      <tr><th>Name</th>
+      <th>E-mail</th></tr>
+    </thead>
+    <tbody>
+    {
+      for (contact <- data) yield {
+        <tr>
+          <td>{contact.name.value}</td>
+          <td>{contact.email.value}</td>
+        </tr>
+      }
+    }
+    </tbody>
+  </table>
+
+  def main(): Unit = {
+    dom.render(document.body, table)
+  }
+
+}
+```
