@@ -126,7 +126,7 @@ object dom {
   /**
     * Render a binding sequence of node into `parent`
     */
-  def render(parent: Node, children: Binding[BindingSeq[Node]]): Unit = {
+  def render(parent: Node, children: Binding[BindingSeq[Node]], dummy: Unit = ()): Unit = {
     new NodeSeqMountPoint(parent, children).watch()
   }
 
