@@ -8,7 +8,7 @@ lazy val coreJVM = core.jvm.addSbtFiles(file("../build.sbt.shared"))
 
 scalaVersion in ThisBuild := "2.11.7"
 
-releaseUseGlobalVersion := false
+releaseUseGlobalVersion := true
 
 releaseCrossBuild := false
 
