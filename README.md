@@ -11,7 +11,7 @@ which are able to automatically change whenever the data source changes.
 
 See http://www.scala-js.org/tutorial/basic/ for information about how to setup such a project.
 
-### Step 1: Add Binding.scala dependencies in your `build.sbt`:
+### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
 libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.1"
