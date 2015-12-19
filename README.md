@@ -17,7 +17,7 @@ See http://www.scala-js.org/tutorial/basic/ for information about how to setup s
 libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.1"
 ```
 
-### Step 2: Create `Var` and `Vars` as data source for your data-binding expressions
+### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
 
 ``` scala
 case class Contact(name: Var[String], email: Var[String])
