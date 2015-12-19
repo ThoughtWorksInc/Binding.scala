@@ -80,7 +80,7 @@ def main(): Unit = {
 </html>
 ```
 
-Now you will see a table that only have a header. Because `data` is empty at the moment.
+Now you will see a table that just contains a header. Because `data` is empty at the moment.
 
 ### Step 6: Add some `<button>` to fill `data` for the table
 
