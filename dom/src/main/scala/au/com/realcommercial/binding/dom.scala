@@ -167,7 +167,7 @@ object dom {
                     }
                   }
                 }
-                  ).flatMapBinding(_root_.scala.Predef.locally)
+                  ).flatMapBinding(_root_.scala.Predef.locally _)
                 """
               }
             case q"""
