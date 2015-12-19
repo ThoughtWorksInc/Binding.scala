@@ -59,8 +59,11 @@ def table = {
 
 ``` scala
 @JsExport
-def main(): Unit = {
-  dom.render(document.body, table)
+object SampleMain {
+  @JsExport
+  def main(): Unit = {
+    dom.render(document.body, table)
+  }
 }
 ```
 
