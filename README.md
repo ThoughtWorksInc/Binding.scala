@@ -134,4 +134,4 @@ def table = {
 }
 ```
 
-See https://git.realestate.com.au/rca/Binding.scala-demo for the complete example.
+See https://git.realestate.com.au/rca/Binding.scala-sample for the complete example.
