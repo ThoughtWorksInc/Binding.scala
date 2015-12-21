@@ -63,7 +63,7 @@ We will build an Binding.scala web page during the following steps.
 
 See http://www.scala-js.org/tutorial/basic/ for information about how to setup such a project.
 
-Note that macros used by Binding.scala require a larger size of stack size for JVM that runs Scala compiler,
+Note that macros used by Binding.scala require a larger stack size for JVM that runs Scala compiler than default value,
 therefore, you should specify a `-Xss5m` JVM argument when launching sbt:
 
 ```
