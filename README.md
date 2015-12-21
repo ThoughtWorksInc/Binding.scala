@@ -80,7 +80,7 @@ Otherwise you may see an error message like this:
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
-libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.1"
+libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.3"
 ```
 
 ### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
