@@ -206,7 +206,7 @@ See https://git.realestate.com.au/yang-bo/Binding.scala-sample for the complete 
 
 ReactJS requires users provide a `render` function for each component.
 The `render` function should map `props` and `state` to a ReactJS's virtual DOM,
-and ReactJS framework creates a DOM with the same structure as the virtual DOM.
+then ReactJS framework creates a DOM with the same structure as the virtual DOM.
 
 When `state` changes, ReactJS framework invokes `render` function to get a new virtual DOM.
 Unfortunately, ReactJS framework does not precisely know what the `state` changing is.
