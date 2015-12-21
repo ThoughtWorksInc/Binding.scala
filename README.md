@@ -91,11 +91,22 @@ case class Contact(name: Var[String], email: Var[String])
 val data = Vars.empty[Contact]
 ```
 
+A `Var` represents a bindable variable,
+which also implements `Binding` trait,
+hence a `Var` can be seen as a binding expression as well.
+If another expression depends on a `Var`, the value of the expression changes whenever value of the `Var` changes.
+
+A `Vars` represents a sequence of bindable variables,
+which also implements `BindingSeq` trait,
+hence a `Vars` can be seen as a binding expression of a sequence as well.
+If another comprehension expression depends on a `Vars`,
+the value of the expression changes whenever value of the `Var` changes.
+
 ### Step 3: Create a `@dom` method that contains data-binding expressions
 
 ``` scala
 @dom
-def table = {
+def table: Binding[Table] = {
   <table border="1" cellPadding="5">
     <thead>
       <tr>
@@ -120,6 +131,25 @@ def table = {
   </table>
 }
 ```
+
+A `@dom` method represents a data-binding expression.
+
+The return type are always wrapped in a `au.com.realcommercial.binding.Binding` trait.
+For example `@dom def x: Binding[Int] = 1`,  `@dom def message: Binding[String] = "content"`
+
+A `@dom` method supports HTML literal.
+Unlike normal XML literal in a normal Scala method,
+the type of HTML literal are specific subtypes of `org.scalajs.dom.raw.Node` and `au.com.realcommercial.binding.BindingSeq[org.scalajs.dom.raw.Node]`
+instead of `scala.xml.Node` and `scala.xml.NodeSeq`.
+So we could have `@dom def node: Binding[org.scalajs.dom.raw.HTMLBRElement] = <br/>`
+and `@dom def node: Binding[BindingSeq[org.scalajs.dom.raw.HTMLBRElement]] = <br/><br/>`.
+
+A `@dom` method consists with other data-binding expressions in two approach:
+
+ 1. You could use `each` method in a `@dom` method to get value of another `Binding`.
+ 2. You could use `for` / `yield` expression in a `@dom` method to map a `BindingSeq` to another.
+
+You can nest `Node` or `BindingSeq[Node]` in other HTML element literals via `{ ... }` interpolation syntax.
 
 ### Step 4: render the data-binding expressions to DOM in the `main` method
 
@@ -152,7 +182,7 @@ Now you will see a table that just contains a header. Because `data` is empty at
 
 ``` scala
 @dom
-def table = {
+def table: Binding[BindingSeq[Element]] = {
   <div>
     <button
       onclick={ event: Event =>
@@ -196,6 +226,13 @@ def table = {
   </table>
 }
 ```
+
+When you click the "Add a contact" button, it appends a new Contact into `data`,
+then, Binding.scala knows the relationship between DOM and `data`,
+so it decides to append a new `<tr>` corresponding to the newly appended Contact.
+
+And when you click the "Modify the name", the `name` field on `contact` changes,
+then, Binding.scala decides to change the content of the corresponding `tr` to new value of `name` field.
 
 See https://git.realestate.com.au/yang-bo/Binding.scala-sample for the complete example.
 
