@@ -63,6 +63,20 @@ We will build an Binding.scala web page during the following steps.
 
 See http://www.scala-js.org/tutorial/basic/ for information about how to setup such a project.
 
+Note that macros used by Binding.scala require a larger size of stack size for JVM that runs Scala compiler,
+therefore, you should specify a `-Xss5m` JVM argument when launching sbt:
+
+```
+sbt -J-Xss5m
+```
+
+Otherwise you may see an error message like this:
+
+```
+[trace] Stack trace suppressed: run last dom/compile:compileIncremental for the full output.
+[error] (dom/compile:compileIncremental) java.lang.StackOverflowError
+```
+
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
@@ -214,13 +228,17 @@ It is a template that describes the relationship between data source and the DOM
 When partial of the data source changed, Binding.scala framework knows exactly the correspond DOM to the partial data.
 Then, Binding.scala only re-evaluates partial of the `@dom` method to update the partial of DOM.
 
+With the help of the ability of precise data-binding in Binding.scala,
+you can get rid of trivial concepts,
+like `key` attribute, `shouldComponentUpdate` method, `componentDidUpdate` method or `componentWillUpdate` method forced by ReactJS.
+
 ### Composability
 
-The smallest composable unit in ReactJS world is components.
-It is fair to say that a React component is lighter than AngularJS,
+The smallest composable unit in ReactJS is a component.
+It is fair to say that a React component is lighter than an AngularJS controller,
 while Binding.scala is better than that.
 
-The smallest composable unit in Binding.scala is `@dom` methods.
+The smallest composable unit in Binding.scala is a `@dom` method.
 Every `@dom` method is able to compose other `@dom` methods via `.each`.
 
 ``` scala
@@ -266,19 +284,43 @@ def main(): Unit = {
 
 You may find out this approach is much simpler than ReactJS, as:
 
- * Instead of passing `props` in ReactJS, you just simply provide parameters in Binding.scala.
+ * Instead of passing `props` in ReactJS, you just simply provide parameters for  Binding.scala.
  * Instead of specifying `propTypes` in ReactJS, you just simply define the types parameters in Binding.scala.
  * Instead of raising a run-time error when types of props do not match in ReactJS, you just check the types at compile-time.
 
 ### Lifecycle management for data-binding expressions
 
-TODO
+The ability of precise data-binding in Binding.scala requires listener registrations on the data source.
+Others reactive frameworks that has the ability ask users manage the lifecycle of data-binding expressions.
 
-### HTML literal
+For example, [MetaRx](https://github.com/MetaStack-pl/MetaRx/issues/45) provide a `dispose` method to unregister the listeners created when building data-binding expressions.
+The user of MetaRx have the responsibility to call `dispose` method for every `map` and `flatMap` call after the expression changes,
+otherwise MetaRx leaks memory. Unfortunately manually `dispose` everything is almost impossible for complicated binding expression.
 
-TODO
+Another reactive web framework [Widok](https://github.com/widok/widok/issues/29) did not provide any mechanism to manage lifecycle of of data-binding expressions.
+As a result, it simply always leaks memory.
 
-### Statically type checking
+Because ReactJS does not have the ability of precise data-binding,
+it does not register listeners to data source hence no memory leaks issue for simple cases.
+
+Unfortunately, ReactJS provides `ref` attribute, `getInitialState` method, `componentWillMount` method, and `componentDidMount` method,
+encouraging users create operations with side-effects in these methods, which are usually error-prone.
+
+Unlike MetaRx or Widok, all data-binding expressions are pure functional, with no side-effects in Binding.scala.
+Binding.scala does not register any listeners when users create individual expressions,
+thus users neither need to manually unregister listeners for a single expression like MetaRx,
+nor perform additional operations in handlers like ReactJS.
+
+Instead, Binding.scala create all internal listeners together,
+when the user calls `dom.render` or `Binding.watch` on root of expressions.
+`dom.render` or `Binding.watch` manages listeners in all sub-expressions together.
+
+In brief, Binding.scala separates functionality in two kinds:
+ * `@dom` methods that produce pure functional expressions with no side-effects.
+ * `dom.render` or `Binding.watch` manages all side-effects automatically.
+
+### HTML literal and statically type checking
+
 
 TODO
 
