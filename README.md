@@ -358,8 +358,76 @@ In brief, Binding.scala separates functionality in two kinds:
 
 ### HTML literal and statically type checking
 
+As you see, you can embed HTML literal in `@dom` methods in Scala source files.
+You can also embed Scala expressions in braces in content or attribute values of the HTML literal.
 
-TODO
+``` scala
+@dom
+def notificationBox(message: String): Binding[Div] = {
+  <div className="notification" title={ s"Tooltip: $message" }>
+    {
+      message
+    }
+  </div>
+}
+```
+
+
+Regardless the similar syntax of HTML literal between Binding.scala and ReactJS,
+Binding.scala create real DOM instead of ReactJS's virtual DOM.
+
+
+In the above example, `<div>...</div>` create a DOM element with type of `org.scalajs.dom.html.Div`.
+And the magic `@dom` make the method wrap the result in a `Binding`.
+
+You can even assign the `Div` to a local variable and invoke native DOM method on the variable:
+
+``` scala
+@dom
+def notificationBox(message: String): Binding[Div] = {
+  val result: Div = <div className="notification" title={ s"Tooltip: $message" }>
+    {
+      message
+    }
+  </div>
+
+  result.scrollIntoView()
+
+  result
+}
+```
+
+`scrollIntoView` method will be invoked when the `Div` is created.
+If you invoked a method that does not defined in `Div`,
+the Scala compiler will report an compile-time error instead of bringing the failure to run-time,
+Because Scala is a statically typed language and the Scala compiler understand the type of `Div`.
+
+You may also notice `className` and `title`. They are DOM properties on `Div`.
+They are type-checked by Scala compiler as well.
+
+For example, given the following `typo` method:
+
+``` scala
+@dom
+def typo = {
+  val myDiv = <div typoProperty="xx">content</div>
+  myDiv.typoMethod()
+  myDiv
+}
+```
+
+The Scala compiler will report errors like this:
+
+```
+typo.scala:23: value typoProperty is not a member of org.scalajs.dom.html.Div
+        val myDiv = <div typoProperty="xx">content</div>
+                     ^
+typo.scala:24: value typoMethod is not a member of org.scalajs.dom.html.Div
+        myDiv.typoMethod()
+              ^
+```
+
+With the help of static type system, `@dom` methods can be much robuster than ReactJS components.
 
 ## Downloads
 
