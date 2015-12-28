@@ -462,4 +462,4 @@ libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.3"
 
 You could download the API documentation of dom module at Nexus:
 
- * [dom_2.11-1.0.3-javadoc.jar](http://nexus.delivery.realestate.com.au/nexus/content/repositories/releases/au/com/realcommercial/binding/dom_2.11/1.0.3/dom_2.11-1.0.3-javadoc.jar)
+ * [dom_sjs0.6_2.11-1.0.3-javadoc.jar](http://nexus.delivery.realestate.com.au/nexus/content/repositories/releases/au/com/realcommercial/binding/dom_sjs0.6_2.11/1.0.3/dom_sjs0.6_2.11-1.0.3-javadoc.jar)
