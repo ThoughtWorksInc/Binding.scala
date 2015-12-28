@@ -2,7 +2,7 @@ organization := "au.com.realcommercial.binding"
 
 name := "core"
 
-libraryDependencies += "com.thoughtworks.each" %%% "each" % "0.4.2"
+libraryDependencies += "com.thoughtworks.each" %%% "each" % "0.4.3"
 
 libraryDependencies += "com.lihaoyi" %%% "utest" % "0.3.1" % Test
 
