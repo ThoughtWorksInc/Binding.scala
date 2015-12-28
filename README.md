@@ -176,7 +176,7 @@ def main(): Unit = {
 </html>
 ```
 
-Now you will see a table that just contains a header. Because `data` is empty at the moment.
+Now you will see a table that just contains a header, because `data` is empty at the moment.
 
 ### Step 6: Add some `<button>` to fill `data` for the table
 
@@ -401,7 +401,7 @@ def notificationBox(message: String): Binding[Div] = {
 `scrollIntoView` method will be invoked when the `Div` is created.
 If you invoked a method that does not defined in `Div`,
 the Scala compiler will report an compile-time error instead of bringing the failure to run-time,
-Because Scala is a statically typed language and the Scala compiler understand the type of `Div`.
+because Scala is a statically typed language and the Scala compiler understand the type of `Div`.
 
 You may also notice `className` and `title`. They are DOM properties on `Div`.
 They are type-checked by Scala compiler as well.
