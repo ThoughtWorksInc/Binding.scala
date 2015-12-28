@@ -350,7 +350,8 @@ nor perform additional operations in handlers like ReactJS.
 
 Instead, Binding.scala create all internal listeners together,
 when the user calls `dom.render` or `Binding.watch` on root of expressions.
-`dom.render` or `Binding.watch` manages listeners in all sub-expressions together.
+Note that `dom.render` or `Binding.watch` manages listeners on all sub-expressions,
+not only the listener on the root expression.
 
 In brief, Binding.scala separates functionality in two kinds:
  * `@dom` methods that produce pure functional expressions with no side-effects.
@@ -378,7 +379,7 @@ Binding.scala create real DOM instead of ReactJS's virtual DOM.
 
 
 In the above example, `<div>...</div>` create a DOM element with type of `org.scalajs.dom.html.Div`.
-And the magic `@dom` make the method wrap the result in a `Binding`.
+And the magic `@dom` let the method wrap the result in a `Binding`.
 
 You can even assign the `Div` to a local variable and invoke native DOM method on the variable:
 
