@@ -1,5 +1,6 @@
 *.class
 *.log
+*.sjsir
 
 # sbt specific
 .cache
@@ -15,6 +16,7 @@ project/plugins/project/
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
+.cache-*
 
 # IntelliJ specific
 .idea/
