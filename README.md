@@ -248,26 +248,26 @@ then ReactJS framework creates a DOM with the same structure as the virtual DOM.
 When `state` changes, ReactJS framework invokes `render` function to get a new virtual DOM.
 Unfortunately, ReactJS framework does not precisely know what the `state` changing is.
 ReactJS framework has to compare the new virtual DOM and the original virtual DOM,
-and guesses the change set between the two virtual DOM,
-then apply guessed the change set to the real DOM as well.
+and guesses the changeset between the two virtual DOM,
+then apply the guessed changeset to the real DOM as well.
 
-For example, after you prepended a table row, say, `<tr>`, into an existing `<table>`,
-ReactJS may think you changed the content of the every existing `<tr>`s of the `<table>`,
-and appended another `<tr>` at the tail of the `<table>`.
+For example, after you prepended a table row, say, `<tr>`, into an existing `<tbody>` in a `<table>`,
+ReactJS may think you changed the content of the every existing `<tr>`s of the `<tbody>`,
+and appended another `<tr>` at the tail of the `<tbody>`.
 
 The reason is that the `render` function for ReactJS does not describe the relationship between `state` and DOM.
 Instead, it describes the process to create a virtual DOM.
-As a result, the `render` function does not provide any information about the purpose of the `state` changing
-that a data-binding framework wants.
+As a result, the `render` function does not provide any information about the purpose of the `state` changing,
+although a data-binding framework should need the information.
 
 Unlike ReactJS, a Binding.scala `@dom` method is NOT a regular function.
 It is a template that describes the relationship between data source and the DOM.
-When partial of the data source changed, Binding.scala framework knows exactly the correspond DOM to the partial data.
-Then, Binding.scala only re-evaluates partial of the `@dom` method to update the partial of DOM.
+When partial of the data source changed, Binding.scala framework knows the exact partial DOM corresponding to the partial data.
+Then, Binding.scala only re-evaluates partial of the `@dom` method to update the partial DOM.
 
-With the help of the ability of precise data-binding in Binding.scala,
-you can get rid of trivial concepts,
-like `key` attribute, `shouldComponentUpdate` method, `componentDidUpdate` method or `componentWillUpdate` method forced by ReactJS.
+With the help of the ability of precise data-binding provided by Binding.scala,
+you can get rid of concepts for hinting ReactJS's guessing algorithm,
+like `key` attribute, `shouldComponentUpdate` method, `componentDidUpdate` method or `componentWillUpdate` method.
 
 ### Composability
 
