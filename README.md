@@ -182,7 +182,7 @@ Now you will see a table that just contains a header, because `data` is empty at
 
 ``` scala
 @dom
-def table: Binding[BindingSeq[Element]] = {
+def table: Binding[BindingSeq[Node]] = {
   <div>
     <button
       onclick={ event: Event =>
