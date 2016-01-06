@@ -449,7 +449,7 @@ libraryDependencies += "com.thoughtworks.binding" %% "core" % "1.0.5"
 libraryDependencies += "com.thoughtworks.binding" %%% "core" % "1.0.5"
 ```
 
-* [The API documentation of core module](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/core_2.11/1.0.5/core_2.11-1.0.5-javadoc.jar/!/index.html)
+* [The API documentation of `core` module](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/core_2.11/1.0.5/core_2.11-1.0.5-javadoc.jar/!/index.html)
 
 ### HTML DOM integration (dom.scala)
 
@@ -460,4 +460,4 @@ The latter module is only available for Scala.js. You could add it in your `buil
 libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "1.0.5"
 ```
 
-* [The API documentation of dom module](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/dom_sjs0.6_2.11/1.0.5/dom_sjs0.6_2.11-1.0.5-javadoc.jar/!/index.html)
+* [The API documentation of `dom` module](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/dom_sjs0.6_2.11/1.0.5/dom_sjs0.6_2.11-1.0.5-javadoc.jar/!/index.html)
