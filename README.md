@@ -68,20 +68,6 @@ We will build an Binding.scala web page during the following steps.
 
 See http://www.scala-js.org/tutorial/basic/ for information about how to setup such a project.
 
-Note that macros used by Binding.scala require a larger stack size for JVM that runs Scala compiler than default value,
-therefore, you should specify a `-Xss5m` JVM argument when launching sbt:
-
-```
-sbt -J-Xss5m
-```
-
-Otherwise you may see an error message like this:
-
-```
-[trace] Stack trace suppressed: run last dom/compile:compileIncremental for the full output.
-[error] (dom/compile:compileIncremental) java.lang.StackOverflowError
-```
-
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
