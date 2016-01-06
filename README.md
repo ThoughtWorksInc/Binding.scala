@@ -307,7 +307,7 @@ def bindingTr(contact: Contact): Binding[TableRow] = {
 }
 
 @dom
-def bindingTable(contacts: BindingSeq[Contact): Binding[Table] = {
+def bindingTable(contacts: BindingSeq[Contact]): Binding[Table] = {
   <table>
     {
       for (contact <- contacts) yield {
