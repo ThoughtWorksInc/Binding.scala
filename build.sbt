@@ -36,8 +36,6 @@ releaseUseGlobalVersion := true
 
 releaseCrossBuild := false
 
-releasePublishArtifactsAction := PgpKeys.publishSigned.value
-
 import ReleaseTransformations._
 
 releaseProcess := Seq[ReleaseStep](
