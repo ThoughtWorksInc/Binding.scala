@@ -80,7 +80,7 @@ Otherwise you may see an error message like this:
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
-libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "1.0.4"
+libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "1.0.5"
 ```
 
 ### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
@@ -441,16 +441,15 @@ The former module is available for both JVM and Scala.js. You could add it in yo
 
 ``` scala
 // For JVM projects
-libraryDependencies += "com.thoughtworks.binding" %% "core" % "1.0.4"
+libraryDependencies += "com.thoughtworks.binding" %% "core" % "1.0.5"
 ```
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
-libraryDependencies += "com.thoughtworks.binding" %%% "core" % "1.0.4"
+libraryDependencies += "com.thoughtworks.binding" %%% "core" % "1.0.5"
 ```
-You could download the API documentation of core module at Nexus:
 
- * [core_2.11-1.0.4-javadoc.jar](http://nexus.delivery.realestate.com.au/nexus/content/repositories/releases/au/com/realcommercial/binding/core_2.11/1.0.4/core_2.11-1.0.4-javadoc.jar)
+* [The API documentation of core module](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/core_2.11/1.0.5/core_2.11-1.0.5-javadoc.jar/!/index.html)
 
 ### HTML DOM integration (dom.scala)
 
@@ -458,9 +457,7 @@ The latter module is only available for Scala.js. You could add it in your `buil
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
-libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "1.0.4"
+libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "1.0.5"
 ```
 
-You could download the API documentation of dom module at Nexus:
-
- * [dom_sjs0.6_2.11-1.0.4-javadoc.jar](http://nexus.delivery.realestate.com.au/nexus/content/repositories/releases/au/com/realcommercial/binding/dom_sjs0.6_2.11/1.0.4/dom_sjs0.6_2.11-1.0.4-javadoc.jar)
+* [The API documentation of dom module](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/dom_sjs0.6_2.11/1.0.5/dom_sjs0.6_2.11-1.0.5-javadoc.jar/!/index.html)
