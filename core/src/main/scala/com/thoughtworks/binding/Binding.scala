@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package au.com.realcommercial.binding
+package com.thoughtworks.binding
 
 import java.util.EventObject
 
@@ -242,7 +242,7 @@ object Binding {
       val apply@Apply(TypeApply(Select(self, TermName("map")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.each.Monadic.monadic[
-          _root_.au.com.realcommercial.binding.Binding
+          _root_.com.thoughtworks.binding.Binding
         ].apply[$b]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.mapBinding[$b]($monadicFunction)""")
@@ -253,8 +253,8 @@ object Binding {
       val apply@Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.each.Monadic.monadic[
-          _root_.au.com.realcommercial.binding.Binding
-        ].apply[_root_.au.com.realcommercial.binding.Binding.BindingSeq[$b]]($body)"""
+          _root_.com.thoughtworks.binding.Binding
+        ].apply[_root_.com.thoughtworks.binding.Binding.BindingSeq[$b]]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.flatMapBinding[$b]($monadicFunction)""")
     }
@@ -264,7 +264,7 @@ object Binding {
       val apply@Apply(Select(self, TermName("withFilter")), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.each.Monadic.monadic[
-          _root_.au.com.realcommercial.binding.Binding
+          _root_.com.thoughtworks.binding.Binding
         ].apply[_root_.scala.Boolean]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.withFilterBinding($monadicFunction)""")

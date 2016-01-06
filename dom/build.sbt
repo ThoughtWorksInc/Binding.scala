@@ -1,6 +1,6 @@
 enablePlugins(ScalaJSPlugin)
 
-organization := "au.com.realcommercial.binding"
+organization := "com.thoughtworks.binding"
 
 name := "dom"
 

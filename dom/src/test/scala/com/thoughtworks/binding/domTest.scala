@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package au.com.realcommercial.binding
+package com.thoughtworks.binding
 
-import au.com.realcommercial.binding.Binding.{BindingSeq, Vars, Var, Constant}
+import Binding.{BindingSeq, Vars, Var, Constant}
 import org.scalajs.dom.document
 import org.scalajs.dom.html.{Div, BR}
 import org.scalajs.dom.raw.{Node, Event}

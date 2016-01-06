@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package au.com.realcommercial.binding
+package com.thoughtworks.binding
 
-import au.com.realcommercial.binding.Binding._
+import Binding._
 import com.thoughtworks.each.Monadic._
 import scala.collection.mutable.ArrayBuffer
 import utest._

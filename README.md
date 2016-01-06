@@ -80,7 +80,7 @@ Otherwise you may see an error message like this:
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
-libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.4"
+libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "1.0.4"
 ```
 
 ### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
@@ -134,12 +134,12 @@ def table: Binding[Table] = {
 
 A `@dom` method represents a data-binding expression.
 
-The return type are always wrapped in a `au.com.realcommercial.binding.Binding` trait.
+The return type are always wrapped in a `com.thoughtworks.binding.Binding` trait.
 For example `@dom def x: Binding[Int] = 1`,  `@dom def message: Binding[String] = "content"`
 
 A `@dom` method supports HTML literal.
 Unlike normal XML literal in a normal Scala method,
-the type of HTML literal are specific subtypes of `org.scalajs.dom.raw.Node` and `au.com.realcommercial.binding.BindingSeq[org.scalajs.dom.raw.Node]`
+the type of HTML literal are specific subtypes of `org.scalajs.dom.raw.Node` and `com.thoughtworks.binding.BindingSeq[org.scalajs.dom.raw.Node]`
 instead of `scala.xml.Node` and `scala.xml.NodeSeq`.
 So we could have `@dom def node: Binding[org.scalajs.dom.raw.HTMLBRElement] = <br/>`
 and `@dom def node: Binding[BindingSeq[org.scalajs.dom.raw.HTMLBRElement]] = <br/><br/>`.
@@ -441,12 +441,12 @@ The former module is available for both JVM and Scala.js. You could add it in yo
 
 ``` scala
 // For JVM projects
-libraryDependencies += "au.com.realcommercial.binding" %% "core" % "1.0.4"
+libraryDependencies += "com.thoughtworks.binding" %% "core" % "1.0.4"
 ```
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
-libraryDependencies += "au.com.realcommercial.binding" %%% "core" % "1.0.4"
+libraryDependencies += "com.thoughtworks.binding" %%% "core" % "1.0.4"
 ```
 You could download the API documentation of core module at Nexus:
 
@@ -458,7 +458,7 @@ The latter module is only available for Scala.js. You could add it in your `buil
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
-libraryDependencies += "au.com.realcommercial.binding" %%% "dom" % "1.0.4"
+libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "1.0.4"
 ```
 
 You could download the API documentation of dom module at Nexus:

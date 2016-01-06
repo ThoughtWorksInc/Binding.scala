@@ -22,10 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package au.com.realcommercial.binding
+package com.thoughtworks.binding
 
-import au.com.realcommercial.binding.Binding.{SingleMountPoint, Constants, BindingSeq, MultiMountPoint}
-import au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint
+import Binding.{SingleMountPoint, Constants, BindingSeq, MultiMountPoint}
+import dom.Runtime.NodeSeqMountPoint
+import com.thoughtworks.binding.Binding.BindingSeq
 import org.scalajs.dom.raw.{Text, Node}
 
 import scala.annotation.{tailrec, StaticAnnotation, compileTimeOnly}
@@ -176,7 +177,7 @@ object dom {
             }""" =>
               atPos(tree.pos) {
                 q"""
-                  _root_.au.com.realcommercial.binding.Binding.Constants(
+                  _root_.com.thoughtworks.binding.Binding.Constants(
                     ..${
                   for {
                     pushChild <- pushChildrenTree
@@ -184,8 +185,8 @@ object dom {
                     val q"$$buf.$$amp$$plus($child)" = pushChild
                     atPos(child.pos) {
                       q"""
-                            _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.binding.Binding] {
-                              _root_.au.com.realcommercial.binding.dom.Runtime.domBindingSeq(${transform(child)})
+                            _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding] {
+                              _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq(${transform(child)})
                             }
                           """
                     }
@@ -210,8 +211,8 @@ object dom {
                 val keyName = TermName(key)
                 atPos(attribute.pos) {
                   q"""
-                    new _root_.au.com.realcommercial.binding.dom.Runtime.AttributeMountPoint(
-                      _root_.com.thoughtworks.each.Monadic.monadic[_root_.au.com.realcommercial.binding.Binding](${transform(value)})
+                    new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint(
+                      _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding](${transform(value)})
                     )( value => $elementName.$keyName = value ).each
                   """
                 }
@@ -219,7 +220,7 @@ object dom {
               atPos(tree.pos) {
                 q"""
                   {
-                    val $elementName = _root_.au.com.realcommercial.binding.dom.Runtime.TagsAndTags2.$labelName().render
+                    val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
                     ..$attributeMountPoints
                     ..${
                   child match {
@@ -227,7 +228,7 @@ object dom {
                       Nil
                     case Seq(q"""$nodeBuffer: _*""") =>
                       List(atPos(nodeBuffer.pos) {
-                        q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
+                        q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
                           ${transform(nodeBuffer)}
                         ).each"""
@@ -244,14 +245,14 @@ object dom {
               atPos(tree.pos) {
                 q"""
                   {
-                    val $elementName = _root_.au.com.realcommercial.binding.dom.Runtime.TagsAndTags2.$labelName().render
+                    val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
                     ..${
                   child match {
                     case Seq() =>
                       Nil
                     case Seq(q"""$nodeBuffer: _*""") =>
                       List(atPos(nodeBuffer.pos) {
-                        q"""new _root_.au.com.realcommercial.binding.dom.Runtime.NodeSeqMountPoint(
+                        q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
                           ${transform(nodeBuffer)}
                         ).each"""
@@ -286,7 +287,7 @@ object dom {
             DefDef(
               mods, name, tparams, vparamss, tpt,
               q"""_root_.com.thoughtworks.each.Monadic.monadic[
-                _root_.au.com.realcommercial.binding.Binding
+                _root_.com.thoughtworks.binding.Binding
               ](${transform(rhs)})"""
             )
           }
@@ -295,7 +296,7 @@ object dom {
             ValDef(
               mods, name, tpt,
               q"""_root_.com.thoughtworks.each.Monadic.monadic[
-                _root_.au.com.realcommercial.binding.Binding
+                _root_.com.thoughtworks.binding.Binding
               ](${transform(rhs)})"""
             )
           }

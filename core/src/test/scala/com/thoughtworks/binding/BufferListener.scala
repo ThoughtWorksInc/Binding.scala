@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package au.com.realcommercial.binding
+package com.thoughtworks.binding
 
-import au.com.realcommercial.binding.Binding.{PatchedEvent, ChangedEvent, PatchedListener, ChangedListener}
+import Binding.{PatchedEvent, ChangedEvent, PatchedListener, ChangedListener}
+import com.thoughtworks.binding.Binding.{PatchedEvent, ChangedEvent, PatchedListener, ChangedListener}
 
 import scala.collection.mutable.ArrayBuffer
 
