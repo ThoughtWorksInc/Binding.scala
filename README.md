@@ -1,6 +1,8 @@
 # Binding.scala
 
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
+[![Maven Central (Core Funtionality)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/core_2.11.svg?label=maven-central%20%28core%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/core_2.11)
+[![Maven Central (DOM Integration)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/dom_sjs0.6_2.11.svg?label=maven-central%20%28dom%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/dom_sjs0.6_2.11)
 
 **Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/) JVM and [Scala.js](http://www.scala-js.org/).
 
