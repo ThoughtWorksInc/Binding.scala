@@ -1,5 +1,7 @@
 # Binding.scala
 
+[![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
+
 **Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/) JVM and [Scala.js](http://www.scala-js.org/).
 
 Binding.scala can be used as a **[reactive](https://en.wikipedia.org/wiki/Reactive_programming) web framework**.
