@@ -8,15 +8,50 @@ lazy val coreJVM = core.jvm.addSbtFiles(file("../build.sbt.shared"))
 
 scalaVersion in ThisBuild := "2.11.7"
 
+developers in ThisBuild := List(
+  Developer(
+    "Atry",
+    "杨博 (Yang Bo)",
+    "pop.atry@gmail.com",
+    url("https://github.com/Atry")
+  )
+)
+
+val projectName = "Binding.scala"
+
+publishArtifact := false
+
+licenses in ThisBuild += "MIT" -> url("http://opensource.org/licenses/MIT")
+
+startYear in ThisBuild := Some(2016)
+
+homepage in ThisBuild := Some(url(s"https://github.com/ThoughtWorksInc/$projectName"))
+
+scmInfo in ThisBuild := Some(ScmInfo(
+  url(s"https://github.com/ThoughtWorksInc/$projectName"),
+  s"scm:git:git://github.com/ThoughtWorksInc/$projectName.git",
+  Some(s"scm:git:git@github.com:ThoughtWorksInc/$projectName.git")))
+
 releaseUseGlobalVersion := true
 
 releaseCrossBuild := false
 
-// Do not publish signed artifacts as REA's Nexus refuses .asc files
-//releasePublishArtifactsAction := PgpKeys.publishSigned.value
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
-publishTo in ThisBuild := Some(if (isSnapshot.value) {
-  "snapshots" at "http://nexus.delivery.realestate.com.au/nexus/content/repositories/snapshots"
-} else {
-  "releases" at "http://nexus.delivery.realestate.com.au/nexus/content/repositories/releases"
-})
+import ReleaseTransformations._
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  publishArtifacts,
+  setNextVersion,
+  commitNextVersion,
+  releaseStepCommand("sonatypeRelease"),
+  pushChanges
+)
+

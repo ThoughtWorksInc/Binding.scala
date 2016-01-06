@@ -4,6 +4,8 @@ organization := "com.thoughtworks.binding"
 
 name := "dom"
 
+description := "Reactive web framework for Scala.js."
+
 libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.5.3"
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.8.2"
