@@ -1,3 +1,15 @@
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot/
+    - $HOME/.haxelib-local/
+
+before_cache:
+  - find $HOME/.sbt -name '*.lock' | xargs rm
+  - find $HOME/.ivy2 -name 'ivydata-*.properties' | xargs rm
+
 language: scala
 
 scala:
