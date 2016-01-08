@@ -423,8 +423,8 @@ With the help of static type system, `@dom` methods can be much robuster than Re
 
 ## Downloads
 
-Binding.scala has an extremely tiny code base. There is only one source file [Binding.scala](https://git.realestate.com.au/rca/Binding.scala/blob/master/core/src/main/scala/au/com/realcommercial/binding/Binding.scala) for data-binding expressions,
-and one source file [dom.scala](https://git.realestate.com.au/rca/Binding.scala/blob/master/dom/src/main/scala/au/com/realcommercial/binding/dom.scala) for HTML DOM integration.
+Binding.scala has an extremely tiny code base. There is only one source file [Binding.scala](https://github.com/ThoughtWorksInc/Binding.scala/blob/master/core/src/main/scala/com/thoughtworks/binding/Binding.scala) for data-binding expressions,
+and one source file [dom.scala](https://github.com/ThoughtWorksInc/Binding.scala/blob/master/dom/src/main/scala/com/thoughtworks/binding/dom.scala) for HTML DOM integration.
 
 ### Core data-binding expressions (Binding.scala)
 
