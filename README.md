@@ -225,7 +225,7 @@ so it decides to append a new `<tr>` corresponding to the newly appended Contact
 And when you click the "Modify the name", the `name` field on `contact` changes,
 then, Binding.scala decides to change the content of the corresponding `tr` to new value of `name` field.
 
-See https://git.realestate.com.au/yang-bo/Binding.scala-sample for the complete example.
+See https://github.com/ThoughtWorksInc/Binding.scala-sample for the complete example.
 
 
 ## Design
