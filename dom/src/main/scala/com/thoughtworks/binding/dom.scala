@@ -221,20 +221,20 @@ object dom {
                 q"""
                   {
                     val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
-                    ..$attributeMountPoints
                     ..${
-                  child match {
-                    case Seq() =>
-                      Nil
-                    case Seq(q"""$nodeBuffer: _*""") =>
-                      List(atPos(nodeBuffer.pos) {
-                        q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
-                          $elementName,
-                          ${transform(nodeBuffer)}
-                        ).each"""
-                      })
-                  }
-                }
+                      child match {
+                        case Seq() =>
+                          Nil
+                        case Seq(q"""$nodeBuffer: _*""") =>
+                          List(atPos(nodeBuffer.pos) {
+                            q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
+                              $elementName,
+                              ${transform(nodeBuffer)}
+                            ).each"""
+                          })
+                      }
+                    }
+                    ..$attributeMountPoints
                     $elementName
                   }
                 """
