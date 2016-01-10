@@ -28,6 +28,12 @@ import com.thoughtworks.binding.Binding.ChangedListener
 import org.scalajs.dom.raw.{Promise => JsPromise}
 import Binding._
 
+object JsPromiseBinding {
+
+  def apply[A](promise: JsPromise[A]) = new JsPromiseBinding(promise)
+
+}
+
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
