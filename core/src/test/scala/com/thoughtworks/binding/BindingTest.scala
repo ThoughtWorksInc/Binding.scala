@@ -118,7 +118,7 @@ object BindingTest extends TestSuite {
         i <- Constants((0 until sourceElement): _*)
       } yield {
         raw"""${prefix.each} $i/$sourceElement"""
-      }).asInstanceOf[FlatMappedSeq[_, String]]
+      }).asInstanceOf[FlatMapBinding[_, String]]
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
       mapped.addChangedListener(mappedEvents.listener)
@@ -203,7 +203,7 @@ object BindingTest extends TestSuite {
         i <- Constants((0 until sourceElement): _*)
       } yield {
         raw"""${prefix.each} $i/$sourceElement"""
-      }).asInstanceOf[FlatMappedSeq[_, String]]
+      }).asInstanceOf[FlatMapBinding[_, String]]
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
       mapped.addChangedListener(mappedEvents.listener)
@@ -292,7 +292,7 @@ object BindingTest extends TestSuite {
     'FlatMappedVarBuffer {
       val prefix = new Var("")
       val source = Vars(1, 2, 3)
-      val mapped = new FlatMappedSeq(source, { sourceElement: Int =>
+      val mapped = new FlatMapBinding(source, { sourceElement: Int =>
         new MapBinding(Constants((0 until sourceElement): _*), { i: Int =>
           monadic[Binding] {
             raw"""${prefix.each}$sourceElement"""

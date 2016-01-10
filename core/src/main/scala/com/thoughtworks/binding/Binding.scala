@@ -449,7 +449,7 @@ object Binding {
     }
   }
 
-  private[binding] final class FlatMappedSeq[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B]) extends BindingSeq[B] {
+  private[binding] final class FlatMapBinding[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B]) extends BindingSeq[B] {
 
     var cache: Vector[BindingSeq[B]] = {
       (for {
@@ -477,7 +477,7 @@ object Binding {
           for ((listener, _) <- patchedPublisher) {
             val flattenFrom = flatIndex(0, event.from)
             val flattenReplaced = flatIndex(event.from, event.from + event.replaced)
-            listener.patched(new PatchedEvent(FlatMappedSeq.this, get, flattenFrom, flatNewChildren, flattenReplaced))
+            listener.patched(new PatchedEvent(FlatMapBinding.this, get, flattenFrom, flatNewChildren, flattenReplaced))
           }
           for (oldChild <- cache.view(event.from, event.replaced)) {
             oldChild.removeChangedListener(childListener)
@@ -496,7 +496,7 @@ object Binding {
           a <- event.newValue
         } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
         for ((listener, _) <- changedPublisher) {
-          listener.changed(new ChangedEvent(FlatMappedSeq.this, get, new FlatProxy(newCache)))
+          listener.changed(new ChangedEvent(FlatMapBinding.this, get, new FlatProxy(newCache)))
         }
         for (oldChild <- cache) {
           oldChild.removeChangedListener(childListener)
@@ -517,7 +517,7 @@ object Binding {
       override private[binding] def changed(event: ChangedEvent[Seq[B]]): Unit = {
         val index = flatIndex(0, cache.indexOf(event.getSource))
         for ((listener, _) <- patchedPublisher) {
-          listener.patched(new PatchedEvent(FlatMappedSeq.this, get, index, event.newValue, event.oldValue.length))
+          listener.patched(new PatchedEvent(FlatMapBinding.this, get, index, event.newValue, event.oldValue.length))
         }
       }
 
@@ -525,7 +525,7 @@ object Binding {
         val source = event.getSource.asInstanceOf[BindingSeq[B]]
         val index = flatIndex(0, cache.indexOf(source)) + event.from
         for ((listener, _) <- patchedPublisher) {
-          listener.patched(new PatchedEvent(FlatMappedSeq.this, get, index, event.that, event.replaced))
+          listener.patched(new PatchedEvent(FlatMapBinding.this, get, index, event.that, event.replaced))
         }
       }
     }
@@ -611,8 +611,8 @@ object Binding {
       */
     @inline
     final def flatMapBinding[B](f: A => Binding[BindingSeq[B]]): BindingSeq[B] = {
-      new FlatMappedSeq[A, B](this, { a =>
-        new FlatMappedSeq[BindingSeq[B], B](new MapBinding[Unit, BindingSeq[B]](Constants(()), _ => f(a)), locally)
+      new FlatMapBinding[A, B](this, { a =>
+        new FlatMapBinding[BindingSeq[B], B](new MapBinding[Unit, BindingSeq[B]](Constants(()), _ => f(a)), locally)
       })
     }
 
