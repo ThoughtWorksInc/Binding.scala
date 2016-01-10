@@ -53,3 +53,4 @@ releaseProcess := Seq[ReleaseStep](
   pushChanges
 )
 
+sonatypeProfileName := "com.thoughtworks.binding"
