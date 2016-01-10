@@ -1025,7 +1025,7 @@ object Binding {
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-sealed trait Binding[+A] extends Any {
+trait Binding[+A] extends Any {
 
   private[binding] def get: A
 
