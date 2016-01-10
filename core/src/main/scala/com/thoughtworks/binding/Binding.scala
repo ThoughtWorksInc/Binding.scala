@@ -29,10 +29,12 @@ import java.util.EventObject
 import com.thoughtworks.each.Monadic._
 
 import scala.annotation.tailrec
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.collection.GenSeq
 import scala.collection.Seq
 import scala.collection.mutable.Buffer
+import scala.util.Try
 import scalaz.Monad
 import scala.language.experimental.macros
 
@@ -158,6 +160,50 @@ object Binding {
     override private[binding] def addChangedListener(listener: ChangedListener[A]): Unit = {
       publisher.subscribe(listener)
     }
+  }
+
+  /**
+    * @group expressions
+    */
+  object FutureBinding {
+    def apply[A](future: Future[A])(implicit executor: ExecutionContext) = new FutureBinding(future)
+  }
+
+  /**
+    * A wrapper that wraps [[scala.concurrent.Future]] to a [[Binding]].
+    * @group expressions
+    * @note Because all [[Binding]] (including this [[FutureBinding]]) are not thread safe.
+    *       As a result, `executor` must guarantee running sequencely.
+    */
+  final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionContext) extends Binding[Option[Try[A]]] {
+
+    override def get = future.value
+
+    private val publisher = new Publisher[ChangedListener[Option[Try[A]]]]
+
+    override private[binding] def removeChangedListener(listener: ChangedListener[Option[Try[A]]]): Unit = {
+      publisher.unsubscribe(listener)
+    }
+
+    private var isHandlerRegiested: Boolean = false
+
+    private def completeHandler(result: Try[A]): Unit = {
+      for ((listener, _) <- publisher) {
+        listener.changed(new ChangedEvent[Option[Try[A]]](this, None, Some(result)))
+      }
+    }
+
+    override private[binding] def addChangedListener(listener: ChangedListener[Option[Try[A]]]): Unit = {
+      if (!isHandlerRegiested) {
+        isHandlerRegiested = true
+        if (!future.isCompleted) {
+          future.onComplete(completeHandler)
+        }
+      }
+      publisher.subscribe(listener)
+
+    }
+
   }
 
   private final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B])
