@@ -51,7 +51,7 @@ class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[A
     publisher.unsubscribe(listener)
   }
 
-  private var isHandlerRegiested: Boolean = false
+  private var isHandlerRegistered: Boolean = false
 
   private def fulfilledHandler(result: A): Unit = {
     val oldCache = cache
@@ -72,8 +72,8 @@ class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[A
   }
 
   override private[binding] def addChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
-    if (!isHandlerRegiested) {
-      isHandlerRegiested = true
+    if (!isHandlerRegistered) {
+      isHandlerRegistered = true
       promise.andThen(fulfilledHandler _, rejectedHandler _)
 
     }
