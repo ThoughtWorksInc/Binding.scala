@@ -47,6 +47,19 @@ object BindingTest extends TestSuite {
 
   def tests = TestSuite {
 
+    'TripleBinding {
+      val input = Var(0)
+      val output = monadic[Binding] {
+        input.each + input.each + input.each
+      }
+      output.watch()
+      assert(output.get == 0)
+      for (i <- 0 until 10) {
+        input := i
+        assert(output.get == i * 3)
+      }
+    }
+
     'DataBindingShouldBeSupportedByScalaz {
 
       val expr3: Var[Int] = new Var(2000)
@@ -123,16 +136,16 @@ object BindingTest extends TestSuite {
       val sourceEvents = new BufferListener
       mapped.addChangedListener(mappedEvents.listener)
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.patchedPublisher.size == 1)
-      assert(mapped.changedPublisher.size == 1)
+      assert(mapped.patchedPublisher.nonEmpty)
+      assert(mapped.changedPublisher.nonEmpty)
       assert(source.patchedPublisher.nonEmpty)
       assert(source.changedPublisher.nonEmpty)
       source.addChangedListener(sourceEvents.listener)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.patchedPublisher.size == 1)
-      assert(mapped.changedPublisher.size == 1)
-      assert(source.patchedPublisher.size > 1)
-      assert(source.changedPublisher.size > 1)
+      assert(mapped.patchedPublisher.nonEmpty)
+      assert(mapped.changedPublisher.nonEmpty)
+      assert(source.patchedPublisher.nonEmpty)
+      assert(source.changedPublisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
       source.reset(2, 3, 4)
@@ -208,16 +221,16 @@ object BindingTest extends TestSuite {
       val sourceEvents = new BufferListener
       mapped.addChangedListener(mappedEvents.listener)
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.patchedPublisher.size == 1)
-      assert(mapped.changedPublisher.size == 1)
+      assert(mapped.patchedPublisher.nonEmpty)
+      assert(mapped.changedPublisher.nonEmpty)
       assert(source.patchedPublisher.nonEmpty)
       assert(source.changedPublisher.nonEmpty)
       source.addChangedListener(sourceEvents.listener)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.patchedPublisher.size == 1)
-      assert(mapped.changedPublisher.size == 1)
-      assert(source.patchedPublisher.size > 1)
-      assert(source.changedPublisher.size > 1)
+      assert(mapped.patchedPublisher.nonEmpty)
+      assert(mapped.changedPublisher.nonEmpty)
+      assert(source.patchedPublisher.nonEmpty)
+      assert(source.changedPublisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
       source.reset(2, 3, 4)
@@ -303,16 +316,16 @@ object BindingTest extends TestSuite {
       val sourceEvents = new BufferListener
       mapped.addChangedListener(mappedEvents.listener)
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.patchedPublisher.size == 1)
-      assert(mapped.changedPublisher.size == 1)
+      assert(mapped.patchedPublisher.nonEmpty)
+      assert(mapped.changedPublisher.nonEmpty)
       assert(source.patchedPublisher.nonEmpty)
       assert(source.changedPublisher.nonEmpty)
       source.addChangedListener(sourceEvents.listener)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.patchedPublisher.size == 1)
-      assert(mapped.changedPublisher.size == 1)
-      assert(source.patchedPublisher.size > 1)
-      assert(source.changedPublisher.size > 1)
+      assert(mapped.patchedPublisher.nonEmpty)
+      assert(mapped.changedPublisher.nonEmpty)
+      assert(source.patchedPublisher.nonEmpty)
+      assert(source.changedPublisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
       source.reset(2, 3, 4)
@@ -396,16 +409,16 @@ object BindingTest extends TestSuite {
       val sourceEvents = new BufferListener
       mapped.addChangedListener(mappedEvents.listener)
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.patchedPublisher.size == 1)
-      assert(mapped.changedPublisher.size == 1)
-      assert(source.patchedPublisher.size > 0)
-      assert(source.changedPublisher.size > 0)
+      assert(mapped.patchedPublisher.nonEmpty)
+      assert(mapped.changedPublisher.nonEmpty)
+      assert(source.patchedPublisher.nonEmpty)
+      assert(source.changedPublisher.nonEmpty)
       source.addChangedListener(sourceEvents.listener)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.patchedPublisher.size == 1)
-      assert(mapped.changedPublisher.size == 1)
-      assert(source.patchedPublisher.size > 1)
-      assert(source.changedPublisher.size > 1)
+      assert(mapped.patchedPublisher.nonEmpty)
+      assert(mapped.changedPublisher.nonEmpty)
+      assert(source.patchedPublisher.nonEmpty)
+      assert(source.changedPublisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
       source.reset(2, 3, 4)
