@@ -56,7 +56,7 @@ class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[A
   private def fulfilledHandler(result: A): Unit = {
     val oldCache = cache
     val newCache = Some(Right(result))
-    for ((listener, _) <- publisher) {
+    for (listener <- publisher) {
       listener.changed(new ChangedEvent[Option[Either[Any, A]]](this, oldCache, newCache))
     }
     cache = newCache
@@ -65,7 +65,7 @@ class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[A
   private def rejectedHandler(result: Any): Unit = {
     val oldCache = cache
     val newCache = Some(Left(result))
-    for ((listener, _) <- publisher) {
+    for (listener <- publisher) {
       listener.changed(new ChangedEvent[Option[Either[Any, A]]](this, oldCache, newCache))
     }
     cache = newCache

@@ -47,29 +47,88 @@ import scala.language.experimental.macros
   */
 object Binding {
 
-  private[binding] final class Publisher[Subscriber] extends collection.mutable.HashMap[Subscriber, Int] {
+  private object Publisher {
 
-    override final def default(subscriber: Subscriber) = 0
+    private[Publisher] sealed trait State
+
+    case object Idle extends State
+
+    case object CleanForeach extends State
+
+    case object DirtyForeach extends State
+
+  }
+
+  private[binding] final class Publisher[Subscriber >: Null] {
+
+    import Publisher._
+
+    private val subscribers = collection.mutable.ArrayBuffer.empty[Subscriber]
+
+    @volatile
+    private var state: State = Idle
+
+    def nonEmpty = !isEmpty
+
+    def isEmpty = subscribers.forall(_ == null)
+
+    def foreach[U](f: Subscriber => U): Unit = {
+      @tailrec
+      def loop(i: Int): Unit = {
+        if (i < subscribers.length) {
+          val subscriber = subscribers(i)
+          if (subscriber != null) {
+            f(subscriber)
+          }
+          loop(i + 1)
+        }
+      }
+      state match {
+        case Idle =>
+          state = CleanForeach
+          loop(0)
+          state match {
+            case DirtyForeach => {
+              @tailrec
+              def compact(i: Int, j: Int): Unit = {
+                if (i < subscribers.length) {
+                  val subscriber = subscribers(i)
+                  if (subscriber == null) {
+                    compact(i + 1, j)
+                  } else {
+                    subscribers(j) = subscriber
+                    compact(i + 1, j + 1)
+                  }
+                } else {
+                  subscribers.reduceToSize(j)
+                }
+              }
+              compact(0, 0)
+              state = Idle
+            }
+            case CleanForeach =>
+              state = Idle
+            case Idle =>
+              throw new IllegalStateException("Expect CleanForeach or DirtyForeach")
+          }
+        case CleanForeach | DirtyForeach =>
+          loop(0)
+      }
+    }
 
     final def subscribe(subscriber: Subscriber): Unit = {
-      val oldValue = this (subscriber)
-      if (oldValue < 0) {
-        throw new IllegalStateException()
-      }
-      val newValue = oldValue + 1
-      this (subscriber) = newValue
+      subscribers += subscriber
     }
 
     final def unsubscribe(subscriber: Subscriber): Unit = {
-      val oldValue = this (subscriber)
-      if (oldValue <= 0) {
-        throw new IllegalStateException()
-      }
-      val newValue = oldValue - 1
-      if (newValue == 0) {
-        this -= subscriber
-      } else {
-        this (subscriber) = newValue
+      state match {
+        case Idle =>
+          subscribers -= subscriber
+        case CleanForeach =>
+          subscribers(subscribers.indexOf(subscriber)) = null
+          state = DirtyForeach
+        case DirtyForeach =>
+          subscribers(subscribers.indexOf(subscriber)) = null
       }
     }
 
@@ -146,7 +205,7 @@ object Binding {
 
     final def :=(newValue: A): Unit = {
       if (value != newValue) {
-        for ((listener, _) <- publisher) {
+        for (listener <- publisher) {
           listener.changed(new ChangedEvent(this, value, newValue))
         }
         value = newValue
@@ -188,7 +247,7 @@ object Binding {
     private var isHandlerRegiested: Boolean = false
 
     private def completeHandler(result: Try[A]): Unit = {
-      for ((listener, _) <- publisher) {
+      for (listener <- publisher) {
         listener.changed(new ChangedEvent[Option[Try[A]]](this, None, Some(result)))
       }
     }
@@ -218,7 +277,7 @@ object Binding {
         val newCache = f(event.newValue)
         newCache.addChangedListener(FlatMap.this)
         if (cache.get != newCache.get) {
-          for ((listener, _) <- publisher) {
+          for (listener <- publisher) {
             listener.changed(new ChangedEvent(FlatMap.this, cache.get, newCache.get))
           }
         }
@@ -227,7 +286,7 @@ object Binding {
     }
 
     override private[binding] final def changed(event: ChangedEvent[B]) = {
-      for ((listener, _) <- publisher) {
+      for (listener <- publisher) {
         listener.changed(new ChangedEvent(FlatMap.this, event.oldValue, event.newValue))
       }
     }
@@ -379,7 +438,7 @@ object Binding {
         val mappedNewChildren = (for {
           child <- event.that
         } yield f(child)) (collection.breakOut(Seq.canBuildFrom))
-        for ((listener, _) <- patchedPublisher) {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(MapBinding.this, new ValueProxy(cache), event.from, new ValueProxy(mappedNewChildren), event.replaced))
         }
         for (oldChild <- cache.view(event.from, event.replaced)) {
@@ -395,7 +454,7 @@ object Binding {
         val newCache = (for {
           a <- event.newValue
         } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
-        for ((listener, _) <- changedPublisher) {
+        for (listener <- changedPublisher) {
           listener.changed(new ChangedEvent(MapBinding.this, new ValueProxy(cache), new ValueProxy(newCache)))
         }
         for (oldChild <- cache) {
@@ -414,7 +473,7 @@ object Binding {
 
       override def changed(event: ChangedEvent[B]): Unit = {
         val index = cache.indexOf(event.getSource)
-        for ((listener, _) <- patchedPublisher) {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(MapBinding.this, new ValueProxy(cache), index, SingleSeq(event.newValue), 1))
         }
       }
@@ -520,7 +579,7 @@ object Binding {
         } yield f(child)) (collection.breakOut(Seq.canBuildFrom))
         val flatNewChildren = new FlatProxy(mappedNewChildren)
         if (event.replaced != 0 || flatNewChildren.nonEmpty) {
-          for ((listener, _) <- patchedPublisher) {
+          for (listener <- patchedPublisher) {
             val flattenFrom = flatIndex(0, event.from)
             val flattenReplaced = flatIndex(event.from, event.from + event.replaced)
             listener.patched(new PatchedEvent(FlatMapBinding.this, get, flattenFrom, flatNewChildren, flattenReplaced))
@@ -541,7 +600,7 @@ object Binding {
         val newCache = (for {
           a <- event.newValue
         } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
-        for ((listener, _) <- changedPublisher) {
+        for (listener <- changedPublisher) {
           listener.changed(new ChangedEvent(FlatMapBinding.this, get, new FlatProxy(newCache)))
         }
         for (oldChild <- cache) {
@@ -562,7 +621,7 @@ object Binding {
 
       override private[binding] def changed(event: ChangedEvent[Seq[B]]): Unit = {
         val index = flatIndex(0, cache.indexOf(event.getSource))
-        for ((listener, _) <- patchedPublisher) {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(FlatMapBinding.this, get, index, event.newValue, event.oldValue.length))
         }
       }
@@ -570,7 +629,7 @@ object Binding {
       override private[binding] def patched(event: PatchedEvent[B]): Unit = {
         val source = event.getSource.asInstanceOf[BindingSeq[B]]
         val index = flatIndex(0, cache.indexOf(source)) + event.from
-        for ((listener, _) <- patchedPublisher) {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(FlatMapBinding.this, get, index, event.that, event.replaced))
         }
       }
@@ -812,7 +871,7 @@ object Binding {
       */
     def reset(newValues: A*): Unit = {
       val newCache = Vector(newValues: _*)
-      for ((listener, _) <- changedPublisher) {
+      for (listener <- changedPublisher) {
         listener.changed(new ChangedEvent[Seq[A]](Vars.this, cache, newCache))
       }
       cache = newCache
@@ -824,18 +883,14 @@ object Binding {
       }
 
       override def update(n: Int, newelem: A): Unit = {
-        for {
-          (listener, _) <- patchedPublisher
-        } {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(Vars.this, cache, n, SingleSeq(newelem), 1))
         }
         cache = cache.updated(n, newelem)
       }
 
       override def clear(): Unit = {
-        for {
-          (listener, _) <- patchedPublisher
-        } yield {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(Vars.this, cache, 0, Nil, cache.length))
         }
         cache = Vector.empty
@@ -846,9 +901,7 @@ object Binding {
       }
 
       override def remove(n: Int): A = {
-        for {
-          (listener, _) <- patchedPublisher
-        } yield {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(Vars.this, cache, n, Nil, 1))
         }
         val result = cache(n)
@@ -857,9 +910,7 @@ object Binding {
       }
 
       override def +=:(elem: A): this.type = {
-        for {
-          (listener, _) <- patchedPublisher
-        } yield {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(Vars.this, cache, 0, SingleSeq(elem), 0))
         }
         cache = elem +: cache
@@ -867,9 +918,7 @@ object Binding {
       }
 
       override def +=(elem: A): this.type = {
-        for {
-          (listener, _) <- patchedPublisher
-        } yield {
+        for (listener <- patchedPublisher) {
           listener.patched(new PatchedEvent(Vars.this, cache, cache.length, SingleSeq(elem), 0))
         }
         cache = cache :+ elem
@@ -879,7 +928,7 @@ object Binding {
       override def insertAll(n: Int, elems: Traversable[A]): Unit = {
         val seq = elems.toSeq
         for {
-          (listener, _) <- patchedPublisher
+          listener <- patchedPublisher
         } {
           listener.patched(new PatchedEvent(Vars.this, cache, n, seq, 0))
         }
