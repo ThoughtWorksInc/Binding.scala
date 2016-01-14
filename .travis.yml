@@ -27,5 +27,5 @@ deploy:
   provider: script
   script: deploy.sh
   on:
-    condition: -e deploy.sh
+    condition: "-e deploy.sh"
   	all_branches: true
