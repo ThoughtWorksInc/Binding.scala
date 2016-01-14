@@ -130,8 +130,8 @@ For example `@dom def x: Binding[Int] = 1`,  `@dom def message: Binding[String] 
 
 A `@dom` method supports HTML literal.
 Unlike normal XML literal in a normal Scala method,
-the type of HTML literal are specific subtypes of `org.scalajs.dom.raw.Node` and `com.thoughtworks.binding.BindingSeq[org.scalajs.dom.raw.Node]`
-instead of `scala.xml.Node` and `scala.xml.NodeSeq`.
+the types of HTML literal are specific subtypes of `org.scalajs.dom.raw.Node` or `com.thoughtworks.binding.BindingSeq[org.scalajs.dom.raw.Node]`,
+instead of `scala.xml.Node` or `scala.xml.NodeSeq`.
 So we could have `@dom def node: Binding[org.scalajs.dom.raw.HTMLBRElement] = <br/>`
 and `@dom def node: Binding[BindingSeq[org.scalajs.dom.raw.HTMLBRElement]] = <br/><br/>`.
 
