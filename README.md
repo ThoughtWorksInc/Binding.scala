@@ -5,7 +5,7 @@
 [![Maven Central (Core Funtionality)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/core_2.11.svg?label=maven-central%20%28core%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/core_2.11)
 [![Maven Central (DOM Integration)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/dom_sjs0.6_2.11.svg?label=maven-central%20%28dom%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/dom_sjs0.6_2.11)
 
-**Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/) JVM and [Scala.js](http://www.scala-js.org/).
+**Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
 Binding.scala can be used as a **[reactive](https://en.wikipedia.org/wiki/Reactive_programming) web framework**.
 It enables you use native XML literal syntax to create reactive DOM nodes,
