@@ -95,6 +95,9 @@ object dom {
       override protected def set(children: Seq[Node]): Unit = {
         removeAll()
         for (child <- children) {
+          if (child.parentNode != null) {
+            throw new IllegalStateException(raw"""Cannot insert ${child.nodeName} twice!""")
+          }
           parent.appendChild(child)
         }
       }
@@ -111,10 +114,16 @@ object dom {
         if (i.hasNext) {
           val refChild = i.next()
           for (newChild <- that) {
+            if (newChild.parentNode != null) {
+              throw new IllegalStateException(raw"""Cannot insert a ${newChild.nodeName} element twice!""")
+            }
             parent.insertBefore(newChild, refChild)
           }
         } else {
           for (newChild <- that) {
+            if (newChild.parentNode != null) {
+              throw new IllegalStateException(raw"""Cannot insert a ${newChild.nodeName} element twice!""")
+            }
             parent.appendChild(newChild)
           }
         }
