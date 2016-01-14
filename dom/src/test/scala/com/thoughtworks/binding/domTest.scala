@@ -161,6 +161,19 @@ object domTest extends TestSuite {
       assert(div.outerHTML == """<div><hr/><table id="myId"> </table><br/></div>""")
     }
 
+    'DoubleInsertion {
+
+      intercept[IllegalStateException] {
+        @dom
+        val child = <hr/>
+        @dom
+        val parent = <p><span>{child.each}</span><span>{child.each}</span></p>
+        val div = document.createElement("div")
+        dom.render(div, parent)
+      }
+
+    }
+
   }
 
 }
