@@ -125,7 +125,7 @@ def table: Binding[Table] = {
 
 A `@dom` method represents a data-binding expression.
 
-The return type are always wrapped in a `com.thoughtworks.binding.Binding` trait.
+The return type is always wrapped in a `com.thoughtworks.binding.Binding` trait.
 For example `@dom def x: Binding[Int] = 1`,  `@dom def message: Binding[String] = "content"`
 
 A `@dom` method supports HTML literal.
