@@ -319,7 +319,7 @@ You may find out this approach is much simpler than ReactJS, as:
 ### Lifecycle management for data-binding expressions
 
 The ability of precise data-binding in Binding.scala requires listener registrations on the data source.
-Others reactive frameworks that has the ability ask users manage the lifecycle of data-binding expressions.
+Other reactive frameworks that has the ability ask users manage the lifecycle of data-binding expressions.
 
 For example, [MetaRx](https://github.com/MetaStack-pl/MetaRx/issues/45) provide a `dispose` method to unregister the listeners created when building data-binding expressions.
 The user of MetaRx have the responsibility to call `dispose` method for every `map` and `flatMap` call after the expression changes,
