@@ -231,8 +231,8 @@ object Binding {
   /**
     * A wrapper that wraps [[scala.concurrent.Future]] to a [[Binding]].
     * @group expressions
-    * @note Because all [[Binding]] (including this [[FutureBinding]]) are not thread safe.
-    *       As a result, `executor` must guarantee running sequencely.
+    * @note Because all [[Binding]] (including this [[FutureBinding]]) are not thread safe,
+    *       you must guarantee `executor` running sequencely.
     */
   final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionContext) extends Binding[Option[Try[A]]] {
 
