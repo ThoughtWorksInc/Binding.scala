@@ -38,12 +38,17 @@ releaseCrossBuild := false
 
 import ReleaseTransformations._
 
+val disableDeploySh = taskKey[Unit]("Rename deploy.sh to deploy.sh.disabled.")
+
+disableDeploySh := {
+  IO.move(baseDirectory.value / "deploy.sh", baseDirectory.value / "deploy.sh.disabled")
+}
+
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
   inquireVersions,
-  runClean,
-  runTest,
   setReleaseVersion,
+  releaseStepTask(disableDeploySh),
   commitReleaseVersion,
   tagRelease,
   publishArtifacts,
