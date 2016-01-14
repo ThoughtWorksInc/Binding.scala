@@ -41,7 +41,11 @@ import ReleaseTransformations._
 val disableDeploySh = taskKey[Unit]("Rename deploy.sh to deploy.sh.disabled.")
 
 disableDeploySh := {
-  IO.move(baseDirectory.value / "deploy.sh", baseDirectory.value / "deploy.sh.disabled")
+  val log = (streams in disableDeploySh).value.log
+  Process(
+    "git" :: "mv" :: "--" :: "deploy.sh" :: "deploy.sh.disabled" :: Nil,
+    baseDirectory.value
+  ) ! log
 }
 
 releaseProcess := Seq[ReleaseStep](
@@ -53,9 +57,15 @@ releaseProcess := Seq[ReleaseStep](
   tagRelease,
   publishArtifacts,
   setNextVersion,
-  commitNextVersion,
+  commitNextVersion
   releaseStepCommand("sonatypeRelease"),
   pushChanges
 )
 
 sonatypeProfileName := "com.thoughtworks.binding"
+
+pgpSecretRing := baseDirectory.value / "secret" / "secring.asc"
+
+pgpPublicRing := baseDirectory.value / "pubring.asc"
+
+pgpPassphrase := Some(Array.empty)
