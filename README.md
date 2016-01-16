@@ -58,7 +58,7 @@ Binding.scala has more features and less concepts than other reactive web framew
   </tbody>
 </table>
 
-See [Desigin](#design) section for more information.
+See [Design](#design) section for more information.
 
 ## Getting started
 
