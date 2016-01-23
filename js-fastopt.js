@@ -5772,23 +5772,23 @@ $c_Lcom_thoughtworks_binding_website_IntSample$.prototype.fileName__T = (functio
   return "/Users/twer/workspace/Binding.scala-sample/js/src/main/scala/com/thoughtworks/binding/website/IntSample.scala"
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$.prototype.com$thoughtworks$binding$website$IntSample$$intEditor__Lcom_thoughtworks_binding_Binding$Var__Lcom_thoughtworks_binding_Binding = (function($int) {
-  var monad$macro$88 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var element$macro$49 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().div$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  return monad$macro$88.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2().init___Lcom_thoughtworks_binding_Binding$Var__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLDivElement($int, monad$macro$88, element$macro$49))
+  var monad$macro$40 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var element$macro$1 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().div$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  return monad$macro$40.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2().init___Lcom_thoughtworks_binding_Binding$Var__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLDivElement($int, monad$macro$40, element$macro$1))
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$.prototype.render__Lcom_thoughtworks_binding_Binding = (function() {
-  var monad$macro$114 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var monad$macro$66 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
   var i = new $c_Lcom_thoughtworks_binding_Binding$Var().init___O(0);
-  var monad$macro$102 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var monad$macro$54 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
   var fa = $m_Lcom_thoughtworks_each_Monadic$EachOps$().unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(i)).get__O();
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$103$2) {
-    var element$macro$103 = $uI(element$macro$103$2);
-    return ((1 + element$macro$103) | 0)
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$55$2) {
+    var element$macro$55 = $uI(element$macro$55$2);
+    return ((1 + element$macro$55) | 0)
   }));
-  return monad$macro$114.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$102, fa, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2().init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var(monad$macro$114, i))
+  return monad$macro$66.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$54, fa, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2().init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var(monad$macro$66, i))
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$.prototype.content__T = (function() {
-  return "package com.thoughtworks.binding.website\n\nimport com.thoughtworks.binding.Binding.{Var, Vars}\nimport com.thoughtworks.binding.dom\nimport com.thoughtworks.binding.website.TableSample.Contact\nimport org.scalajs.dom.raw.Event\n\n/**\n  * @author \u6768\u535a (Yang Bo) &lt;pop.atry@gmail.com&gt;\n  */\nobject IntSample extends Sample {\n\n  @dom\n  private def intEditor(int: Var[Int]) = {\n    <div>\n    <button onclick={event: Event => int := int.get - 1}>-</button>\n    {int.each.toString}\n    <button onclick={event: Event => int := int.get + 1}>+</button>\n    </div>\n  }\n\n  override def fileName = CurrentSource.fileName\n\n  override def content = CurrentSource.content\n\n  @dom\n  override def render = {\n\n    val i = Var(0)\n\n    @dom\n    val j = i.each + 1\n\n    <div>\n      {intEditor(i).each}\n      <br/>\n      {j.each.toString}\n    </div>\n  }\n}\n"
+  return "package com.thoughtworks.binding.website\n\nimport com.thoughtworks.binding.Binding.{Var, Vars}\nimport com.thoughtworks.binding.dom\nimport com.thoughtworks.binding.website.TableSample.Contact\nimport org.scalajs.dom.raw.Event\n\n/**\n  * @author \u6768\u535a (Yang Bo) &lt;pop.atry@gmail.com&gt;\n  */\nobject IntSample extends Sample {\n\n  @dom\n  private def intEditor(int: Var[Int]) = {\n    <div>\n      <button onclick={event: Event => int := int.get - 1}>-</button>\n      {int.each.toString}\n      <button onclick={event: Event => int := int.get + 1}>+</button>\n    </div>\n  }\n\n  override def fileName = CurrentSource.fileName\n\n  override def content = CurrentSource.content\n\n  @dom\n  override def render = {\n\n    val i = Var(0)\n\n    @dom\n    val j = i.each + 1\n\n    <div>\n      {intEditor(i).each}\n      <br/>\n      {j.each.toString}\n    </div>\n  }\n}\n"
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$ = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$: 0
@@ -11180,8 +11180,8 @@ $c_Lcom_thoughtworks_binding_Binding$FlatProxy$$anonfun$iterator$2.prototype.$cl
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2() {
   $c_sr_AbstractFunction1.call(this);
   this.int$1$f = null;
-  this.monad$macro$88$1$f = null;
-  this.element$macro$49$1$f = null
+  this.monad$macro$40$1$f = null;
+  this.element$macro$1$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2;
@@ -11193,24 +11193,24 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$89) {
-  var jsx$1 = this.monad$macro$88$1$f;
-  var monad$macro$67 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$3 = this.monad$macro$88$1$f;
-  var element$macro$51 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().button$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  var this$2 = this.monad$macro$88$1$f;
-  var monad$macro$65 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var a = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$67, monad$macro$65);
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$41) {
+  var jsx$1 = this.monad$macro$40$1$f;
+  var monad$macro$19 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var this$3 = this.monad$macro$40$1$f;
+  var element$macro$3 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().button$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  var this$2 = this.monad$macro$40$1$f;
+  var monad$macro$17 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var a = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$19, monad$macro$17);
   var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(a.apply__Lcom_thoughtworks_binding_Binding());
-  var f = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement(this, monad$macro$67, element$macro$51);
+  var f = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement(this, monad$macro$19, element$macro$3);
   var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
-  var f$1 = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$67);
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding(this, element$macro$89))
+  var f$1 = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$19);
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding(this, element$macro$41))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2.prototype.init___Lcom_thoughtworks_binding_Binding$Var__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLDivElement = (function(int$1, monad$macro$88$1, element$macro$49$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2.prototype.init___Lcom_thoughtworks_binding_Binding$Var__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLDivElement = (function(int$1, monad$macro$40$1, element$macro$1$1) {
   this.int$1$f = int$1;
-  this.monad$macro$88$1$f = monad$macro$88$1;
-  this.element$macro$49$1$f = element$macro$49$1;
+  this.monad$macro$40$1$f = monad$macro$40$1;
+  this.element$macro$1$1$f = element$macro$1$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2 = new $TypeData().initClass({
@@ -11227,7 +11227,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 /** @constructor */
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18() {
   $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$67$1$2 = null
+  this.monad$macro$19$1$2 = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18;
@@ -11239,15 +11239,15 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$91) {
-  var this$1 = this.monad$macro$67$1$2;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$73$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$73$2))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$43) {
+  var this$1 = this.monad$macro$19$1$2;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$25$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$25$2))
   }));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$91, f))
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$43, f))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$67$1) {
-  this.monad$macro$67$1$2 = monad$macro$67$1;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$19$1) {
+  this.monad$macro$19$1$2 = monad$macro$19$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$18 = new $TypeData().initClass({
@@ -11265,7 +11265,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$89$1$f = null
+  this.element$macro$41$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20;
@@ -11277,16 +11277,16 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$92) {
-  return this.$$outer$2.monad$macro$88$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20__Lcom_thoughtworks_binding_Binding(this, element$macro$92))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$44) {
+  return this.$$outer$2.monad$macro$40$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20__Lcom_thoughtworks_binding_Binding(this, element$macro$44))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$89$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$41$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$89$1$f = element$macro$89$1;
+  this.element$macro$41$1$f = element$macro$41$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20 = new $TypeData().initClass({
@@ -11304,7 +11304,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$92$1$f = null
+  this.element$macro$44$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23;
@@ -11316,25 +11316,25 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$93) {
-  var jsx$2 = this.$$outer$2.$$outer$2.monad$macro$88$1$f;
-  var monad$macro$75 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$45) {
+  var jsx$2 = this.$$outer$2.$$outer$2.monad$macro$40$1$f;
+  var monad$macro$27 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
   var jsx$1 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
   var binding = this.$$outer$2.$$outer$2.int$1$f;
   var fa = jsx$1.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$76$2) {
-    var element$macro$76 = $uI(element$macro$76$2);
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq(("" + element$macro$76)))
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$28$2) {
+    var element$macro$28 = $uI(element$macro$28$2);
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq(("" + element$macro$28)))
   }));
-  return jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$75, fa, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23__Lcom_thoughtworks_binding_Binding(this, element$macro$93))
+  return jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$27, fa, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23__Lcom_thoughtworks_binding_Binding(this, element$macro$45))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$92$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$44$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$92$1$f = element$macro$92$1;
+  this.element$macro$44$1$f = element$macro$44$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23 = new $TypeData().initClass({
@@ -11352,7 +11352,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$93$1$f = null
+  this.element$macro$45$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26;
@@ -11364,17 +11364,17 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$93$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$45$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$93$1$f = element$macro$93$1;
+  this.element$macro$45$1$f = element$macro$45$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$94) {
-  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$88$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26__Lcom_thoughtworks_binding_Binding(this, element$macro$94))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$46) {
+  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$40$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26__Lcom_thoughtworks_binding_Binding(this, element$macro$46))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26: 0
@@ -11391,7 +11391,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$94$1$f = null
+  this.element$macro$46$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29;
@@ -11400,31 +11400,31 @@ function $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtwork
   /*<skip>*/
 }
 $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype;
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$94$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$46$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$94$1$f = element$macro$94$1;
+  this.element$macro$46$1$f = element$macro$46$1;
   return this
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$95) {
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$88$1$f;
-  var monad$macro$80 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$88$1$f;
-  var element$macro$55 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().button$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$88$1$f;
-  var monad$macro$78 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var a = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$80, monad$macro$78);
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$47) {
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$40$1$f;
+  var monad$macro$32 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$40$1$f;
+  var element$macro$7 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().button$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$40$1$f;
+  var monad$macro$30 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var a = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$32, monad$macro$30);
   var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(a.apply__Lcom_thoughtworks_binding_Binding());
-  var f = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement(this, monad$macro$80, element$macro$55);
+  var f = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement(this, monad$macro$32, element$macro$7);
   var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
-  var f$1 = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$80);
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding(this, element$macro$95))
+  var f$1 = new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$32);
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding(this, element$macro$47))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29: 0
@@ -11441,8 +11441,8 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30() {
   $c_sr_AbstractFunction0.call(this);
   this.$$outer$2 = null;
-  this.monad$macro$80$1$2 = null;
-  this.monad$macro$78$1$f = null
+  this.monad$macro$32$1$2 = null;
+  this.monad$macro$30$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30.prototype = new $h_sr_AbstractFunction0();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30;
@@ -11451,14 +11451,14 @@ function $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtwork
   /*<skip>*/
 }
 $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30.prototype = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30.prototype;
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$80$1, monad$macro$78$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$32$1, monad$macro$30$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.monad$macro$80$1$2 = monad$macro$80$1;
-  this.monad$macro$78$1$f = monad$macro$78$1;
+  this.monad$macro$32$1$2 = monad$macro$32$1;
+  this.monad$macro$30$1$f = monad$macro$30$1;
   return this
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$30.prototype.apply__Lcom_thoughtworks_binding_Binding = (function() {
@@ -11563,8 +11563,8 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 /** @constructor */
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34() {
   $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$80$1$f = null;
-  this.element$macro$55$1$f = null
+  this.monad$macro$32$1$f = null;
+  this.element$macro$7$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34;
@@ -11576,12 +11576,12 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$96) {
-  return this.monad$macro$80$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$96, new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34(this))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$48) {
+  return this.monad$macro$32$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$48, new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34(this))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement = (function($$outer, monad$macro$80$1, element$macro$55$1) {
-  this.monad$macro$80$1$f = monad$macro$80$1;
-  this.element$macro$55$1$f = element$macro$55$1;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement = (function($$outer, monad$macro$32$1, element$macro$7$1) {
+  this.monad$macro$32$1$f = monad$macro$32$1;
+  this.element$macro$7$1$f = element$macro$7$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34 = new $TypeData().initClass({
@@ -11610,13 +11610,13 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$81) {
-  var jsx$2 = this.$$outer$2.monad$macro$80$1$f;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$33) {
+  var jsx$2 = this.$$outer$2.monad$macro$32$1$f;
   var jsx$1 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$AttributeMountPoint().init___Lcom_thoughtworks_binding_Binding__F1(element$macro$81, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$AttributeMountPoint().init___Lcom_thoughtworks_binding_Binding__F1(element$macro$33, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(value$2) {
       var value = $as_F1(value$2);
-      arg$outer.$$outer$2.element$macro$55$1$f["onclick"] = (function(f) {
+      arg$outer.$$outer$2.element$macro$7$1$f["onclick"] = (function(f) {
         return (function(arg1) {
           return f.apply__O__O(arg1)
         })
@@ -11659,8 +11659,8 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37.prototype.apply__O__O = (function(v1) {
   return this.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding($asUnit(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37.prototype.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding = (function(element$macro$82) {
-  return this.$$outer$2.$$outer$2.monad$macro$80$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("+"))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37(this))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37.prototype.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding = (function(element$macro$34) {
+  return this.$$outer$2.$$outer$2.monad$macro$32$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("+"))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37(this))
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35 = (function($$outer) {
   if (($$outer === null)) {
@@ -11696,11 +11696,11 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$83) {
-  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$80$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$35) {
+  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$32$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
     var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
     return x
-  }))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40__Lcom_thoughtworks_binding_Binding(this, element$macro$83))
+  }))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40__Lcom_thoughtworks_binding_Binding(this, element$macro$35))
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37 = (function($$outer) {
   if (($$outer === null)) {
@@ -11725,7 +11725,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$83$1$2 = null
+  this.element$macro$35$1$2 = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43;
@@ -11734,28 +11734,28 @@ function $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtwork
   /*<skip>*/
 }
 $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype;
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$84) {
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$80$1$f;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$36) {
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$32$1$f;
   var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$55$1$f;
-  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.element$macro$83$1$2]));
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMappedSeq().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$84)));
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$7$1$f;
+  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.element$macro$35$1$2]));
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMappedSeq().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$36)));
   var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(element$macro$85$2) {
-      $asUnit(element$macro$85$2);
-      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$55$1$f
+    return (function(element$macro$37$2) {
+      $asUnit(element$macro$37$2);
+      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$7$1$f
     })
   })(this));
   return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$83$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$35$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$83$1$2 = element$macro$83$1;
+  this.element$macro$35$1$2 = element$macro$35$1;
   return this
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$34$$anonfun$apply$35$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.apply__O__O = (function(v1) {
@@ -11775,7 +11775,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 /** @constructor */
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45() {
   $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$80$1$2 = null
+  this.monad$macro$32$1$2 = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45;
@@ -11787,15 +11787,15 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$97) {
-  var this$1 = this.monad$macro$80$1$2;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$86$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$86$2))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$49) {
+  var this$1 = this.monad$macro$32$1$2;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$38$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$38$2))
   }));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$97, f))
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$49, f))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$80$1) {
-  this.monad$macro$80$1$2 = monad$macro$80$1;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$32$1) {
+  this.monad$macro$32$1$2 = monad$macro$32$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$45 = new $TypeData().initClass({
@@ -11813,7 +11813,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$95$1$f = null
+  this.element$macro$47$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47;
@@ -11825,17 +11825,17 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$95$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$47$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$95$1$f = element$macro$95$1;
+  this.element$macro$47$1$f = element$macro$47$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$98) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$88$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47__Lcom_thoughtworks_binding_Binding(this, element$macro$98))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$50) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$40$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47__Lcom_thoughtworks_binding_Binding(this, element$macro$50))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47: 0
@@ -11852,7 +11852,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$98$1$f = null
+  this.element$macro$50$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50;
@@ -11864,20 +11864,20 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$98$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$50$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$98$1$f = element$macro$98$1;
+  this.element$macro$50$1$f = element$macro$50$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$99) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$88$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$51) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$40$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
     var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
     return x
-  }))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50__Lcom_thoughtworks_binding_Binding(this, element$macro$99))
+  }))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50__Lcom_thoughtworks_binding_Binding(this, element$macro$51))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50: 0
@@ -11894,7 +11894,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$99$1$2 = null
+  this.element$macro$51$1$2 = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53;
@@ -11903,17 +11903,17 @@ function $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtwork
   /*<skip>*/
 }
 $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype;
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$100) {
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$88$1$f;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$52) {
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$40$1$f;
   var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$49$1$f;
-  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$89$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$92$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$93$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$94$1$f, this.$$outer$2.$$outer$2.element$macro$95$1$f, this.$$outer$2.element$macro$98$1$f, this.element$macro$99$1$2]));
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMappedSeq().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$100)));
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$1$1$f;
+  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$41$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$44$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$45$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$46$1$f, this.$$outer$2.$$outer$2.element$macro$47$1$f, this.$$outer$2.element$macro$50$1$f, this.element$macro$51$1$2]));
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMappedSeq().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$52)));
   var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(element$macro$101$2) {
-      $asUnit(element$macro$101$2);
-      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$49$1$f
+    return (function(element$macro$53$2) {
+      $asUnit(element$macro$53$2);
+      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$1$1$f
     })
   })(this));
   return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
@@ -11921,13 +11921,13 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype.apply__O__O = (function(v1) {
   return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$99$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$51$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$99$1$2 = element$macro$99$1;
+  this.element$macro$51$1$2 = element$macro$51$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$20$$anonfun$apply$23$$anonfun$apply$26$$anonfun$apply$29$$anonfun$apply$47$$anonfun$apply$50$$anonfun$apply$53 = new $TypeData().initClass({
@@ -11945,8 +11945,8 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3() {
   $c_sr_AbstractFunction0.call(this);
   this.$$outer$2 = null;
-  this.monad$macro$67$1$2 = null;
-  this.monad$macro$65$1$f = null
+  this.monad$macro$19$1$2 = null;
+  this.monad$macro$17$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3.prototype = new $h_sr_AbstractFunction0();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3;
@@ -11955,14 +11955,14 @@ function $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtwork
   /*<skip>*/
 }
 $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3.prototype = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3.prototype;
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$67$1, monad$macro$65$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$19$1, monad$macro$17$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.monad$macro$67$1$2 = monad$macro$67$1;
-  this.monad$macro$65$1$f = monad$macro$65$1;
+  this.monad$macro$19$1$2 = monad$macro$19$1;
+  this.monad$macro$17$1$f = monad$macro$17$1;
   return this
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$3.prototype.apply__Lcom_thoughtworks_binding_Binding = (function() {
@@ -12067,8 +12067,8 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 /** @constructor */
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7() {
   $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$67$1$f = null;
-  this.element$macro$51$1$f = null
+  this.monad$macro$19$1$f = null;
+  this.element$macro$3$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7;
@@ -12080,12 +12080,12 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$90) {
-  return this.monad$macro$67$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$90, new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7(this))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$42) {
+  return this.monad$macro$19$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$42, new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7(this))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement = (function($$outer, monad$macro$67$1, element$macro$51$1) {
-  this.monad$macro$67$1$f = monad$macro$67$1;
-  this.element$macro$51$1$f = element$macro$51$1;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement = (function($$outer, monad$macro$19$1, element$macro$3$1) {
+  this.monad$macro$19$1$f = monad$macro$19$1;
+  this.element$macro$3$1$f = element$macro$3$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7 = new $TypeData().initClass({
@@ -12122,13 +12122,13 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
   };
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$68) {
-  var jsx$2 = this.$$outer$2.monad$macro$67$1$f;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$20) {
+  var jsx$2 = this.$$outer$2.monad$macro$19$1$f;
   var jsx$1 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$AttributeMountPoint().init___Lcom_thoughtworks_binding_Binding__F1(element$macro$68, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$AttributeMountPoint().init___Lcom_thoughtworks_binding_Binding__F1(element$macro$20, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(value$2) {
       var value = $as_F1(value$2);
-      arg$outer.$$outer$2.element$macro$51$1$f["onclick"] = (function(f) {
+      arg$outer.$$outer$2.element$macro$3$1$f["onclick"] = (function(f) {
         return (function(arg1) {
           return f.apply__O__O(arg1)
         })
@@ -12163,8 +12163,8 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10.prototype.apply__O__O = (function(v1) {
   return this.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding($asUnit(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10.prototype.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding = (function(element$macro$69) {
-  return this.$$outer$2.$$outer$2.monad$macro$67$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("-"))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10(this))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10.prototype.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding = (function(element$macro$21) {
+  return this.$$outer$2.$$outer$2.monad$macro$19$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("-"))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10(this))
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8 = (function($$outer) {
   if (($$outer === null)) {
@@ -12208,11 +12208,11 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
   };
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$70) {
-  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$67$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$22) {
+  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$19$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
     var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
     return x
-  }))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13__Lcom_thoughtworks_binding_Binding(this, element$macro$70))
+  }))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13__Lcom_thoughtworks_binding_Binding(this, element$macro$22))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13: 0
@@ -12229,7 +12229,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$70$1$2 = null
+  this.element$macro$22$1$2 = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16;
@@ -12238,17 +12238,17 @@ function $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtwork
   /*<skip>*/
 }
 $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype;
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$71) {
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$67$1$f;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$23) {
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$19$1$f;
   var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$51$1$f;
-  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.element$macro$70$1$2]));
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMappedSeq().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$71)));
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$3$1$f;
+  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.element$macro$22$1$2]));
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMappedSeq().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$23)));
   var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(element$macro$72$2) {
-      $asUnit(element$macro$72$2);
-      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$51$1$f
+    return (function(element$macro$24$2) {
+      $asUnit(element$macro$24$2);
+      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$3$1$f
     })
   })(this));
   return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
@@ -12256,13 +12256,13 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype.apply__O__O = (function(v1) {
   return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$70$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$22$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$70$1$2 = element$macro$70$1;
+  this.element$macro$22$1$2 = element$macro$22$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding$website$IntSample$$intEditor$2$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$10$$anonfun$apply$13$$anonfun$apply$16 = new $TypeData().initClass({
@@ -12279,7 +12279,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$com$thoughtworks$binding
 /** @constructor */
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2() {
   $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$114$1$f = null;
+  this.monad$macro$66$1$f = null;
   this.i$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2.prototype = new $h_sr_AbstractFunction1();
@@ -12292,12 +12292,12 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2.prototype = $c_
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$115) {
-  var element$macro$58 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().div$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  return this.monad$macro$114$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2__Lcom_thoughtworks_binding_Binding__Lorg_scalajs_dom_raw_HTMLDivElement(this, element$macro$115, element$macro$58))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$67) {
+  var element$macro$10 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().div$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  return this.monad$macro$66$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2__Lcom_thoughtworks_binding_Binding__Lorg_scalajs_dom_raw_HTMLDivElement(this, element$macro$67, element$macro$10))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2.prototype.init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var = (function(monad$macro$114$1, i$1) {
-  this.monad$macro$114$1$f = monad$macro$114$1;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2.prototype.init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var = (function(monad$macro$66$1, i$1) {
+  this.monad$macro$66$1$f = monad$macro$66$1;
   this.i$1$f = i$1;
   return this
 });
@@ -12317,7 +12317,7 @@ function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonf
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.j$1$f = null;
-  this.element$macro$58$1$f = null
+  this.element$macro$10$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57;
@@ -12329,25 +12329,25 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$116) {
-  var jsx$2 = this.$$outer$2.monad$macro$114$1$f;
-  var monad$macro$105 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$68) {
+  var jsx$2 = this.$$outer$2.monad$macro$66$1$f;
+  var monad$macro$57 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
   var jsx$1 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
   var binding = $m_Lcom_thoughtworks_binding_website_IntSample$().com$thoughtworks$binding$website$IntSample$$intEditor__Lcom_thoughtworks_binding_Binding$Var__Lcom_thoughtworks_binding_Binding(this.$$outer$2.i$1$f);
   var fa = jsx$1.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$106$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$106$2))
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$58$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$58$2))
   }));
-  return jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$105, fa, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57__Lcom_thoughtworks_binding_Binding(this, element$macro$116))
+  return jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$57, fa, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57__Lcom_thoughtworks_binding_Binding(this, element$macro$68))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2__Lcom_thoughtworks_binding_Binding__Lorg_scalajs_dom_raw_HTMLDivElement = (function($$outer, j$1, element$macro$58$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2__Lcom_thoughtworks_binding_Binding__Lorg_scalajs_dom_raw_HTMLDivElement = (function($$outer, j$1, element$macro$10$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
   this.j$1$f = j$1;
-  this.element$macro$58$1$f = element$macro$58$1;
+  this.element$macro$10$1$f = element$macro$10$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57 = new $TypeData().initClass({
@@ -12365,7 +12365,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$116$1$f = null
+  this.element$macro$68$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60;
@@ -12377,17 +12377,17 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$116$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$68$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$116$1$f = element$macro$116$1;
+  this.element$macro$68$1$f = element$macro$68$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$117) {
-  return this.$$outer$2.$$outer$2.monad$macro$114$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60__Lcom_thoughtworks_binding_Binding(this, element$macro$117))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$69) {
+  return this.$$outer$2.$$outer$2.monad$macro$66$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60__Lcom_thoughtworks_binding_Binding(this, element$macro$69))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60: 0
@@ -12404,7 +12404,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$117$1$f = null
+  this.element$macro$69$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63;
@@ -12416,21 +12416,21 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$117$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$69$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$117$1$f = element$macro$117$1;
+  this.element$macro$69$1$f = element$macro$69$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$118) {
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$114$1$f;
-  var monad$macro$108 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$114$1$f;
-  var element$macro$61 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().br$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(element$macro$61));
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$70) {
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$66$1$f;
+  var monad$macro$60 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$66$1$f;
+  var element$macro$13 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().br$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(element$macro$13));
   if ((this$2 === null)) {
     var $$outer$2;
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
@@ -12438,11 +12438,11 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
     var $$outer$2 = this$2
   };
   var x2 = fa.get$1;
-  var element$macro$119 = $as_Lcom_thoughtworks_binding_Binding(x2);
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$109$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$109$2))
+  var element$macro$71 = $as_Lcom_thoughtworks_binding_Binding(x2);
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$61$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$61$2))
   }));
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$108, element$macro$119, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63__Lcom_thoughtworks_binding_Binding(this, element$macro$118))
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$60, element$macro$71, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63__Lcom_thoughtworks_binding_Binding(this, element$macro$70))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63: 0
@@ -12459,7 +12459,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$118$1$f = null
+  this.element$macro$70$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68;
@@ -12471,17 +12471,17 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$118$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$70$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$118$1$f = element$macro$118$1;
+  this.element$macro$70$1$f = element$macro$70$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$120) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$114$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68__Lcom_thoughtworks_binding_Binding(this, element$macro$120))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$72) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$66$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68__Lcom_thoughtworks_binding_Binding(this, element$macro$72))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68: 0
@@ -12498,7 +12498,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$120$1$f = null
+  this.element$macro$72$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71;
@@ -12510,25 +12510,25 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$121) {
-  var jsx$2 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$114$1$f;
-  var monad$macro$111 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$73) {
+  var jsx$2 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$66$1$f;
+  var monad$macro$63 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
   var jsx$1 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
   var binding = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.j$1$f;
   var fa = jsx$1.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$112$2) {
-    var element$macro$112 = $uI(element$macro$112$2);
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq(("" + element$macro$112)))
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$64$2) {
+    var element$macro$64 = $uI(element$macro$64$2);
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq(("" + element$macro$64)))
   }));
-  return jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$111, fa, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71__Lcom_thoughtworks_binding_Binding(this, element$macro$121))
+  return jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$63, fa, f))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71__Lcom_thoughtworks_binding_Binding(this, element$macro$73))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$120$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$72$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$120$1$f = element$macro$120$1;
+  this.element$macro$72$1$f = element$macro$72$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71 = new $TypeData().initClass({
@@ -12546,7 +12546,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$121$1$f = null
+  this.element$macro$73$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74;
@@ -12558,17 +12558,17 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$121$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$73$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$121$1$f = element$macro$121$1;
+  this.element$macro$73$1$f = element$macro$73$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$122) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$114$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74__Lcom_thoughtworks_binding_Binding(this, element$macro$122))
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$74) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$66$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74__Lcom_thoughtworks_binding_Binding(this, element$macro$74))
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74: 0
@@ -12585,7 +12585,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$122$1$f = null
+  this.element$macro$74$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77;
@@ -12597,19 +12597,19 @@ $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$123) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$114$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$75) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$66$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
     var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
     return x
-  }))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding(this, element$macro$123))
+  }))), new $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80().init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding(this, element$macro$75))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$122$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$74$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$122$1$f = element$macro$122$1;
+  this.element$macro$74$1$f = element$macro$74$1;
   return this
 });
 var $d_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77 = new $TypeData().initClass({
@@ -12627,7 +12627,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 function $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$123$1$2 = null
+  this.element$macro$75$1$2 = null
 }
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype.constructor = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80;
@@ -12636,28 +12636,28 @@ function $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonf
   /*<skip>*/
 }
 $h_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype = $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype;
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$124) {
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$114$1$f;
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$76) {
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$66$1$f;
   var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$58$1$f;
-  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$116$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$117$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$118$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$120$1$f, this.$$outer$2.$$outer$2.element$macro$121$1$f, this.$$outer$2.element$macro$122$1$f, this.element$macro$123$1$2]));
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMappedSeq().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$124)));
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$10$1$f;
+  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$68$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$69$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$70$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$72$1$f, this.$$outer$2.$$outer$2.element$macro$73$1$f, this.$$outer$2.element$macro$74$1$f, this.element$macro$75$1$2]));
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMappedSeq().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$76)));
   var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(element$macro$125$2) {
-      $asUnit(element$macro$125$2);
-      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$58$1$f
+    return (function(element$macro$77$2) {
+      $asUnit(element$macro$77$2);
+      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$10$1$f
     })
   })(this));
   return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
 });
-$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$123$1) {
+$c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype.init___Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$75$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$123$1$2 = element$macro$123$1;
+  this.element$macro$75$1$2 = element$macro$75$1;
   return this
 });
 $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$57$$anonfun$apply$60$$anonfun$apply$63$$anonfun$apply$68$$anonfun$apply$71$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$80.prototype.apply__O__O = (function(v1) {
