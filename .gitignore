@@ -25,3 +25,4 @@ project/plugins/project/
 .settings/
 
 local.sbt
+secret/
