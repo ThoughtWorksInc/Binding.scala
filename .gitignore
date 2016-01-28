@@ -25,4 +25,3 @@ project/plugins/project/
 .settings/
 
 local.sbt
-secring.asc
