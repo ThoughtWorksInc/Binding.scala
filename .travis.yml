@@ -24,7 +24,7 @@ notifications:
     on_start: never     # options: [always|never|change] default: always
 
 before_deploy:
-  - git clone --depth=1 $secret_git ./secret
+  - travis_retry git clone --depth=1 $secret_git ./secret
   - bash ./secret/before_deploy.sh
 
 deploy:
