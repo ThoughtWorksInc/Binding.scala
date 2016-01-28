@@ -57,7 +57,7 @@ releaseProcess := Seq[ReleaseStep](
   tagRelease,
   publishArtifacts,
   setNextVersion,
-  commitNextVersion
+  commitNextVersion,
   releaseStepCommand("sonatypeRelease"),
   pushChanges
 )
