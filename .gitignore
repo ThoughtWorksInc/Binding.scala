@@ -23,3 +23,6 @@ project/plugins/project/
 .classpath
 .project
 .settings/
+
+local.sbt
+secring.asc

@@ -38,19 +38,34 @@ releaseCrossBuild := false
 
 import ReleaseTransformations._
 
+val disableDeploySh = taskKey[Unit]("Rename deploy.sh to deploy.sh.disabled.")
+
+disableDeploySh := {
+  val log = (streams in disableDeploySh).value.log
+  Process(
+    "git" :: "mv" :: "--" :: "deploy.sh" :: "deploy.sh.disabled" :: Nil,
+    baseDirectory.value
+  ) ! log
+}
+
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
   inquireVersions,
-  runClean,
-  runTest,
   setReleaseVersion,
+  releaseStepTask(disableDeploySh),
   commitReleaseVersion,
   tagRelease,
   publishArtifacts,
   setNextVersion,
-  commitNextVersion,
+  commitNextVersion
   releaseStepCommand("sonatypeRelease"),
   pushChanges
 )
 
 sonatypeProfileName := "com.thoughtworks.binding"
+
+pgpSecretRing := baseDirectory.value / "secret" / "secring.asc"
+
+pgpPublicRing := baseDirectory.value / "pubring.asc"
+
+pgpPassphrase := Some(Array.empty)
