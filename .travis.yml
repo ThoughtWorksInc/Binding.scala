@@ -15,9 +15,6 @@ language: scala
 scala:
   - 2.11.7
 
-script:
-  - echo disabled
-
 notifications:
   webhooks:
     urls:
