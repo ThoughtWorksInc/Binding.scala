@@ -1,0 +1,11 @@
+
+before_deploy:
+  - travis_retry git clone --depth=1 $secret_git ./secret
+
+deploy:
+  provider: script
+  script: ./deploy.sh
+  on:
+    jdk: openjdk7
+    condition: -e ./deploy.sh
+    all_branches: true
