@@ -48,20 +48,6 @@ disableDeploySh := {
   ) ! log
 }
 
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  setReleaseVersion,
-  releaseStepTask(disableDeploySh),
-  commitReleaseVersion,
-  tagRelease,
-  publishArtifacts,
-  setNextVersion,
-  commitNextVersion,
-  releaseStepCommand("sonatypeRelease"),
-  pushChanges
-)
-
 sonatypeProfileName := "com.thoughtworks.binding"
 
 pgpSecretRing := baseDirectory.value / "secret" / "secring.asc"
@@ -69,3 +55,11 @@ pgpSecretRing := baseDirectory.value / "secret" / "secring.asc"
 pgpPublicRing := baseDirectory.value / "pubring.asc"
 
 pgpPassphrase := Some(Array.empty)
+
+releaseProcess := {
+  releaseProcess.value.patch(releaseProcess.value.indexOf(pushChanges), Seq[ReleaseStep](releaseStepCommand("sonatypeRelease")), 0)
+}
+
+releaseProcess -= runClean
+
+releaseProcess -= runTest
