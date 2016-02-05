@@ -1322,7 +1322,7 @@ function $m_Lcom_thoughtworks_binding_dom$Runtime$() {
 /** @constructor */
 function $c_Lcom_thoughtworks_binding_website_SampleBrowser$() {
   $c_O.call(this);
-  this.Samples$1 = null
+  this.com$thoughtworks$binding$website$SampleBrowser$$Samples$1 = null
 }
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype = new $h_O();
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$;
@@ -1333,26 +1333,15 @@ function $h_Lcom_thoughtworks_binding_website_SampleBrowser$() {
 $h_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype;
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.init___ = (function() {
   $n_Lcom_thoughtworks_binding_website_SampleBrowser$ = this;
-  this.Samples$1 = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$m_Lcom_thoughtworks_binding_website_IntSample$(), $m_Lcom_thoughtworks_binding_website_TableSample$()])));
+  this.com$thoughtworks$binding$website$SampleBrowser$$Samples$1 = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([$m_Lcom_thoughtworks_binding_website_IntSample$(), $m_Lcom_thoughtworks_binding_website_TableSample$()])));
   return this
 });
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.main__V = (function() {
   var parent = $g["document"]["body"];
-  var child = this.render__Lcom_thoughtworks_binding_Binding();
+  var child = this.render__p1__Lcom_thoughtworks_binding_Binding();
   var this$2 = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding(parent, child);
   var listener = $m_Lcom_thoughtworks_binding_Binding$DummyListener$();
   $s_Lcom_thoughtworks_binding_Binding$MountPoint$class__addChangedListener__Lcom_thoughtworks_binding_Binding$MountPoint__Lcom_thoughtworks_binding_Binding$ChangedListener__V(this$2, listener)
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.render__Lcom_thoughtworks_binding_Binding = (function() {
-  var monad$macro$407 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var initialValue = this.com$thoughtworks$binding$website$SampleBrowser$$hashIndex__I();
-  var currentSampleIndex = new $c_Lcom_thoughtworks_binding_Binding$Var().init___O(initialValue);
-  $g["window"]["onhashchange"] = (function(currentSampleIndex$1) {
-    return (function(event$2) {
-      currentSampleIndex$1.$$colon$eq__O__V($m_Lcom_thoughtworks_binding_website_SampleBrowser$().com$thoughtworks$binding$website$SampleBrowser$$hashIndex__I())
-    })
-  })(currentSampleIndex);
-  return monad$macro$407.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($m_Lcom_thoughtworks_each_Monadic$EachOps$().unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(currentSampleIndex)).get__O()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2().init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var(monad$macro$407, currentSampleIndex))
 });
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.$$js$exported$meth$main__O = (function() {
   this.main__V()
@@ -1383,6 +1372,17 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.com$thoughtworks$b
     }
   };
   return $uI((this$8.isSuccess__Z() ? this$8.get__O() : 0))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.render__p1__Lcom_thoughtworks_binding_Binding = (function() {
+  var monad$macro$407 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var initialValue = this.com$thoughtworks$binding$website$SampleBrowser$$hashIndex__I();
+  var currentSampleIndex = new $c_Lcom_thoughtworks_binding_Binding$Var().init___O(initialValue);
+  $g["window"]["onhashchange"] = (function(currentSampleIndex$1) {
+    return (function(event$2) {
+      currentSampleIndex$1.$$colon$eq__O__V($m_Lcom_thoughtworks_binding_website_SampleBrowser$().com$thoughtworks$binding$website$SampleBrowser$$hashIndex__I())
+    })
+  })(currentSampleIndex);
+  return monad$macro$407.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($m_Lcom_thoughtworks_each_Monadic$EachOps$().unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(currentSampleIndex)).get__O()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2().init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var(monad$macro$407, currentSampleIndex))
 });
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype["main"] = (function() {
   return this.$$js$exported$meth$main__O()
@@ -14162,7 +14162,7 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   return this.apply__I__Lcom_thoughtworks_binding_Binding($uI(v1))
 });
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype.apply__I__Lcom_thoughtworks_binding_Binding = (function(element$macro$392) {
-  var sample = $as_Lcom_thoughtworks_binding_website_Sample($m_Lcom_thoughtworks_binding_website_SampleBrowser$().Samples$1.apply__I__O(element$macro$392));
+  var sample = $as_Lcom_thoughtworks_binding_website_Sample($m_Lcom_thoughtworks_binding_website_SampleBrowser$().com$thoughtworks$binding$website$SampleBrowser$$Samples$1.apply__I__O(element$macro$392));
   var element$macro$133 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().section$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
   return this.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34__Lcom_thoughtworks_binding_website_Sample__Lorg_scalajs_dom_raw_HTMLElement(this, sample, element$macro$133))
 });
@@ -14638,7 +14638,7 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
     return (function(event$2) {
       var jsx$2 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
       var this$1 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
-      if ((((1 + $uI(this$1.com$thoughtworks$binding$Binding$Var$$value$1)) | 0) === $m_Lcom_thoughtworks_binding_website_SampleBrowser$().Samples$1.length__I())) {
+      if ((((1 + $uI(this$1.com$thoughtworks$binding$Binding$Var$$value$1)) | 0) === $m_Lcom_thoughtworks_binding_website_SampleBrowser$().com$thoughtworks$binding$website$SampleBrowser$$Samples$1.length__I())) {
         var jsx$1 = 0
       } else {
         var this$2 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
