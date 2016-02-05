@@ -1345,12 +1345,44 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.main__V = (functio
 });
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.render__Lcom_thoughtworks_binding_Binding = (function() {
   var monad$macro$407 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var currentSampleIndex = new $c_Lcom_thoughtworks_binding_Binding$Var().init___O(0);
-  var element$macro$126 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().section$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  return monad$macro$407.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2().init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var__Lorg_scalajs_dom_raw_HTMLElement(monad$macro$407, currentSampleIndex, element$macro$126))
+  var initialValue = this.com$thoughtworks$binding$website$SampleBrowser$$hashIndex__I();
+  var currentSampleIndex = new $c_Lcom_thoughtworks_binding_Binding$Var().init___O(initialValue);
+  $g["window"]["onhashchange"] = (function(currentSampleIndex$1) {
+    return (function(event$2) {
+      currentSampleIndex$1.$$colon$eq__O__V($m_Lcom_thoughtworks_binding_website_SampleBrowser$().com$thoughtworks$binding$website$SampleBrowser$$hashIndex__I())
+    })
+  })(currentSampleIndex);
+  return monad$macro$407.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($m_Lcom_thoughtworks_each_Monadic$EachOps$().unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(currentSampleIndex)).get__O()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2().init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var(monad$macro$407, currentSampleIndex))
 });
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.$$js$exported$meth$main__O = (function() {
   this.main__V()
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype.com$thoughtworks$binding$website$SampleBrowser$$hashIndex__I = (function() {
+  try {
+    var thiz = $as_T($g["location"]["hash"]);
+    var this$5 = new $c_sci_StringOps().init___T($as_T(thiz["substring"](1)));
+    var this$7 = $m_jl_Integer$();
+    var s = this$5.repr$1;
+    var this$8 = new $c_s_util_Success().init___O(this$7.parseInt__T__I__I(s, 10))
+  } catch (e) {
+    var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+    if ((e$2 !== null)) {
+      matchEnd8: {
+        var this$8;
+        var o11 = $m_s_util_control_NonFatal$().unapply__jl_Throwable__s_Option(e$2);
+        if ((!o11.isEmpty__Z())) {
+          var e$3 = $as_jl_Throwable(o11.get__O());
+          var this$8 = new $c_s_util_Failure().init___jl_Throwable(e$3);
+          break matchEnd8
+        };
+        throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
+      }
+    } else {
+      var this$8;
+      throw e
+    }
+  };
+  return $uI((this$8.isSuccess__Z() ? this$8.get__O() : 0))
 });
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$.prototype["main"] = (function() {
   return this.$$js$exported$meth$main__O()
@@ -1660,6 +1692,62 @@ function $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O($$this, fa, f) {
   return $$this.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(fa), f$1)
 }
 /** @constructor */
+function $c_jl_Character$() {
+  $c_O.call(this);
+  this.TYPE$1 = null;
+  this.MIN$undVALUE$1 = 0;
+  this.MAX$undVALUE$1 = 0;
+  this.SIZE$1 = 0;
+  this.MIN$undRADIX$1 = 0;
+  this.MAX$undRADIX$1 = 0;
+  this.MIN$undHIGH$undSURROGATE$1 = 0;
+  this.MAX$undHIGH$undSURROGATE$1 = 0;
+  this.MIN$undLOW$undSURROGATE$1 = 0;
+  this.MAX$undLOW$undSURROGATE$1 = 0;
+  this.MIN$undSURROGATE$1 = 0;
+  this.MAX$undSURROGATE$1 = 0;
+  this.MIN$undCODE$undPOINT$1 = 0;
+  this.MAX$undCODE$undPOINT$1 = 0;
+  this.MIN$undSUPPLEMENTARY$undCODE$undPOINT$1 = 0;
+  this.HighSurrogateMask$1 = 0;
+  this.HighSurrogateID$1 = 0;
+  this.LowSurrogateMask$1 = 0;
+  this.LowSurrogateID$1 = 0;
+  this.SurrogateUsefulPartMask$1 = 0;
+  this.java$lang$Character$$charTypesFirst256$1 = null;
+  this.charTypeIndices$1 = null;
+  this.charTypes$1 = null;
+  this.isMirroredIndices$1 = null;
+  this.bitmap$0$1 = 0
+}
+$c_jl_Character$.prototype = new $h_O();
+$c_jl_Character$.prototype["constructor"] = $c_jl_Character$;
+/** @constructor */
+function $h_jl_Character$() {
+  /*<skip>*/
+}
+$h_jl_Character$.prototype = $c_jl_Character$.prototype;
+$c_jl_Character$.prototype.init___ = (function() {
+  return this
+});
+$c_jl_Character$.prototype.digit__C__I__I = (function(c, radix) {
+  return (((radix > 36) || (radix < 2)) ? (-1) : ((((c >= 48) && (c <= 57)) && ((((-48) + c) | 0) < radix)) ? (((-48) + c) | 0) : ((((c >= 65) && (c <= 90)) && ((((-65) + c) | 0) < (((-10) + radix) | 0))) ? (((-55) + c) | 0) : ((((c >= 97) && (c <= 122)) && ((((-97) + c) | 0) < (((-10) + radix) | 0))) ? (((-87) + c) | 0) : ((((c >= 65313) && (c <= 65338)) && ((((-65313) + c) | 0) < (((-10) + radix) | 0))) ? (((-65303) + c) | 0) : ((((c >= 65345) && (c <= 65370)) && ((((-65345) + c) | 0) < (((-10) + radix) | 0))) ? (((-65303) + c) | 0) : (-1)))))))
+});
+var $d_jl_Character$ = new $TypeData().initClass({
+  jl_Character$: 0
+}, false, "java.lang.Character$", {
+  jl_Character$: 1,
+  O: 1
+});
+$c_jl_Character$.prototype.$classData = $d_jl_Character$;
+var $n_jl_Character$ = (void 0);
+function $m_jl_Character$() {
+  if ((!$n_jl_Character$)) {
+    $n_jl_Character$ = new $c_jl_Character$().init___()
+  };
+  return $n_jl_Character$
+}
+/** @constructor */
 function $c_jl_Class() {
   $c_O.call(this);
   this.data$1 = null
@@ -1798,17 +1886,57 @@ $h_jl_Integer$.prototype = $c_jl_Integer$.prototype;
 $c_jl_Integer$.prototype.init___ = (function() {
   return this
 });
+$c_jl_Integer$.prototype.fail$1__p1__T__sr_Nothing$ = (function(s$1) {
+  throw new $c_jl_NumberFormatException().init___T(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["For input string: \"", "\""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([s$1])))
+});
+$c_jl_Integer$.prototype.parseInt__T__I__I = (function(s, radix) {
+  if ((s === null)) {
+    var jsx$1 = true
+  } else {
+    var this$2 = new $c_sci_StringOps().init___T(s);
+    var $$this = this$2.repr$1;
+    var jsx$1 = ($uI($$this["length"]) === 0)
+  };
+  if (((jsx$1 || (radix < 2)) || (radix > 36))) {
+    this.fail$1__p1__T__sr_Nothing$(s)
+  } else {
+    var i = ((((65535 & $uI(s["charCodeAt"](0))) === 45) || ((65535 & $uI(s["charCodeAt"](0))) === 43)) ? 1 : 0);
+    var this$12 = new $c_sci_StringOps().init___T(s);
+    var $$this$1 = this$12.repr$1;
+    if (($uI($$this$1["length"]) <= i)) {
+      this.fail$1__p1__T__sr_Nothing$(s)
+    } else {
+      while (true) {
+        var jsx$2 = i;
+        var this$16 = new $c_sci_StringOps().init___T(s);
+        var $$this$2 = this$16.repr$1;
+        if ((jsx$2 < $uI($$this$2["length"]))) {
+          var jsx$3 = $m_jl_Character$();
+          var index = i;
+          if ((jsx$3.digit__C__I__I((65535 & $uI(s["charCodeAt"](index))), radix) < 0)) {
+            this.fail$1__p1__T__sr_Nothing$(s)
+          };
+          i = ((1 + i) | 0)
+        } else {
+          break
+        }
+      };
+      var res = $uD($g["parseInt"](s, radix));
+      return (((res !== res) || ((res > 2147483647) || (res < (-2147483648)))) ? this.fail$1__p1__T__sr_Nothing$(s) : $doubleToInt(res))
+    }
+  }
+});
+$c_jl_Integer$.prototype.bitCount__I__I = (function(i) {
+  var t1 = ((i - (1431655765 & (i >> 1))) | 0);
+  var t2 = (((858993459 & t1) + (858993459 & (t1 >> 2))) | 0);
+  return ($imul(16843009, (252645135 & ((t2 + (t2 >> 4)) | 0))) >> 24)
+});
 $c_jl_Integer$.prototype.reverseBytes__I__I = (function(i) {
   var byte3 = ((i >>> 24) | 0);
   var byte2 = (65280 & ((i >>> 8) | 0));
   var byte1 = (16711680 & (i << 8));
   var byte0 = (i << 24);
   return (((byte0 | byte1) | byte2) | byte3)
-});
-$c_jl_Integer$.prototype.bitCount__I__I = (function(i) {
-  var t1 = ((i - (1431655765 & (i >> 1))) | 0);
-  var t2 = (((858993459 & t1) + (858993459 & (t1 >> 2))) | 0);
-  return ($imul(16843009, (252645135 & ((t2 + (t2 >> 4)) | 0))) >> 24)
 });
 var $d_jl_Integer$ = new $TypeData().initClass({
   jl_Integer$: 0
@@ -2451,6 +2579,17 @@ function $m_s_util_Either$() {
   return $n_s_util_Either$
 }
 /** @constructor */
+function $c_s_util_Try() {
+  $c_O.call(this)
+}
+$c_s_util_Try.prototype = new $h_O();
+$c_s_util_Try.prototype["constructor"] = $c_s_util_Try;
+/** @constructor */
+function $h_s_util_Try() {
+  /*<skip>*/
+}
+$h_s_util_Try.prototype = $c_s_util_Try.prototype;
+/** @constructor */
 function $c_s_util_control_Breaks() {
   $c_O.call(this);
   this.scala$util$control$Breaks$$breakException$1 = null
@@ -2473,6 +2612,18 @@ var $d_s_util_control_Breaks = new $TypeData().initClass({
   O: 1
 });
 $c_s_util_control_Breaks.prototype.$classData = $d_s_util_control_Breaks;
+function $is_s_util_control_ControlThrowable(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.s_util_control_ControlThrowable)))
+}
+function $as_s_util_control_ControlThrowable(obj) {
+  return (($is_s_util_control_ControlThrowable(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.util.control.ControlThrowable"))
+}
+function $isArrayOf_s_util_control_ControlThrowable(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.s_util_control_ControlThrowable)))
+}
+function $asArrayOf_s_util_control_ControlThrowable(obj, depth) {
+  return (($isArrayOf_s_util_control_ControlThrowable(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.util.control.ControlThrowable;", depth))
+}
 function $s_s_util_control_NoStackTrace$class__fillInStackTrace__s_util_control_NoStackTrace__jl_Throwable($$this) {
   var this$1 = $m_s_util_control_NoStackTrace$();
   if (this$1.$$undnoSuppression$1) {
@@ -2480,6 +2631,40 @@ function $s_s_util_control_NoStackTrace$class__fillInStackTrace__s_util_control_
   } else {
     return $as_jl_Throwable($$this)
   }
+}
+/** @constructor */
+function $c_s_util_control_NonFatal$() {
+  $c_O.call(this)
+}
+$c_s_util_control_NonFatal$.prototype = new $h_O();
+$c_s_util_control_NonFatal$.prototype["constructor"] = $c_s_util_control_NonFatal$;
+/** @constructor */
+function $h_s_util_control_NonFatal$() {
+  /*<skip>*/
+}
+$h_s_util_control_NonFatal$.prototype = $c_s_util_control_NonFatal$.prototype;
+$c_s_util_control_NonFatal$.prototype.init___ = (function() {
+  return this
+});
+$c_s_util_control_NonFatal$.prototype.apply__jl_Throwable__Z = (function(t) {
+  return (!($is_jl_VirtualMachineError(t) || ($is_jl_ThreadDeath(t) || ($is_jl_InterruptedException(t) || ($is_jl_LinkageError(t) || $is_s_util_control_ControlThrowable(t))))))
+});
+$c_s_util_control_NonFatal$.prototype.unapply__jl_Throwable__s_Option = (function(t) {
+  return (this.apply__jl_Throwable__Z(t) ? new $c_s_Some().init___O(t) : $m_s_None$())
+});
+var $d_s_util_control_NonFatal$ = new $TypeData().initClass({
+  s_util_control_NonFatal$: 0
+}, false, "scala.util.control.NonFatal$", {
+  s_util_control_NonFatal$: 1,
+  O: 1
+});
+$c_s_util_control_NonFatal$.prototype.$classData = $d_s_util_control_NonFatal$;
+var $n_s_util_control_NonFatal$ = (void 0);
+function $m_s_util_control_NonFatal$() {
+  if ((!$n_s_util_control_NonFatal$)) {
+    $n_s_util_control_NonFatal$ = new $c_s_util_control_NonFatal$().init___()
+  };
+  return $n_s_util_control_NonFatal$
 }
 /** @constructor */
 function $c_s_util_hashing_MurmurHash3() {
@@ -9566,6 +9751,18 @@ var $d_jl_CloneNotSupportedException = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_jl_CloneNotSupportedException.prototype.$classData = $d_jl_CloneNotSupportedException;
+function $is_jl_InterruptedException(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.jl_InterruptedException)))
+}
+function $as_jl_InterruptedException(obj) {
+  return (($is_jl_InterruptedException(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.lang.InterruptedException"))
+}
+function $isArrayOf_jl_InterruptedException(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_InterruptedException)))
+}
+function $asArrayOf_jl_InterruptedException(obj, depth) {
+  return (($isArrayOf_jl_InterruptedException(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.InterruptedException;", depth))
+}
 /** @constructor */
 function $c_jl_JSConsoleBasedPrintStream$DummyOutputStream() {
   $c_Ljava_io_OutputStream.call(this)
@@ -9590,6 +9787,18 @@ var $d_jl_JSConsoleBasedPrintStream$DummyOutputStream = new $TypeData().initClas
   Ljava_io_Flushable: 1
 });
 $c_jl_JSConsoleBasedPrintStream$DummyOutputStream.prototype.$classData = $d_jl_JSConsoleBasedPrintStream$DummyOutputStream;
+function $is_jl_LinkageError(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.jl_LinkageError)))
+}
+function $as_jl_LinkageError(obj) {
+  return (($is_jl_LinkageError(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.lang.LinkageError"))
+}
+function $isArrayOf_jl_LinkageError(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_LinkageError)))
+}
+function $asArrayOf_jl_LinkageError(obj, depth) {
+  return (($isArrayOf_jl_LinkageError(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.LinkageError;", depth))
+}
 /** @constructor */
 function $c_jl_RuntimeException() {
   $c_jl_Exception.call(this)
@@ -9673,6 +9882,30 @@ var $d_jl_StringBuilder = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_jl_StringBuilder.prototype.$classData = $d_jl_StringBuilder;
+function $is_jl_ThreadDeath(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.jl_ThreadDeath)))
+}
+function $as_jl_ThreadDeath(obj) {
+  return (($is_jl_ThreadDeath(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.lang.ThreadDeath"))
+}
+function $isArrayOf_jl_ThreadDeath(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_ThreadDeath)))
+}
+function $asArrayOf_jl_ThreadDeath(obj, depth) {
+  return (($isArrayOf_jl_ThreadDeath(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.ThreadDeath;", depth))
+}
+function $is_jl_VirtualMachineError(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.jl_VirtualMachineError)))
+}
+function $as_jl_VirtualMachineError(obj) {
+  return (($is_jl_VirtualMachineError(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.lang.VirtualMachineError"))
+}
+function $isArrayOf_jl_VirtualMachineError(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_VirtualMachineError)))
+}
+function $asArrayOf_jl_VirtualMachineError(obj, depth) {
+  return (($isArrayOf_jl_VirtualMachineError(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.VirtualMachineError;", depth))
+}
 /** @constructor */
 function $c_s_Array$() {
   $c_s_FallbackArrayBuilding.call(this)
@@ -12292,8 +12525,7 @@ $c_Lcom_thoughtworks_binding_website_IntSample$$anonfun$render$2$$anonfun$apply$
 function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2() {
   $c_sr_AbstractFunction1.call(this);
   this.monad$macro$407$1$f = null;
-  this.currentSampleIndex$1$f = null;
-  this.element$macro$126$1$f = null
+  this.currentSampleIndex$1$f = null
 }
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype = new $h_sr_AbstractFunction1();
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2;
@@ -12302,27 +12534,18 @@ function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2() 
   /*<skip>*/
 }
 $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype.init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var__Lorg_scalajs_dom_raw_HTMLElement = (function(monad$macro$407$1, currentSampleIndex$1, element$macro$126$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype.apply__O__O = (function(v1) {
+  return this.apply__I__Lcom_thoughtworks_binding_Binding($uI(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype.apply__I__Lcom_thoughtworks_binding_Binding = (function(element$macro$408) {
+  $g["location"]["hash"] = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["#", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([("" + element$macro$408)]));
+  var element$macro$126 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().section$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  return this.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2__Lorg_scalajs_dom_raw_HTMLElement(this, element$macro$126))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype.init___Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$Var = (function(monad$macro$407$1, currentSampleIndex$1) {
   this.monad$macro$407$1$f = monad$macro$407$1;
   this.currentSampleIndex$1$f = currentSampleIndex$1;
-  this.element$macro$126$1$f = element$macro$126$1;
   return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$408) {
-  var jsx$1 = this.monad$macro$407$1$f;
-  var monad$macro$331 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$3 = this.monad$macro$407$1$f;
-  var element$macro$128 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().button$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  var this$2 = this.monad$macro$407$1$f;
-  $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n        Next Sample\n      ")))));
-  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement(this, monad$macro$331, element$macro$128);
-  var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
-  var f$1 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$331);
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2__Lcom_thoughtworks_binding_Binding(this, element$macro$408))
 });
 var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2 = new $TypeData().initClass({
   Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2: 0
@@ -12336,239 +12559,70 @@ var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2 = new $
 });
 $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17() {
-  $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$331$1$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$331$1) {
-  this.monad$macro$331$1$2 = monad$macro$331$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$410) {
-  var this$1 = this.monad$macro$331$1$2;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$337$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$337$2))
-  }));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$410, f))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$17", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$17;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$408$1$f = null
+  this.element$macro$126$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$408$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$408$1$f = element$macro$408$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$411) {
-  return this.$$outer$2.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19__Lcom_thoughtworks_binding_Binding(this, element$macro$411))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$386$1$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$387) {
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
-  var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$138$1$f;
-  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$376$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$379$1$f, this.$$outer$2.$$outer$2.element$macro$380$1$f, this.$$outer$2.element$macro$385$1$f, this.element$macro$386$1$2]));
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$387)));
-  var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(element$macro$388$2) {
-      $asUnit(element$macro$388$2);
-      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$138$1$f
-    })
-  })(this));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104.prototype.apply__O__O = (function(v1) {
-  return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$386$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$386$1$2 = element$macro$386$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$376) {
-  var jsx$1 = this.$$outer$2.monad$macro$375$1$f;
-  var monad$macro$353 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$3 = this.$$outer$2.monad$macro$375$1$f;
-  var element$macro$140 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().legend$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  var this$2 = this.$$outer$2.monad$macro$375$1$f;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$409) {
+  var jsx$1 = this.$$outer$2.monad$macro$407$1$f;
+  var monad$macro$331 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var this$3 = this.$$outer$2.monad$macro$407$1$f;
+  var element$macro$128 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().button$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  var this$2 = this.$$outer$2.monad$macro$407$1$f;
   $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n              ")))));
-  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLLegendElement(this, monad$macro$353, element$macro$140);
+  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n        Next Sample\n      ")))));
+  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement(this, monad$macro$331, element$macro$128);
   var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
-  var f$1 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$353);
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54__Lcom_thoughtworks_binding_Binding(this, element$macro$376))
+  var f$1 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$331);
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3__Lcom_thoughtworks_binding_Binding(this, element$macro$409))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53 = (function($$outer) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2__Lorg_scalajs_dom_raw_HTMLElement = (function($$outer, element$macro$126$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
+  this.element$macro$126$1$f = element$macro$126$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.monad$macro$353$1$f = null;
-  this.element$macro$140$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLLegendElement = (function($$outer, monad$macro$353$1, element$macro$140$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.monad$macro$353$1$f = monad$macro$353$1;
-  this.element$macro$140$1$f = element$macro$140$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$377) {
-  return this.monad$macro$353$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$377, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58(this))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$354) {
-  return this.$$outer$2.monad$macro$353$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq(this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.sample$1$f.fileName__T()))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59__Lcom_thoughtworks_binding_Binding(this, element$macro$354))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58 = (function($$outer) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -12576,783 +12630,42 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   };
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59: 1,
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$368) {
+  return this.$$outer$2.monad$macro$362$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$368, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83(this))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$354$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$354$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$354$1$f = element$macro$354$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$355) {
-  return this.$$outer$2.$$outer$2.monad$macro$353$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n            "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62__Lcom_thoughtworks_binding_Binding(this, element$macro$355))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$355$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$355$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$355$1$f = element$macro$355$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$356) {
-  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$353$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
-    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
-    return x
-  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65__Lcom_thoughtworks_binding_Binding(this, element$macro$356))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70() {
-  $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$353$1$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$353$1) {
-  this.monad$macro$353$1$2 = monad$macro$353$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$378) {
-  var this$1 = this.monad$macro$353$1$2;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$359$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$359$2))
-  }));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$378, f))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$70;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$376$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$379) {
-  return this.$$outer$2.$$outer$2.monad$macro$375$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n            "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72__Lcom_thoughtworks_binding_Binding(this, element$macro$379))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$376$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$376$1$f = element$macro$376$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$379$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$380) {
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
-  var monad$macro$367 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$5 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
-  var element$macro$144 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().pre$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  var this$4 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
-  var monad$macro$362 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
-  var element$macro$145 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().code$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
-  $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq(this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.sample$1$f.content__T()))))));
-  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLElement(this, monad$macro$367, monad$macro$362, element$macro$145);
-  var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
-  var f$1 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$367, monad$macro$362);
-  var fa$2 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1);
-  var f$2 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLPreElement(this, monad$macro$367, element$macro$144);
-  var fa$3 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$4, fa$2, f$2);
-  var f$3 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$367);
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$5, fa$3, f$3)), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding(this, element$macro$380))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$379$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$379$1$f = element$macro$379$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80() {
-  $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$367$1$2 = null;
-  this.monad$macro$362$1$f = null;
-  this.element$macro$145$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$381) {
-  var this$1 = this.monad$macro$367$1$2;
-  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80(this);
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$381, f))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLElement = (function($$outer, monad$macro$367$1, monad$macro$362$1, element$macro$145$1) {
-  this.monad$macro$367$1$2 = monad$macro$367$1;
-  this.monad$macro$362$1$f = monad$macro$362$1;
-  this.element$macro$145$1$f = element$macro$145$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$368) {
-  return this.$$outer$2.monad$macro$362$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$368, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81(this))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87() {
-  $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$367$1$2 = null;
-  this.monad$macro$362$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$367$1, monad$macro$362$1) {
-  this.monad$macro$367$1$2 = monad$macro$367$1;
-  this.monad$macro$362$1$f = monad$macro$362$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$382) {
-  var this$1 = this.monad$macro$367$1$2;
-  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87(this);
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$382, f))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$369) {
-  var this$1 = this.$$outer$2.monad$macro$362$1$f;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$366$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$366$2))
-  }));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$369, f))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$87$$anonfun$apply$88;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90() {
-  $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$367$1$f = null;
-  this.element$macro$144$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLPreElement = (function($$outer, monad$macro$367$1, element$macro$144$1) {
-  this.monad$macro$367$1$f = monad$macro$367$1;
-  this.element$macro$144$1$f = element$macro$144$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$383) {
-  return this.monad$macro$367$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$383, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90(this))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$370) {
-  return this.$$outer$2.monad$macro$367$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
-    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
-    return x
-  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91__Lcom_thoughtworks_binding_Binding(this, element$macro$370))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96() {
-  $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$367$1$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$367$1) {
-  this.monad$macro$367$1$2 = monad$macro$367$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$384) {
-  var this$1 = this.monad$macro$367$1$2;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$373$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$373$2))
-  }));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$384, f))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$96;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$380$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$385) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98__Lcom_thoughtworks_binding_Binding(this, element$macro$385))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$380$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$380$1$f = element$macro$380$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$385$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$386) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
-    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
-    return x
-  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$16141d19135441b611f5c52e135560$$$$ly$75$$anonfun$apply$98$$anonfun$apply$101$$anonfun$apply$104().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101__Lcom_thoughtworks_binding_Binding(this, element$macro$386))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$385$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$385$1$f = element$macro$385$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$98$$anonfun$apply$101;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$356$1$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$357) {
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$353$1$f;
-  var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$140$1$f;
-  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.element$macro$354$1$f, this.$$outer$2.element$macro$355$1$f, this.element$macro$356$1$2]));
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$357)));
-  var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(element$macro$358$2) {
-      $asUnit(element$macro$358$2);
-      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$140$1$f
-    })
-  })(this));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68.prototype.apply__O__O = (function(v1) {
-  return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$58$$anonfun$apply$59$$anonfun$apply$62$$anonfun$apply$65__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$356$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$356$1$2 = element$macro$356$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$32674ee32edc2279d57e56a166adf2f$$$$pply$59$$anonfun$apply$62$$anonfun$apply$65$$anonfun$apply$68;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$398$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$398$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$398$1$f = element$macro$398$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$401) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n        "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108__Lcom_thoughtworks_binding_Binding(this, element$macro$401))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$401$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$401$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$401$1$f = element$macro$401$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$402) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
-    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
-    return x
-  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111__Lcom_thoughtworks_binding_Binding(this, element$macro$402))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$402$1$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$403) {
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
-  var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$133$1$f;
-  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$393$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$394$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$395$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$397$1$f, this.$$outer$2.$$outer$2.element$macro$398$1$f, this.$$outer$2.element$macro$401$1$f, this.element$macro$402$1$2]));
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$403)));
-  var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(element$macro$404$2) {
-      $asUnit(element$macro$404$2);
-      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$133$1$f
-    })
-  })(this));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114.prototype.apply__O__O = (function(v1) {
-  return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$402$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$402$1$2 = element$macro$402$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108$$anonfun$apply$111$$anonfun$apply$114;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$363) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$363) {
   return this.$$outer$2.$$outer$2.monad$macro$362$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
     var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
     return x
-  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82__Lcom_thoughtworks_binding_Binding(this, element$macro$363))
+  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84__Lcom_thoughtworks_binding_Binding(this, element$macro$363))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$80$$anonfun$apply$81 = (function($$outer) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13360,31 +12673,31 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   };
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$363$1$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$364) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$364) {
   var this$3 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$362$1$f;
   var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
   var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.element$macro$145$1$f;
@@ -13399,10 +12712,10 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   })(this));
   return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85.prototype.apply__O__O = (function(v1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87.prototype.apply__O__O = (function(v1) {
   return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$363$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$363$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13411,68 +12724,71 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$363$1$2 = element$macro$363$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$a32b0c6a1ca7c81533afc163978a578$$$$pply$75$$anonfun$apply$80$$anonfun$apply$81$$anonfun$apply$82$$anonfun$apply$85;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83$$anonfun$apply$84$$anonfun$apply$87;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93() {
   $c_sr_AbstractFunction1.call(this);
-  this.monad$macro$375$1$2 = null
+  this.$$outer$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$400) {
-  var this$1 = this.monad$macro$375$1$2;
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$389$2) {
-    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$389$2))
-  }));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$400, f))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$375$1) {
-  this.monad$macro$375$1$2 = monad$macro$375$1;
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106: 1,
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$370) {
+  return this.$$outer$2.monad$macro$367$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
+    return x
+  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93__Lcom_thoughtworks_binding_Binding(this, element$macro$370))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$370$1$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$371) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$371) {
   var this$3 = this.$$outer$2.$$outer$2.monad$macro$367$1$f;
   var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
   var jsx$1 = this.$$outer$2.$$outer$2.element$macro$144$1$f;
@@ -13487,10 +12803,10 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   })(this));
   return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94.prototype.apply__O__O = (function(v1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96.prototype.apply__O__O = (function(v1) {
   return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54$$anonfun$apply$72$$anonfun$apply$75$$anonfun$apply$90$$anonfun$apply$91__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$370$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$370$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13499,37 +12815,1043 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$370$1$2 = element$macro$370$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$ce8f7d43323f356c9a41f2e9c58f7be$$$$pply$75$$anonfun$apply$90$$anonfun$apply$91$$anonfun$apply$94;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93$$anonfun$apply$96;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$411$1$f = null
+  this.element$macro$398$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$412) {
-  var jsx$1 = this.$$outer$2.$$outer$2.monad$macro$407$1$f;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$398$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$398$1$f = element$macro$398$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$401) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n        "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110__Lcom_thoughtworks_binding_Binding(this, element$macro$401))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$401$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$402) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
+    return x
+  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113__Lcom_thoughtworks_binding_Binding(this, element$macro$402))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$401$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$401$1$f = element$macro$401$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$402$1$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$403) {
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
+  var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$133$1$f;
+  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$393$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$394$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$395$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$397$1$f, this.$$outer$2.$$outer$2.element$macro$398$1$f, this.$$outer$2.element$macro$401$1$f, this.element$macro$402$1$2]));
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$403)));
+  var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+    return (function(element$macro$404$2) {
+      $asUnit(element$macro$404$2);
+      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$133$1$f
+    })
+  })(this));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116.prototype.apply__O__O = (function(v1) {
+  return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$402$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$402$1$2 = element$macro$402$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110$$anonfun$apply$113$$anonfun$apply$116;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$355$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$355$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$355$1$f = element$macro$355$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$356) {
+  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$353$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
+    return x
+  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67__Lcom_thoughtworks_binding_Binding(this, element$macro$356))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$356$1$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$357) {
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$353$1$f;
+  var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$140$1$f;
+  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.element$macro$354$1$f, this.$$outer$2.element$macro$355$1$f, this.element$macro$356$1$2]));
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$357)));
+  var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+    return (function(element$macro$358$2) {
+      $asUnit(element$macro$358$2);
+      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$140$1$f
+    })
+  })(this));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70.prototype.apply__O__O = (function(v1) {
+  return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$356$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$356$1$2 = element$macro$356$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67$$anonfun$apply$70;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108() {
+  $c_sr_AbstractFunction1.call(this);
+  this.monad$macro$375$1$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$400) {
+  var this$1 = this.monad$macro$375$1$2;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$389$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$389$2))
+  }));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$400, f))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$375$1) {
+  this.monad$macro$375$1$2 = monad$macro$375$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$369) {
+  var this$1 = this.$$outer$2.monad$macro$362$1$f;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$366$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$366$2))
+  }));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$369, f))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$385$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$386) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
+    return x
+  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103__Lcom_thoughtworks_binding_Binding(this, element$macro$386))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$385$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$385$1$f = element$macro$385$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$386$1$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$387) {
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
+  var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$138$1$f;
+  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$376$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$379$1$f, this.$$outer$2.$$outer$2.element$macro$380$1$f, this.$$outer$2.element$macro$385$1$f, this.element$macro$386$1$2]));
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$387)));
+  var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+    return (function(element$macro$388$2) {
+      $asUnit(element$macro$388$2);
+      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$138$1$f
+    })
+  })(this));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106.prototype.apply__O__O = (function(v1) {
+  return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$386$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$386$1$2 = element$macro$386$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103$$anonfun$apply$106;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.monad$macro$375$1$f = null;
+  this.element$macro$138$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLFieldSetElement = (function($$outer, monad$macro$375$1, element$macro$138$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.monad$macro$375$1$f = monad$macro$375$1;
+  this.element$macro$138$1$f = element$macro$138$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$399) {
+  return this.monad$macro$375$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$399, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55(this))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$376) {
+  var jsx$1 = this.$$outer$2.monad$macro$375$1$f;
+  var monad$macro$353 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var this$3 = this.$$outer$2.monad$macro$375$1$f;
+  var element$macro$140 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().legend$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  var this$2 = this.$$outer$2.monad$macro$375$1$f;
+  $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n              ")))));
+  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLLegendElement(this, monad$macro$353, element$macro$140);
+  var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
+  var f$1 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$353);
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56__Lcom_thoughtworks_binding_Binding(this, element$macro$376))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.monad$macro$353$1$f = null;
+  this.element$macro$140$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLLegendElement = (function($$outer, monad$macro$353$1, element$macro$140$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.monad$macro$353$1$f = monad$macro$353$1;
+  this.element$macro$140$1$f = element$macro$140$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$377) {
+  return this.monad$macro$353$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$377, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60(this))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$354) {
+  return this.$$outer$2.monad$macro$353$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq(this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.sample$1$f.fileName__T()))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61__Lcom_thoughtworks_binding_Binding(this, element$macro$354))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$354$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$354$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$354$1$f = element$macro$354$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$355) {
+  return this.$$outer$2.$$outer$2.monad$macro$353$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n            "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$825af7776341351b2901437f13314f8$$$$pply$60$$anonfun$apply$61$$anonfun$apply$64$$anonfun$apply$67().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64__Lcom_thoughtworks_binding_Binding(this, element$macro$355))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$60$$anonfun$apply$61$$anonfun$apply$64;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72() {
+  $c_sr_AbstractFunction1.call(this);
+  this.monad$macro$353$1$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$353$1) {
+  this.monad$macro$353$1$2 = monad$macro$353$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$378) {
+  var this$1 = this.monad$macro$353$1$2;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$359$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$359$2))
+  }));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$378, f))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$72;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$376$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$379) {
+  return this.$$outer$2.$$outer$2.monad$macro$375$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n            "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74__Lcom_thoughtworks_binding_Binding(this, element$macro$379))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$376$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$376$1$f = element$macro$376$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$379$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$379$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$379$1$f = element$macro$379$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$380) {
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
+  var monad$macro$367 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var this$5 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
+  var element$macro$144 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().pre$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  var this$4 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
+  var monad$macro$362 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
+  var element$macro$145 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().code$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f;
+  $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq(this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.sample$1$f.content__T()))))));
+  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLElement(this, monad$macro$367, monad$macro$362, element$macro$145);
+  var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
+  var f$1 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$367, monad$macro$362);
+  var fa$2 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1);
+  var f$2 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLPreElement(this, monad$macro$367, element$macro$144);
+  var fa$3 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$4, fa$2, f$2);
+  var f$3 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$367);
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$5, fa$3, f$3)), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding(this, element$macro$380))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$380$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$380$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$380$1$f = element$macro$380$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$385) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$375$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$c1657871b53ed6de542cee9ffe6c5c8$$$$ly$74$$anonfun$apply$77$$anonfun$apply$100$$anonfun$apply$103().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100__Lcom_thoughtworks_binding_Binding(this, element$macro$385))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$100;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82() {
+  $c_sr_AbstractFunction1.call(this);
+  this.monad$macro$367$1$2 = null;
+  this.monad$macro$362$1$f = null;
+  this.element$macro$145$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$381) {
+  var this$1 = this.monad$macro$367$1$2;
+  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$241ddf448ddb2187f644d2aaea6471ec$$$$pply$74$$anonfun$apply$77$$anonfun$apply$82$$anonfun$apply$83().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82(this);
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$381, f))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLElement = (function($$outer, monad$macro$367$1, monad$macro$362$1, element$macro$145$1) {
+  this.monad$macro$367$1$2 = monad$macro$367$1;
+  this.monad$macro$362$1$f = monad$macro$362$1;
+  this.element$macro$145$1$f = element$macro$145$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$82;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89() {
+  $c_sr_AbstractFunction1.call(this);
+  this.monad$macro$367$1$2 = null;
+  this.monad$macro$362$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$367$1, monad$macro$362$1) {
+  this.monad$macro$367$1$2 = monad$macro$367$1;
+  this.monad$macro$362$1$f = monad$macro$362$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$382) {
+  var this$1 = this.monad$macro$367$1$2;
+  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$97864628c550897a88723773fa1335ab$$$$pply$74$$anonfun$apply$77$$anonfun$apply$89$$anonfun$apply$90().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89(this);
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$382, f))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$89;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92() {
+  $c_sr_AbstractFunction1.call(this);
+  this.monad$macro$367$1$f = null;
+  this.element$macro$144$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$383) {
+  return this.monad$macro$367$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$383, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$41144425ac1eceeb290af8b1878fa19$$$$pply$74$$anonfun$apply$77$$anonfun$apply$92$$anonfun$apply$93().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92(this))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLPreElement = (function($$outer, monad$macro$367$1, element$macro$144$1) {
+  this.monad$macro$367$1$f = monad$macro$367$1;
+  this.element$macro$144$1$f = element$macro$144$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$92;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98() {
+  $c_sr_AbstractFunction1.call(this);
+  this.monad$macro$367$1$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$367$1) {
+  this.monad$macro$367$1$2 = monad$macro$367$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$384) {
+  var this$1 = this.monad$macro$367$1$2;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$373$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$373$2))
+  }));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$384, f))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55$$anonfun$apply$56$$anonfun$apply$74$$anonfun$apply$77$$anonfun$apply$98;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19() {
+  $c_sr_AbstractFunction1.call(this);
+  this.monad$macro$331$1$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$411) {
+  var this$1 = this.monad$macro$331$1$2;
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$337$2) {
+    return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$337$2))
+  }));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$1, element$macro$411, f))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$331$1) {
+  this.monad$macro$331$1$2 = monad$macro$331$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$19;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$409$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$409$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$409$1$f = element$macro$409$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$412) {
+  return this.$$outer$2.$$outer$2.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21__Lcom_thoughtworks_binding_Binding(this, element$macro$412))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$412$1$f = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$412$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$412$1$f = element$macro$412$1;
+  return this
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$413) {
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f;
   var monad$macro$339 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$2 = this.$$outer$2.$$outer$2.monad$macro$407$1$f;
+  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f;
   var element$macro$131 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().hr$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
   var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(element$macro$131));
   if ((this$2 === null)) {
@@ -13539,133 +13861,85 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
     var $$outer$2 = this$2
   };
   var x2 = fa.get$1;
-  var element$macro$413 = $as_Lcom_thoughtworks_binding_Binding(x2);
+  var element$macro$414 = $as_Lcom_thoughtworks_binding_Binding(x2);
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$340$2) {
     return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$340$2))
   }));
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$339, element$macro$413, f))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22__Lcom_thoughtworks_binding_Binding(this, element$macro$412))
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$339, element$macro$414, f))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24__Lcom_thoughtworks_binding_Binding(this, element$macro$413))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$411$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$411$1$f = element$macro$411$1;
-  return this
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$412$1$f = null
+  this.element$macro$413$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$412$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$415) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding(this, element$macro$415))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$413$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$412$1$f = element$macro$412$1;
+  this.element$macro$413$1$f = element$macro$413$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$414) {
-  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n      "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27__Lcom_thoughtworks_binding_Binding(this, element$macro$414))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.element$macro$414$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$414$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.element$macro$414$1$f = element$macro$414$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$415) {
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f;
-  var monad$macro$391 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var a = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$391);
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(a.apply__Lcom_thoughtworks_binding_Binding()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30__Lcom_thoughtworks_binding_Binding(this, element$macro$415))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$415$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$416) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117__Lcom_thoughtworks_binding_Binding(this, element$macro$416))
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$416) {
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f;
+  var monad$macro$391 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var a = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$391);
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(a.apply__Lcom_thoughtworks_binding_Binding()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32__Lcom_thoughtworks_binding_Binding(this, element$macro$416))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$415$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$415$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13674,40 +13948,37 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$415$1$f = element$macro$415$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$416$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$417) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
-    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
-    return x
-  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120__Lcom_thoughtworks_binding_Binding(this, element$macro$417))
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$417) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n    "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119__Lcom_thoughtworks_binding_Binding(this, element$macro$417))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$416$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$416$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13716,96 +13987,138 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$416$1$f = element$macro$416$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
-  this.element$macro$417$1$2 = null
+  this.element$macro$417$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$418) {
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f;
-  var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$126$1$f;
-  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$408$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$411$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$412$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$414$1$f, this.$$outer$2.$$outer$2.element$macro$415$1$f, this.$$outer$2.element$macro$416$1$f, this.element$macro$417$1$2]));
-  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$418)));
-  var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
-    return (function(element$macro$419$2) {
-      $asUnit(element$macro$419$2);
-      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$126$1$f
-    })
-  })(this));
-  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123.prototype.apply__O__O = (function(v1) {
-  return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$418) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
+    var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
+    return x
+  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122__Lcom_thoughtworks_binding_Binding(this, element$macro$418))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$417$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$417$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
     this.$$outer$2 = $$outer
   };
-  this.element$macro$417$1$2 = element$macro$417$1;
+  this.element$macro$417$1$f = element$macro$417$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$117$$anonfun$apply$120$$anonfun$apply$123;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125() {
+  $c_sr_AbstractFunction1.call(this);
+  this.$$outer$2 = null;
+  this.element$macro$418$1$2 = null
+}
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125;
+/** @constructor */
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125() {
+  /*<skip>*/
+}
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$419) {
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$407$1$f;
+  var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$126$1$f;
+  var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$409$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$412$1$f, this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$413$1$f, this.$$outer$2.$$outer$2.$$outer$2.element$macro$415$1$f, this.$$outer$2.$$outer$2.element$macro$416$1$f, this.$$outer$2.element$macro$417$1$f, this.element$macro$418$1$2]));
+  var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$419)));
+  var fa = jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O();
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
+    return (function(element$macro$420$2) {
+      $asUnit(element$macro$420$2);
+      return arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.element$macro$126$1$f
+    })
+  })(this));
+  return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa, f))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125.prototype.apply__O__O = (function(v1) {
+  return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$418$1) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  this.element$macro$418$1$2 = element$macro$418$1;
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125: 1,
+  sr_AbstractFunction1: 1,
+  O: 1,
+  F1: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$119$$anonfun$apply$122$$anonfun$apply$125;
+/** @constructor */
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33() {
   $c_sr_AbstractFunction0.call(this);
   this.$$outer$2 = null;
   this.monad$macro$391$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31.prototype = new $h_sr_AbstractFunction0();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33.prototype = new $h_sr_AbstractFunction0();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31.prototype.apply__Lcom_thoughtworks_binding_Binding = (function() {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33.prototype.apply__Lcom_thoughtworks_binding_Binding = (function() {
   var this$2 = this.monad$macro$391$1$f;
   var jsx$2 = this.monad$macro$391$1$f;
   var jsx$1 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
-  var binding = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
-  var fa = jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(jsx$1.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31(this));
+  var binding = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
+  var fa = jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(jsx$1.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33(this));
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$405$2) {
     return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$405$2))
   }));
   return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31.prototype.apply__O = (function() {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33.prototype.apply__O = (function() {
   return this.apply__Lcom_thoughtworks_binding_Binding()
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$391$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$391$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13814,38 +14127,30 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.monad$macro$391$1$f = monad$macro$391$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33: 1,
   sr_AbstractFunction0: 1,
   O: 1,
   F0: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32.prototype.apply__O__O = (function(v1) {
-  return this.apply__I__Lcom_thoughtworks_binding_Binding($uI(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32.prototype.apply__I__Lcom_thoughtworks_binding_Binding = (function(element$macro$392) {
-  var sample = $as_Lcom_thoughtworks_binding_website_Sample($m_Lcom_thoughtworks_binding_website_SampleBrowser$().Samples$1.apply__I__O(element$macro$392));
-  var element$macro$133 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().section$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  return this.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32__Lcom_thoughtworks_binding_website_Sample__Lorg_scalajs_dom_raw_HTMLElement(this, sample, element$macro$133))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31 = (function($$outer) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13853,35 +14158,43 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   };
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32: 1,
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype.apply__O__O = (function(v1) {
+  return this.apply__I__Lcom_thoughtworks_binding_Binding($uI(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype.apply__I__Lcom_thoughtworks_binding_Binding = (function(element$macro$392) {
+  var sample = $as_Lcom_thoughtworks_binding_website_Sample($m_Lcom_thoughtworks_binding_website_SampleBrowser$().Samples$1.apply__I__O(element$macro$392));
+  var element$macro$133 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().section$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  return this.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34__Lcom_thoughtworks_binding_website_Sample__Lorg_scalajs_dom_raw_HTMLElement(this, sample, element$macro$133))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.sample$1$f = null;
   this.element$macro$133$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$393) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$393) {
   var jsx$2 = this.$$outer$2.$$outer$2.monad$macro$391$1$f;
   var monad$macro$343 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
   var jsx$1 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
@@ -13890,9 +14203,9 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$344$2) {
     return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$344$2))
   }));
-  return jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$343, fa, f))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35__Lcom_thoughtworks_binding_Binding(this, element$macro$393))
+  return jsx$2.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$343, fa, f))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37__Lcom_thoughtworks_binding_Binding(this, element$macro$393))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32__Lcom_thoughtworks_binding_website_Sample__Lorg_scalajs_dom_raw_HTMLElement = (function($$outer, sample$1, element$macro$133$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34__Lcom_thoughtworks_binding_website_Sample__Lorg_scalajs_dom_raw_HTMLElement = (function($$outer, sample$1, element$macro$133$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13902,37 +14215,34 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$133$1$f = element$macro$133$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$393$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$394) {
-  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38__Lcom_thoughtworks_binding_Binding(this, element$macro$394))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$393$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$393$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13941,34 +14251,37 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$393$1$f = element$macro$393$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38: 1,
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$394) {
+  return this.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40__Lcom_thoughtworks_binding_Binding(this, element$macro$394))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$394$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$395) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$395) {
   var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
   var monad$macro$346 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
   var this$2 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
@@ -13985,9 +14298,9 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(element$macro$347$2) {
     return new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__Lorg_scalajs_dom_raw_Node__sc_Seq(element$macro$347$2))
   }));
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$346, element$macro$396, f))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41__Lcom_thoughtworks_binding_Binding(this, element$macro$395))
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(monad$macro$346, element$macro$396, f))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43__Lcom_thoughtworks_binding_Binding(this, element$macro$395))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$394$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$394$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -13996,37 +14309,34 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$394$1$f = element$macro$394$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$395$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$397) {
-  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46__Lcom_thoughtworks_binding_Binding(this, element$macro$397))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$395$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$395$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -14035,47 +14345,37 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$395$1$f = element$macro$395$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46: 1,
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$397) {
+  return this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(($m_Lcom_thoughtworks_binding_Binding$BindingInstances$(), new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n          "))))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48__Lcom_thoughtworks_binding_Binding(this, element$macro$397))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$397$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$398) {
-  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
-  var monad$macro$375 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
-  var element$macro$138 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().fieldset$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
-  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
-  $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n            ")))));
-  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLFieldSetElement(this, monad$macro$375, element$macro$138);
-  var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
-  var f$1 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$b3e6c78546ac144dfe708a2f055b4a$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$106().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$375);
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$4dba84b9dd8432cbca4c04ae6d9dd9b$$$$ply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$108().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49__Lcom_thoughtworks_binding_Binding(this, element$macro$398))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$397$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$397$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -14084,79 +14384,45 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$397$1$f = element$macro$397$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49: 1,
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$398) {
+  var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
+  var monad$macro$375 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var this$3 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
+  var element$macro$138 = $as_Lscalatags_JsDom$TypedTag($m_Lcom_thoughtworks_binding_dom$Runtime$TagsAndTags2$().fieldset$1).apply__sc_Seq__Lscalatags_JsDom$TypedTag($m_sci_Nil$()).render__Lorg_scalajs_dom_raw_Element();
+  var this$2 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$391$1$f;
+  $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
+  var fa = new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq($m_Lcom_thoughtworks_binding_dom$Runtime$().domBindingSeq__T__sc_Seq("\n            ")))));
+  var f = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$dd6055bd1419964d2b6e8be1f055284b$$$$pply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$55().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLFieldSetElement(this, monad$macro$375, element$macro$138);
+  var fa$1 = $s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f);
+  var f$1 = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$855e1636d8b43568432fd8e92e1e25ad$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$108().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$375);
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$3, fa$1, f$1)), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$app$$$$51689f5bce9cefc3f2606de93f982716$$$$ply$43$$anonfun$apply$48$$anonfun$apply$51$$anonfun$apply$110().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51__Lcom_thoughtworks_binding_Binding(this, element$macro$398))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$21$$anonfun$apply$24$$anonfun$apply$29$$anonfun$apply$32$$anonfun$apply$33$$anonfun$apply$34$$anonfun$apply$37$$anonfun$apply$40$$anonfun$apply$43$$anonfun$apply$48$$anonfun$apply$51;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53() {
-  $c_sr_AbstractFunction1.call(this);
-  this.$$outer$2 = null;
-  this.monad$macro$375$1$f = null;
-  this.element$macro$138$1$f = null
-}
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53;
-/** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53() {
-  /*<skip>*/
-}
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLFieldSetElement = (function($$outer, monad$macro$375$1, element$macro$138$1) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  this.monad$macro$375$1$f = monad$macro$375$1;
-  this.element$macro$138$1$f = element$macro$138$1;
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$399) {
-  return this.monad$macro$375$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$399, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$ap$$$$184819350443fd048f01d85888ce123$$$$pply$46$$anonfun$apply$49$$anonfun$apply$53$$anonfun$apply$54().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53(this))
-});
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53: 1,
-  sr_AbstractFunction1: 1,
-  O: 1,
-  F1: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$19$$anonfun$apply$22$$anonfun$apply$27$$anonfun$apply$30$$anonfun$apply$31$$anonfun$apply$32$$anonfun$apply$35$$anonfun$apply$38$$anonfun$apply$41$$anonfun$apply$46$$anonfun$apply$49$$anonfun$apply$53;
-/** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.monad$macro$331$1$f = null;
   this.element$macro$128$1$f = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5.prototype.apply__O__O = (function(v1) {
-  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$409) {
-  return this.monad$macro$331$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$409, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5(this))
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement = (function($$outer, monad$macro$331$1, element$macro$128$1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3__Lcom_thoughtworks_binding_Binding$BindingInstances$__Lorg_scalajs_dom_raw_HTMLButtonElement = (function($$outer, monad$macro$331$1, element$macro$128$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -14166,33 +14432,39 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$128$1$f = element$macro$128$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$5", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5: 1,
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7.prototype.apply__O__O = (function(v1) {
+  return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$410) {
+  return this.monad$macro$331$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(element$macro$410, new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7(this))
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5 = (function($$outer) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -14200,48 +14472,48 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   };
   return this
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$332) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$332) {
   return this.$$outer$2.monad$macro$331$1$f.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(x$2) {
     var x = $as_Lcom_thoughtworks_binding_Binding(x$2);
     return x
-  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6__Lcom_thoughtworks_binding_Binding(this, element$macro$332))
+  }))), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8__Lcom_thoughtworks_binding_Binding(this, element$macro$332))
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null;
   this.element$macro$332$1$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$333) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11.prototype.apply__F1__Lcom_thoughtworks_binding_Binding = (function(element$macro$333) {
   var jsx$3 = this.$$outer$2.$$outer$2.monad$macro$331$1$f;
   var jsx$2 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
   var jsx$1 = this.$$outer$2.$$outer$2.element$macro$128$1$f;
   var this$1 = new $c_Lcom_thoughtworks_binding_Binding$Constants().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.element$macro$332$1$2]));
   var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$NodeSeqMountPoint().init___Lorg_scalajs_dom_raw_Node__Lcom_thoughtworks_binding_Binding$BindingSeq(jsx$1, new $c_Lcom_thoughtworks_binding_Binding$FlatMapBinding().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, new $c_Lcom_thoughtworks_binding_Binding$BindingSeq$$anonfun$flatMapBinding$1().init___Lcom_thoughtworks_binding_Binding$BindingSeq__F1(this$1, element$macro$333)));
-  return jsx$3.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9(this))
+  return jsx$3.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(jsx$2.unapply__Lcom_thoughtworks_each_Monadic$EachOps__s_Option(new $c_Lcom_thoughtworks_each_Monadic$EachOps().init___O(binding)).get__O()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11(this))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9.prototype.apply__O__O = (function(v1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11.prototype.apply__O__O = (function(v1) {
   return this.apply__F1__Lcom_thoughtworks_binding_Binding($as_F1(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$332$1) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8__Lcom_thoughtworks_binding_Binding = (function($$outer, element$macro$332$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -14250,39 +14522,39 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.element$macro$332$1$2 = element$macro$332$1;
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12.prototype.apply__O__O = (function(v1) {
   return this.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding($asUnit(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10.prototype.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding = (function(element$macro$334) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12.prototype.apply__sr_BoxedUnit__Lcom_thoughtworks_binding_Binding = (function(element$macro$334) {
   var jsx$1 = this.$$outer$2.$$outer$2.$$outer$2.monad$macro$331$1$f;
   var monad$macro$330 = $m_Lcom_thoughtworks_binding_Binding$BindingInstances$();
-  var a = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$330);
-  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(a.apply__Lcom_thoughtworks_binding_Binding()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10(this))
+  var a = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12__Lcom_thoughtworks_binding_Binding$BindingInstances$(this, monad$macro$330);
+  return jsx$1.bind__Lcom_thoughtworks_binding_Binding__F1__Lcom_thoughtworks_binding_Binding(new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(a.apply__Lcom_thoughtworks_binding_Binding()), new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12(this))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9 = (function($$outer) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -14290,35 +14562,31 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   };
   return this
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13() {
   $c_sr_AbstractFunction0.call(this);
   this.$$outer$2 = null;
   this.monad$macro$330$1$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11.prototype = new $h_sr_AbstractFunction0();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13.prototype = new $h_sr_AbstractFunction0();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11.prototype.apply__Lcom_thoughtworks_binding_Binding = (function() {
-  var a = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11(this);
-  return new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(a.apply__F1())
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$330$1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12__Lcom_thoughtworks_binding_Binding$BindingInstances$ = (function($$outer, monad$macro$330$1) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -14327,33 +14595,37 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   this.monad$macro$330$1$2 = monad$macro$330$1;
   return this
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11.prototype.apply__O = (function() {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13.prototype.apply__Lcom_thoughtworks_binding_Binding = (function() {
+  var a = new $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14().init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13(this);
+  return new $c_Lcom_thoughtworks_binding_Binding$Constant().init___O(a.apply__F1())
+});
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13.prototype.apply__O = (function() {
   return this.apply__Lcom_thoughtworks_binding_Binding()
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13: 1,
   sr_AbstractFunction0: 1,
   O: 1,
   F0: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14() {
   $c_sr_AbstractFunction0.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12.prototype = new $h_sr_AbstractFunction0();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14.prototype = new $h_sr_AbstractFunction0();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11 = (function($$outer) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13 = (function($$outer) {
   if (($$outer === null)) {
     throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
   } else {
@@ -14361,59 +14633,51 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   };
   return this
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12.prototype.apply__F1 = (function() {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14.prototype.apply__F1 = (function() {
   return new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
     return (function(event$2) {
-      var jsx$2 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
-      var this$1 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
+      var jsx$2 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
+      var this$1 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
       if ((((1 + $uI(this$1.com$thoughtworks$binding$Binding$Var$$value$1)) | 0) === $m_Lcom_thoughtworks_binding_website_SampleBrowser$().Samples$1.length__I())) {
         var jsx$1 = 0
       } else {
-        var this$2 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
+        var this$2 = arg$outer.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.$$outer$2.currentSampleIndex$1$f;
         var jsx$1 = ((1 + $uI(this$2.com$thoughtworks$binding$Binding$Var$$value$1)) | 0)
       };
       jsx$2.$$colon$eq__O__V(jsx$1)
     })
   })(this))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12.prototype.apply__O = (function() {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14.prototype.apply__O = (function() {
   return this.apply__F1()
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12: 1,
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14: 1,
   sr_AbstractFunction0: 1,
   O: 1,
   F0: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$11$$anonfun$apply$12;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$13$$anonfun$apply$14;
 /** @constructor */
-function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14() {
+function $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16() {
   $c_sr_AbstractFunction1.call(this);
   this.$$outer$2 = null
 }
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14.prototype = new $h_sr_AbstractFunction1();
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16.prototype = new $h_sr_AbstractFunction1();
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16.prototype["constructor"] = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16;
 /** @constructor */
-function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14() {
+function $h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16() {
   /*<skip>*/
 }
-$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14.prototype;
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14.prototype.apply__O__O = (function(v1) {
+$h_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16.prototype = $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16.prototype;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16.prototype.apply__O__O = (function(v1) {
   return this.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding($as_Lcom_thoughtworks_binding_Binding(v1))
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10 = (function($$outer) {
-  if (($$outer === null)) {
-    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
-  } else {
-    this.$$outer$2 = $$outer
-  };
-  return this
-});
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$335) {
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16.prototype.apply__Lcom_thoughtworks_binding_Binding__Lcom_thoughtworks_binding_Binding = (function(element$macro$335) {
   var this$2 = this.$$outer$2.$$outer$2.$$outer$2.$$outer$2.monad$macro$331$1$f;
   var jsx$1 = $m_Lcom_thoughtworks_each_Monadic$EachOps$();
   var binding = new $c_Lcom_thoughtworks_binding_dom$Runtime$AttributeMountPoint().init___Lcom_thoughtworks_binding_Binding__F1(element$macro$335, new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(arg$outer) {
@@ -14435,17 +14699,25 @@ $c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$ap
   })(this));
   return $as_Lcom_thoughtworks_binding_Binding($s_Lscalaz_Monad$class__map__Lscalaz_Monad__O__F1__O(this$2, fa, f$1))
 });
-var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14 = new $TypeData().initClass({
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14: 0
-}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14", {
-  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14: 1,
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16.prototype.init___Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12 = (function($$outer) {
+  if (($$outer === null)) {
+    throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(null)
+  } else {
+    this.$$outer$2 = $$outer
+  };
+  return this
+});
+var $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16 = new $TypeData().initClass({
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16: 0
+}, false, "com.thoughtworks.binding.website.SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16", {
+  Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16: 1,
   sr_AbstractFunction1: 1,
   O: 1,
   F1: 1,
   s_Serializable: 1,
   Ljava_io_Serializable: 1
 });
-$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$5$$anonfun$apply$6$$anonfun$apply$9$$anonfun$apply$10$$anonfun$apply$14;
+$c_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16.prototype.$classData = $d_Lcom_thoughtworks_binding_website_SampleBrowser$$anonfun$render$2$$anonfun$apply$3$$anonfun$apply$7$$anonfun$apply$8$$anonfun$apply$11$$anonfun$apply$12$$anonfun$apply$16;
 /** @constructor */
 function $c_Lcom_thoughtworks_binding_website_TableSample$$anonfun$render$2() {
   $c_sr_AbstractFunction1.call(this);
@@ -20980,6 +21252,33 @@ var $d_T2 = new $TypeData().initClass({
 });
 $c_T2.prototype.$classData = $d_T2;
 /** @constructor */
+function $c_jl_NumberFormatException() {
+  $c_jl_IllegalArgumentException.call(this)
+}
+$c_jl_NumberFormatException.prototype = new $h_jl_IllegalArgumentException();
+$c_jl_NumberFormatException.prototype["constructor"] = $c_jl_NumberFormatException;
+/** @constructor */
+function $h_jl_NumberFormatException() {
+  /*<skip>*/
+}
+$h_jl_NumberFormatException.prototype = $c_jl_NumberFormatException.prototype;
+$c_jl_NumberFormatException.prototype.init___T = (function(s) {
+  $c_jl_Throwable.prototype.init___T__jl_Throwable.call(this, s, null);
+  return this
+});
+var $d_jl_NumberFormatException = new $TypeData().initClass({
+  jl_NumberFormatException: 0
+}, false, "java.lang.NumberFormatException", {
+  jl_NumberFormatException: 1,
+  jl_IllegalArgumentException: 1,
+  jl_RuntimeException: 1,
+  jl_Exception: 1,
+  jl_Throwable: 1,
+  O: 1,
+  Ljava_io_Serializable: 1
+});
+$c_jl_NumberFormatException.prototype.$classData = $d_jl_NumberFormatException;
+/** @constructor */
 function $c_s_None$() {
   $c_s_Option.call(this)
 }
@@ -21162,6 +21461,174 @@ var $d_s_StringContext$InvalidEscapeException = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_s_StringContext$InvalidEscapeException.prototype.$classData = $d_s_StringContext$InvalidEscapeException;
+/** @constructor */
+function $c_s_util_Failure() {
+  $c_s_util_Try.call(this);
+  this.exception$2 = null
+}
+$c_s_util_Failure.prototype = new $h_s_util_Try();
+$c_s_util_Failure.prototype["constructor"] = $c_s_util_Failure;
+/** @constructor */
+function $h_s_util_Failure() {
+  /*<skip>*/
+}
+$h_s_util_Failure.prototype = $c_s_util_Failure.prototype;
+$c_s_util_Failure.prototype.productPrefix__T = (function() {
+  return "Failure"
+});
+$c_s_util_Failure.prototype.productArity__I = (function() {
+  return 1
+});
+$c_s_util_Failure.prototype.isSuccess__Z = (function() {
+  return false
+});
+$c_s_util_Failure.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_s_util_Failure(x$1)) {
+    var Failure$1 = $as_s_util_Failure(x$1);
+    var x = this.exception$2;
+    var x$2 = Failure$1.exception$2;
+    return ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
+  } else {
+    return false
+  }
+});
+$c_s_util_Failure.prototype.productElement__I__O = (function(x$1) {
+  switch (x$1) {
+    case 0: {
+      return this.exception$2;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
+    }
+  }
+});
+$c_s_util_Failure.prototype.get__O = (function() {
+  throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(this.exception$2)
+});
+$c_s_util_Failure.prototype.toString__T = (function() {
+  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
+});
+$c_s_util_Failure.prototype.init___jl_Throwable = (function(exception) {
+  this.exception$2 = exception;
+  return this
+});
+$c_s_util_Failure.prototype.hashCode__I = (function() {
+  var this$2 = $m_s_util_hashing_MurmurHash3$();
+  return this$2.productHash__s_Product__I__I(this, (-889275714))
+});
+$c_s_util_Failure.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+function $is_s_util_Failure(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.s_util_Failure)))
+}
+function $as_s_util_Failure(obj) {
+  return (($is_s_util_Failure(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.util.Failure"))
+}
+function $isArrayOf_s_util_Failure(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.s_util_Failure)))
+}
+function $asArrayOf_s_util_Failure(obj, depth) {
+  return (($isArrayOf_s_util_Failure(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.util.Failure;", depth))
+}
+var $d_s_util_Failure = new $TypeData().initClass({
+  s_util_Failure: 0
+}, false, "scala.util.Failure", {
+  s_util_Failure: 1,
+  s_util_Try: 1,
+  O: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_s_util_Failure.prototype.$classData = $d_s_util_Failure;
+/** @constructor */
+function $c_s_util_Success() {
+  $c_s_util_Try.call(this);
+  this.value$2 = null
+}
+$c_s_util_Success.prototype = new $h_s_util_Try();
+$c_s_util_Success.prototype["constructor"] = $c_s_util_Success;
+/** @constructor */
+function $h_s_util_Success() {
+  /*<skip>*/
+}
+$h_s_util_Success.prototype = $c_s_util_Success.prototype;
+$c_s_util_Success.prototype.productPrefix__T = (function() {
+  return "Success"
+});
+$c_s_util_Success.prototype.productArity__I = (function() {
+  return 1
+});
+$c_s_util_Success.prototype.isSuccess__Z = (function() {
+  return true
+});
+$c_s_util_Success.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_s_util_Success(x$1)) {
+    var Success$1 = $as_s_util_Success(x$1);
+    return $m_sr_BoxesRunTime$().equals__O__O__Z(this.value$2, Success$1.value$2)
+  } else {
+    return false
+  }
+});
+$c_s_util_Success.prototype.productElement__I__O = (function(x$1) {
+  switch (x$1) {
+    case 0: {
+      return this.value$2;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
+    }
+  }
+});
+$c_s_util_Success.prototype.get__O = (function() {
+  return this.value$2
+});
+$c_s_util_Success.prototype.toString__T = (function() {
+  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
+});
+$c_s_util_Success.prototype.init___O = (function(value) {
+  this.value$2 = value;
+  return this
+});
+$c_s_util_Success.prototype.hashCode__I = (function() {
+  var this$2 = $m_s_util_hashing_MurmurHash3$();
+  return this$2.productHash__s_Product__I__I(this, (-889275714))
+});
+$c_s_util_Success.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+function $is_s_util_Success(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.s_util_Success)))
+}
+function $as_s_util_Success(obj) {
+  return (($is_s_util_Success(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.util.Success"))
+}
+function $isArrayOf_s_util_Success(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.s_util_Success)))
+}
+function $asArrayOf_s_util_Success(obj, depth) {
+  return (($isArrayOf_s_util_Success(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.util.Success;", depth))
+}
+var $d_s_util_Success = new $TypeData().initClass({
+  s_util_Success: 0
+}, false, "scala.util.Success", {
+  s_util_Success: 1,
+  s_util_Try: 1,
+  O: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_s_util_Success.prototype.$classData = $d_s_util_Success;
 function $is_sc_TraversableLike(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.sc_TraversableLike)))
 }
