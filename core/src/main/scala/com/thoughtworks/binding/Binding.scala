@@ -35,7 +35,7 @@ import scala.collection.GenSeq
 import scala.collection.Seq
 import scala.collection.mutable.Buffer
 import scala.util.Try
-import scalaz.Monad
+import scalaz.{MonadPlus, Monad}
 import scala.language.experimental.macros
 
 /**
@@ -159,6 +159,7 @@ object Binding {
 
   /**
     * An data binding expression that never changes.
+    *
     * @group expressions
     */
   final case class Constant[+A](override val get: A) extends AnyVal with Binding[A] {
@@ -230,6 +231,7 @@ object Binding {
 
   /**
     * A wrapper that wraps [[scala.concurrent.Future]] to a [[Binding]].
+    *
     * @group expressions
     * @note Because all [[Binding]] (including this [[FutureBinding]]) are not thread safe,
     *       you must guarantee `executor` running sequencely.
@@ -338,6 +340,27 @@ object Binding {
     }
 
     override def point[A](a: => A): Binding[A] = Constant(a)
+
+    override def ifM[B](value: Binding[Boolean], ifTrue: => Binding[B], ifFalse: => Binding[B]): Binding[B] = {
+      bind(value)(if (_) ifTrue else ifFalse)
+    }
+
+    override def whileM[G[_], A](p: Binding[Boolean], body: => Binding[A])(implicit G: MonadPlus[G]): Binding[G[A]] = {
+      ifM(p, bind(body)(x => map(whileM(p, body))(xs => G.plus(G.point(x), xs))), point(G.empty))
+    }
+
+    override def whileM_[A](p: Binding[Boolean], body: => Binding[A]): Binding[Unit] = {
+      ifM(p, bind(body)(_ => whileM_(p, body)), point(()))
+    }
+
+    override def untilM[G[_], A](f: Binding[A], cond: => Binding[Boolean])(implicit G: MonadPlus[G]): Binding[G[A]] = {
+      bind(f)(x => map(whileM(map(cond)(!_), f))(xs => G.plus(G.point(x), xs)))
+    }
+
+    override def untilM_[A](f: Binding[A], cond: => Binding[Boolean]): Binding[Unit] = {
+      bind(f)(_ => whileM_(map(cond)(!_), f))
+    }
+
   }
 
   private[binding] object Macros {
@@ -691,12 +714,14 @@ object Binding {
 
     /**
       * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+      *
       * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
       */
     def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
     /**
       * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+      *
       * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
       */
     def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
@@ -743,12 +768,14 @@ object Binding {
 
       /**
         * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+        *
         * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
         */
       def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
       /**
         * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+        *
         * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
         */
       def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
@@ -815,6 +842,7 @@ object Binding {
 
   /**
     * An data binding expression of sequence that never changes.
+    *
     * @group expressions
     */
   final case class Constants[+A](override val get: A*) extends AnyVal with BindingSeq[A] {
@@ -848,6 +876,7 @@ object Binding {
 
   /**
     * Source sequence of data binding expression.
+    *
     * @group expressions
     */
   final class Vars[A] private(private var cache: Vector[A]) extends BindingSeq[A] {
@@ -867,6 +896,7 @@ object Binding {
 
     /**
       * Reset content of this [[Vars]]
+      *
       * @param newValues
       */
     def reset(newValues: A*): Unit = {
@@ -960,6 +990,7 @@ object Binding {
 
   /**
     * A mount point that places the result of a data binding expression into DOM or other system.
+    *
     * @group expressions
     */
   sealed trait MountPoint extends Binding[Unit] {
@@ -990,6 +1021,7 @@ object Binding {
 
   /**
     * A mount point that places the result of a data binding expression of a sequence into DOM or other system.
+    *
     * @group expressions
     */
   abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element]) extends MountPoint {
@@ -1025,6 +1057,7 @@ object Binding {
 
   /**
     * A mount point that places the result of a data binding expression of a single value into DOM or other system.
+    *
     * @group expressions
     */
   abstract class SingleMountPoint[-Value](upstream: Binding[Value]) extends MountPoint {
@@ -1052,6 +1085,7 @@ object Binding {
 
   /**
     * A implicit view to enable `.each` magic.
+    *
     * @group implicits
     */
   @inline
@@ -1071,7 +1105,6 @@ object Binding {
   * or add `@dom` annotation to methods that produces a data binding expression.
   *
   * @see [[com.thoughtworks.each.Monadic]]
-  *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 trait Binding[+A] extends Any {
