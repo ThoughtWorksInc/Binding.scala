@@ -11,6 +11,8 @@ Binding.scala can be used as a **[reactive](https://en.wikipedia.org/wiki/Reacti
 It enables you use native XML literal syntax to create reactive DOM nodes,
 which are able to automatically change whenever the data source changes.
 
+See [Live DEMOs](https://thoughtworksinc.github.io/Binding.scala/) for common patterns when working with Binding.scala.
+
 ## Comparison to other reactive web frameworks
 
 Binding.scala has more features and less concepts than other reactive web frameworks like [Widok](https://widok.github.io/) or [ReactJS](https://facebook.github.io/react/).
