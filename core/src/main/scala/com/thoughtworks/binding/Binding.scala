@@ -31,6 +31,7 @@ import com.thoughtworks.each.Monadic._
 import scala.annotation.tailrec
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
+import scala.language.higherKinds
 import scala.collection.GenSeq
 import scala.collection.Seq
 import scala.collection.mutable.Buffer
