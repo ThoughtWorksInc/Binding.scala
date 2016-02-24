@@ -12,8 +12,8 @@ before_cache:
 
 language: scala
 
-scala:
-  - 2.11.7
+script:
+  - sbt test
 
 notifications:
   webhooks:
