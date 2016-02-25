@@ -26,7 +26,7 @@ package com.thoughtworks.binding
 
 import Binding.{BindingSeq, Vars, Var, Constant}
 import org.scalajs.dom.document
-import org.scalajs.dom.html.{Div, BR}
+import org.scalajs.dom.html.{HR, Div, BR}
 import org.scalajs.dom.raw.{Node, Event}
 import utest._
 
@@ -182,9 +182,31 @@ object domTest extends TestSuite {
       dom.render(div, input)
       val outerHTML = div.outerHTML
       assert(outerHTML == """<div><br id="BR"/></div>""")
-
     }
 
+    'StyleVisibility {
+      @dom def hr = <hr style:visibility="hidden"/>
+      val div = document.createElement("div")
+      dom.render(div, hr)
+      assert(div.asInstanceOf[HR].style.visibility == "hidden")
+    }
+
+    'ComplexProperty {
+      implicit class MyHr(hr: HR) {
+        object a {
+          object b {
+            def c = hr.style.visibility
+            def c_=(value: String) = {
+              hr.style.visibility = value
+            }
+          }
+        }
+      }
+      @dom def hr = <hr a:b:c="hidden"/>
+      val div = document.createElement("div")
+      dom.render(div, hr)
+      assert(div.asInstanceOf[HR].style.visibility == "hidden")
+    }
   }
 
 }

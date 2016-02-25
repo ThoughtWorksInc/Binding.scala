@@ -227,15 +227,22 @@ object dom {
               val attributeMountPoints = for {
                 attribute <- attributes
               } yield {
-                val q"$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)" = attribute
-                val keyName = TermName(key)
+                val (attributeAccess, value) = attribute match {
+                  case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
+                    val keyName = TermName(key)
+                    q"""$elementName.$keyName""" -> value
+                  case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(Constant(key: String))}, $value, $$md)""" =>
+                    key.split(':').foldLeft(q"""$elementName.${TermName(pre)}""") { (prefixExpr, propertyName) =>
+                      q"""$prefixExpr.${TermName(propertyName)}"""
+                    } -> value
+                }
                 atPos(attribute.pos) {
                   q"""
                     new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
                       implicit def ${TermName(c.freshName("currentTargetReference"))} =
                         new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
                       _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding](${transform(value)})
-                    })( value => $elementName.$keyName = value ).each
+                    })( value => $attributeAccess = value ).each
                   """
                 }
               }
