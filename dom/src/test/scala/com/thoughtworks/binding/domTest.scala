@@ -174,6 +174,17 @@ object domTest extends TestSuite {
 
     }
 
+    'AttributeCurrentTarget {
+      @dom def input = {
+          <br id={dom.currentTarget.tagName}/>
+      }
+      val div = document.createElement("div")
+      dom.render(div, input)
+      val outerHTML = div.outerHTML
+      assert(outerHTML == """<div><br id="BR"/></div>""")
+
+    }
+
   }
 
 }

@@ -170,7 +170,13 @@ object dom {
     new NodeSeqMountPoint(parent, children).watch()
   }
 
-  def currentTarget[A](implicit currentTarget: Runtime.CurrentTargetReference[A]): A = currentTarget.value
+  /**
+    * Returns the current element. This method must be called in attribute value expressions.
+    * @example {{{<br id={ "This BR element's tagName is:" + dom.currentTarget.tagName } />}}}
+    */
+  def currentTarget[A](implicit implicitCurrentTarget: Runtime.CurrentTargetReference[A]): A = {
+    implicitCurrentTarget.value
+  }
 
   private[binding] object Macros {
 
