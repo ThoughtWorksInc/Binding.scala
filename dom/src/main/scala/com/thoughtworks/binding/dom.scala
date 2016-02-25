@@ -196,7 +196,7 @@ object dom {
                   for {
                     pushChild <- pushChildrenTree
                   } yield {
-                    val q"$$buf.$$ amp$$plus($child)" = pushChild
+                    val q"$$buf.$$amp$$plus($child)" = pushChild
                     atPos(child.pos) {
                       q"""
                             _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding] {
@@ -225,11 +225,11 @@ object dom {
                 val keyName = TermName(key)
                 atPos(attribute.pos) {
                   q"""
-                    new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint {
+                    new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
                       implicit def ${TermName(c.freshName("currentTargetReference"))} =
                         new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
                       _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding](${transform(value)})
-                    }( value => $elementName.$keyName = value ).each
+                    })( value => $elementName.$keyName = value ).each
                   """
                 }
               }
