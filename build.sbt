@@ -2,11 +2,13 @@ lazy val core = crossProject.crossType(CrossType.Pure)
 
 lazy val dom = project dependsOn coreJS
 
+lazy val `sbt-plugin` = project
+
 lazy val coreJS = core.js.addSbtFiles(file("../build.sbt.shared"))
 
 lazy val coreJVM = core.jvm.addSbtFiles(file("../build.sbt.shared"))
 
-scalaVersion in ThisBuild := "2.11.7"
+resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
 
 developers in ThisBuild := List(
   Developer(
