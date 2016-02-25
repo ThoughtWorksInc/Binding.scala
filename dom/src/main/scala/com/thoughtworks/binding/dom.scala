@@ -39,6 +39,7 @@ import org.scalajs.dom.document
 
 /**
   * Enable XML DOM literal for Binding.scala
+  *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 @compileTimeOnly("enable macro paradise to expand macro annotations")
@@ -57,6 +58,8 @@ object dom {
     * @note Do not use methods and classes in this object.
     */
   object Runtime {
+
+    final class CurrentTargetReference[A](val value: A) extends AnyVal
 
     final class AttributeMountPoint[-Value](valueBinding: Binding[Value])(setter: Value => Unit)
       extends SingleMountPoint[Value](valueBinding) {
@@ -167,6 +170,8 @@ object dom {
     new NodeSeqMountPoint(parent, children).watch()
   }
 
+  def currentTarget[A](implicit currentTarget: Runtime.CurrentTargetReference[A]): A = currentTarget.value
+
   private[binding] object Macros {
 
     def macroTransform(c: whitebox.Context)(annottees: c.Tree*): c.Tree = {
@@ -191,7 +196,7 @@ object dom {
                   for {
                     pushChild <- pushChildrenTree
                   } yield {
-                    val q"$$buf.$$amp$$plus($child)" = pushChild
+                    val q"$$buf.$$ amp$$plus($child)" = pushChild
                     atPos(child.pos) {
                       q"""
                             _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding] {
@@ -220,9 +225,11 @@ object dom {
                 val keyName = TermName(key)
                 atPos(attribute.pos) {
                   q"""
-                    new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint(
+                    new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint {
+                      implicit def ${TermName(c.freshName("currentTargetReference"))} =
+                        new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
                       _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding](${transform(value)})
-                    )( value => $elementName.$keyName = value ).each
+                    }( value => $elementName.$keyName = value ).each
                   """
                 }
               }
@@ -231,18 +238,18 @@ object dom {
                   {
                     val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
                     ..${
-                      child match {
-                        case Seq() =>
-                          Nil
-                        case Seq(q"""$nodeBuffer: _*""") =>
-                          List(atPos(nodeBuffer.pos) {
-                            q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
+                  child match {
+                    case Seq() =>
+                      Nil
+                    case Seq(q"""$nodeBuffer: _*""") =>
+                      List(atPos(nodeBuffer.pos) {
+                        q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
                               $elementName,
                               ${transform(nodeBuffer)}
                             ).each"""
-                          })
-                      }
-                    }
+                      })
+                  }
+                }
                     ..$attributeMountPoints
                     $elementName
                   }
@@ -284,11 +291,11 @@ object dom {
       }
 
       import transformer.transform
-//      def transform(tree: Tree): Tree = {
-//        val output = transformer.transform(tree)
-//        c.info(c.enclosingPosition, show(output), true)
-//        output
-//      }
+      //      def transform(tree: Tree): Tree = {
+      //        val output = transformer.transform(tree)
+      //        c.info(c.enclosingPosition, show(output), true)
+      //        output
+      //      }
 
       annottees match {
         case Seq(annottee@DefDef(mods, name, tparams, vparamss, tpt, rhs)) =>
