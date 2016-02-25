@@ -26,7 +26,7 @@ package com.thoughtworks.binding
 
 import Binding.{BindingSeq, Vars, Var, Constant}
 import org.scalajs.dom.document
-import org.scalajs.dom.html.{HR, Div, BR}
+import org.scalajs.dom.html.{Paragraph, HR, Div, BR}
 import org.scalajs.dom.raw.{Node, Event}
 import utest._
 
@@ -172,6 +172,27 @@ object domTest extends TestSuite {
         dom.render(div, parent)
       }
 
+    }
+
+    'NestedContentCurrentTarget {
+      @dom def innerDiv = {
+        // FIXME: Nested element of same node type does not work, e.g. <div><div>{ dom.currentTarget[Div] }</div></div>
+        <div><p>The tagName of current Div is { dom.currentTarget[Div].tagName }. The tagName of current Paragraph is { dom.currentTarget[Paragraph].tagName }. </p></div>
+      }
+      val div = document.createElement("div")
+      dom.render(div, innerDiv)
+      val outerHTML = div.outerHTML
+      assert(outerHTML == """<div><div><p>The tagName of current Div is DIV. The tagName of current Paragraph is P. </p></div></div>""")
+    }
+
+    'ContentCurrentTarget {
+      @dom def innerDiv = {
+          <p>The tagName of current element is { dom.currentTarget.tagName }.</p>
+      }
+      val div = document.createElement("div")
+      dom.render(div, innerDiv)
+      val outerHTML = div.outerHTML
+      assert(outerHTML == """<div><p>The tagName of current element is P.</p></div>""")
     }
 
     'AttributeCurrentTarget {

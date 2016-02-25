@@ -258,7 +258,11 @@ object dom {
                       List(atPos(nodeBuffer.pos) {
                         q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
                               $elementName,
-                              ${transform(nodeBuffer)}
+                              {
+                                implicit def ${TermName(c.freshName("currentTargetReference"))} =
+                                  new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
+                                ${transform(nodeBuffer)}
+                              }
                             ).each"""
                       })
                   }
@@ -283,7 +287,11 @@ object dom {
                       List(atPos(nodeBuffer.pos) {
                         q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
                           $elementName,
-                          ${transform(nodeBuffer)}
+                          {
+                            implicit def ${TermName(c.freshName("currentTargetReference"))} =
+                              new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
+                            ${transform(nodeBuffer)}
+                          }
                         ).each"""
                       })
                   }
