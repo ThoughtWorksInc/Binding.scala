@@ -73,7 +73,9 @@ See http://www.scala-js.org/tutorial/basic/ for information about how to setup s
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
-libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "2.0.1"
+libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "3.0.0"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
 ### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
