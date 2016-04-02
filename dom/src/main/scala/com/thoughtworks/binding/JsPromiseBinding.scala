@@ -35,7 +35,7 @@ object JsPromiseBinding {
 }
 
 /**
-  * A wrapper that wraps [[org.scalajs.dom.raw.Promise]] to a [[Binding]].
+  * A wrapper that wraps a [[org.scalajs.dom.raw.Promise]] to a [[Binding]].
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[Any, A]]] {
