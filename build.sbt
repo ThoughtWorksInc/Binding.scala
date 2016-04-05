@@ -19,7 +19,7 @@ developers in ThisBuild := List(
 
 val projectName = "Binding.scala"
 
-publishArtifact := false
+publishArtifact := true
 
 licenses in ThisBuild += "MIT" -> url("http://opensource.org/licenses/MIT")
 
