@@ -6,6 +6,10 @@ lazy val coreJS = core.js.addSbtFiles(file("../build.sbt.shared"))
 
 lazy val coreJVM = core.jvm.addSbtFiles(file("../build.sbt.shared"))
 
+organization := "com.thoughtworks.binding"
+
+name := "unidoc"
+
 scalaVersion in ThisBuild := "2.11.7"
 
 developers in ThisBuild := List(
@@ -19,7 +23,9 @@ developers in ThisBuild := List(
 
 val projectName = "Binding.scala"
 
-publishArtifact := true
+publishArtifact in packageSrc := false
+
+publishArtifact in packageBin := false
 
 licenses in ThisBuild += "MIT" -> url("http://opensource.org/licenses/MIT")
 
