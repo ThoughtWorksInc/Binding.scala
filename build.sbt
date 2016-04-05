@@ -63,3 +63,10 @@ releaseProcess := {
 releaseProcess -= runClean
 
 releaseProcess -= runTest
+
+scalaJavaUnidocSettings
+
+import UnidocKeys._
+unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(coreJS)
+
+doc in Compile := (unidoc in Compile).value.head
