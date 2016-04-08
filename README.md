@@ -73,7 +73,7 @@ See http://www.scala-js.org/tutorial/basic/ for information about how to setup s
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
-libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "3.0.0"
+libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "3.0.1"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
