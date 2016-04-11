@@ -228,6 +228,18 @@ object domTest extends TestSuite {
       dom.render(div, hr)
       assert(div.asInstanceOf[HR].style.visibility == "hidden")
     }
+
+    'WithFilter {
+      @dom def domMethod() = {
+        val myVars = Vars(1, 2, 100, 3)
+        val filtered = for {
+          myVar <- myVars
+          if myVar < 10
+        } yield myVar
+        assert(filtered.get == Seq(1, 2, 3))
+      }
+      domMethod()
+    }
   }
 
 }

@@ -782,7 +782,7 @@ object Binding {
     /**
       * Returns a view of this [[BindingSeq]] that applied a filter of `condition`
       */
-    def withFilter(condition: A => Boolean): WithFilter = macro Macros.withFilter
+    def withFilter(condition: A => Boolean): BindingSeq[A]#WithFilter = macro Macros.withFilter
 
     /**
       * Underlying implementation of [[#withFilter]].
@@ -790,7 +790,7 @@ object Binding {
       * @note Don't use this method in user code.
       */
     @inline
-    final def withFilterBinding(condition: A => Binding[Boolean]): WithFilter = {
+    final def withFilterBinding(condition: A => Binding[Boolean]): BindingSeq[A]#WithFilter = {
       new WithFilter(condition)
     }
 

@@ -533,6 +533,15 @@ object BindingTest extends TestSuite {
 
     }
 
+    'WithFilter {
+      monadic[Binding] {
+        val myVars = Vars(1, 2, 100, 3)
+        val filtered = myVars.withFilter(_ < 10).map(x => x)
+
+        assert(filtered.get == Seq(1, 2, 3))
+      }
+    }
+
   }
 
 }
