@@ -95,7 +95,7 @@ A `Vars` represents a sequence of bindable variables,
 which also implements `BindingSeq` trait,
 hence a `Vars` can be seen as a binding expression of a sequence as well.
 If another comprehension expression depends on a `Vars`,
-the value of the expression changes whenever value of the `Var` changes.
+the value of the expression changes whenever value of the `Vars` changes.
 
 ### Step 3: Create a `@dom` method that contains data-binding expressions
 
