@@ -73,7 +73,7 @@ See http://www.scala-js.org/tutorial/basic/ for information about how to setup s
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
 ``` scala
-libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "4.0.0"
+libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "4.0.1"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
@@ -436,12 +436,12 @@ The former module is available for both JVM and Scala.js. You could add it in yo
 
 ``` scala
 // For JVM projects
-libraryDependencies += "com.thoughtworks.binding" %% "core" % "4.0.0"
+libraryDependencies += "com.thoughtworks.binding" %% "core" % "4.0.1"
 ```
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
-libraryDependencies += "com.thoughtworks.binding" %%% "core" % "4.0.0"
+libraryDependencies += "com.thoughtworks.binding" %%% "core" % "4.0.1"
 ```
 
 ### HTML DOM integration (dom.scala)
@@ -450,10 +450,10 @@ The latter module is only available for Scala.js. You could add it in your `buil
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
-libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "4.0.0"
+libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "4.0.1"
 ```
 
 ## Links
 
-* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/4.0.0/unidoc_2.11-4.0.0-javadoc.jar/!/com/thoughtworks/binding/package.html)
+* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/4.0.1/unidoc_2.11-4.0.1-javadoc.jar/!/com/thoughtworks/binding/package.html)
 * [Live DEMOs](https://thoughtworksinc.github.io/Binding.scala/)
