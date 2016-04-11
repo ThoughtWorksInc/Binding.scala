@@ -317,7 +317,7 @@ def main(): Unit = {
 You may find out this approach is much simpler than ReactJS, as:
 
  * Instead of passing `props` in ReactJS, you just simply provide parameters for  Binding.scala.
- * Instead of specifying `propTypes` in ReactJS, you just simply define the types parameters in Binding.scala.
+ * Instead of specifying `propTypes` in ReactJS, you just simply define the types of parameters in Binding.scala.
  * Instead of raising a run-time error when types of props do not match in ReactJS, you just check the types at compile-time.
 
 ### Lifecycle management for data-binding expressions
