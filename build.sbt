@@ -73,6 +73,8 @@ releaseProcess -= runTest
 scalaJavaUnidocSettings
 
 import UnidocKeys._
-unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(coreJS)
+unidocProjectFilter in ScalaUnidoc in unidoc := inAnyProject -- inProjects(coreJS)
 
 doc in Compile := (unidoc in Compile).value.head
+
+releasePublishArtifactsAction <<= PgpKeys.publishSigned
