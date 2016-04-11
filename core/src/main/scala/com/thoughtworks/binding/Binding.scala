@@ -402,7 +402,7 @@ object Binding {
   }
 
 
-  private[binding] final case class Length(bindingSeq: BindingSeq[_]) extends Binding[Int] with PatchedListener[Any] {
+  private[binding] final case class Length(bindingSeq: BindingSeq[_]) extends Binding[Int] with PatchedListener[Any] with ChangedListener[Seq[Any]] {
 
     private val publisher = new Publisher[ChangedListener[Int]]
 
@@ -412,17 +412,19 @@ object Binding {
       publisher.unsubscribe(listener)
       if (publisher.isEmpty) {
         bindingSeq.removePatchedListener(this)
+        bindingSeq.removeChangedListener(this)
       }
     }
 
     override private[binding] def addChangedListener(listener: ChangedListener[Int]): Unit = {
       if (publisher.isEmpty) {
         bindingSeq.addPatchedListener(this)
+        bindingSeq.addChangedListener(this)
       }
       publisher.subscribe(listener)
     }
 
-    override private[binding] def patched(patchedEvent: PatchedEvent[Any]): Unit = {
+    override private[binding] final def patched(patchedEvent: PatchedEvent[Any]): Unit = {
       val oldLength = patchedEvent.oldSeq.length
       val changedEvent = new ChangedEvent[Int](this, oldLength, oldLength + patchedEvent.that.length - patchedEvent.replaced)
       for (subscriber <- publisher) {
@@ -430,6 +432,12 @@ object Binding {
       }
     }
 
+    override private[binding] final def changed(event: ChangedEvent[Seq[Any]]): Unit = {
+      val changedEvent = new ChangedEvent[Int](this, event.oldValue.length, event.newValue.length)
+      for (subscriber <- publisher) {
+        subscriber.changed(changedEvent)
+      }
+    }
   }
 
   private[binding] case class SingleSeq[+A](element: A) extends collection.immutable.IndexedSeq[A] {
