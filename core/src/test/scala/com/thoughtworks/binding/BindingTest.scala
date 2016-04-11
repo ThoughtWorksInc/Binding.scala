@@ -34,8 +34,8 @@ import scalaz._
 object BindingTest extends TestSuite {
 
   final class BufferListener extends ArrayBuffer[Any] {
-    val listener = new ChangedListener[Seq[Any]] with PatchedListener[Any] {
-      override private[binding] def changed(event: ChangedEvent[Seq[Any]]): Unit = {
+    val listener = new ChangedListener[Any] with PatchedListener[Any] {
+      override private[binding] def changed(event: ChangedEvent[Any]): Unit = {
         BufferListener.this += event
       }
 
@@ -497,6 +497,40 @@ object BindingTest extends TestSuite {
       assert(mapped.changedPublisher.isEmpty)
       assert(source.patchedPublisher.isEmpty)
       assert(source.changedPublisher.isEmpty)
+    }
+
+    'Length {
+      val source = Vars(1)
+      val length = source.length
+      val lengthEvents = new BufferListener
+      length.addChangedListener(lengthEvents.listener)
+      source.get(0) = 100
+      assert(lengthEvents.length == 1)
+      lengthEvents(0) match {
+        case event: ChangedEvent[_] =>
+          assert(event.getSource == length)
+          assert(event.oldValue == 1)
+          assert(event.newValue == 1)
+      }
+
+      source.get += 200
+      assert(lengthEvents.length == 2)
+      lengthEvents(1) match {
+        case event: ChangedEvent[_] =>
+          assert(event.getSource == length)
+          assert(event.oldValue == 1)
+          assert(event.newValue == 2)
+      }
+
+      source.get -= 100
+      assert(lengthEvents.length == 3)
+      lengthEvents(2) match {
+        case event: ChangedEvent[_] =>
+          assert(event.getSource == length)
+          assert(event.oldValue == 2)
+          assert(event.newValue == 1)
+      }
+
     }
 
   }

@@ -402,6 +402,36 @@ object Binding {
   }
 
 
+  private[binding] final case class Length(bindingSeq: BindingSeq[_]) extends Binding[Int] with PatchedListener[Any] {
+
+    private val publisher = new Publisher[ChangedListener[Int]]
+
+    override private[binding] def get: Int = bindingSeq.get.length
+
+    override private[binding] def removeChangedListener(listener: ChangedListener[Int]): Unit = {
+      publisher.unsubscribe(listener)
+      if (publisher.isEmpty) {
+        bindingSeq.removePatchedListener(this)
+      }
+    }
+
+    override private[binding] def addChangedListener(listener: ChangedListener[Int]): Unit = {
+      if (publisher.isEmpty) {
+        bindingSeq.addPatchedListener(this)
+      }
+      publisher.subscribe(listener)
+    }
+
+    override private[binding] def patched(patchedEvent: PatchedEvent[Any]): Unit = {
+      val oldLength = patchedEvent.oldSeq.length
+      val changedEvent = new ChangedEvent[Int](this, oldLength, oldLength + patchedEvent.that.length - patchedEvent.replaced)
+      for (subscriber <- publisher) {
+        subscriber.changed(changedEvent)
+      }
+    }
+
+  }
+
   private[binding] case class SingleSeq[+A](element: A) extends collection.immutable.IndexedSeq[A] {
 
     override final def length: Int = 1
@@ -712,6 +742,8 @@ object Binding {
     private[binding] def removePatchedListener(listener: PatchedListener[A]): Unit
 
     private[binding] def addPatchedListener(listener: PatchedListener[A]): Unit
+
+    final def length: Binding[Int] = Length(this)
 
     /**
       * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
