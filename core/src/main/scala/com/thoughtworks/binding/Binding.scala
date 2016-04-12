@@ -64,7 +64,7 @@ object Binding {
 
     import Publisher._
 
-    private val subscribers = collection.mutable.ArrayBuffer.empty[Subscriber]
+    private val subscribers = Buffer.empty[Subscriber]
 
     @volatile
     private var state: State = Idle
