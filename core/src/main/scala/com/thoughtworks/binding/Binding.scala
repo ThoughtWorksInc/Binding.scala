@@ -27,7 +27,7 @@ package java {
 
   package object util {
 
-    @com.thoughtworks.enableIf(_.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+    @com.thoughtworks.enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
     class EventObject(@transient protected val source: AnyRef) extends java.io.Serializable {
       private val serialVersionUID: Long = 5516075349620653480L
 
@@ -79,7 +79,7 @@ package com.thoughtworks.binding {
 
     private object Jvm {
 
-      @enableIf(!_.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+      @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
       def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
 
     }
@@ -87,10 +87,10 @@ package com.thoughtworks.binding {
     private object Js {
 
       @inline
-      @enableIf(_.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+      @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
       def newBuffer[A] = new scalajs.js.Array[A]
 
-      @enableIf(_.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+      @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
       @inline
       implicit final class ReduceToSizeOps[A] @inline()(array: scalajs.js.Array[A]) {
         @inline def reduceToSize(newSize: Int) = array.length = newSize
