@@ -323,7 +323,7 @@ You may find out this approach is much simpler than ReactJS, as:
 ### Lifecycle management for data-binding expressions
 
 The ability of precise data-binding in Binding.scala requires listener registrations on the data source.
-Other reactive frameworks that has the ability ask users manage the lifecycle of data-binding expressions.
+Other reactive frameworks that have the ability ask users manage the lifecycle of data-binding expressions.
 
 For example, [MetaRx](https://github.com/MetaStack-pl/MetaRx/issues/45) provide a `dispose` method to unregister the listeners created when building data-binding expressions.
 The user of MetaRx have the responsibility to call `dispose` method for every `map` and `flatMap` call after the expression changes,
@@ -332,25 +332,19 @@ otherwise MetaRx leaks memory. Unfortunately manually `dispose` everything is al
 Another reactive web framework [Widok](https://github.com/widok/widok/issues/29) did not provide any mechanism to manage lifecycle of of data-binding expressions.
 As a result, it simply always leaks memory.
 
-Because ReactJS does not have the ability of precise data-binding,
-it does not register listeners to data source hence no memory leaks issue for simple cases.
-
-Unfortunately, ReactJS provides `ref` attribute, `getInitialState` method, `componentWillMount` method, and `componentDidMount` method,
-encouraging users create operations with side-effects in these methods, which are usually error-prone.
-
-Unlike MetaRx or Widok, all data-binding expressions are pure functional, with no side-effects in Binding.scala.
+In Binding.scala, unlike MetaRx or Widok, all data-binding expressions are pure functional, with no side-effects.
 Binding.scala does not register any listeners when users create individual expressions,
 thus users neither need to manually unregister listeners for a single expression like MetaRx,
 nor perform additional operations in handlers like ReactJS.
 
 Instead, Binding.scala create all internal listeners together,
-when the user calls `dom.render` or `Binding.watch` on root of expressions.
-Note that `dom.render` or `Binding.watch` manages listeners on all sub-expressions,
-not only the listener on the root expression.
+when the user calls `dom.render` or `Binding.watch` on the result expression.
+Note that `dom.render` or `Binding.watch` manages listeners on all upstream expressions,
+not only the direct listeners of the result expression.
 
 In brief, Binding.scala separates functionality in two kinds:
- * `@dom` methods that produce pure functional expressions with no side-effects.
- * `dom.render` or `Binding.watch` manages all side-effects automatically.
+ * User-defined `@dom` methods, which produce pure functional expressions with no side-effects.
+ * Calls to `dom.render` or `Binding.watch`, which manage all side-effects automatically.
 
 ### HTML literal and statically type checking
 
@@ -373,8 +367,8 @@ Regardless the similar syntax of HTML literal between Binding.scala and ReactJS,
 Binding.scala create real DOM instead of ReactJS's virtual DOM.
 
 
-In the above example, `<div>...</div>` create a DOM element with type of `org.scalajs.dom.html.Div`.
-And the magic `@dom` let the method wrap the result in a `Binding`.
+In the above example, `<div>...</div>` create a DOM element with the type of `org.scalajs.dom.html.Div`.
+Then, the magic `@dom` let the method wrap the result as a `Binding`.
 
 You can even assign the `Div` to a local variable and invoke native DOM method on the variable:
 
@@ -394,11 +388,11 @@ def notificationBox(message: String): Binding[Div] = {
 ```
 
 `scrollIntoView` method will be invoked when the `Div` is created.
-If you invoked a method that does not defined in `Div`,
+If you invoked another method that does not defined in `Div`,
 the Scala compiler will report an compile-time error instead of bringing the failure to run-time,
 because Scala is a statically typed language and the Scala compiler understand the type of `Div`.
 
-You may also notice `className` and `title`. They are DOM properties on `Div`.
+You may also notice `className` and `title`. They are DOM properties (not HTML attributes) on `Div`.
 They are type-checked by Scala compiler as well.
 
 For example, given the following `typo` method:
@@ -424,6 +418,8 @@ typo.scala:24: value typoMethod is not a member of org.scalajs.dom.html.Div
 ```
 
 With the help of static type system, `@dom` methods can be much robuster than ReactJS components.
+
+You can find a complete list of supported properties and methods on [scaladoc of scalajs-dom](http://www.scala-js.org/api/scalajs-dom/0.8/org/scalajs/dom/raw/HTMLElement.html) or [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement)
 
 ## Downloads
 
