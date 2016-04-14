@@ -44,16 +44,6 @@ releaseCrossBuild := false
 
 import ReleaseTransformations._
 
-val disableDeploySh = taskKey[Unit]("Rename deploy.sh to deploy.sh.disabled.")
-
-disableDeploySh := {
-  val log = (streams in disableDeploySh).value.log
-  Process(
-    "git" :: "mv" :: "--" :: "deploy.sh" :: "deploy.sh.disabled" :: Nil,
-    baseDirectory.value
-  ) ! log
-}
-
 sonatypeProfileName := "com.thoughtworks.binding"
 
 pgpSecretRing := baseDirectory.value / "secret" / "secring.asc"
