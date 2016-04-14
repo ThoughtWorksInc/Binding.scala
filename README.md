@@ -334,8 +334,7 @@ As a result, it simply always leaks memory.
 
 In Binding.scala, unlike MetaRx or Widok, all data-binding expressions are pure functional, with no side-effects.
 Binding.scala does not register any listeners when users create individual expressions,
-thus users neither need to manually unregister listeners for a single expression like MetaRx,
-nor perform additional operations in handlers like ReactJS.
+thus users do not need to manually unregister listeners for a single expression like MetaRx.
 
 Instead, Binding.scala create all internal listeners together,
 when the user calls `dom.render` or `Binding.watch` on the result expression.
