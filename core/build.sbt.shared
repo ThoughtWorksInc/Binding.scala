@@ -26,3 +26,5 @@ scalacOptions in doc in Compile += "-implicits"
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
 releasePublishArtifactsAction <<= PgpKeys.publishSigned
+
+incOptions := incOptions.value.withNameHashing(true).withRecompileOnMacroDef(false)
