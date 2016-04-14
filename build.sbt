@@ -10,7 +10,7 @@ organization := "com.thoughtworks.binding"
 
 name := "unidoc"
 
-scalaVersion in ThisBuild := "2.11.7"
+scalaVersion in ThisBuild := "2.11.8"
 
 developers in ThisBuild := List(
   Developer(
