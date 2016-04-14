@@ -27,6 +27,7 @@ package com.thoughtworks.binding
 import java.util.EventObject
 
 import com.thoughtworks.each.Monadic._
+import com.thoughtworks.enableIf
 
 import scala.annotation.tailrec
 import scala.concurrent.{ExecutionContext, Future}
@@ -60,11 +61,35 @@ object Binding {
 
   }
 
+  private object Jvm {
+
+    @enableIf(!_.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+    def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
+
+  }
+
+  private object Js {
+
+    @inline
+    @enableIf(_.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+    def newBuffer[A] = new scalajs.js.Array[A]
+
+    @enableIf(_.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+    @inline
+    implicit final class ReduceToSizeOps[A] @inline()(array: scalajs.js.Array[A]) {
+      @inline def reduceToSize(newSize: Int) = array.length = newSize
+    }
+
+  }
+
+  import Js._
+  import Jvm._
+
   private[binding] final class Publisher[Subscriber >: Null] {
 
     import Publisher._
 
-    private val subscribers = collection.mutable.ArrayBuffer.empty[Subscriber]
+    private val subscribers = newBuffer[Subscriber]
 
     @volatile
     private var state: State = Idle
