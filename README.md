@@ -11,7 +11,7 @@ Binding.scala can be used as a **[reactive](https://en.wikipedia.org/wiki/Reacti
 It enables you use native XML literal syntax to create reactive DOM nodes,
 which are able to automatically change whenever the data source changes.
 
-See [Binding.scala • TodoMVC](https://github.com/ThoughtWorksInc/todo/) or [Other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/) as examples for common patterns when working with Binding.scala.
+See [Binding.scala • TodoMVC](https://github.com/ThoughtWorksInc/todo/) or [other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/) as examples for common patterns when working with Binding.scala.
 
 ## Comparison to other reactive web frameworks
 
