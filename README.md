@@ -1,7 +1,7 @@
 # Binding.scala
 
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
+[![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg?branch=master)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
 [![Maven Central (Core Funtionality)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/core_2.11.svg?label=maven-central%20%28core%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/core_2.11)
 [![Maven Central (DOM Integration)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/dom_sjs0.6_2.11.svg?label=maven-central%20%28dom%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/dom_sjs0.6_2.11)
 
