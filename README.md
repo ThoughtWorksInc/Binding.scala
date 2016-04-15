@@ -43,7 +43,7 @@ Binding.scala has more features and less concepts than other reactive web framew
       <th>Lifecycle management for data-binding expressions</th>
       <td>Automatically</td>
       <td>Manually</td>
-      <td>Manually</td>
+      <td>N/A</td>
     </tr>
     <tr>
       <th>Statically type checking</th>
