@@ -63,10 +63,12 @@ releaseProcess -= runTest
 scalaJavaUnidocSettings
 
 import UnidocKeys._
-unidocProjectFilter in ScalaUnidoc in unidoc := inAnyProject -- inProjects(coreJS)
+unidocProjectFilter in ScalaUnidoc in unidoc := inAnyProject -- inProjects(coreJVM)
 
 doc in Compile := (unidoc in Compile).value.head
 
 releasePublishArtifactsAction <<= PgpKeys.publishSigned
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+
+scalacOptions += "-Xexperimental"
