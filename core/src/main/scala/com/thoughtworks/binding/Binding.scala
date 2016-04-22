@@ -37,7 +37,7 @@ import scala.collection.GenSeq
 import scala.collection.Seq
 import scala.collection.mutable.Buffer
 import scala.util.Try
-import scalaz.{MonadPlus, Monad}
+import scalaz.{Monad, MonadPlus}
 import scala.language.experimental.macros
 
 /**
@@ -64,11 +64,17 @@ object Binding {
   private object Jvm {
 
     @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+    type NativeFunction1[-A, +R] = A => R
+
+    @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
     def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
 
   }
 
   private object Js {
+
+    @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+    type NativeFunction1[-A, +R] = scala.scalajs.js.Function1[A, R]
 
     @inline
     @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
@@ -293,7 +299,7 @@ object Binding {
 
   }
 
-  private final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B])
+  private final class FlatMap[A, B](upstream: Binding[A], f: NativeFunction1[A, Binding[B]])
     extends Binding[B] with ChangedListener[B] {
 
     private val publisher = new Publisher[ChangedListener[B]]
@@ -508,7 +514,7 @@ object Binding {
     }
   }
 
-  private[binding] final class MapBinding[A, B](upstream: BindingSeq[A], f: A => Binding[B]) extends BindingSeq[B] {
+  private[binding] final class MapBinding[A, B](upstream: BindingSeq[A], f: NativeFunction1[A, Binding[B]]) extends BindingSeq[B] {
 
     var cache: Vector[Binding[B]] = {
       (for {
@@ -641,7 +647,7 @@ object Binding {
     }
   }
 
-  private[binding] final class FlatMapBinding[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B]) extends BindingSeq[B] {
+  private[binding] final class FlatMapBinding[A, B](upstream: BindingSeq[A], f: NativeFunction1[A, BindingSeq[B]]) extends BindingSeq[B] {
 
     var cache: Vector[BindingSeq[B]] = {
       (for {
