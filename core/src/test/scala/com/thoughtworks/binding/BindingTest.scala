@@ -47,6 +47,18 @@ object BindingTest extends TestSuite {
 
   def tests = TestSuite {
 
+    * - {
+      val target = Var("World")
+      val hello = monadic[Binding] {
+        "Hello, " + target.each + "!"
+      }
+      hello.watch()
+
+      assert(hello.get == "Hello, World!")
+      target := "Each"
+      assert(hello.get == "Hello, Each!")
+    }
+
     'TripleBinding {
       val input = Var(0)
       val output = monadic[Binding] {

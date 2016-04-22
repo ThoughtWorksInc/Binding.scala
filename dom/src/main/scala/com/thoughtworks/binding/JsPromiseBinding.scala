@@ -25,8 +25,12 @@ SOFTWARE.
 package com.thoughtworks.binding
 
 import com.thoughtworks.binding.Binding.ChangedListener
-import org.scalajs.dom.raw.{Promise => JsPromise}
+
+import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.{Thenable, UndefOr, |, Promise => JsPromise}
 import Binding._
+
+import scala.scalajs.js
 
 object JsPromiseBinding {
 
@@ -35,7 +39,8 @@ object JsPromiseBinding {
 }
 
 /**
-  * A wrapper that wraps a [[org.scalajs.dom.raw.Promise]] to a [[Binding]].
+  * A wrapper that wraps a [[scala.scalajs.js.Promise]] to a [[Binding]].
+  *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[Any, A]]] {
@@ -74,8 +79,11 @@ class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[A
   override private[binding] def addChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
     if (!isHandlerRegistered) {
       isHandlerRegistered = true
-      promise.andThen(fulfilledHandler _, rejectedHandler _)
-
+      promise.`then`[Unit]({ result: A =>
+        fulfilledHandler(result)
+      }, UndefOr.any2undefOrA({ error: Any =>
+        rejectedHandler(error)
+      }))
     }
     publisher.subscribe(listener)
   }
