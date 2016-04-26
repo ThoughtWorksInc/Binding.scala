@@ -206,19 +206,19 @@ object domTest extends TestSuite {
     }
 
     'StyleVisibility {
-      @dom def hr = <hr style:visibility="hidden"/>
+      @dom def hr = <hr style:borderLeft="123px"/>
       val div = document.createElement("div")
       dom.render(div, hr)
-      assert(div.asInstanceOf[HR].style.visibility == "hidden")
+      assert(div.firstChild.asInstanceOf[HR].style.borderLeft == "123px")
     }
 
     'ComplexProperty {
       implicit class MyHr(hr: HR) {
         object a {
           object b {
-            def c = hr.style.visibility
+            def c = hr.style.borderLeft
             def c_=(value: String) = {
-              hr.style.visibility = value
+              hr.style.borderLeft = "123px"
             }
           }
         }
@@ -226,7 +226,7 @@ object domTest extends TestSuite {
       @dom def hr = <hr a:b:c="hidden"/>
       val div = document.createElement("div")
       dom.render(div, hr)
-      assert(div.asInstanceOf[HR].style.visibility == "hidden")
+      assert(div.firstChild.asInstanceOf[HR].style.borderLeft == "123px")
     }
 
     'WithFilter {
