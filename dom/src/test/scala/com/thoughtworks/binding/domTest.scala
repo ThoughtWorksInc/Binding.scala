@@ -240,6 +240,21 @@ object domTest extends TestSuite {
       }
       domMethod()
     }
+
+    'TextStyle {
+      @dom def hr = <hr style="borderLeft: 123px"/>
+      val div = document.createElement("div")
+      dom.render(div, hr)
+      assert(div.firstChild.asInstanceOf[HR].style.borderLeft == "123px")
+    }
+
+    'Class {
+      @dom def hr = <hr class="myClass"/>
+      val div = document.createElement("div")
+      dom.render(div, hr)
+      assert(div.firstChild.asInstanceOf[HR].className == "myClass")
+    }
+
   }
 
 }

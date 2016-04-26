@@ -24,12 +24,12 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{SingleMountPoint, Constants, BindingSeq, MultiMountPoint}
+import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.binding.Binding.BindingSeq
-import org.scalajs.dom.raw.{Text, Node}
+import org.scalajs.dom.raw.{HTMLElement, HTMLLabelElement, Node, Text}
 
-import scala.annotation.{tailrec, StaticAnnotation, compileTimeOnly}
+import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
 import scala.collection.GenSeq
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
@@ -146,6 +146,32 @@ object dom {
 
   }
 
+
+  /**
+    * This object contains implicit views imported automaticlly for @dom methods.
+    */
+  object AutoImports {
+
+    implicit final class StyleOps(node: HTMLElement) {
+      def style = node.style.cssText
+
+      def style_=(value: String) = node.style.cssText = value
+    }
+
+    implicit final class ClassOps(node: HTMLElement) {
+      def `class` = node.className
+
+      def class_=(value: String) = node.className = value
+    }
+
+    implicit final class ForOps(node: HTMLLabelElement) {
+      def `for` = node.htmlFor
+
+      def for_=(value: String) = node.htmlFor = value
+    }
+
+  }
+
   /**
     * Render a binding node into `parent`
     */
@@ -172,6 +198,7 @@ object dom {
 
   /**
     * Returns the current element. This method must be called in attribute value expressions.
+    *
     * @example {{{<br id={ "This BR element's tagName is:" + dom.currentTarget.tagName } />}}}
     */
   def currentTarget[A](implicit implicitCurrentTarget: Runtime.CurrentTargetReference[A]): A = {
@@ -325,7 +352,10 @@ object dom {
               mods, name, tparams, vparamss, tpt,
               q"""_root_.com.thoughtworks.each.Monadic.monadic[
                 _root_.com.thoughtworks.binding.Binding
-              ](${transform(rhs)})"""
+              ]{
+                import _root_.com.thoughtworks.binding.dom.AutoImports._
+                ${transform(rhs)}
+              }"""
             )
           }
         case Seq(annottee@ValDef(mods, name, tpt, rhs)) =>
@@ -334,7 +364,10 @@ object dom {
               mods, name, tpt,
               q"""_root_.com.thoughtworks.each.Monadic.monadic[
                 _root_.com.thoughtworks.binding.Binding
-              ](${transform(rhs)})"""
+              ]{
+                import _root_.com.thoughtworks.binding.dom.AutoImports._
+                ${transform(rhs)}
+              }"""
             )
           }
         case _ =>
