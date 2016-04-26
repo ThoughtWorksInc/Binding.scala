@@ -24,10 +24,10 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{BindingSeq, Vars, Var, Constant}
+import Binding.{BindingSeq, Constant, Var, Vars}
 import org.scalajs.dom.document
-import org.scalajs.dom.html.{Paragraph, HR, Div, BR}
-import org.scalajs.dom.raw.{Node, Event}
+import org.scalajs.dom.html.{BR, Div, HR, Paragraph}
+import org.scalajs.dom.raw.{Comment, Event, Node}
 import utest._
 
 /**
@@ -253,6 +253,13 @@ object domTest extends TestSuite {
       val div = document.createElement("div")
       dom.render(div, hr)
       assert(div.firstChild.asInstanceOf[HR].className == "myClass")
+    }
+
+    'Comment {
+      @dom def comment = <div><!--my comment--></div>
+      val div = document.createElement("div")
+      dom.render(div, comment)
+      assert(div.innerHTML == "<div><!--my comment--></div>")
     }
 
   }

@@ -327,8 +327,11 @@ object dom {
                   }
                 """
               }
+            case q"""new _root_.scala.xml.Comment($text)""" =>
+              atPos(tree.pos) {
+                q"""_root_.org.scalajs.dom.document.createComment(${transform(text)})"""
+              }
             case q"""new _root_.scala.xml.Text($text)""" =>
-              val textName = TermName(c.freshName("text"))
               atPos(tree.pos) {
                 transform(text)
               }
