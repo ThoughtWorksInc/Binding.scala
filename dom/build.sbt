@@ -12,6 +12,8 @@ libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.5.3"
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.0"
 
+libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4"
+
 jsDependencies += RuntimeDOM
 
 libraryDependencies += "com.lihaoyi" %%% "utest" % "0.3.1" % Test

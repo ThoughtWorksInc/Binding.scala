@@ -262,6 +262,20 @@ object domTest extends TestSuite {
       assert(div.innerHTML == "<div><!--my comment--></div>")
     }
 
+    'Escape {
+      @dom def comment = <div>&#32;</div>
+      val div = document.createElement("div")
+      dom.render(div, comment)
+      assert(div.innerHTML == "<div> </div>")
+    }
+
+    'Entity {
+      @dom def comment = <div>&amp;&lt;&copy;&lambda;</div>
+      val div = document.createElement("div")
+      dom.render(div, comment)
+      assert(div.innerHTML == "<div>&amp;&lt;©λ</div>")
+    }
+
   }
 
 }

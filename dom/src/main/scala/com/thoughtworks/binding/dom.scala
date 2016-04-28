@@ -27,6 +27,7 @@ package com.thoughtworks.binding
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.binding.Binding.BindingSeq
+import org.apache.commons.lang3.text.translate.EntityArrays
 import org.scalajs.dom.raw.{HTMLElement, HTMLLabelElement, Node, Text}
 
 import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
@@ -207,6 +208,12 @@ object dom {
 
   private[binding] object Macros {
 
+    private val EntityRefRegex = "&(.*);".r
+
+    private val EntityRefMap = (for {
+      Array(character, EntityRefRegex(reference)) <- EntityArrays.BASIC_ESCAPE.view ++ EntityArrays.ISO8859_1_ESCAPE ++ EntityArrays.HTML40_EXTENDED_ESCAPE
+    } yield reference -> character).toMap
+
     def macroTransform(c: whitebox.Context)(annottees: c.Tree*): c.Tree = {
       import c.universe._
       val transformer = new Transformer {
@@ -326,6 +333,16 @@ object dom {
                     $elementName
                   }
                 """
+              }
+            case q"""new _root_.scala.xml.EntityRef(${Literal(Constant(reference: String))})""" =>
+              EntityRefMap.get(reference) match {
+                case Some(unescapedCharacter) =>
+                  atPos(tree.pos) {
+                    q"""$unescapedCharacter"""
+                  }
+                case None =>
+                  c.error(tree.pos, s"Unknown HTML entity reference: $reference")
+                  q"""???"""
               }
             case q"""new _root_.scala.xml.Comment($text)""" =>
               atPos(tree.pos) {
