@@ -257,7 +257,7 @@ although a data-binding framework should need the information.
 
 Unlike ReactJS, a Binding.scala `@dom` method is NOT a regular function.
 It is a template that describes the relationship between data source and the DOM.
-When partial of the data source changed, Binding.scala framework knows the exact partial DOM corresponding to the partial data.
+When partial of the data source changed, the Binding.scala framework understands the exact partial DOM corresponding to the partial data.
 Then, Binding.scala only re-evaluates partial of the `@dom` method to update the partial DOM.
 
 With the help of the ability of precise data-binding provided by Binding.scala,
@@ -326,8 +326,8 @@ The ability of precise data-binding in Binding.scala requires listener registrat
 Other reactive frameworks that have the ability ask users manage the lifecycle of data-binding expressions.
 
 For example, [MetaRx](https://github.com/MetaStack-pl/MetaRx/issues/45) provide a `dispose` method to unregister the listeners created when building data-binding expressions.
-The user of MetaRx have the responsibility to call `dispose` method for every `map` and `flatMap` call after the expression changes,
-otherwise MetaRx leaks memory. Unfortunately manually `dispose` everything is almost impossible for complicated binding expression.
+The users of MetaRx have the responsibility to call `dispose` method for every `map` and `flatMap` call after the expression changes,
+otherwise MetaRx leaks memory. Unfortunately, manually `dispose`ing everything is too hard to be right for complicated binding expression.
 
 Another reactive web framework [Widok](https://github.com/widok/widok/issues/29) did not provide any mechanism to manage lifecycle of of data-binding expressions.
 As a result, it simply always leaks memory.
