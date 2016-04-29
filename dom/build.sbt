@@ -8,7 +8,7 @@ name := "dom"
 
 description := "Reactive web framework for Scala.js."
 
-libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.5.3"
+libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.5.5"
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.0"
 
