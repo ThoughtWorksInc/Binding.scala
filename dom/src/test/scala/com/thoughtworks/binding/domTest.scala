@@ -276,6 +276,13 @@ object domTest extends TestSuite {
       assert(div.innerHTML == "<div>&amp;&lt;©λ</div>")
     }
 
+    'CustomAttribute {
+      @dom def hr = <hr data:custom-key="value"/>
+      val div = document.createElement("div")
+      dom.render(div, hr)
+      assert(div.firstChild.asInstanceOf[HR].getAttribute("custom-key") == "value")
+    }
+
   }
 
 }

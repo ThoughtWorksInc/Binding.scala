@@ -28,7 +28,7 @@ import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.binding.Binding.BindingSeq
 import org.apache.commons.lang3.text.translate.EntityArrays
-import org.scalajs.dom.raw.{HTMLElement, HTMLLabelElement, Node, Text}
+import org.scalajs.dom.raw._
 
 import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
 import scala.collection.GenSeq
@@ -152,6 +152,24 @@ object dom {
     * This object contains implicit views imported automaticlly for @dom methods.
     */
   object AutoImports {
+
+    implicit final class DataOps(node: Element) {
+
+      import scala.language.dynamics
+
+      def data = new Dynamic {
+
+        final def selectDynamic(attributeName: String): String = {
+          node.getAttribute(attributeName)
+        }
+
+        final def updateDynamic(attributeName: String)(attributeValue: String): Unit = {
+          node.setAttribute(attributeName, attributeValue)
+        }
+
+      }
+
+    }
 
     implicit final class StyleOps(node: HTMLElement) {
       def style = node.style.cssText
