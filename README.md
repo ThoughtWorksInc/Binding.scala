@@ -420,6 +420,16 @@ With the help of static type system, `@dom` methods can be much robuster than Re
 
 You can find a complete list of supported properties and methods on [scaladoc of scalajs-dom](http://www.scala-js.org/api/scalajs-dom/0.8/org/scalajs/dom/raw/HTMLElement.html) or [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement)
 
+#### Custom attributes
+
+If you want to suppress the static type checking of attributes, add a `data:` prefix to the attribute:
+
+``` scala
+@dom def myCustomDiv = <div data:customAttributeName="attributeValue"></div>
+```
+
+The Scala compiler will not report errors now.
+
 ## Downloads
 
 Binding.scala has an extremely tiny code base. There is only one source file [Binding.scala](https://github.com/ThoughtWorksInc/Binding.scala/blob/master/core/src/main/scala/com/thoughtworks/binding/Binding.scala) for data-binding expressions,
