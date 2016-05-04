@@ -353,7 +353,7 @@ You can also embed Scala expressions in braces in content or attribute values of
 ``` scala
 @dom
 def notificationBox(message: String): Binding[Div] = {
-  <div className="notification" title={ s"Tooltip: $message" }>
+  <div class="notification" title={ s"Tooltip: $message" }>
     {
       message
     }
@@ -374,7 +374,7 @@ You can even assign the `Div` to a local variable and invoke native DOM method o
 ``` scala
 @dom
 def notificationBox(message: String): Binding[Div] = {
-  val result: Div = <div className="notification" title={ s"Tooltip: $message" }>
+  val result: Div = <div class="notification" title={ s"Tooltip: $message" }>
     {
       message
     }
@@ -391,7 +391,7 @@ If you invoked another method that does not defined in `Div`,
 the Scala compiler will report an compile-time error instead of bringing the failure to run-time,
 because Scala is a statically typed language and the Scala compiler understand the type of `Div`.
 
-You may also notice `className` and `title`. They are DOM properties (not HTML attributes) on `Div`.
+You may also notice `class` and `title`. They are DOM properties or HTML attributes on `Div`.
 They are type-checked by Scala compiler as well.
 
 For example, given the following `typo` method:
@@ -450,6 +450,6 @@ libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
 
 ## Links
 
-* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/5.3.0/unidoc_2.11-5.3.0-javadoc.jar/!/com/thoughtworks/binding/package.html)
+* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/5.4.0/unidoc_2.11-5.4.0-javadoc.jar/!/com/thoughtworks/binding/package.html)
 * [Binding.scala • TodoMVC](https://github.com/ThoughtWorksInc/todo/)
 * [Other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/)
