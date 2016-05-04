@@ -425,7 +425,10 @@ You can find a complete list of supported properties and methods on [scaladoc of
 If you want to suppress the static type checking of attributes, add a `data:` prefix to the attribute:
 
 ``` scala
-@dom def myCustomDiv = <div data:customAttributeName="attributeValue"></div>
+@dom def myCustomDiv = {
+  val myDiv = <div data:customAttributeName="attributeValue"></div>
+  assert(myDiv.getAttribute("customAttributeName") == "attributeValue")
+}
 ```
 
 The Scala compiler will not report errors now.
