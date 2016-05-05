@@ -153,17 +153,17 @@ object dom {
     */
   object AutoImports {
 
-    implicit final class DataOps(node: Element) {
+    implicit final class DataOps @inline() (node: Element) {
 
       import scala.language.dynamics
 
-      def data = new Dynamic {
+      @inline object data extends Dynamic {
 
-        final def selectDynamic(attributeName: String): String = {
+        @inline final def selectDynamic(attributeName: String): String = {
           node.getAttribute(attributeName)
         }
 
-        final def updateDynamic(attributeName: String)(attributeValue: String): Unit = {
+        @inline final def updateDynamic(attributeName: String)(attributeValue: String): Unit = {
           node.setAttribute(attributeName, attributeValue)
         }
 
@@ -171,22 +171,22 @@ object dom {
 
     }
 
-    implicit final class StyleOps(node: HTMLElement) {
-      def style = node.style.cssText
+    implicit final class StyleOps @inline() (node: HTMLElement) {
+      @inline def style = node.style.cssText
 
-      def style_=(value: String) = node.style.cssText = value
+      @inline def style_=(value: String) = node.style.cssText = value
     }
 
-    implicit final class ClassOps(node: HTMLElement) {
-      def `class` = node.className
+    implicit final class ClassOps @inline() (node: HTMLElement) {
+      @inline def `class` = node.className
 
-      def class_=(value: String) = node.className = value
+      @inline def class_=(value: String) = node.className = value
     }
 
-    implicit final class ForOps(node: HTMLLabelElement) {
-      def `for` = node.htmlFor
+    implicit final class ForOps @inline() (node: HTMLLabelElement) {
+      @inline def `for` = node.htmlFor
 
-      def for_=(value: String) = node.htmlFor = value
+      @inline def for_=(value: String) = node.htmlFor = value
     }
 
   }
