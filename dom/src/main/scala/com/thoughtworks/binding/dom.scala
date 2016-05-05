@@ -149,7 +149,7 @@ object dom {
 
 
   /**
-    * This object contains implicit views imported automaticlly for @dom methods.
+    * This object contains implicit views imported automatically for @dom methods.
     */
   object AutoImports {
 
