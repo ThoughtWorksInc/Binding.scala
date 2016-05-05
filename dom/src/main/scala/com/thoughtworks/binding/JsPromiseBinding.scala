@@ -39,7 +39,7 @@ object JsPromiseBinding {
 }
 
 /**
-  * A wrapper that wraps a [[scala.scalajs.js.Promise]] to a [[Binding]].
+  * A wrapper that wraps a [[scala.scalajs.js.Promise]] to a [[com.thoughtworks.binding.Binding]].
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
