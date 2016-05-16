@@ -17,3 +17,8 @@ script:
 before_deploy:
 
 deploy:
+  provider: script
+  script: sbt "release with-defaults"
+  on:
+    condition: -e ./deploy.sbt
+    all_branches: true
