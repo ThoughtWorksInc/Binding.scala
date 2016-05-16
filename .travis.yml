@@ -12,6 +12,7 @@ cache:
     - $HOME/.sbt/boot/
 
 script:
+  - sbt test
 
 before_deploy:
 
