@@ -1,6 +1,6 @@
 sudo: false
 
-language:
+language: scala
 
 before_cache:
 
