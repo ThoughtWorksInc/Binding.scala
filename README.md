@@ -35,7 +35,7 @@ Binding.scala has more features and less concepts than other reactive web framew
     </tr>
     <tr>
       <th>Algorithm to update DOM</th>
-      <td>Precise data-binding</td>
+      <td>Precise data-binding, which is faster than virtual DOM</td>
       <td>Precise data-binding</td>
       <td>Virtual DOM differentiation, which requires manually managed key attributes for complicated DOM.</td>
     </tr>
