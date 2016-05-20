@@ -24,6 +24,8 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
+import java.net.URI
+
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.binding.Binding.BindingSeq
@@ -37,6 +39,19 @@ import scala.language.experimental.macros
 import scalatags.JsDom
 import scalatags.jsdom
 import org.scalajs.dom.document
+import scala.collection.mutable.LazyBuilder
+import scala.collection.mutable.ListBuffer
+import scala.collection.LinearSeqOptimized
+import scala.collection.LinearSeq
+import scala.collection.generic.GenericTraversableTemplate
+import scala.collection.generic.SeqFactory
+
+import scalaz.Free
+import scalaz.\/
+import scalaz.-\/
+import scalaz.std.list._
+import scalaz.std.tuple._
+import com.thoughtworks.each.Monadic._
 
 /**
   * Enable XML DOM literal for Binding.scala
@@ -52,6 +67,76 @@ class dom extends StaticAnnotation {
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 object dom {
+
+  private type StringSource[A] = Free.Source[String, A]
+
+  private def checkNull(s: String): StringSource[Unit] = monadic[StringSource] {
+    if (s != null) {
+      produce(s).each
+    }
+  }
+
+  private def produce(a: String): StringSource[Unit] = Free.produce(a)
+
+  private def split(uri:URI): StringSource[Unit] = monadic[StringSource] {
+    (
+      uri.getScheme,
+      uri.getSchemeSpecificPart,
+      uri.getUserInfo, uri.getAuthority, uri.getHost, uri.getPort,
+      uri.getPath, uri.getQuery,
+      uri.getFragment
+    ) match {
+      case (
+        scheme,
+        schemeSpecificPart,
+        null, null, null, -1,
+        null, null,
+        fragment
+      ) =>
+        checkNull(schemeSpecificPart).each
+        checkNull(fragment).each
+      case (
+        scheme,
+        _,
+        userInfo, authority, null, -1,
+        path, query,
+        fragment
+      ) =>
+        checkNull(userInfo).each
+        checkNull(authority).each
+        if (path != null) {
+          for (pathPart <- path.split('/').toList.monadicLoop) {
+            produce(pathPart).each
+          }
+        }
+        checkNull(query).each
+        checkNull(fragment).each
+      case (
+        scheme,
+        _,
+        userInfo, _, host, port,
+        path, query,
+        fragment
+      ) =>
+      checkNull(userInfo).each
+      if (path != null) {
+        for (pathPart <- host.split('.').view.reverse.toList.monadicLoop) {
+          produce(pathPart).each
+        }
+      }
+      if (port != -1) {
+        produce(port.toString).each
+      }
+      if (path != null) {
+        for (pathPart <- path.split('/').toList.monadicLoop) {
+          produce(pathPart).each
+        }
+      }
+      checkNull(query).each
+      checkNull(fragment).each
+    }
+
+  }
 
   /**
     * Internal helpers for `@dom` annotation
