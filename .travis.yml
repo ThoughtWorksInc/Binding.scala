@@ -12,3 +12,4 @@ script:
 before_deploy:
 
 deploy:
+  skip_cleanup: true
