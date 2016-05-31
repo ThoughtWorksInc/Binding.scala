@@ -1,6 +1,6 @@
 enablePlugins(Travis)
 
-lazy val secret = project configure { secret =>
+lazy val secret = project settings(publishArtifact := false) configure { secret =>
   sys.env.get("GITHUB_PERSONAL_ACCESS_TOKEN") match {
     case Some(pat) =>
       import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
