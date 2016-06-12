@@ -8,7 +8,7 @@ cache:
   directories:
 
 script:
-  - sbt test
+  - sbt +test
 
 before_deploy:
 
