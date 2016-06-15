@@ -31,7 +31,7 @@ Binding.scala has more features and less concepts than other reactive web framew
       <th>Support HTML literal?</th>
       <td>Yes</td>
       <td>No</td>
-      <td>Yes</td>
+      <td>Patially. Regular HTML does not compile, unless users manually replace <code>class</code> and <code>for</> attributes to <code>className</code> and <code>htmlFor</code>.</td>
     </tr>
     <tr>
       <th>Algorithm to update DOM</th>
