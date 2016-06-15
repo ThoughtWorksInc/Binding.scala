@@ -347,7 +347,7 @@ In brief, Binding.scala separates functionality in two kinds:
 
 ### HTML literal and statically type checking
 
-As you see, you can embed HTML literal in `@dom` methods in Scala source files.
+As you see, you can embed HTML literals in `@dom` methods in Scala source files.
 You can also embed Scala expressions in braces in content or attribute values of the HTML literal.
 
 ``` scala
@@ -361,10 +361,8 @@ def notificationBox(message: String): Binding[Div] = {
 }
 ```
 
-
 Regardless the similar syntax of HTML literal between Binding.scala and ReactJS,
 Binding.scala create real DOM instead of ReactJS's virtual DOM.
-
 
 In the above example, `<div>...</div>` create a DOM element with the type of `org.scalajs.dom.html.Div`.
 Then, the magic `@dom` let the method wrap the result as a `Binding`.
