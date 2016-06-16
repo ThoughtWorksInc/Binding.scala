@@ -230,6 +230,11 @@ object Binding {
       value
     }
 
+   /**
+     * Changes the current value of this [[Var]], and reevaluates any expressions that depends on this [[Var]].
+     * 
+     * @note This method must not be invoked inside a `@dom` method body.
+     */
     final def :=(newValue: A): Unit = {
       if (value != newValue) {
         for (listener <- publisher) {
@@ -1175,6 +1180,11 @@ object Binding {
   */
 trait Binding[+A] extends Any {
 
+  /**
+    * Returns the current value of this [[Binding]]
+    * 
+    * @note This method must not be invoked inside a `@dom` method body.
+    */
   private[binding] def get: A
 
   private[binding] def removeChangedListener(listener: Binding.ChangedListener[A]): Unit
