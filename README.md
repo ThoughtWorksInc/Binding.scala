@@ -426,6 +426,7 @@ If you want to suppress the static type checking of attributes, add a `data:` pr
 @dom def myCustomDiv = {
   val myDiv = <div data:customAttributeName="attributeValue"></div>
   assert(myDiv.getAttribute("customAttributeName") == "attributeValue")
+  myDiv
 }
 ```
 
