@@ -146,39 +146,56 @@ object BindingTest extends TestSuite {
       }).asInstanceOf[FlatMapBinding[_, String]]
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
-      mapped.addChangedListener(mappedEvents.listener)
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.patchedPublisher.nonEmpty)
-      assert(mapped.changedPublisher.nonEmpty)
-      assert(source.patchedPublisher.nonEmpty)
-      assert(source.changedPublisher.nonEmpty)
-      source.addChangedListener(sourceEvents.listener)
+      assert(mapped.publisher.nonEmpty)
+      assert(source.publisher.nonEmpty)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.patchedPublisher.nonEmpty)
-      assert(mapped.changedPublisher.nonEmpty)
-      assert(source.patchedPublisher.nonEmpty)
-      assert(source.changedPublisher.nonEmpty)
+      assert(mapped.publisher.nonEmpty)
+      assert(source.publisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
-      source.reset(2, 3, 4)
-      assert(mappedEvents.length == 1)
+      source.get.clear()
       assert(sourceEvents.length == 1)
+      assert(mappedEvents.length == 1)
       sourceEvents(0) match {
-        case event: ChangedEvent[_] =>
-          assert(event.oldValue == Seq(1, 2, 3))
-          assert(event.newValue == Seq(2, 3, 4))
+        case event: PatchedEvent[_] =>
+          assert(event.that.isEmpty)
+          assert(event.from == 0)
+          assert(event.replaced == 3)
           assert(event.getSource == source)
+          assert(event.oldSeq == Seq(1, 2, 3))
       }
       mappedEvents(0) match {
-        case event: ChangedEvent[_] =>
+        case event: PatchedEvent[_] =>
+          assert(event.that.isEmpty)
+          assert(event.from == 0)
+          assert(event.replaced == 6)
           assert(event.getSource == mapped)
-          assert(event.oldValue == Seq("ForYield 0/1", "ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
-          assert(event.newValue == Seq("ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3", "ForYield 0/4", "ForYield 1/4", "ForYield 2/4", "ForYield 3/4"))
+          assert(event.oldSeq == Seq("ForYield 0/1", "ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
+      }
+      source.get.append(2, 3, 4)
+      assert(sourceEvents.length == 2)
+      assert(mappedEvents.length == 2)
+      sourceEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.from == 0)
+          assert(event.replaced == 0)
+          assert(event.oldSeq == Seq())
+          assert(event.that == Seq(2, 3, 4))
+          assert(event.getSource == source)
+      }
+      mappedEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.getSource == mapped)
+          assert(event.from == 0)
+          assert(event.replaced == 0)
+          assert(event.oldSeq == Seq())
+          assert(event.that == Seq("ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3", "ForYield 0/4", "ForYield 1/4", "ForYield 2/4", "ForYield 3/4"))
       }
       source.get += 0
-      assert(sourceEvents.length == 2)
-      assert(mappedEvents.length == 1)
-      sourceEvents(1) match {
+      assert(sourceEvents.length == 3)
+      assert(mappedEvents.length == 2)
+      sourceEvents(2) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == source)
           assert(event.from == 3)
@@ -187,9 +204,9 @@ object BindingTest extends TestSuite {
           assert(event.oldSeq == Seq(2, 3, 4))
       }
       source.get += 3
-      assert(sourceEvents.length == 3)
-      assert(mappedEvents.length == 2)
-      sourceEvents(2) match {
+      assert(sourceEvents.length == 4)
+      assert(mappedEvents.length == 3)
+      sourceEvents(3) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == source)
           assert(event.from == 4)
@@ -197,7 +214,7 @@ object BindingTest extends TestSuite {
           assert(event.that == Seq(3))
           assert(event.oldSeq == Seq(2, 3, 4, 0))
       }
-      mappedEvents(1) match {
+      mappedEvents(2) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == mapped)
           assert(event.from == 9)
@@ -206,18 +223,14 @@ object BindingTest extends TestSuite {
           assert(event.oldSeq == Seq("ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3", "ForYield 0/4", "ForYield 1/4", "ForYield 2/4", "ForYield 3/4"))
       }
       prefix := "3"
-      assert(sourceEvents.length == 3)
+      assert(sourceEvents.length == 4)
       assert(mapped.get == Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4"))
 
-      mapped.removeChangedListener(mappedEvents.listener)
       mapped.removePatchedListener(mappedEvents.listener)
-      source.removeChangedListener(sourceEvents.listener)
       source.removePatchedListener(sourceEvents.listener)
 
-      assert(mapped.patchedPublisher.isEmpty)
-      assert(mapped.changedPublisher.isEmpty)
-      assert(source.patchedPublisher.isEmpty)
-      assert(source.changedPublisher.isEmpty)
+      assert(mapped.publisher.isEmpty)
+      assert(source.publisher.isEmpty)
     }
 
     'ForYield {
@@ -231,39 +244,56 @@ object BindingTest extends TestSuite {
       }).asInstanceOf[FlatMapBinding[_, String]]
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
-      mapped.addChangedListener(mappedEvents.listener)
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.patchedPublisher.nonEmpty)
-      assert(mapped.changedPublisher.nonEmpty)
-      assert(source.patchedPublisher.nonEmpty)
-      assert(source.changedPublisher.nonEmpty)
-      source.addChangedListener(sourceEvents.listener)
+      assert(mapped.publisher.nonEmpty)
+      assert(source.publisher.nonEmpty)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.patchedPublisher.nonEmpty)
-      assert(mapped.changedPublisher.nonEmpty)
-      assert(source.patchedPublisher.nonEmpty)
-      assert(source.changedPublisher.nonEmpty)
+      assert(mapped.publisher.nonEmpty)
+      assert(source.publisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
-      source.reset(2, 3, 4)
+      source.get.clear()
       assert(mappedEvents.length == 1)
       assert(sourceEvents.length == 1)
       sourceEvents(0) match {
-        case event: ChangedEvent[_] =>
-          assert(event.oldValue == Seq(1, 2, 3))
-          assert(event.newValue == Seq(2, 3, 4))
+        case event: PatchedEvent[_] =>
+          assert(event.that.isEmpty)
+          assert(event.from == 0)
+          assert(event.replaced == 3)
           assert(event.getSource == source)
+          assert(event.oldSeq == Seq(1, 2, 3))
       }
       mappedEvents(0) match {
-        case event: ChangedEvent[_] =>
+        case event: PatchedEvent[_] =>
+          assert(event.that.isEmpty)
+          assert(event.from == 0)
+          assert(event.replaced == 6)
           assert(event.getSource == mapped)
-          assert(event.oldValue == Seq("ForYield 0/1", "ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
-          assert(event.newValue == Seq("ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3", "ForYield 0/4", "ForYield 1/4", "ForYield 2/4", "ForYield 3/4"))
+          assert(event.oldSeq == Seq("ForYield 0/1", "ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
+      }
+      source.get .append(2, 3, 4)
+      assert(mappedEvents.length == 2)
+      assert(sourceEvents.length == 2)
+      sourceEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.from == 0)
+          assert(event.replaced == 0)
+          assert(event.oldSeq == Seq())
+          assert(event.that == Seq(2, 3, 4))
+          assert(event.getSource == source)
+      }
+      mappedEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.getSource == mapped)
+          assert(event.from == 0)
+          assert(event.replaced == 0)
+          assert(event.oldSeq == Seq())
+          assert(event.that == Seq("ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3", "ForYield 0/4", "ForYield 1/4", "ForYield 2/4", "ForYield 3/4"))
       }
       source.get += 0
-      assert(sourceEvents.length == 2)
-      assert(mappedEvents.length == 1)
-      sourceEvents(1) match {
+      assert(sourceEvents.length == 3)
+      assert(mappedEvents.length == 2)
+      sourceEvents(2) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == source)
           assert(event.from == 3)
@@ -272,9 +302,9 @@ object BindingTest extends TestSuite {
           assert(event.oldSeq == Seq(2, 3, 4))
       }
       source.get += 3
-      assert(sourceEvents.length == 3)
-      assert(mappedEvents.length == 2)
-      sourceEvents(2) match {
+      assert(sourceEvents.length == 4)
+      assert(mappedEvents.length == 3)
+      sourceEvents(3) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == source)
           assert(event.from == 4)
@@ -282,7 +312,7 @@ object BindingTest extends TestSuite {
           assert(event.that == Seq(3))
           assert(event.oldSeq == Seq(2, 3, 4, 0))
       }
-      mappedEvents(1) match {
+      mappedEvents(2) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == mapped)
           assert(event.from == 9)
@@ -291,11 +321,11 @@ object BindingTest extends TestSuite {
           assert(event.oldSeq == Seq("ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3", "ForYield 0/4", "ForYield 1/4", "ForYield 2/4", "ForYield 3/4"))
       }
       prefix := "p"
-      assert(sourceEvents.length == 3)
-      assert(mappedEvents.length == 14)
+      assert(sourceEvents.length == 4)
+      assert(mappedEvents.length == 15)
       val expected = Seq("p 0/2", "p 1/2", "p 0/3", "p 1/3", "p 2/3", "p 0/4", "p 1/4", "p 2/4", "p 3/4", "p 0/3", "p 1/3", "p 2/3")
       for (i <- 0 until 12) {
-        mappedEvents(i + 2) match {
+        mappedEvents(i + 3) match {
           case event: PatchedEvent[_] =>
             assert(event.getSource == mapped)
             assert(event.replaced == 1)
@@ -303,15 +333,11 @@ object BindingTest extends TestSuite {
         }
       }
 
-      mapped.removeChangedListener(mappedEvents.listener)
       mapped.removePatchedListener(mappedEvents.listener)
-      source.removeChangedListener(sourceEvents.listener)
       source.removePatchedListener(sourceEvents.listener)
 
-      assert(mapped.patchedPublisher.isEmpty)
-      assert(mapped.changedPublisher.isEmpty)
-      assert(source.patchedPublisher.isEmpty)
-      assert(source.changedPublisher.isEmpty)
+      assert(mapped.publisher.isEmpty)
+      assert(source.publisher.isEmpty)
     }
 
     'FlatMappedVarBuffer {
@@ -326,39 +352,56 @@ object BindingTest extends TestSuite {
       })
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
-      mapped.addChangedListener(mappedEvents.listener)
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.patchedPublisher.nonEmpty)
-      assert(mapped.changedPublisher.nonEmpty)
-      assert(source.patchedPublisher.nonEmpty)
-      assert(source.changedPublisher.nonEmpty)
-      source.addChangedListener(sourceEvents.listener)
+      assert(mapped.publisher.nonEmpty)
+      assert(source.publisher.nonEmpty)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.patchedPublisher.nonEmpty)
-      assert(mapped.changedPublisher.nonEmpty)
-      assert(source.patchedPublisher.nonEmpty)
-      assert(source.changedPublisher.nonEmpty)
+      assert(mapped.publisher.nonEmpty)
+      assert(source.publisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
-      source.reset(2, 3, 4)
+      source.get.clear()
       assert(mappedEvents.length == 1)
       assert(sourceEvents.length == 1)
       sourceEvents(0) match {
-        case event: ChangedEvent[_] =>
-          assert(event.oldValue == Seq(1, 2, 3))
-          assert(event.newValue == Seq(2, 3, 4))
+        case event: PatchedEvent[_] =>
+          assert(event.that.isEmpty)
+          assert(event.from == 0)
+          assert(event.replaced == 3)
           assert(event.getSource == source)
+          assert(event.oldSeq == Seq(1, 2, 3))
       }
       mappedEvents(0) match {
-        case event: ChangedEvent[_] =>
+        case event: PatchedEvent[_] =>
+          assert(event.that.isEmpty)
+          assert(event.from == 0)
+          assert(event.replaced == 6)
           assert(event.getSource == mapped)
-          assert(event.oldValue == Seq("1", "2", "2", "3", "3", "3"))
-          assert(event.newValue == Seq("2", "2", "3", "3", "3", "4", "4", "4", "4"))
+          assert(event.oldSeq == Seq("1", "2", "2", "3", "3", "3"))
+      }
+      source.get.append(2, 3, 4)
+      assert(mappedEvents.length == 2)
+      assert(sourceEvents.length == 2)
+      sourceEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.from == 0)
+          assert(event.replaced == 0)
+          assert(event.oldSeq == Seq())
+          assert(event.that == Seq(2, 3, 4))
+          assert(event.getSource == source)
+      }
+      mappedEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.getSource == mapped)
+          assert(event.from == 0)
+          assert(event.replaced == 0)
+          assert(event.oldSeq == Seq())
+          assert(event.that == Seq("2", "2", "3", "3", "3", "4", "4", "4", "4"))
       }
       source.get += 0
-      assert(sourceEvents.length == 2)
-      assert(mappedEvents.length == 1)
-      sourceEvents(1) match {
+      assert(sourceEvents.length == 3)
+      assert(mappedEvents.length == 2)
+      sourceEvents(2) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == source)
           assert(event.from == 3)
@@ -367,9 +410,9 @@ object BindingTest extends TestSuite {
           assert(event.oldSeq == Seq(2, 3, 4))
       }
       source.get += 3
-      assert(sourceEvents.length == 3)
-      assert(mappedEvents.length == 2)
-      sourceEvents(2) match {
+      assert(sourceEvents.length == 4)
+      assert(mappedEvents.length == 3)
+      sourceEvents(3) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == source)
           assert(event.from == 4)
@@ -377,7 +420,7 @@ object BindingTest extends TestSuite {
           assert(event.that == Seq(3))
           assert(event.oldSeq == Seq(2, 3, 4, 0))
       }
-      mappedEvents(1) match {
+      mappedEvents(2) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == mapped)
           assert(event.from == 9)
@@ -386,11 +429,11 @@ object BindingTest extends TestSuite {
           assert(event.oldSeq == Seq("2", "2", "3", "3", "3", "4", "4", "4", "4"))
       }
       prefix := "p"
-      assert(sourceEvents.length == 3)
-      assert(mappedEvents.length == 14)
+      assert(sourceEvents.length == 4)
+      assert(mappedEvents.length == 15)
       val expected = Seq("p2", "p2", "p3", "p3", "p3", "p4", "p4", "p4", "p4", "p3", "p3", "p3")
       for (i <- 0 until 12) {
-        mappedEvents(i + 2) match {
+        mappedEvents(i + 3) match {
           case event: PatchedEvent[_] =>
             assert(event.getSource == mapped)
             assert(event.replaced == 1)
@@ -398,15 +441,11 @@ object BindingTest extends TestSuite {
         }
       }
 
-      mapped.removeChangedListener(mappedEvents.listener)
       mapped.removePatchedListener(mappedEvents.listener)
-      source.removeChangedListener(sourceEvents.listener)
       source.removePatchedListener(sourceEvents.listener)
 
-      assert(mapped.patchedPublisher.isEmpty)
-      assert(mapped.changedPublisher.isEmpty)
-      assert(source.patchedPublisher.isEmpty)
-      assert(source.changedPublisher.isEmpty)
+      assert(mapped.publisher.isEmpty)
+      assert(source.publisher.isEmpty)
     }
 
     'MappedVarBuffer {
@@ -419,39 +458,56 @@ object BindingTest extends TestSuite {
       })
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
-      mapped.addChangedListener(mappedEvents.listener)
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.patchedPublisher.nonEmpty)
-      assert(mapped.changedPublisher.nonEmpty)
-      assert(source.patchedPublisher.nonEmpty)
-      assert(source.changedPublisher.nonEmpty)
-      source.addChangedListener(sourceEvents.listener)
+      assert(mapped.publisher.nonEmpty)
+      assert(source.publisher.nonEmpty)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.patchedPublisher.nonEmpty)
-      assert(mapped.changedPublisher.nonEmpty)
-      assert(source.patchedPublisher.nonEmpty)
-      assert(source.changedPublisher.nonEmpty)
+      assert(mapped.publisher.nonEmpty)
+      assert(source.publisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
-      source.reset(2, 3, 4)
+      source.get.clear()
       assert(mappedEvents.length == 1)
       assert(sourceEvents.length == 1)
       sourceEvents(0) match {
-        case event: ChangedEvent[_] =>
-          assert(event.oldValue == Seq(1, 2, 3))
-          assert(event.newValue == Seq(2, 3, 4))
+        case event: PatchedEvent[_] =>
+          assert(event.that.isEmpty)
+          assert(event.from == 0)
+          assert(event.replaced == 3)
           assert(event.getSource == source)
+          assert(event.oldSeq == Seq(1, 2, 3))
       }
       mappedEvents(0) match {
-        case event: ChangedEvent[_] =>
+        case event: PatchedEvent[_] =>
+          assert(event.that.isEmpty)
+          assert(event.from == 0)
+          assert(event.replaced == 3)
           assert(event.getSource == mapped)
-          assert(event.oldValue == Seq("1", "2", "3"))
-          assert(event.newValue == Seq("2", "3", "4"))
+          assert(event.oldSeq == Seq("1", "2", "3"))
+      }
+      source.get.append(2, 3, 4)
+      assert(mappedEvents.length == 2)
+      assert(sourceEvents.length == 2)
+      sourceEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.from == 0)
+          assert(event.replaced == 0)
+          assert(event.oldSeq == Seq())
+          assert(event.that == Seq(2, 3, 4))
+          assert(event.getSource == source)
+      }
+      mappedEvents(1) match {
+        case event: PatchedEvent[_] =>
+          assert(event.getSource == mapped)
+          assert(event.from == 0)
+          assert(event.replaced == 0)
+          assert(event.oldSeq == Seq())
+          assert(event.that == Seq("2", "3", "4"))
       }
       source.get += 20
-      assert(sourceEvents.length == 2)
-      assert(mappedEvents.length == 2)
-      sourceEvents(1) match {
+      assert(sourceEvents.length == 3)
+      assert(mappedEvents.length == 3)
+      sourceEvents(2) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == source)
           assert(event.from == 3)
@@ -459,7 +515,7 @@ object BindingTest extends TestSuite {
           assert(event.that == Seq(20))
           assert(event.oldSeq == Seq(2, 3, 4))
       }
-      mappedEvents(1) match {
+      mappedEvents(2) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == mapped)
           assert(event.from == 3)
@@ -468,9 +524,9 @@ object BindingTest extends TestSuite {
           assert(event.oldSeq == Seq("2", "3", "4"))
       }
       300 +=: source.get
-      assert(mappedEvents.length == 3)
-      assert(sourceEvents.length == 3)
-      sourceEvents(2) match {
+      assert(mappedEvents.length == 4)
+      assert(sourceEvents.length == 4)
+      sourceEvents(3) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == source)
           assert(event.from == 0)
@@ -479,7 +535,7 @@ object BindingTest extends TestSuite {
           val oldSeq = event.oldSeq
           assert(oldSeq == Seq(2, 3, 4, 20))
       }
-      mappedEvents(2) match {
+      mappedEvents(3) match {
         case event: PatchedEvent[_] =>
           assert(event.getSource == mapped)
           assert(event.from == 0)
@@ -488,11 +544,11 @@ object BindingTest extends TestSuite {
           assert(event.oldSeq == Seq("2", "3", "4", "20"))
       }
       prefix := "p"
-      assert(sourceEvents.length == 3)
-      assert(mappedEvents.length == 8)
+      assert(sourceEvents.length == 4)
+      assert(mappedEvents.length == 9)
       val expected = Seq("p300", "p2", "p3", "p4", "p20")
       for (i <- 0 until 5) {
-        mappedEvents(i + 3) match {
+        mappedEvents(i + 4) match {
           case event: PatchedEvent[_] =>
             assert(event.getSource == mapped)
             assert(event.replaced == 1)
@@ -500,15 +556,11 @@ object BindingTest extends TestSuite {
         }
       }
 
-      mapped.removeChangedListener(mappedEvents.listener)
       mapped.removePatchedListener(mappedEvents.listener)
-      source.removeChangedListener(sourceEvents.listener)
       source.removePatchedListener(sourceEvents.listener)
 
-      assert(mapped.patchedPublisher.isEmpty)
-      assert(mapped.changedPublisher.isEmpty)
-      assert(source.patchedPublisher.isEmpty)
-      assert(source.changedPublisher.isEmpty)
+      assert(mapped.publisher.isEmpty)
+      assert(source.publisher.isEmpty)
     }
 
     'Length {
