@@ -504,8 +504,8 @@ object Binding {
 
     var cache: Vector[Binding[B]] = {
       (for {
-        a <- upstream.get
-      } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
+        a <- upstream.get.view
+      } yield f(a)).toVector
     }
 
     override private[binding] def get: Seq[B] = new ValueProxy(cache)
@@ -514,7 +514,7 @@ object Binding {
       override def patched(event: PatchedEvent[A]): Unit = {
         val mappedNewChildren = (for {
           child <- event.that
-        } yield f(child)) (collection.breakOut(Seq.canBuildFrom))
+        } yield f(child)).toVector
         for (listener <- publisher) {
           listener.patched(new PatchedEvent(MapBinding.this, new ValueProxy(cache), event.from, new ValueProxy(mappedNewChildren), event.replaced))
         }
@@ -601,8 +601,8 @@ object Binding {
 
     var cache: Vector[BindingSeq[B]] = {
       (for {
-        a <- upstream.get
-      } yield f(a)) (collection.breakOut(Vector.canBuildFrom))
+        a <- upstream.get.view
+      } yield f(a)).toVector
     }
 
     @inline
@@ -617,7 +617,7 @@ object Binding {
       override private[binding] def patched(event: PatchedEvent[A]): Unit = {
         val mappedNewChildren = (for {
           child <- event.that
-        } yield f(child)) (collection.breakOut(Seq.canBuildFrom))
+        } yield f(child)).toVector
         val flatNewChildren = new FlatProxy(mappedNewChildren)
         if (event.replaced != 0 || flatNewChildren.nonEmpty) {
           for (listener <- publisher) {
