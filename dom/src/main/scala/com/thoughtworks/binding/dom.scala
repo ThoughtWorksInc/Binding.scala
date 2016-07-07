@@ -210,7 +210,7 @@ object dom {
   /**
     * Render a binding sequence of node into `parent`
     * 
-    * @usecase def render(parent: Node, children: Binding[BindingSeq[Node]]): Unit
+    * @usecase def render(parent: Node, children: Binding[BindingSeq[Node]]): Unit = ???
     */
   @inline
   def render(parent: Node, children: Binding[BindingSeq[Node]], dummy: Unit = ()): Unit = {
