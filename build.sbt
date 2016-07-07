@@ -63,6 +63,7 @@ releaseProcess -= runTest
 scalaJavaUnidocSettings
 
 import UnidocKeys._
+
 unidocProjectFilter in ScalaUnidoc in unidoc := inAnyProject -- inProjects(coreJVM)
 
 doc in Compile := (unidoc in Compile).value.head
@@ -72,3 +73,25 @@ releasePublishArtifactsAction <<= PgpKeys.publishSigned
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
 scalacOptions += "-Xexperimental"
+
+scalacOptions in Compile in doc ++= {
+  Seq("-doc-title", name.value)
+}
+
+scalacOptions in Compile in doc ++= {
+  Seq("-doc-version", version.value)
+}
+
+scalacOptions in Compile in doc += "-groups"
+
+scalacOptions in Compile in doc += "-diagrams"
+
+scalacOptions in Compile in doc += "-implicits"
+
+scalacOptions in Compile in doc ++= {
+  if (scalaBinaryVersion.value == "2.11") {
+    Seq("-author")
+  } else {
+    Seq()
+  }
+}
