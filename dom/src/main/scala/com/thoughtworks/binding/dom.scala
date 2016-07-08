@@ -246,10 +246,6 @@ object dom {
       import c.universe._
       val transformer = new ComprehensionTransformer {
 
-        private def extractChildren: PartialFunction[List[Tree], Tree] = {
-          case Typed(expr, Ident(typeNames.WILDCARD_STAR)) :: Nil => expr
-        }
-
         override def transform(tree: Tree): Tree = {
           tree match {
             case q"""{
