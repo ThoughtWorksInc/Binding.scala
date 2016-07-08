@@ -169,7 +169,7 @@ object Binding {
   private[binding] final class PatchedEvent[+Element](source: AnyRef,
                                                       val oldSeq: Seq[Element],
                                                       val from: Int,
-                                                      val that: GenSeq[Element],
+                                                      val that: Seq[Element],
                                                       val replaced: Int) extends EventObject(source) {
     override def toString = raw"""PatchedEvent[source=$source oldSeq=$oldSeq from=$from that=$that replaced=$replaced]"""
   }
@@ -513,7 +513,7 @@ object Binding {
     private val upstreamListener = new PatchedListener[A] {
       override def patched(event: PatchedEvent[A]): Unit = {
         val mappedNewChildren = (for {
-          child <- event.that
+          child <- event.that.view
         } yield f(child)).toVector
         for (listener <- publisher) {
           listener.patched(new PatchedEvent(MapBinding.this, new ValueProxy(cache), event.from, new ValueProxy(mappedNewChildren), event.replaced))
@@ -616,7 +616,7 @@ object Binding {
     private val upstreamListener = new PatchedListener[A] {
       override private[binding] def patched(event: PatchedEvent[A]): Unit = {
         val mappedNewChildren = (for {
-          child <- event.that
+          child <- event.that.view
         } yield f(child)).toVector
         val flatNewChildren = new FlatProxy(mappedNewChildren)
         if (event.replaced != 0 || flatNewChildren.nonEmpty) {
