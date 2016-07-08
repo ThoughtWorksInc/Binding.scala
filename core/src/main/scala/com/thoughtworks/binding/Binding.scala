@@ -26,10 +26,11 @@ package com.thoughtworks.binding
 
 import java.util.EventObject
 
-import com.thoughtworks.each.Monadic._
+import com.thoughtworks.sde.core.MonadicFactory._
 import com.thoughtworks.enableIf
+import com.thoughtworks.sde.core.MonadicFactory
 
-import scala.annotation.tailrec
+import scala.annotation.{compileTimeOnly, tailrec}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.language.higherKinds
@@ -393,39 +394,48 @@ object Binding {
 
   }
 
-  private[binding] object Macros {
+  private[binding] final class Macros(val c: scala.reflect.macros.blackbox.Context) {
+    import c.universe._
 
-    def map(c: scala.reflect.macros.blackbox.Context)(f: c.Tree): c.Tree = {
-      import c.universe._
+    def map(f: c.Tree): c.Tree = {
       val apply@Apply(TypeApply(Select(self, TermName("map")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
-        q"""_root_.com.thoughtworks.each.Monadic.monadic[
+        q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
+          _root_.scalaz.Monad,
           _root_.com.thoughtworks.binding.Binding
         ].apply[$b]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.mapBinding[$b]($monadicFunction)""")
     }
 
-    def flatMap(c: scala.reflect.macros.blackbox.Context)(f: c.Tree): c.Tree = {
-      import c.universe._
+    def flatMap(f: c.Tree): c.Tree = {
       val apply@Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
-        q"""_root_.com.thoughtworks.each.Monadic.monadic[
+        q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
+          _root_.scalaz.Monad,
           _root_.com.thoughtworks.binding.Binding
         ].apply[_root_.com.thoughtworks.binding.Binding.BindingSeq[$b]]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.flatMapBinding[$b]($monadicFunction)""")
     }
 
-    def withFilter(c: scala.reflect.macros.blackbox.Context)(condition: c.Tree): c.Tree = {
-      import c.universe._
+    def withFilter(condition: c.Tree): c.Tree = {
       val apply@Apply(Select(self, TermName("withFilter")), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
-        q"""_root_.com.thoughtworks.each.Monadic.monadic[
+        q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
+          _root_.scalaz.Monad,
           _root_.com.thoughtworks.binding.Binding
         ].apply[_root_.scala.Boolean]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.withFilterBinding($monadicFunction)""")
+    }
+
+    def bind: c.Tree = {
+      val q"$binding.$methodName" = c.macroApplication
+      q"""_root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+        _root_.com.thoughtworks.binding.Binding,
+        ${TypeTree(c.macroApplication.tpe)}
+      ]($binding)"""
     }
 
   }
@@ -677,11 +687,6 @@ object Binding {
     */
   object BindingSeq {
 
-    @inline
-    implicit def eachOps[A](bindingSeq: BindingSeq[A]): EachOps[Binding, Seq[A]] = {
-      new EachOps[Binding, Seq[A]](new AsBinding(bindingSeq))
-    }
-
     implicit final class AsBinding[Element](upstream: BindingSeq[Element]) extends Binding[Seq[Element]] with PatchedListener[Element] {
 
       private val publisher = new Publisher[ChangedListener[Seq[Element]]]
@@ -713,6 +718,8 @@ object Binding {
 
     }
   }
+
+  private def bindingFactory = new MonadicFactory[Monad, Binding]
 
   /**
     * Data binding expression of a sequence
@@ -833,9 +840,9 @@ object Binding {
         */
       final def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
         new WithFilter({ a =>
-          monadic[Binding] {
-            if (condition(a).each) {
-              nextCondition(a).each
+          bindingFactory {
+            if (Instructions.each[Binding, Boolean](condition(a))) {
+              Instructions.each[Binding, Boolean](nextCondition(a))
             } else {
               false
             }
@@ -850,9 +857,9 @@ object Binding {
         */
       final def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a =>
-          monadic[Binding] {
-            if (condition(a).each) {
-              Constants(f(a).each)
+          bindingFactory {
+            if (Instructions.each[Binding, Boolean](condition(a))) {
+              Constants(Instructions.each[Binding, B](f(a)))
             } else {
               Empty
             }
@@ -867,9 +874,9 @@ object Binding {
         */
       final def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a =>
-          monadic[Binding] {
-            if (condition(a).each) {
-              f(a).each
+          bindingFactory {
+            if (Instructions.each[Binding, Boolean](condition(a))) {
+              Instructions.each[Binding, BindingSeq[B]](f(a))
             } else {
               Empty
             }
@@ -1099,14 +1106,6 @@ object Binding {
 
   }
 
-  /**
-    * A implicit view to enable `.each` magic.
-    *
-    * @group implicits
-    */
-  @inline
-  implicit def eachOps[A](binding: Binding[A]): EachOps[Binding, A] = new EachOps[Binding, A](binding)
-
   private[binding] object DummyPatchedListener extends PatchedListener[Any] {
     @inline
     override private[binding] def patched(event: PatchedEvent[Any]): Unit = {}
@@ -1125,10 +1124,14 @@ object Binding {
   * You may compose a data binding expression via `monadic[Binding]` block,
   * or add `@dom` annotation to methods that produces a data binding expression.
   *
-  * @see [[com.thoughtworks.each.Monadic]]
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 trait Binding[+A] extends Any {
+
+  @deprecated(message = "Use `bind` instead", since = "7.0.0")
+  final def each: A = macro Binding.Macros.bind
+
+  final def bind: A = macro Binding.Macros.bind
 
   /**
     * Returns the current value of this [[Binding]]

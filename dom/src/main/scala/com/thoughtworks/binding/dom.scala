@@ -27,6 +27,7 @@ package com.thoughtworks.binding
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.binding.Binding.BindingSeq
+import com.thoughtworks.sde.core.Preprocessor
 import org.apache.commons.lang3.text.translate.EntityArrays
 import org.scalajs.dom.raw._
 
@@ -209,9 +210,9 @@ object dom {
 
   /**
     * Render a binding sequence of node into `parent`
-    * 
+    *
     * @usecase def render(parent: Node, children: Binding[BindingSeq[Node]]): Unit = ???
-    */
+    **/
   @inline
   def render(parent: Node, children: Binding[BindingSeq[Node]], dummy: Unit = ()): Unit = {
     new NodeSeqMountPoint(parent, children).watch()
@@ -226,7 +227,8 @@ object dom {
     implicitCurrentTarget.value
   }
 
-  private[binding] object Macros {
+
+  private object Macros {
 
     private val EntityRefRegex = "&(.*);".r
 
@@ -234,9 +236,15 @@ object dom {
       Array(character, EntityRefRegex(reference)) <- EntityArrays.BASIC_ESCAPE.view ++ EntityArrays.ISO8859_1_ESCAPE ++ EntityArrays.HTML40_EXTENDED_ESCAPE
     } yield reference -> character).toMap
 
-    def macroTransform(c: whitebox.Context)(annottees: c.Tree*): c.Tree = {
+  }
+
+  private[binding] final class Macros(context: whitebox.Context) extends Preprocessor(context)  {
+
+    import Macros._
+
+    def macroTransform(annottees: c.Tree*): c.Tree = {
       import c.universe._
-      val transformer = new Transformer {
+      val transformer = new ComprehensionTransformer {
 
         private def extractChildren: PartialFunction[List[Tree], Tree] = {
           case Typed(expr, Ident(typeNames.WILDCARD_STAR)) :: Nil => expr
@@ -259,10 +267,13 @@ object dom {
                     val q"$$buf.$$amp$$plus($child)" = pushChild
                     atPos(child.pos) {
                       q"""
-                            _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding] {
-                              _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq(${transform(child)})
-                            }
-                          """
+                        new _root_.com.thoughtworks.sde.core.MonadicFactory[
+                          _root_.scalaz.Monad,
+                          _root_.com.thoughtworks.binding.Binding
+                        ].apply {
+                          _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq(${transform(child)})
+                        }
+                      """
                     }
                   }
                 }
@@ -295,7 +306,10 @@ object dom {
                     new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
                       implicit def ${TermName(c.freshName("currentTargetReference"))} =
                         new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                      _root_.com.thoughtworks.each.Monadic.monadic[_root_.com.thoughtworks.binding.Binding](${transform(value)})
+                      new _root_.com.thoughtworks.sde.core.MonadicFactory[
+                        _root_.scalaz.Monad,
+                        _root_.com.thoughtworks.binding.Binding
+                      ].apply(${transform(value)})
                     })( value => $attributeAccess = value ).each
                   """
                 }
@@ -385,35 +399,15 @@ object dom {
       //        output
       //      }
 
-      annottees match {
-        case Seq(annottee@DefDef(mods, name, tparams, vparamss, tpt, rhs)) =>
-          atPos(annottee.pos) {
-            DefDef(
-              mods, name, tparams, vparamss, tpt,
-              q"""_root_.com.thoughtworks.each.Monadic.monadic[
-                _root_.com.thoughtworks.binding.Binding
-              ]{
-                import _root_.com.thoughtworks.binding.dom.AutoImports._
-                ${transform(rhs)}
-              }"""
-            )
-          }
-        case Seq(annottee@ValDef(mods, name, tpt, rhs)) =>
-          atPos(annottee.pos) {
-            ValDef(
-              mods, name, tpt,
-              q"""_root_.com.thoughtworks.each.Monadic.monadic[
-                _root_.com.thoughtworks.binding.Binding
-              ]{
-                import _root_.com.thoughtworks.binding.dom.AutoImports._
-                ${transform(rhs)}
-              }"""
-            )
-          }
-        case _ =>
-          c.error(c.enclosingPosition, "Expect def or val")
-          annottees.head
-      }
+      replaceDefBody(annottees, { body =>
+        q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
+          _root_.scalaz.Monad,
+          _root_.com.thoughtworks.binding.Binding
+        ].apply{
+          import _root_.com.thoughtworks.binding.dom.AutoImports._
+          ${transform(body)}
+        }"""
+      })
     }
 
   }

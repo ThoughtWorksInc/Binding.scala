@@ -25,9 +25,9 @@ SOFTWARE.
 package com.thoughtworks.binding
 
 import Binding._
-import com.thoughtworks.each.Monadic._
 import scala.collection.mutable.ArrayBuffer
 import utest._
+import com.thoughtworks.sde.core.MonadicFactory
 
 import scalaz._
 
@@ -45,12 +45,14 @@ object BindingTest extends TestSuite {
     }
   }
 
+  private def bindingFactory = new MonadicFactory[Monad, Binding]
+
   def tests = TestSuite {
 
     * - {
       val target = Var("World")
-      val hello = monadic[Binding] {
-        "Hello, " + target.each + "!"
+      val hello = bindingFactory {
+        "Hello, " + target.bind + "!"
       }
       hello.watch()
 
@@ -61,8 +63,8 @@ object BindingTest extends TestSuite {
 
     'TripleBinding {
       val input = Var(0)
-      val output = monadic[Binding] {
-        input.each + input.each + input.each
+      val output = bindingFactory {
+        input.bind + input.bind + input.bind
       }
       output.watch()
       assert(output.get == 0)
@@ -76,16 +78,16 @@ object BindingTest extends TestSuite {
 
       val expr3: Var[Int] = new Var(2000)
 
-      val expr4: Binding[Int] = monadic[Binding] {
+      val expr4: Binding[Int] = bindingFactory {
         30000
       }
 
-      val expr2: Binding[Int] = monadic[Binding] {
-        expr3.each + expr4.each
+      val expr2: Binding[Int] = bindingFactory {
+        expr3.bind + expr4.bind
       }
 
-      val expr1: Binding[Int] = monadic[Binding] {
-        expr2.each + 100
+      val expr1: Binding[Int] = bindingFactory {
+        expr2.bind + 100
       }
 
 
@@ -115,9 +117,9 @@ object BindingTest extends TestSuite {
     'CacheShouldBeUpdated {
       val source = new Var(2.0)
       val constant = new Constant(1.0)
-      val result = monadic[Binding] {
-        val sourceValue = source.each
-        val one = sourceValue / sourceValue / constant.each
+      val result = bindingFactory {
+        val sourceValue = source.bind
+        val one = sourceValue / sourceValue / constant.bind
         one / sourceValue
       }
       var resultChanged = 0
@@ -139,10 +141,10 @@ object BindingTest extends TestSuite {
       val source = Vars(1, 2, 3)
       val mapped = (for {
         sourceElement <- source
-        if prefix.each != sourceElement.toString
+        if prefix.bind != sourceElement.toString
         i <- Constants((0 until sourceElement): _*)
       } yield {
-        raw"""${prefix.each} $i/$sourceElement"""
+        raw"""${prefix.bind} $i/$sourceElement"""
       }).asInstanceOf[FlatMapBinding[_, String]]
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
@@ -240,7 +242,7 @@ object BindingTest extends TestSuite {
         sourceElement <- source
         i <- Constants((0 until sourceElement): _*)
       } yield {
-        raw"""${prefix.each} $i/$sourceElement"""
+        raw"""${prefix.bind} $i/$sourceElement"""
       }).asInstanceOf[FlatMapBinding[_, String]]
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
@@ -345,8 +347,8 @@ object BindingTest extends TestSuite {
       val source = Vars(1, 2, 3)
       val mapped = new FlatMapBinding(source, { sourceElement: Int =>
         new MapBinding(Constants((0 until sourceElement): _*), { i: Int =>
-          monadic[Binding] {
-            raw"""${prefix.each}$sourceElement"""
+          bindingFactory {
+            raw"""${prefix.bind}$sourceElement"""
           }
         })
       })
@@ -452,8 +454,8 @@ object BindingTest extends TestSuite {
       val prefix = new Var("")
       val source = Vars(1, 2, 3)
       val mapped = new MapBinding(source, { a: Int =>
-        monadic[Binding] {
-          raw"""${prefix.each}${a}"""
+        bindingFactory {
+          raw"""${prefix.bind}${a}"""
         }
       })
       val mappedEvents = new BufferListener
@@ -598,7 +600,7 @@ object BindingTest extends TestSuite {
     }
 
     'WithFilter {
-      monadic[Binding] {
+      bindingFactory {
         val myVars = Vars(1, 2, 100, 3)
         val filtered = myVars.withFilter(_ < 10).map(x => x)
 
