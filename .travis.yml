@@ -13,7 +13,7 @@ before_cache:
 language: scala
 
 script:
-  - sbt +test
+  - sbt "set parallelExecution in Global := false" +test
 
 notifications:
   webhooks:
