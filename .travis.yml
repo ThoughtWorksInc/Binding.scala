@@ -27,6 +27,7 @@ before_deploy:
   - travis_retry git clone --depth=1 $secret_git ./secret
 
 deploy:
+  skip_cleanup: true
   provider: script
   script: ./deploy.sh
   on:
