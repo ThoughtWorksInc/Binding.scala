@@ -257,22 +257,22 @@ object dom {
                 q"""
                   _root_.com.thoughtworks.binding.Binding.Constants(
                     ..${
-                  for {
-                    pushChild <- pushChildrenTree
-                  } yield {
-                    val q"$$buf.$$amp$$plus($child)" = pushChild
-                    atPos(child.pos) {
-                      q"""
-                        new _root_.com.thoughtworks.sde.core.MonadicFactory[
-                          _root_.scalaz.Monad,
-                          _root_.com.thoughtworks.binding.Binding
-                        ].apply {
-                          _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq(${transform(child)})
+                      for {
+                        pushChild <- pushChildrenTree
+                      } yield {
+                        val q"$$buf.$$amp$$plus($child)" = pushChild
+                        atPos(child.pos) {
+                          q"""
+                            new _root_.com.thoughtworks.sde.core.MonadicFactory[
+                              _root_.scalaz.Monad,
+                              _root_.com.thoughtworks.binding.Binding
+                            ].apply {
+                              _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq(${transform(child)})
+                            }(_root_.com.thoughtworks.binding.Binding.BindingInstances)
+                          """
                         }
-                      """
+                      }
                     }
-                  }
-                }
                   ).flatMapBinding(_root_.scala.Predef.locally _)
                 """
               }
@@ -299,14 +299,19 @@ object dom {
                 }
                 atPos(attribute.pos) {
                   q"""
-                    new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
-                      implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                        new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                      new _root_.com.thoughtworks.sde.core.MonadicFactory[
-                        _root_.scalaz.Monad,
-                        _root_.com.thoughtworks.binding.Binding
-                      ].apply(${transform(value)})
-                    })( value => $attributeAccess = value ).each
+                    _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+                      _root_.com.thoughtworks.binding.Binding,
+                      _root_.scala.Unit
+                    ](
+                      new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
+                        implicit def ${TermName(c.freshName("currentTargetReference"))} =
+                          new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
+                        new _root_.com.thoughtworks.sde.core.MonadicFactory[
+                          _root_.scalaz.Monad,
+                          _root_.com.thoughtworks.binding.Binding
+                        ].apply(${transform(value)})(_root_.com.thoughtworks.binding.Binding.BindingInstances)
+                      })( value => $attributeAccess = value )
+                    )
                   """
                 }
               }
@@ -320,14 +325,21 @@ object dom {
                       Nil
                     case Seq(q"""$nodeBuffer: _*""") =>
                       List(atPos(nodeBuffer.pos) {
-                        q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
+                        q"""
+                          _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+                            _root_.com.thoughtworks.binding.Binding,
+                            _root_.scala.Unit
+                          ](
+                            new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
                               $elementName,
                               {
                                 implicit def ${TermName(c.freshName("currentTargetReference"))} =
                                   new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
                                 ${transform(nodeBuffer)}
                               }
-                            ).each"""
+                            )
+                          )
+                        """
                       })
                   }
                 }
@@ -349,14 +361,21 @@ object dom {
                       Nil
                     case Seq(q"""$nodeBuffer: _*""") =>
                       List(atPos(nodeBuffer.pos) {
-                        q"""new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
-                          $elementName,
-                          {
-                            implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                              new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                            ${transform(nodeBuffer)}
-                          }
-                        ).each"""
+                        q"""
+                          _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+                            _root_.com.thoughtworks.binding.Binding,
+                            _root_.scala.Unit
+                          ](
+                            new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
+                              $elementName,
+                              {
+                                implicit def ${TermName(c.freshName("currentTargetReference"))} =
+                                  new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
+                                ${transform(nodeBuffer)}
+                              }
+                            )
+                          )
+                        """
                       })
                   }
                 }
@@ -402,7 +421,7 @@ object dom {
         ].apply{
           import _root_.com.thoughtworks.binding.dom.AutoImports._
           ${transform(body)}
-        }"""
+        }(_root_.com.thoughtworks.binding.Binding.BindingInstances)"""
       })
     }
 
