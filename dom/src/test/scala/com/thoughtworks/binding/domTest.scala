@@ -54,7 +54,7 @@ object domTest extends TestSuite {
     }
 
     'TextElement {
-      @dom var monadicDiv: Binding[Div] = <div>text</div>
+      @dom val monadicDiv: Binding[Div] = <div>text</div>
       monadicDiv.watch()
       assert(monadicDiv.get.outerHTML == "<div>text</div>")
     }
@@ -73,7 +73,7 @@ object domTest extends TestSuite {
 
     'ChangedElementText {
       val v0 = Var("original text")
-      @dom val monadicDiv: Binding[Div] = <div> <span> {v0.each} </span> </div>
+      @dom val monadicDiv: Binding[Div] = <div> <span> {v0.bind} </span> </div>
       monadicDiv.watch()
       assert(monadicDiv.get.outerHTML == "<div> <span> original text </span> </div>")
       v0 := "changed"
@@ -99,7 +99,7 @@ object domTest extends TestSuite {
 
     'Attribute {
       val id = Var("oldId")
-      @dom val hr = <hr id={id.each}/>
+      @dom val hr = <hr id={id.bind}/>
       hr.watch()
       assert(hr.get.outerHTML == """<hr id="oldId"/>""")
       id := "newId"
@@ -120,12 +120,12 @@ object domTest extends TestSuite {
 
       @dom
       def shouldShow(user: User): Binding[Boolean] = {
-        val pattern = filterPattern.each
+        val pattern = filterPattern.bind
         if (pattern == "") {
           true
-        } else if (user.firstName.each.toLowerCase.contains(pattern)) {
+        } else if (user.firstName.bind.toLowerCase.contains(pattern)) {
           true
-        } else if (user.lastName.each.toLowerCase.contains(pattern)) {
+        } else if (user.lastName.bind.toLowerCase.contains(pattern)) {
           true
         } else {
           false
@@ -137,14 +137,14 @@ object domTest extends TestSuite {
         <tbody>{
           for {
             user <- users
-            if shouldShow(user).each
-          } yield <tr><td>{user.firstName.each}</td><td>{user.lastName.each}</td><td>{user.age.each.toString}</td></tr>
+            if shouldShow(user).bind
+          } yield <tr><td>{user.firstName.bind}</td><td>{user.lastName.bind}</td><td>{user.age.bind.toString}</td></tr>
         }</tbody>
       }
 
       @dom
       val tableBinding = {
-        <table title="My Tooltip" className="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{tbodyBinding.each}</table>
+        <table title="My Tooltip" className="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{tbodyBinding.bind}</table>
       }
       tableBinding.watch()
       assert(tableBinding.get.outerHTML == """<table class="my-table" title="My Tooltip"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
@@ -167,7 +167,7 @@ object domTest extends TestSuite {
         @dom
         val child = <hr/>
         @dom
-        val parent = <p><span>{child.each}</span><span>{child.each}</span></p>
+        val parent = <p><span>{child.bind}</span><span>{child.bind}</span></p>
         val div = document.createElement("div")
         dom.render(div, parent)
       }
