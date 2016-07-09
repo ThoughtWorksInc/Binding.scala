@@ -1130,7 +1130,7 @@ object Binding {
   */
 trait Binding[+A] extends Any {
 
-  @deprecated(message = "Use `bind` instead", since = "7.0.0")
+  @deprecated(message = "Use [[Binding#bind]] instead", since = "7.0.0")
   final def each: A = macro Binding.Macros.bind
 
   final def bind: A = macro Binding.Macros.bind
