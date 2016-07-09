@@ -15,4 +15,4 @@ eval "$(ssh-agent -s)" &&
 chmod 600 ./secret/id_rsa &&
 ssh-add ./secret/id_rsa &&
 
-sbt "release with-defaults"
+sbt "set parallelExecution in Global := false" "release with-defaults"
