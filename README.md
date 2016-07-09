@@ -114,10 +114,10 @@ def table: Binding[Table] = {
         for (contact <- data) yield {
           <tr>
             <td>
-              {contact.name.each}
+              {contact.name.bind}
             </td>
             <td>
-              {contact.email.each}
+              {contact.email.bind}
             </td>
           </tr>
         }
@@ -141,7 +141,7 @@ and `@dom def node: Binding[BindingSeq[org.scalajs.dom.raw.HTMLBRElement]] = <br
 
 A `@dom` method consists with other data-binding expressions in two approach:
 
- 1. You could use `each` method in a `@dom` method to get value of another `Binding`.
+ 1. You could use `bind` method in a `@dom` method to get value of another `Binding`.
  2. You could use `for` / `yield` expression in a `@dom` method to map a `BindingSeq` to another.
 
 You can nest `Node` or `BindingSeq[Node]` in other HTML element literals via `{ ... }` interpolation syntax.
@@ -200,10 +200,10 @@ def table: Binding[BindingSeq[Node]] = {
         for (contact <- data) yield {
           <tr>
             <td>
-              {contact.name.each}
+              {contact.name.bind}
             </td>
             <td>
-              {contact.email.each}
+              {contact.email.bind}
             </td>
             <td>
               <button
@@ -271,7 +271,7 @@ It is fair to say that a React component is lighter than an AngularJS controller
 while Binding.scala is better than that.
 
 The smallest composable unit in Binding.scala is a `@dom` method.
-Every `@dom` method is able to compose other `@dom` methods via `.each`.
+Every `@dom` method is able to compose other `@dom` methods via `.bind`.
 
 ``` scala
 case class Contact(name: Var[String], email: Var[String])
@@ -290,9 +290,9 @@ def bindingButton(contact: Contact): Binding[Button] = {
 @dom
 def bindingTr(contact: Contact): Binding[TableRow] = {
   <tr>
-    <td>{ contact.name.each }</td>
-    <td>{ contact.email.each }</td>
-    <td>{ bindingButton(contact).each }</td>
+    <td>{ contact.name.bind }</td>
+    <td>{ contact.email.bind }</td>
+    <td>{ bindingButton(contact).bind }</td>
   </tr>
 }
 
@@ -301,7 +301,7 @@ def bindingTable(contacts: BindingSeq[Contact]): Binding[Table] = {
   <table>
     {
       for (contact <- contacts) yield {
-        bindingTr(contact).each
+        bindingTr(contact).bind
       }
     }
   </table>
@@ -462,6 +462,6 @@ libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
 
 ## Links
 
-* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/5.4.0/unidoc_2.11-5.4.0-javadoc.jar/!/com/thoughtworks/binding/package.html)
+* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/7.0.0/unidoc_2.11-7.0.0-javadoc.jar/!/com/thoughtworks/binding/package.html)
 * [Binding.scala • TodoMVC](https://github.com/ThoughtWorksInc/todo/)
 * [Other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/)
