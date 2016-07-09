@@ -145,14 +145,12 @@ object BindingTest extends TestSuite {
         i <- Constants((0 until sourceElement): _*)
       } yield {
         raw"""${prefix.bind} $i/$sourceElement"""
-      }).asInstanceOf[FlatMapBinding[_, String]]
+      })
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.publisher.nonEmpty)
       assert(source.publisher.nonEmpty)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.publisher.nonEmpty)
       assert(source.publisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
@@ -231,7 +229,6 @@ object BindingTest extends TestSuite {
       mapped.removePatchedListener(mappedEvents.listener)
       source.removePatchedListener(sourceEvents.listener)
 
-      assert(mapped.publisher.isEmpty)
       assert(source.publisher.isEmpty)
     }
 
@@ -243,14 +240,12 @@ object BindingTest extends TestSuite {
         i <- Constants((0 until sourceElement): _*)
       } yield {
         raw"""${prefix.bind} $i/$sourceElement"""
-      }).asInstanceOf[FlatMapBinding[_, String]]
+      })
       val mappedEvents = new BufferListener
       val sourceEvents = new BufferListener
       mapped.addPatchedListener(mappedEvents.listener)
-      assert(mapped.publisher.nonEmpty)
       assert(source.publisher.nonEmpty)
       source.addPatchedListener(sourceEvents.listener)
-      assert(mapped.publisher.nonEmpty)
       assert(source.publisher.nonEmpty)
 
       assert(sourceEvents == ArrayBuffer.empty)
@@ -338,7 +333,6 @@ object BindingTest extends TestSuite {
       mapped.removePatchedListener(mappedEvents.listener)
       source.removePatchedListener(sourceEvents.listener)
 
-      assert(mapped.publisher.isEmpty)
       assert(source.publisher.isEmpty)
     }
 

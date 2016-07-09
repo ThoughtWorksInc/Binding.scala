@@ -13,7 +13,7 @@ before_cache:
 language: scala
 
 script:
-  - sbt test
+  - sbt +test
 
 notifications:
   webhooks:

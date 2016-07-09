@@ -28,6 +28,7 @@ import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.binding.Binding.BindingSeq
 import com.thoughtworks.sde.core.Preprocessor
+import macrocompat.bundle
 import org.apache.commons.lang3.text.translate.EntityArrays
 import org.scalajs.dom.raw._
 
@@ -238,12 +239,13 @@ object dom {
 
   }
 
+  @bundle
   private[binding] final class Macros(context: whitebox.Context) extends Preprocessor(context)  {
 
     import Macros._
+    import c.universe._
 
-    def macroTransform(annottees: c.Tree*): c.Tree = {
-      import c.universe._
+    def macroTransform(annottees: Tree*): Tree = {
       val transformer = new ComprehensionTransformer {
 
         override def transform(tree: Tree): Tree = {
@@ -280,7 +282,7 @@ object dom {
               {
                 var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
                 ..$attributes
-                new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, $$md, $$scope, $_, ..$child)
+                new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, $$md, $$scope, $minimizeEmpty, ..$child)
               }
             """ =>
               val elementName = TermName(c.freshName("element"))
@@ -348,7 +350,7 @@ object dom {
                   }
                 """
               }
-            case q"new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, _root_.scala.xml.Null, $$scope, $_, ..$child)" =>
+            case q"new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, _root_.scala.xml.Null, $$scope, $minimizeEmpty, ..$child)" =>
               val elementName = TermName(c.freshName("element"))
               val labelName = TermName(label)
               atPos(tree.pos) {

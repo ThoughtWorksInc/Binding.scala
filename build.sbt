@@ -10,7 +10,7 @@ organization := "com.thoughtworks.binding"
 
 name := "unidoc"
 
-scalaVersion in ThisBuild := "2.11.8"
+crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8")
 
 developers in ThisBuild := List(
   Developer(
@@ -40,7 +40,7 @@ scmInfo in ThisBuild := Some(ScmInfo(
 
 releaseUseGlobalVersion := true
 
-releaseCrossBuild := false
+releaseCrossBuild := true
 
 import ReleaseTransformations._
 

@@ -29,8 +29,9 @@ import java.util.EventObject
 import com.thoughtworks.sde.core.MonadicFactory._
 import com.thoughtworks.enableIf
 import com.thoughtworks.sde.core.MonadicFactory
+import macrocompat.bundle
 
-import scala.annotation.{compileTimeOnly, tailrec}
+import scala.annotation.tailrec
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.language.higherKinds
@@ -394,10 +395,11 @@ object Binding {
 
   }
 
-  private[binding] final class Macros(val c: scala.reflect.macros.blackbox.Context) {
+  @bundle
+  private[Binding] class Macros(val c: scala.reflect.macros.blackbox.Context) {
     import c.universe._
 
-    def map(f: c.Tree): c.Tree = {
+    final def map(f: Tree): Tree = {
       val apply@Apply(TypeApply(Select(self, TermName("map")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
@@ -408,7 +410,7 @@ object Binding {
       atPos(apply.pos)( q"""$self.mapBinding[$b]($monadicFunction)""")
     }
 
-    def flatMap(f: c.Tree): c.Tree = {
+    final def flatMap(f: Tree): Tree = {
       val apply@Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
@@ -419,7 +421,7 @@ object Binding {
       atPos(apply.pos)( q"""$self.flatMapBinding[$b]($monadicFunction)""")
     }
 
-    def withFilter(condition: c.Tree): c.Tree = {
+    final def withFilter(condition: Tree): Tree = {
       val apply@Apply(Select(self, TermName("withFilter")), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
@@ -430,7 +432,7 @@ object Binding {
       atPos(apply.pos)( q"""$self.withFilterBinding($monadicFunction)""")
     }
 
-    def bind: c.Tree = {
+    final def bind: Tree = {
       val q"$binding.$methodName" = c.macroApplication
       q"""_root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
         _root_.com.thoughtworks.binding.Binding,
