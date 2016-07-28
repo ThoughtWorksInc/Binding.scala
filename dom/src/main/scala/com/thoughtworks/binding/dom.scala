@@ -312,7 +312,7 @@ object dom {
                           _root_.scalaz.Monad,
                           _root_.com.thoughtworks.binding.Binding
                         ].apply(${transform(value)})(_root_.com.thoughtworks.binding.Binding.BindingInstances)
-                      })( value => $attributeAccess = value )
+                      })({ attributeValue => if ($attributeAccess != attributeValue) $attributeAccess = attributeValue })
                     )
                   """
                 }
