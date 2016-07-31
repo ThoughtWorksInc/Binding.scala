@@ -25,7 +25,11 @@ SOFTWARE.
 package scala.xml
 
 /**
-  * This file is created in order to avoid the error message `To compile XML syntax, the scala.xml package must be on the classpath.`.
+  * This file is created in order to avoid the error message:
+  *
+  * ```
+  * To compile XML syntax, the scala.xml package must be on the classpath.
+  * ```
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
