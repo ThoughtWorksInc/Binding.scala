@@ -6,7 +6,7 @@ description := "Reactive data-binding for Scala. This artifact is available for 
 
 libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.0"
 
-libraryDependencies += "com.thoughtworks.sde" %%% "core" % "1.0.0"
+libraryDependencies += "com.thoughtworks.sde" %%% "core" % "2.0.0"
 
 libraryDependencies += "com.lihaoyi" %%% "utest" % "0.3.1" % Test
 
