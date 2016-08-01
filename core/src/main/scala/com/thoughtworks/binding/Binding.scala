@@ -632,10 +632,11 @@ object Binding extends MonadicFactory[Monad, Binding] {
         } yield f(child)).toVector
         val flatNewChildren = new FlatProxy(mappedNewChildren)
         if (event.replaced != 0 || flatNewChildren.nonEmpty) {
+          val flattenFrom = flatIndex(0, event.from)
+          val flattenReplaced = flatIndex(event.from, event.from + event.replaced)
+          val flattenPatchedEvent = new PatchedEvent(FlatMapBinding.this, get, flattenFrom, flatNewChildren, flattenReplaced)
           for (listener <- publisher) {
-            val flattenFrom = flatIndex(0, event.from)
-            val flattenReplaced = flatIndex(event.from, event.from + event.replaced)
-            listener.patched(new PatchedEvent(FlatMapBinding.this, get, flattenFrom, flatNewChildren, flattenReplaced))
+            listener.patched(flattenPatchedEvent)
           }
           for (oldChild <- cache.view(event.from, event.replaced)) {
             oldChild.removePatchedListener(childListener)
