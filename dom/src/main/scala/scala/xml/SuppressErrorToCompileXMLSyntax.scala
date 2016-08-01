@@ -33,4 +33,4 @@ package scala.xml
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-class SuppressErrorToCompileXMLSyntax
+private class SuppressErrorToCompileXMLSyntax
