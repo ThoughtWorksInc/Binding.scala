@@ -1,5 +1,3 @@
-enablePlugins(ScalaJsMap)
-
 enablePlugins(ScalaJSPlugin)
 
 organization := "com.thoughtworks.binding"
