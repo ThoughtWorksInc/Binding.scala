@@ -791,9 +791,7 @@ object Binding {
       */
     @inline
     final def flatMapBinding[B](f: A => Binding[BindingSeq[B]]): BindingSeq[B] = {
-      new FlatMapBinding[A, B](this, { a =>
-        new FlatMapBinding[BindingSeq[B], B](new MapBinding[Unit, BindingSeq[B]](Constants(()), _ => f(a)), locally)
-      })
+      new FlatMapBinding[BindingSeq[B], B](new MapBinding[A, BindingSeq[B]](this, f), locally)
     }
 
     /**
