@@ -643,8 +643,8 @@ object Binding extends MonadicFactory[Monad, Binding] {
           for (newChild <- mappedNewChildren) {
             newChild.addPatchedListener(childListener)
           }
-          cache = cache.patch(event.from, mappedNewChildren, event.replaced)
         }
+        cache = cache.patch(event.from, mappedNewChildren, event.replaced)
       }
 
     }

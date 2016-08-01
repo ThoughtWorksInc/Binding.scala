@@ -225,7 +225,7 @@ object BindingTest extends TestSuite {
       assert(mapped.get == Seq("ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3", "ForYield 0/4", "ForYield 1/4", "ForYield 2/4", "ForYield 3/4", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
       prefix := "3"
       assert(sourceEvents.length == 4)
-      assert(mapped.get == Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4", "3 0/3", "3 1/3", "3 2/3"))
+      assert(mapped.get == Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4"))
 
       mapped.removePatchedListener(mappedEvents.listener)
       source.removePatchedListener(sourceEvents.listener)
