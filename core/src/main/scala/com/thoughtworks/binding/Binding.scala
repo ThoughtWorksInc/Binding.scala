@@ -48,7 +48,7 @@ import scala.language.experimental.macros
   * @groupdesc expressions AST nodes of binding expressions
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object Binding {
+object Binding extends MonadicFactory[Monad, Binding] {
 
   private object Publisher {
 
@@ -721,8 +721,6 @@ object Binding {
     }
   }
 
-  private def bindingFactory = new MonadicFactory[Monad, Binding]
-
   /**
     * Data binding expression of a sequence
     *
@@ -840,7 +838,7 @@ object Binding {
         */
       final def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
         new WithFilter({ a =>
-          bindingFactory {
+          Binding {
             if (Instructions.each[Binding, Boolean](condition(a))) {
               Instructions.each[Binding, Boolean](nextCondition(a))
             } else {
@@ -857,7 +855,7 @@ object Binding {
         */
       final def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a =>
-          bindingFactory {
+          Binding {
             if (Instructions.each[Binding, Boolean](condition(a))) {
               Constants(Instructions.each[Binding, B](f(a)))
             } else {
@@ -874,7 +872,7 @@ object Binding {
         */
       final def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a =>
-          bindingFactory {
+          Binding {
             if (Instructions.each[Binding, Boolean](condition(a))) {
               Instructions.each[Binding, BindingSeq[B]](f(a))
             } else {
