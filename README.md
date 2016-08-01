@@ -462,6 +462,6 @@ libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
 
 ## Links
 
-* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/7.0.0/unidoc_2.11-7.0.0-javadoc.jar/!/com/thoughtworks/binding/package.html)
+* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/7.0.3/unidoc_2.11-7.0.3-javadoc.jar/!/com/thoughtworks/binding/package.html)
 * [Binding.scala • TodoMVC](https://github.com/ThoughtWorksInc/todo/)
 * [Other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/)
