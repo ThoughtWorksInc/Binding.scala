@@ -8,7 +8,7 @@ lazy val coreJVM = core.jvm.addSbtFiles(file("../build.sbt.shared"))
 
 organization := "com.thoughtworks.binding"
 
-name := "unidoc"
+moduleName := "unidoc"
 
 crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8")
 
