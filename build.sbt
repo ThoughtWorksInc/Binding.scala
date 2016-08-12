@@ -1,6 +1,6 @@
 lazy val core = crossProject.crossType(CrossType.Pure)
 
-lazy val dom = project dependsOn coreJS
+lazy val dom = project.dependsOn(coreJS)
 
 lazy val coreJS = core.js.addSbtFiles(file("../build.sbt.shared"))
 
@@ -23,7 +23,7 @@ name := "Binding.scala"
 
 publishArtifact := false
 
-lazy val unidoc = project dependsOn (dom, coreJS) settings(scalaJavaUnidocSettings) settings(
+lazy val unidoc = project.dependsOn(dom, coreJS).settings(scalaJavaUnidocSettings).settings(
   doc in Compile := (UnidocKeys.unidoc in Compile).value.head,
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions += "-Xexperimental",
