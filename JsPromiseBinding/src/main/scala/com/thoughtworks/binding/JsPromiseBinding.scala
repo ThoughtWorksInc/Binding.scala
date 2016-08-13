@@ -30,8 +30,6 @@ import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.{Thenable, UndefOr, |, Promise => JsPromise}
 import Binding._
 
-import scala.scalajs.js
-
 object JsPromiseBinding {
 
   def apply[A](promise: JsPromise[A]) = new JsPromiseBinding(promise)
@@ -43,7 +41,7 @@ object JsPromiseBinding {
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[Any, A]]] {
+final class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[Any, A]]] {
 
   @volatile
   private var cache: Option[Either[Any, A]] = None
