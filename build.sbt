@@ -27,7 +27,7 @@ developers in ThisBuild := List(
   )
 )
 
-name := "Binding.scala"
+name in ThisBuild := "Binding.scala"
 
 publishArtifact := false
 
@@ -36,7 +36,7 @@ lazy val unidoc = project.dependsOn(dom, JsPromiseBinding, BindingJS, FutureBind
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions += "-Xexperimental",
   scalacOptions in Compile in doc ++= {
-    Seq("-doc-title", name.value)
+    Seq("-doc-title", (name in ThisBuild).value)
   },
   scalacOptions in Compile in doc ++= {
     Seq("-doc-version", version.value)
@@ -59,12 +59,12 @@ licenses in ThisBuild += "MIT" -> url("http://opensource.org/licenses/MIT")
 
 startYear in ThisBuild := Some(2016)
 
-homepage in ThisBuild := Some(url(s"https://github.com/ThoughtWorksInc/${name.value}"))
+homepage in ThisBuild := Some(url(s"https://github.com/ThoughtWorksInc/${(name in ThisBuild).value}"))
 
 scmInfo in ThisBuild := Some(ScmInfo(
-  url(s"https://github.com/ThoughtWorksInc/${name.value}"),
-  s"scm:git:git://github.com/ThoughtWorksInc/${name.value}.git",
-  Some(s"scm:git:git@github.com:ThoughtWorksInc/${name.value}.git")))
+  url(s"https://github.com/ThoughtWorksInc/${(name in ThisBuild).value}"),
+  s"scm:git:git://github.com/ThoughtWorksInc/${(name in ThisBuild).value}.git",
+  Some(s"scm:git:git@github.com:ThoughtWorksInc/${(name in ThisBuild).value}.git")))
 
 releaseUseGlobalVersion := true
 
