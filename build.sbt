@@ -1,10 +1,18 @@
-lazy val core = crossProject.crossType(CrossType.Pure)
+lazy val Binding = crossProject.crossType(CrossType.Pure)
 
-lazy val dom = project.dependsOn(coreJS)
+lazy val FutureBinding = crossProject.crossType(CrossType.Pure).dependsOn(Binding)
 
-lazy val coreJS = core.js.addSbtFiles(file("../build.sbt.shared"))
+lazy val dom = project.dependsOn(BindingJS)
 
-lazy val coreJVM = core.jvm.addSbtFiles(file("../build.sbt.shared"))
+lazy val JsPromiseBinding = project.dependsOn(BindingJS)
+
+lazy val BindingJS = Binding.js.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val BindingJVM = Binding.jvm.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val FutureBindingJS = FutureBinding.js.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val FutureBindingJVM = FutureBinding.jvm.addSbtFiles(file("../build.sbt.shared"))
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
@@ -23,7 +31,7 @@ name := "Binding.scala"
 
 publishArtifact := false
 
-lazy val unidoc = project.dependsOn(dom, coreJS).settings(scalaJavaUnidocSettings).settings(
+lazy val unidoc = project.dependsOn(dom, JsPromiseBinding, BindingJS, FutureBindingJS).settings(scalaJavaUnidocSettings).settings(
   doc in Compile := (UnidocKeys.unidoc in Compile).value.head,
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions += "-Xexperimental",
