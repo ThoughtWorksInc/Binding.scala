@@ -61,7 +61,7 @@ object BindingTest extends TestSuite {
 
     'TripleBinding {
       val input = Var(0)
-      val output = bindingFactory {
+      val output = Binding {
         input.bind + input.bind + input.bind
       }
       output.watch()
