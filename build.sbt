@@ -31,7 +31,8 @@ name in ThisBuild := "Binding.scala"
 
 publishArtifact := false
 
-lazy val unidoc = project.dependsOn(dom, JsPromiseBinding, BindingJS, FutureBindingJS).settings(scalaJavaUnidocSettings).settings(
+lazy val unidoc = project.settings(scalaJavaUnidocSettings).settings(
+  UnidocKeys.unidocProjectFilter in ScalaUnidoc in UnidocKeys.unidoc := inAnyProject -- inProjects(BindingJVM, FutureBindingJVM),
   doc in Compile := (UnidocKeys.unidoc in Compile).value.head,
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions += "-Xexperimental",
