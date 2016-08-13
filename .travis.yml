@@ -1,0 +1,19 @@
+sudo: false
+
+addons:
+ apt:
+   packages:
+     - graphviz
+
+language:
+
+before_cache:
+
+cache:
+  directories:
+
+script:
+
+before_deploy:
+
+deploy:
