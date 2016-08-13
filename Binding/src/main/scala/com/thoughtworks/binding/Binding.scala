@@ -359,10 +359,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     final def map(f: Tree): Tree = {
       val apply@Apply(TypeApply(Select(self, TermName("map")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
-        q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
-          _root_.scalaz.Monad,
-          _root_.com.thoughtworks.binding.Binding
-        ].apply[$b]($body)"""
+        q"""_root_.com.thoughtworks.binding.Binding.apply[$b]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.mapBinding[$b]($monadicFunction)""")
     }
@@ -370,10 +367,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     final def flatMap(f: Tree): Tree = {
       val apply@Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
-        q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
-          _root_.scalaz.Monad,
-          _root_.com.thoughtworks.binding.Binding
-        ].apply[_root_.com.thoughtworks.binding.Binding.BindingSeq[$b]]($body)"""
+        q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.com.thoughtworks.binding.Binding.BindingSeq[$b]]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.flatMapBinding[$b]($monadicFunction)""")
     }
@@ -381,10 +375,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     final def withFilter(condition: Tree): Tree = {
       val apply@Apply(Select(self, TermName("withFilter")), List(f@Function(vparams, body))) = c.macroApplication
       val monadicBody =
-        q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
-          _root_.scalaz.Monad,
-          _root_.com.thoughtworks.binding.Binding
-        ].apply[_root_.scala.Boolean]($body)"""
+        q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Boolean]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
       atPos(apply.pos)( q"""$self.withFilterBinding($monadicFunction)""")
     }

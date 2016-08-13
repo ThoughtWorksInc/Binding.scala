@@ -45,13 +45,11 @@ object BindingTest extends TestSuite {
     }
   }
 
-  private def bindingFactory = new MonadicFactory[Monad, Binding]
-
   def tests = TestSuite {
 
     * - {
       val target = Var("World")
-      val hello = bindingFactory {
+      val hello = Binding {
         "Hello, " + target.bind + "!"
       }
       hello.watch()
@@ -78,15 +76,15 @@ object BindingTest extends TestSuite {
 
       val expr3: Var[Int] = new Var(2000)
 
-      val expr4: Binding[Int] = bindingFactory {
+      val expr4: Binding[Int] = Binding {
         30000
       }
 
-      val expr2: Binding[Int] = bindingFactory {
+      val expr2: Binding[Int] = Binding {
         expr3.bind + expr4.bind
       }
 
-      val expr1: Binding[Int] = bindingFactory {
+      val expr1: Binding[Int] = Binding {
         expr2.bind + 100
       }
 
@@ -117,7 +115,7 @@ object BindingTest extends TestSuite {
     'CacheShouldBeUpdated {
       val source = new Var(2.0)
       val constant = new Constant(1.0)
-      val result = bindingFactory {
+      val result = Binding {
         val sourceValue = source.bind
         val one = sourceValue / sourceValue / constant.bind
         one / sourceValue
@@ -342,7 +340,7 @@ object BindingTest extends TestSuite {
       val source = Vars(1, 2, 3)
       val mapped = new FlatMapBinding(source, { sourceElement: Int =>
         new MapBinding(Constants((0 until sourceElement): _*), { i: Int =>
-          bindingFactory {
+          Binding {
             raw"""${prefix.bind}$sourceElement"""
           }
         })
@@ -449,7 +447,7 @@ object BindingTest extends TestSuite {
       val prefix = new Var("")
       val source = Vars(1, 2, 3)
       val mapped = new MapBinding(source, { a: Int =>
-        bindingFactory {
+        Binding {
           raw"""${prefix.bind}${a}"""
         }
       })
@@ -595,7 +593,7 @@ object BindingTest extends TestSuite {
     }
 
     'WithFilter {
-      bindingFactory {
+      Binding {
         val myVars = Vars(1, 2, 100, 3)
         val filtered = myVars.withFilter(_ < 10).map(x => x)
 

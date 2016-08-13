@@ -265,10 +265,7 @@ object dom {
                         val q"$$buf.$$amp$$plus($child)" = pushChild
                         atPos(child.pos) {
                           q"""
-                            new _root_.com.thoughtworks.sde.core.MonadicFactory[
-                              _root_.scalaz.Monad,
-                              _root_.com.thoughtworks.binding.Binding
-                            ].apply {
+                            _root_.com.thoughtworks.binding.Binding.apply {
                               _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq(${transform(child)})
                             }(_root_.com.thoughtworks.binding.Binding.BindingInstances)
                           """
@@ -308,10 +305,7 @@ object dom {
                       new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
                         implicit def ${TermName(c.freshName("currentTargetReference"))} =
                           new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                        new _root_.com.thoughtworks.sde.core.MonadicFactory[
-                          _root_.scalaz.Monad,
-                          _root_.com.thoughtworks.binding.Binding
-                        ].apply(${transform(value)})(_root_.com.thoughtworks.binding.Binding.BindingInstances)
+                        _root_.com.thoughtworks.binding.Binding.apply(${transform(value)})(_root_.com.thoughtworks.binding.Binding.BindingInstances)
                       })({ attributeValue => if ($attributeAccess != attributeValue) $attributeAccess = attributeValue })
                     )
                   """
@@ -417,10 +411,7 @@ object dom {
       //      }
 
       replaceDefBody(annottees, { body =>
-        q"""new _root_.com.thoughtworks.sde.core.MonadicFactory[
-          _root_.scalaz.Monad,
-          _root_.com.thoughtworks.binding.Binding
-        ].apply{
+        q"""_root_.com.thoughtworks.binding.Binding.apply{
           import _root_.com.thoughtworks.binding.dom.AutoImports._
           ${transform(body)}
         }(_root_.com.thoughtworks.binding.Binding.BindingInstances)"""
