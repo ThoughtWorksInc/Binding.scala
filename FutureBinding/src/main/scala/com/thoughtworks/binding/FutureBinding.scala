@@ -31,9 +31,6 @@ import scala.util.Try
 import scala.language.experimental.macros
 import Binding._
 
-/**
-  * @group expressions
-  */
 object FutureBinding {
   def apply[A](future: Future[A])(implicit executor: ExecutionContext) = new FutureBinding(future)
 }
@@ -41,7 +38,6 @@ object FutureBinding {
 /**
   * A wrapper that wraps [[scala.concurrent.Future]] to a [[Binding]].
   *
-  * @group expressions
   * @note Because all [[Binding]] (including this [[FutureBinding]]) are not thread safe,
   *       you must guarantee `executor` running sequencely.
   */

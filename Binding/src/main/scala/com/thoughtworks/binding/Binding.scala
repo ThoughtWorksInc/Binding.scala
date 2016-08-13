@@ -1085,6 +1085,13 @@ trait Binding[+A] extends Any {
   @deprecated(message = "Use [[Binding#bind]] instead", since = "7.0.0")
   final def each: A = macro Binding.Macros.bind
 
+  /**
+    * Returns the current value of this [[Binding]] and mark the outer `@dom` method depends on this [[Binding]].
+    *
+    * Each time the value changes, other `@dom` methods that depend on this [[Binding]] will be re-evaluated if that [[Binding]] is [[#watch]]ing.
+    *
+    * @note This method must be invoked inside a `@dom` method body.
+    */
   final def bind: A = macro Binding.Macros.bind
 
   /**
