@@ -1088,7 +1088,7 @@ trait Binding[+A] extends Any {
   /**
     * Returns the current value of this [[Binding]] and mark the outer `@dom` method depends on this [[Binding]].
     *
-    * Each time the value changes, other `@dom` methods that depend on this [[Binding]] will be re-evaluated if that [[Binding]] is [[#watch]]ing.
+    * Each time the value changes, other `@dom` methods that depend on this [[Binding]] will be re-evaluated if the [[Binding]] of that `@dom` method is [[#watch]]ing.
     *
     * @note This method must be invoked inside a `@dom` method body.
     */
