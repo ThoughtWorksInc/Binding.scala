@@ -1,5 +1,9 @@
 sudo: false
 
+addons:
+ apt:
+   packages:
+
 language: scala
 
 before_cache:
@@ -12,7 +16,7 @@ cache:
     - $HOME/.sbt/boot/
 
 script:
-  - sbt test
+  - sbt +test
 
 before_deploy:
 
