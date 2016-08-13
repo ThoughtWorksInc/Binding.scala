@@ -48,7 +48,9 @@ import scala.language.experimental.macros
   * @groupdesc expressions AST nodes of binding expressions
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object Binding extends MonadicFactory[Monad, Binding] {
+object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
+
+  override val typeClass = BindingInstances
 
   private object Publisher {
 
