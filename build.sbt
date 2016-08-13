@@ -58,7 +58,7 @@ lazy val unidoc = project.settings(scalaJavaUnidocSettings).settings(
 
 licenses in ThisBuild += "MIT" -> url("http://opensource.org/licenses/MIT")
 
-startYear in ThisBuild := Some(2016)
+startYear in ThisBuild := Some(2015)
 
 homepage in ThisBuild := Some(url(s"https://github.com/ThoughtWorksInc/${(name in ThisBuild).value}"))
 
