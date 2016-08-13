@@ -2,8 +2,10 @@
 
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg?branch=master)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
-[![Maven Central (Core Funtionality)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/core_2.11.svg?label=maven-central%20%28core%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/core_2.11)
-[![Maven Central (DOM Integration)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/dom_sjs0.6_2.11.svg?label=maven-central%20%28dom%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/dom_sjs0.6_2.11)
+[![Maven Central (core funtionality)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/binding_2.11.svg?label=maven-central%20%28Binding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/binding_2.11)
+[![Maven Central (DOM integration)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/dom_sjs0.6_2.11.svg?label=maven-central%20%28dom.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/dom_sjs0.6_2.11)
+[![Maven Central (remote data-binding for scala.concurrent.Future)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/futurebinding_2.11.svg?label=maven-central%20%28FutureBinding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/futurebinding_2.11)
+[![Maven Central (remote data-binding for ECMAScript 2015 Promise)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/jspromisebinding_sjs0.6_2.11.svg?label=maven-central%20%28JsPromiseBinding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/jspromisebinding_sjs0.6_2.11)
 
 **Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
@@ -434,30 +436,53 @@ The Scala compiler will not report errors now.
 
 ## Downloads
 
-Binding.scala has an extremely tiny code base. There is only one source file [Binding.scala](https://github.com/ThoughtWorksInc/Binding.scala/blob/master/core/src/main/scala/com/thoughtworks/binding/Binding.scala) for data-binding expressions,
-and one source file [dom.scala](https://github.com/ThoughtWorksInc/Binding.scala/blob/master/dom/src/main/scala/com/thoughtworks/binding/dom.scala) for HTML DOM integration.
+Binding.scala has an extremely tiny code base.
+The code base are split into 4 libraries:
 
 ### Core data-binding expressions (Binding.scala)
 
-The former module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
+This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
 
 ``` scala
 // For JVM projects
-libraryDependencies += "com.thoughtworks.binding" %% "core" % "latest.release"
+libraryDependencies += "com.thoughtworks.binding" %% "binding" % "latest.release"
 ```
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
-libraryDependencies += "com.thoughtworks.binding" %%% "core" % "latest.release"
+libraryDependencies += "com.thoughtworks.binding" %%% "binding" % "latest.release"
 ```
 
 ### HTML DOM integration (dom.scala)
 
-The latter module is only available for Scala.js. You could add it in your `build.sbt`.
+This module is only available for Scala.js. You could add it in your `build.sbt`.
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
 libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
+```
+
+### Remote data-binding for `scala.concurrent.Future` (FutureBinding.scala)
+
+This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
+
+``` scala
+// For JVM projects
+libraryDependencies += "com.thoughtworks.binding" %% "futurebinding" % "latest.release"
+```
+
+``` scala
+// For Scala.js projects, or JS/JVM cross projects
+libraryDependencies += "com.thoughtworks.binding" %%% "futurebinding" % "latest.release"
+```
+
+### Remote data-binding for ECMAScript 2015's `Promise` (JsPromiseBinding.scala)
+
+This module is only available for Scala.js. You could add it in your `build.sbt`.
+
+``` scala
+// For Scala.js projects, or JS/JVM cross projects
+libraryDependencies += "com.thoughtworks.binding" %%% "jspromisebinding" % "latest.release"
 ```
 
 ## Links
