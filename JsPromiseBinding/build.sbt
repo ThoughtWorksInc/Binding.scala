@@ -4,8 +4,6 @@ organization := "com.thoughtworks.binding"
 
 name := "JsPromiseBinding"
 
-description := "Reactive web framework for Scala.js."
-
 jsDependencies += RuntimeDOM
 
 libraryDependencies += "com.lihaoyi" %%% "utest" % "0.3.1" % Test
