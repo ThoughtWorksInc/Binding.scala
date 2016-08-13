@@ -44,7 +44,8 @@ lazy val unidoc = project.dependsOn(dom, coreJS).settings(scalaJavaUnidocSetting
     }
   },
   publishArtifact in packageSrc := false,
-  publishArtifact in packageBin := false
+  publishArtifact in packageBin := false,
+  releasePublishArtifactsAction <<= PgpKeys.publishSigned
 )
 
 licenses in ThisBuild += "MIT" -> url("http://opensource.org/licenses/MIT")
