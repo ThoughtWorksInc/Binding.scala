@@ -17,14 +17,13 @@ See [Binding.scala • TodoMVC](https://github.com/ThoughtWorksInc/todo/) or [ot
 
 ## Comparison to other reactive web frameworks
 
-Binding.scala has more features and less concepts than other reactive web frameworks like [Widok](https://widok.github.io/) or [ReactJS](https://facebook.github.io/react/).
+Binding.scala has more features and less concepts than other reactive web frameworks like [ReactJS](https://facebook.github.io/react/).
 
 <table>
   <thead>
     <tr>
       <th></th>
       <th>Binding.scala</th>
-      <th>Widok</th>
       <th>ReactJS</th>
     </tr>
   </thead>
@@ -32,31 +31,26 @@ Binding.scala has more features and less concepts than other reactive web framew
     <tr>
       <th>Support HTML literal?</th>
       <td>Yes</td>
-      <td>No</td>
       <td>Partially supported. Regular HTML does not compile, unless developers manually replaces <code>class</code> and <code>for</code> attributes to <code>className</code> and <code>htmlFor</code>, and manually converts inline <code>style</code>s from CSS syntax to JSON syntax.</td>
     </tr>
     <tr>
       <th>Algorithm to update DOM</th>
       <td>Precise data-binding, which is faster than virtual DOM</td>
-      <td>Precise data-binding</td>
       <td>Virtual DOM differentiation, which requires manually managed key attributes for complicated DOM.</td>
     </tr>
     <tr>
       <th>Lifecycle management for data-binding expressions</th>
       <td>Automatically</td>
-      <td>Manually</td>
       <td>N/A</td>
     </tr>
     <tr>
       <th>Statically type checking</th>
       <td>Yes, even for HTML tags and attribues</td>
-      <td>Yes</td>
       <td>No</td>
     </tr>
     <tr>
       <th>Learning curve</th>
       <td>Always easy</td>
-      <td>Unfamiliar DOM creation syntax for newbie. Requires much efforts to understand its corner cases.</td>
       <td>Easy to start. Requires much more efforts to understand its corner cases.</td>
     </tr>
   </tbody>
