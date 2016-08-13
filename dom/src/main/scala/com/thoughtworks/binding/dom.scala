@@ -267,7 +267,7 @@ object dom {
                           q"""
                             _root_.com.thoughtworks.binding.Binding.apply {
                               _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq(${transform(child)})
-                            }(_root_.com.thoughtworks.binding.Binding.BindingInstances)
+                            }
                           """
                         }
                       }
@@ -305,7 +305,7 @@ object dom {
                       new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
                         implicit def ${TermName(c.freshName("currentTargetReference"))} =
                           new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                        _root_.com.thoughtworks.binding.Binding.apply(${transform(value)})(_root_.com.thoughtworks.binding.Binding.BindingInstances)
+                        _root_.com.thoughtworks.binding.Binding.apply(${transform(value)})
                       })({ attributeValue => if ($attributeAccess != attributeValue) $attributeAccess = attributeValue })
                     )
                   """
@@ -414,7 +414,7 @@ object dom {
         q"""_root_.com.thoughtworks.binding.Binding.apply{
           import _root_.com.thoughtworks.binding.dom.AutoImports._
           ${transform(body)}
-        }(_root_.com.thoughtworks.binding.Binding.BindingInstances)"""
+        }"""
       })
     }
 
