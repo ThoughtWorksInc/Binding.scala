@@ -437,7 +437,7 @@ The Scala compiler will not report errors now.
 ## Downloads
 
 Binding.scala has an extremely tiny code base.
-The code base are split into 4 libraries:
+The code base are split into 4 libraries, one file per library.
 
 ### Core data-binding expressions (Binding.scala)
 
