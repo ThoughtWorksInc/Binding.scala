@@ -1,5 +1,9 @@
 sudo: false
 
+addons:
+ apt:
+   packages:
+
 language: scala
 
 before_cache:
