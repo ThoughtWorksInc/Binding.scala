@@ -335,9 +335,9 @@ Binding.scala does not register any listeners when users create individual expre
 thus users do not need to manually unregister listeners for a single expression like MetaRx.
 
 Instead, Binding.scala create all internal listeners together,
-when the user calls `dom.render` or `Binding.watch` on the result expression.
+when the user calls `dom.render` or `Binding.watch` on the root expression.
 Note that `dom.render` or `Binding.watch` manages listeners on all upstream expressions,
-not only the direct listeners of the result expression.
+not only the direct listeners of the root expression.
 
 In brief, Binding.scala separates functionality in two kinds:
  * User-defined `@dom` methods, which produce pure functional expressions with no side-effects.
