@@ -323,9 +323,9 @@ You may find out this approach is much simpler than ReactJS, as:
 The ability of precise data-binding in Binding.scala requires listener registrations on the data source.
 Other reactive frameworks that have the ability ask users manage the lifecycle of data-binding expressions.
 
-For example, [MetaRx](https://github.com/MetaStack-pl/MetaRx/issues/45) provide a `dispose` method to unregister the listeners created when building data-binding expressions.
+For example, [MetaRx](https://github.com/MetaStack-pl/MetaRx/issues/45) provides a `dispose` method to unregister the listeners created when building data-binding expressions.
 The users of MetaRx have the responsibility to call `dispose` method for every `map` and `flatMap` call after the expression changes,
-otherwise MetaRx leaks memory. Unfortunately, manually `dispose`ing everything is too hard to be right for complicated binding expression.
+otherwise MetaRx leaks memory. Unfortunately, manually `dispose`ing everything is too hard to be right for complicated binding expressions.
 
 Another reactive web framework [Widok](https://github.com/widok/widok/issues/29) did not provide any mechanism to manage lifecycle of of data-binding expressions.
 As a result, it simply always leaks memory.
