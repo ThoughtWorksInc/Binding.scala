@@ -678,7 +678,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   sealed trait BindingSeq[+A] extends Any {
 
     /**
-      * Enable automatically re-calculation.
+      * Enables automatically re-calculation.
       *
       * You may invoke this method more than once.
       * Then, when you want to disable automatically re-calculation,
@@ -692,7 +692,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     /**
-      * Disable automatically re-calculation.
+      * Disables automatically re-calculation.
       *
       * @note This method is recursive, which means that the dependencies of this [[BindingSeq]] will be unwatched as well.
       */
@@ -712,14 +712,14 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     /**
       * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
       *
-      * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
+      * @note This method is only available in a `Binding { ??? }` block or a `@dom` method.
       */
     def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
     /**
       * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
       *
-      * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
+      * @note This method is only available in a `Binding { ??? }` block or a `@dom` method.
       */
     def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
@@ -763,15 +763,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
       /**
         * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
-        *
-        * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
         */
       def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
       /**
         * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
-        *
-        * @note This method is only available in a `monadic[Binding]` block or a `@dom` method.
         */
       def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
@@ -1068,8 +1064,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 /**
   * A data binding expression that represent a value that automatically re-calculates when its dependencies change.
   *
-  * You may compose a data binding expression via `monadic[Binding]` block,
-  * or add `@dom` annotation to methods that produces a data binding expression.
+  * You may compose a data binding expression via `Binding { ??? }` block,
+  * or add `@dom` annotation to a method that produce a data binding expression.
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
