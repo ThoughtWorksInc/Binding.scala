@@ -1,4 +1,4 @@
-# Binding.scala <a href="http://thoughtworks.com/"><img align="right" src="https://www.thoughtworks.com/imgs/tw-logo.png" title="ThoughtWorks" height="28em"/></a>
+# Binding.scala <a href="http://thoughtworks.com/"><img align="right" src="https://www.thoughtworks.com/imgs/tw-logo.png" title="ThoughtWorks" height="15em"/></a>
 
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
