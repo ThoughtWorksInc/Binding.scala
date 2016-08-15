@@ -13,7 +13,7 @@ Binding.scala can be used as a **[reactive](https://en.wikipedia.org/wiki/Reacti
 It enables you use native XHTML literal syntax to create reactive DOM nodes,
 which are able to automatically change whenever the data source changes.
 
-See [Binding.scala • TodoMVC](https://github.com/ThoughtWorksInc/todo/) or [other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/) as examples for common tasks when working with Binding.scala.
+See [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/) or [other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/) as examples for common tasks when working with Binding.scala.
 
 ## Comparison to other reactive web frameworks
 
@@ -482,5 +482,5 @@ libraryDependencies += "com.thoughtworks.binding" %%% "jspromisebinding" % "late
 ## Links
 
 * [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/8.0.0/unidoc_2.11-8.0.0-javadoc.jar/!/com/thoughtworks/binding/package.html)
-* [Binding.scala • TodoMVC](https://github.com/ThoughtWorksInc/todo/)
+* [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [Other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/)
