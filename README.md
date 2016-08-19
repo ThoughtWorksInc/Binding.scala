@@ -442,11 +442,15 @@ This module is available for both JVM and Scala.js. You could add it in your `bu
 ``` scala
 // For JVM projects
 libraryDependencies += "com.thoughtworks.binding" %% "binding" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
 libraryDependencies += "com.thoughtworks.binding" %%% "binding" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
 ### HTML DOM integration (dom.scala)
@@ -456,6 +460,8 @@ This module is only available for Scala.js. You could add it in your `build.sbt`
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
 libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
 ### Remote data-binding for `scala.concurrent.Future` (FutureBinding.scala)
@@ -465,11 +471,15 @@ This module is available for both JVM and Scala.js. You could add it in your `bu
 ``` scala
 // For JVM projects
 libraryDependencies += "com.thoughtworks.binding" %% "futurebinding" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
 libraryDependencies += "com.thoughtworks.binding" %%% "futurebinding" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
 ### Remote data-binding for ECMAScript 2015's `Promise` (JsPromiseBinding.scala)
@@ -479,6 +489,8 @@ This module is only available for Scala.js. You could add it in your `build.sbt`
 ``` scala
 // For Scala.js projects, or JS/JVM cross projects
 libraryDependencies += "com.thoughtworks.binding" %%% "jspromisebinding" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
 ## Links
