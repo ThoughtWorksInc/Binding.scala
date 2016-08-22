@@ -1077,9 +1077,13 @@ trait Binding[+A] extends Any {
   final def each: A = macro Binding.Macros.bind
 
   /**
-    * Returns the current value of this [[Binding]] and mark the outer `@dom` method depends on this [[Binding]].
+    * Returns the current value of this [[Binding]] and mark the current `@dom` method depend on this [[Binding]].
     *
-    * Each time the value changes, other `@dom` methods that depend on this [[Binding]] will be re-evaluated if the [[Binding]] of that `@dom` method is [[#watch]]ing.
+    * Each time the value changes, in the current `@dom` method,
+    * all code after the current `bind` expression will be re-evaluated if the current `@dom` method is [[#watch]]ing.
+    * However, code in current `@dom` method and before the current `bind` expression will not be re-evaluated.
+    * This rule is not applied to DOM nodes created by XHTML literal.
+    * A change related to a DOM node does not affect siblings and parents of the node.
     *
     * @note This method must be invoked inside a `@dom` method body.
     */
