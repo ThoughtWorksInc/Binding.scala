@@ -873,6 +873,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *
       * Whenever you change the returned buffer,
       * other binding expressions that depend on this [[Vars]] will be automatically changed.
+      * 
+      * @note This method must not be invoked inside a `@dom` method body.
       */
     @inline
     override def get: Buffer[A] = new Proxy
