@@ -678,10 +678,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   sealed trait BindingSeq[+A] extends Any {
 
     /**
-      * Enables automatic re-calculation.
+      * Enables automatic recalculation.
       *
       * You may invoke this method more than once.
-      * Then, when you want to disable automatic re-calculation,
+      * Then, when you want to disable automatic recalculation,
       * you must invoke [[#unwatch]] same times as the number of calls to this method.
       *
       * @note This method is recursive, which means that the dependencies of this [[BindingSeq]] will be watched as well.
@@ -692,7 +692,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     /**
-      * Disables automatic re-calculation.
+      * Disables automatic recalculation.
       *
       * @note This method is recursive, which means that the dependencies of this [[BindingSeq]] will be unwatched as well.
       */
