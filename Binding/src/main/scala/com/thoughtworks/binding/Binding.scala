@@ -678,10 +678,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   sealed trait BindingSeq[+A] extends Any {
 
     /**
-      * Enables automatically re-calculation.
+      * Enables automatic re-calculation.
       *
       * You may invoke this method more than once.
-      * Then, when you want to disable automatically re-calculation,
+      * Then, when you want to disable automatic re-calculation,
       * you must invoke [[#unwatch]] same times as the number of calls to this method.
       *
       * @note This method is recursive, which means that the dependencies of this [[BindingSeq]] will be watched as well.
@@ -692,7 +692,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     /**
-      * Disables automatically re-calculation.
+      * Disables automatic re-calculation.
       *
       * @note This method is recursive, which means that the dependencies of this [[BindingSeq]] will be unwatched as well.
       */
@@ -1064,7 +1064,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 }
 
 /**
-  * A data binding expression that represent a value that automatically re-calculates when its dependencies change.
+  * A data binding expression that represent a value that automatically recalculates when its dependencies change.
   *
   * You may compose a data binding expression via `Binding { ??? }` block,
   * or add `@dom` annotation to a method that produce a data binding expression.
@@ -1101,10 +1101,10 @@ trait Binding[+A] extends Any {
   private[binding] def addChangedListener(listener: Binding.ChangedListener[A]): Unit
 
   /**
-    * Enable automatically re-calculation.
+    * Enable automatic recalculation.
     *
     * You may invoke this method more than once.
-    * Then, when you want to disable automatically re-calculation,
+    * Then, when you want to disable automatic recalculation,
     * you must invoke [[#unwatch]] same times as the number of calls to this method.
     *
     * @note This method is recursive, which means that the dependencies of this [[Binding]] will be watched as well.
@@ -1115,7 +1115,7 @@ trait Binding[+A] extends Any {
   }
 
   /**
-    * Disable automatically re-calculation.
+    * Disable automatic recalculation.
     *
     * @note This method is recursive, which means that the dependencies of this [[Binding]] will be unwatched as well.
     */
