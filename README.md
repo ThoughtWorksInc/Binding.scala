@@ -135,7 +135,7 @@ instead of `scala.xml.Node` or `scala.xml.NodeSeq`.
 So we could have `@dom def node: Binding[org.scalajs.dom.raw.HTMLBRElement] = <br/>`
 and `@dom def node: Binding[BindingSeq[org.scalajs.dom.raw.HTMLBRElement]] = <br/><br/>`.
 
-A `@dom` method consists with other data-binding expressions in two approach:
+A `@dom` method composes with other data-binding expressions in two ways:
 
  1. You could use `bind` method in a `@dom` method to get value of another `Binding`.
  2. You could use `for` / `yield` expression in a `@dom` method to map a `BindingSeq` to another.
