@@ -24,10 +24,9 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{BindingSeq, Constant, Var, Vars}
+import Binding.{Constant, Var, Vars}
 import org.scalajs.dom.document
 import org.scalajs.dom.html.{BR, Div, HR, Paragraph}
-import org.scalajs.dom.raw.{Comment, Event, Node}
 import utest._
 
 /**

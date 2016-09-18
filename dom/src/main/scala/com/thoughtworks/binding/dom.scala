@@ -191,6 +191,7 @@ object dom {
       @inline def for_=(value: String) = node.htmlFor = value
     }
 
+    implicit val workaroundUnusedImport = new WorkaroundUnusedImport {}
   }
 
   /**
@@ -413,6 +414,7 @@ object dom {
       replaceDefBody(annottees, { body =>
         q"""_root_.com.thoughtworks.binding.Binding.apply{
           import _root_.com.thoughtworks.binding.dom.AutoImports._
+          implicitly[_root_.com.thoughtworks.binding.dom.WorkaroundUnusedImport]
           ${transform(body)}
         }"""
       })
@@ -420,4 +422,5 @@ object dom {
 
   }
 
+  trait WorkaroundUnusedImport
 }
