@@ -962,7 +962,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   }
 
   /**
-    * A mount point that places the result of a data binding expression into DOM or other system.
+    * A mechanism that mounts the result of a data binding expression into DOM or other system.
     *
     * @group expressions
     */
