@@ -18,6 +18,7 @@ language: scala
 
 script:
   - sbt "set parallelExecution in Global := false" +test
+  - sbt tut
 
 notifications:
   webhooks:

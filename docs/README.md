@@ -76,7 +76,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 ### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
 
-```scala
+```tut:silent
 import com.thoughtworks.binding.Binding.{Var, Vars}
 
 case class Contact(name: Var[String], email: Var[String])
@@ -97,8 +97,18 @@ the value of the expression changes whenever value of the `Vars` changes.
 
 ### Step 3: Create a `@dom` method that contains data-binding expressions
 
+```tut:invisible
+// Due to some obscure tut/REPL/macro interaction, Scala expressions inside XML
+// literals cannot spawn across multiple lines. This `tut:invisible` is a
+// placeholder to simulate interpretation of the first example, which does
+// not compile because of this limitation.
 
+import com.thoughtworks.binding.dom
+import com.thoughtworks.binding.Binding
+import org.scalajs.dom.html._
 
+@dom def table: Binding[Table] = <table></table>
+```
 
 ```scala
 import com.thoughtworks.binding.dom
@@ -153,7 +163,7 @@ You can nest `Node` or `BindingSeq[Node]` in other HTML element literals via `{ 
 
 ### Step 4: render the data-binding expressions to DOM in the `main` method
 
-```scala
+```tut:silent
 import scala.scalajs.js.annotation.JSExport
 import org.scalajs.dom.document
 
@@ -183,7 +193,7 @@ Now you will see a table that just contains a header, because `data` is empty at
 
 ### Step 6: Add some `<button>` to fill `data` for the table
 
-```scala
+```tut:silent
 import com.thoughtworks.binding.Binding.BindingSeq
 import org.scalajs.dom.Event
 import org.scalajs.dom.raw.Node
@@ -282,7 +292,7 @@ while Binding.scala is better than that.
 The smallest composable unit in Binding.scala is a `@dom` method.
 Every `@dom` method is able to compose other `@dom` methods via `.bind`.
 
-```scala
+```tut:silent
 case class Contact(name: Var[String], email: Var[String])
 
 @dom
@@ -355,7 +365,7 @@ In brief, Binding.scala separates functionality in two kinds:
 As you see, you can embed HTML literals in `@dom` methods in Scala source files.
 You can also embed Scala expressions in braces in content or attribute values of the HTML literal.
 
-```scala
+```tut:silent
 @dom
 def notificationBox(message: String): Binding[Div] = {
   <div class="notification" title={ s"Tooltip: $message" }>
@@ -372,7 +382,7 @@ Then, the magic `@dom` let the method wrap the result as a `Binding`.
 
 You can even assign the `Div` to a local variable and invoke native DOM method on the variable:
 
-```scala
+```tut:silent
 @dom
 def notificationBox(message: String): Binding[Div] = {
   val result: Div = <div class="notification" title={ s"Tooltip: $message" }>
@@ -395,19 +405,13 @@ They are type-checked by Scala compiler as well.
 
 For example, given the following `typo` method, the Scala compiler will appropriately report errors:
 
-```scala
-scala> @dom
-     | def typo = {
-     |   val myDiv = <div typoProperty="xx">content</div>
-     |   myDiv.typoMethod()
-     |   myDiv
-     | }
-<console>:21: error: value typoProperty is not a member of org.scalajs.dom.html.Div
+```tut:fail
+@dom
+def typo = {
   val myDiv = <div typoProperty="xx">content</div>
-               ^
-<console>:22: error: value typoMethod is not a member of org.scalajs.dom.html.Div
   myDiv.typoMethod()
-        ^
+  myDiv
+}
 ```
 
 With the help of static type system, `@dom` methods can be much robuster than ReactJS components.
@@ -418,7 +422,7 @@ You can find a complete list of supported properties and methods on [scaladoc of
 
 If you want to suppress the static type checking of attributes, add a `data:` prefix to the attribute:
 
-```scala
+```tut:silent
 @dom def myCustomDiv = {
   val myDiv = <div data:customAttributeName="attributeValue"></div>
   assert(myDiv.getAttribute("customAttributeName") == "attributeValue")
