@@ -145,7 +145,7 @@ You can nest `Node` or `BindingSeq[Node]` in other HTML element literals via `{ 
 ### Step 4: render the data-binding expressions to DOM in the `main` method
 
 ``` scala
-@JsExport
+@JSExport
 def main(): Unit = {
   dom.render(document.body, table)
 }
@@ -308,7 +308,7 @@ def bindingTable(contacts: BindingSeq[Contact]): Binding[Table] = {
 @JSExport
 def main(): Unit = {
   val data = Vars(Contact(Var("Yang Bo"), Var("yang.bo@rea-group.com")))
-  dom.render(document.body, bindingTable(data)
+  dom.render(document.body, bindingTable(data))
 }
 ```
 
