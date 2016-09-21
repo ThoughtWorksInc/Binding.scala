@@ -233,7 +233,7 @@ def table: Binding[BindingSeq[Node]] = {
 
 ReactJS 需要用户为每一个组件提供 `render` 函数。
 `render` 函数需要将 `props` 和 `state` 映射至 ReactJS 的虚拟 DOM，
-也就是说 ReactJS 框架创建了一个结构与虚拟 DOM 一样的 DOM。
+然后，ReactJS 框架会根据虚拟 DOM 的结构，创建一套结构相同的真实的 DOM。
 
 当 `state` 改变时，ReactJS 框架会调用 `render` 函数去获取一个新的虚拟 DOM。
 然而很不幸的是，ReactJS 并不能够确切地知道 `state` 改变了什么。
@@ -260,7 +260,7 @@ ReactJS 可能会认为你改变了 `<tbody>` 中所有的 `<tr>`，
 
 在 ReactJS 中最小的组成单元是组件。
 
-毫无疑问 React 组件要比 AngularJS 控制器更加轻量级，然而 Binding.scala 又比它更佳优秀。
+毫无疑问 React 组件要比 AngularJS 控制器更加轻量级，然而 Binding.scala 又比它更加优秀。
 
 在 Binding.scala 中最小的组成单元仅仅是 `@dom` 方法。
 每一个 `@dom` 方法有能力通过 `.bind` 组合其他的 `@dom` 方法。
@@ -324,7 +324,7 @@ def main(): Unit = {
 否则 MetaRx 会有内存泄漏。然而非常不幸的是，对于复杂的绑定表达式，每次都需要手动地正确调用 `dispose` 实在是太困难了。
 
 另一个 reactive web framework [Widok](https://github.com/widok/widok/issues/29) 没有提供任何机制用于管理数据绑定表达式的生命周期。
-而这样的结果就是，它会时常性的发生内存泄漏。
+而这样的结果就是，Widok 一直在泄漏内存。
 
 在 Binding.scala 中，与 MetaRx 以及 Widok 不同，所有的数据绑定表达式都是纯函数式的，不带有任何副作用。
 Binding.scala 不会在用户创建表达式式注册任何的监听者，
@@ -424,7 +424,7 @@ typo.scala:24: value typoMethod is not a member of org.scalajs.dom.html.Div
 
 ## 下载
 
-Binding.scala 只基于极少部分代码。
+Binding.scala 只有一个很小的代码基。
 源代码被分为 4 个库，每个库一个文件。
 
 ### 数据绑定表达式核心 (Binding.scala)
