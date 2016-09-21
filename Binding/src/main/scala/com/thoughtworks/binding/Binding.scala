@@ -943,7 +943,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         } {
           listener.patched(new PatchedEvent(Vars.this, cache, n, seq, 0))
         }
-        cache.patch(n, seq, 0)
+        cache = cache.patch(n, seq, 0)
       }
 
       override def iterator: Iterator[A] = {
