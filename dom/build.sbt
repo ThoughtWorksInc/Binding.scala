@@ -14,7 +14,7 @@ libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4"
 
 jsDependencies += RuntimeDOM
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0" % Test
 
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
 
