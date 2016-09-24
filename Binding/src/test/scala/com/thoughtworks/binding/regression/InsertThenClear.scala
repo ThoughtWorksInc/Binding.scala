@@ -33,7 +33,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object InsertThenClear extends FreeSpec with Matchers {
+final class InsertThenClear extends FreeSpec with Matchers {
   "insert then clear" in {
     val items = Vars(1 to 10: _*)
 

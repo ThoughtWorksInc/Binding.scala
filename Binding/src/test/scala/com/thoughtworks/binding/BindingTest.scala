@@ -30,7 +30,7 @@ import org.scalatest._
 
 import scalaz._
 
-object BindingTest extends FreeSpec with Matchers {
+final class BindingTest extends FreeSpec with Matchers {
 
   final class BufferListener extends ArrayBuffer[Any] {
     val listener = new ChangedListener[Any] with PatchedListener[Any] {

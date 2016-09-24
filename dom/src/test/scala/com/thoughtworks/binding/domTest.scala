@@ -33,7 +33,7 @@ import org.scalatest._
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object domTest extends FreeSpec with Matchers {
+final class domTest extends FreeSpec with Matchers {
 
   @dom private def privateMonadicBr: Binding[BR] = <br/>
 

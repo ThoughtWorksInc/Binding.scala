@@ -9,7 +9,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object FlatMapRemove extends FreeSpec with Matchers {
+final class FlatMapRemove extends FreeSpec with Matchers {
   "removed source of a flatMap" in {
 
     val data = Vars.empty[Either[String, String]]
