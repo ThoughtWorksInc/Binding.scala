@@ -37,7 +37,6 @@ final class domTest extends FreeSpec with Matchers {
 
   @dom private def privateMonadicBr: Binding[BR] = <br/>
 
-
   "DomMethodShouldBeMonadic" in {
     @dom def monadicMethod = 1
     assert(monadicMethod == Constant(1))
@@ -59,28 +58,20 @@ final class domTest extends FreeSpec with Matchers {
   }
 
   "TextInterpolationElement" in {
-    @dom val monadicDiv: Binding[Div] = <div>
-      {"text"}
-    </div>
+    @dom val monadicDiv: Binding[Div] = <div>{"text"}</div>
     monadicDiv.watch()
     assert(monadicDiv.get.outerHTML == "<div>text</div>")
   }
 
   "NestedElement" in {
-    @dom val monadicDiv: Binding[Div] = <div>
-      <span>text</span>
-    </div>
+    @dom val monadicDiv: Binding[Div] = <div> <span> text </span> </div>
     monadicDiv.watch()
     assert(monadicDiv.get.outerHTML == "<div> <span> text </span> </div>")
   }
 
   "ChangedElementText" in {
     val v0 = Var("original text")
-    @dom val monadicDiv: Binding[Div] = <div>
-      <span>
-        {v0.bind}
-      </span>
-    </div>
+    @dom val monadicDiv: Binding[Div] = <div> <span> {v0.bind} </span> </div>
     monadicDiv.watch()
     assert(monadicDiv.get.outerHTML == "<div> <span> original text </span> </div>")
     v0 := "changed"
@@ -88,14 +79,8 @@ final class domTest extends FreeSpec with Matchers {
   }
 
   "ForYield" in {
-    val v0 = Vars("original text 0", "original text 1")
-    @dom val monadicDiv: Binding[Div] = <div>
-      <span>
-        {for (s <- v0) yield <b>
-        {s}
-      </b>}
-      </span>
-    </div>
+    val v0 = Vars("original text 0","original text 1")
+    @dom val monadicDiv: Binding[Div] = <div> <span> { for (s <- v0) yield <b>{s}</b> } </span> </div>
     monadicDiv.watch()
     val div = monadicDiv.get
 
@@ -147,31 +132,17 @@ final class domTest extends FreeSpec with Matchers {
 
     @dom
     def tbodyBinding = {
-      <tbody>
-        {for {
-        user <- users
-        if shouldShow(user).bind
-      } yield <tr>
-        <td>
-          {user.firstName.bind}
-        </td> <td>
-          {user.lastName.bind}
-        </td> <td>
-          {user.age.bind.toString}
-        </td>
-      </tr>}
-      </tbody>
+      <tbody>{
+        for {
+          user <- users
+          if shouldShow(user).bind
+        } yield <tr><td>{user.firstName.bind}</td><td>{user.lastName.bind}</td><td>{user.age.bind.toString}</td></tr>
+      }</tbody>
     }
 
     @dom
     val tableBinding = {
-      <table title="My Tooltip" className="my-table">
-        <thead>
-          <tr>
-            <td>First Name</td> <td>Second Name</td> <td>Age</td>
-          </tr>
-        </thead>{tbodyBinding.bind}
-      </table>
+      <table title="My Tooltip" className="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{tbodyBinding.bind}</table>
     }
     tableBinding.watch()
     assert(tableBinding.get.outerHTML == """<table class="my-table" title="My Tooltip"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
@@ -181,7 +152,7 @@ final class domTest extends FreeSpec with Matchers {
 
   "NodeSeq" in {
     @dom def nodeSeq = {
-        <hr/> <table id="myId"></table> <br/>
+      <hr/><table id="myId"> </table><br/>
     }
     val div = document.createElement("div")
     dom.render(div, nodeSeq)
@@ -194,13 +165,7 @@ final class domTest extends FreeSpec with Matchers {
       @dom
       val child = <hr/>
       @dom
-      val parent = <p>
-        <span>
-          {child.bind}
-        </span> <span>
-          {child.bind}
-        </span>
-      </p>
+      val parent = <p><span>{child.bind}</span><span>{child.bind}</span></p>
       val div = document.createElement("div")
       dom.render(div, parent)
     }
@@ -210,13 +175,7 @@ final class domTest extends FreeSpec with Matchers {
   "NestedContentCurrentTarget" in {
     @dom def innerDiv = {
       // FIXME: Nested element of same node type does not work, e.g. <div><div>{ dom.currentTarget[Div] }</div></div>
-      <div>
-        <p>The tagName of current Div is
-          {dom.currentTarget[Div].tagName}
-          . The tagName of current Paragraph is
-          {dom.currentTarget[Paragraph].tagName}
-          .</p>
-      </div>
+      <div><p>The tagName of current Div is { dom.currentTarget[Div].tagName }. The tagName of current Paragraph is { dom.currentTarget[Paragraph].tagName }. </p></div>
     }
     val div = document.createElement("div")
     dom.render(div, innerDiv)
@@ -226,9 +185,7 @@ final class domTest extends FreeSpec with Matchers {
 
   "ContentCurrentTarget" in {
     @dom def innerDiv = {
-      <p>The tagName of current element is
-        {dom.currentTarget.tagName}
-        .</p>
+        <p>The tagName of current element is { dom.currentTarget.tagName }.</p>
     }
     val div = document.createElement("div")
     dom.render(div, innerDiv)
@@ -255,21 +212,16 @@ final class domTest extends FreeSpec with Matchers {
 
   "ComplexProperty" in {
     implicit class MyHr(hr: HR) {
-
       object a {
-
         object b {
           def c = hr.style.borderLeft
-
           def c_=(value: String) = {
             hr.style.borderLeft = "123px"
           }
         }
-
       }
-
     }
-    @dom def hr = <hr a:b:c="hidden" />
+    @dom def hr = <hr a:b:c="hidden"/>
     val div = document.createElement("div")
     dom.render(div, hr)
     assert(div.firstChild.asInstanceOf[HR].style.borderLeft == "123px")
@@ -302,27 +254,21 @@ final class domTest extends FreeSpec with Matchers {
   }
 
   "Comment" in {
-    @dom def comment = <div>
-      <!--my comment-->
-    </div>
+    @dom def comment = <div><!--my comment--></div>
     val div = document.createElement("div")
     dom.render(div, comment)
     assert(div.innerHTML == "<div><!--my comment--></div>")
   }
 
   "Escape" in {
-    @dom def comment = <div>
-      &#32;
-    </div>
+    @dom def comment = <div>&#32;</div>
     val div = document.createElement("div")
     dom.render(div, comment)
     assert(div.innerHTML == "<div> </div>")
   }
 
   "Entity" in {
-    @dom def comment = <div>
-      &amp; &lt; &copy; &lambda;
-    </div>
+    @dom def comment = <div>&amp;&lt;&copy;&lambda;</div>
     val div = document.createElement("div")
     dom.render(div, comment)
     assert(div.innerHTML == "<div>&amp;&lt;©λ</div>")
@@ -336,3 +282,4 @@ final class domTest extends FreeSpec with Matchers {
   }
 
 }
+
