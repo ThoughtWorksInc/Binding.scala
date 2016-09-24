@@ -16,7 +16,12 @@ lazy val FutureBindingJVM = FutureBinding.jvm.addSbtFiles(file("../build.sbt.sha
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
-crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0-RC1")
+crossScalaVersions := Seq(
+  "2.10.6",
+  "2.11.8"
+  // Don't build on 2.12.0-RC1 because ScalaTags did not support 2.12.0-RC1 yet
+  // "2.12.0-RC1"
+)
 
 developers in ThisBuild := List(
   Developer(
