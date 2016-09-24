@@ -16,6 +16,9 @@ before_cache:
 
 language: scala
 
+jdk:
+  - oraclejdk8
+
 script:
   - sbt "set parallelExecution in Global := false" +test
 
