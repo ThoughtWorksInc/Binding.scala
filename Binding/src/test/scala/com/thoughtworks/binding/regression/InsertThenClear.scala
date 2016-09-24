@@ -26,27 +26,26 @@ package com.thoughtworks.binding.regression
 
 import com.thoughtworks.binding.Binding._
 import com.thoughtworks.binding._
-import utest._
+import org.scalatest._
 
 import scala.collection.mutable.ArrayBuffer
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object InsertThenClear extends TestSuite {
-  def tests = TestSuite {
-    * - {
-      val items = Vars(1 to 10: _*)
+object InsertThenClear extends FreeSpec with Matchers {
+  "insert then clear" in {
+    val items = Vars(1 to 10: _*)
 
-      val mapped = items.map(-_)
-      mapped.watch()
-      assert(mapped.get == Seq(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10))
+    val mapped = items.map(-_)
+    mapped.watch()
+    assert(mapped.get == Seq(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10))
 
-      items.get.insertAll(3, 100 to 103)
-      assert(mapped.get == Seq(-1, -2, -3, -100, -101, -102, -103, -4, -5, -6, -7, -8, -9, -10))
+    items.get.insertAll(3, 100 to 103)
+    assert(mapped.get == Seq(-1, -2, -3, -100, -101, -102, -103, -4, -5, -6, -7, -8, -9, -10))
 
-      items.get.clear()
-      assert(mapped.get == Seq.empty)
-    }
+    items.get.clear()
+    assert(mapped.get == Seq.empty)
   }
 }
+
