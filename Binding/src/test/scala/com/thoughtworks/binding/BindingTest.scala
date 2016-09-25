@@ -57,7 +57,7 @@ final class BindingTest extends FreeSpec with Matchers {
     assert(hello.get == "Hello, Each!")
   }
 
-  "TripleBinding" in  {
+  "TripleBinding" in {
     val input = Var(0)
     val output = Binding {
       input.bind + input.bind + input.bind
@@ -70,7 +70,7 @@ final class BindingTest extends FreeSpec with Matchers {
     }
   }
 
-  "DataBindingShouldBeSupportedByScalaz" in  {
+  "DataBindingShouldBeSupportedByScalaz" in {
 
     val expr3: Var[Int] = new Var(2000)
 
@@ -110,7 +110,7 @@ final class BindingTest extends FreeSpec with Matchers {
 
   }
 
-  "CacheShouldBeUpdated" in  {
+  "CacheShouldBeUpdated" in {
     val source = new Var(2.0)
     val constant = new Constant(1.0)
     val result = Binding {
@@ -599,11 +599,11 @@ final class BindingTest extends FreeSpec with Matchers {
     }
   }
 
-    '++= {
-      val myVars = Vars(1, 2, 3)
-      myVars.watch()
-      myVars.get ++= Seq(4, 5)
-      assert(myVars.get == Seq(1, 2, 3, 4, 5))
-    }
+  "++=" in {
+    val myVars = Vars(1, 2, 3)
+    myVars.watch()
+    myVars.get ++= Seq(4, 5)
+    assert(myVars.get == Seq(1, 2, 3, 4, 5))
+  }
 
 }
