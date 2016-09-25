@@ -267,7 +267,7 @@ object BindingTest extends TestSuite {
           assert(event.getSource == mapped)
           assert(event.oldSeq == Seq("ForYield 0/1", "ForYield 0/2", "ForYield 1/2", "ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
       }
-      source.get .append(2, 3, 4)
+      source.get.append(2, 3, 4)
       assert(mappedEvents.length == 2)
       assert(sourceEvents.length == 2)
       sourceEvents(1) match {
@@ -599,6 +599,13 @@ object BindingTest extends TestSuite {
 
         assert(filtered.get == Seq(1, 2, 3))
       }
+    }
+
+    '++= {
+      val myVars = Vars(1, 2, 3)
+      myVars.watch()
+      myVars.get ++= Seq(4, 5)
+      assert(myVars.get == Seq(1, 2, 3, 4, 5))
     }
 
   }
