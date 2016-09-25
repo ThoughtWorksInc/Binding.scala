@@ -40,7 +40,7 @@ final class Zhihu50863924 extends FreeSpec with Matchers {
     def subComponent(value: Var[Option[String]]) = Binding {
       renderCount += 1
       assert(value.bind == Some("Changed"))
-      <div>{value.bind.get}</div>
+      Right(value.bind.get)
     }
 
     val value: Var[Option[String]] = Var(None)
@@ -49,14 +49,14 @@ final class Zhihu50863924 extends FreeSpec with Matchers {
       if (value.bind.isDefined) {
         subComponent(value).bind
       } else {
-        <p>None here!</p>
+        Left("None here!")
       }
     }
 
     render.watch()
-    assert(render.get == <p>None here!</p>)
+    assert(render.get == Left("None here!"))
     value := Some("Changed")
-    assert(render.get == <div>Changed</div>)
+    assert(render.get == Right("Changed"))
     assert(renderCount == 1)
   }
 }
