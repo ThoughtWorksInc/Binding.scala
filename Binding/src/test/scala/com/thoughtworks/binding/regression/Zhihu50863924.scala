@@ -35,11 +35,13 @@ final class Zhihu50863924 extends FreeSpec with Matchers {
 
   "Newly created Binding expression should not re-render immediately" in {
 
-    var renderCount = 0
+    var renderCount0 = 0
+    var renderCount1 = 0
 
     def subComponent(value: Var[Option[String]]) = Binding {
-      renderCount += 1
+      renderCount0 += 1
       assert(value.bind == Some("Changed"))
+      renderCount1 += 1
       Right(value.bind.get)
     }
 
@@ -57,6 +59,7 @@ final class Zhihu50863924 extends FreeSpec with Matchers {
     assert(render.get == Left("None here!"))
     value := Some("Changed")
     assert(render.get == Right("Changed"))
-    assert(renderCount == 1)
+    assert(renderCount0 == 1)
+    assert(renderCount1 == 1)
   }
 }
