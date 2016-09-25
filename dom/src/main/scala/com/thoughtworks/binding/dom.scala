@@ -108,29 +108,33 @@ object dom {
         }
       }
 
-      override protected def splice(oldSeq: Seq[Node], from: Int, that: GenSeq[Node], replaced: Int): Unit = {
-        val i = oldSeq.iterator.drop(from)
-        for (_ <- 0 until replaced) {
-          if (i.hasNext) {
-            parent.removeChild(i.next())
+      override protected def splice(from: Int, that: GenSeq[Node], replaced: Int): Unit = {
+        @inline
+        @tailrec
+        def removeChildren(child: Node, n: Int): Node = {
+          if (n == 0) {
+            child
           } else {
-            throw new IllegalArgumentException
+            val nextSibling = child.nextSibling
+            parent.removeChild(child)
+            removeChildren(nextSibling, n - 1)
           }
         }
-        if (i.hasNext) {
-          val refChild = i.next()
+
+        val child = removeChildren(parent.childNodes(from), replaced)
+        if (child == null) {
           for (newChild <- that) {
             if (newChild.parentNode != null) {
               throw new IllegalStateException(raw"""Cannot insert a ${newChild.nodeName} element twice!""")
             }
-            parent.insertBefore(newChild, refChild)
+            parent.appendChild(newChild)
           }
         } else {
           for (newChild <- that) {
             if (newChild.parentNode != null) {
               throw new IllegalStateException(raw"""Cannot insert a ${newChild.nodeName} element twice!""")
             }
-            parent.appendChild(newChild)
+            parent.insertBefore(newChild, child)
           }
         }
       }
@@ -155,7 +159,7 @@ object dom {
     */
   object AutoImports {
 
-    implicit final class DataOps @inline() (node: Element) {
+    implicit final class DataOps @inline()(node: Element) {
 
       import scala.language.dynamics
 
@@ -173,19 +177,19 @@ object dom {
 
     }
 
-    implicit final class StyleOps @inline() (node: HTMLElement) {
+    implicit final class StyleOps @inline()(node: HTMLElement) {
       @inline def style = node.style.cssText
 
       @inline def style_=(value: String) = node.style.cssText = value
     }
 
-    implicit final class ClassOps @inline() (node: HTMLElement) {
+    implicit final class ClassOps @inline()(node: HTMLElement) {
       @inline def `class` = node.className
 
       @inline def class_=(value: String) = node.className = value
     }
 
-    implicit final class ForOps @inline() (node: HTMLLabelElement) {
+    implicit final class ForOps @inline()(node: HTMLLabelElement) {
       @inline def `for` = node.htmlFor
 
       @inline def for_=(value: String) = node.htmlFor = value
@@ -240,7 +244,7 @@ object dom {
   }
 
   @bundle
-  private[binding] final class Macros(context: whitebox.Context) extends Preprocessor(context)  {
+  private[binding] final class Macros(context: whitebox.Context) extends Preprocessor(context) {
 
     import Macros._
     import c.universe._

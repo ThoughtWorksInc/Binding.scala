@@ -57,19 +57,19 @@ final class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Ei
   private var isHandlerRegistered: Boolean = false
 
   private def fulfilledHandler(result: A): Unit | Thenable[Unit] = {
-    val oldCache = cache
     val newCache = Some(Right(result))
+    val event = new ChangedEvent[Option[Either[Any, A]]](this, newCache)
     for (listener <- publisher) {
-      listener.changed(new ChangedEvent[Option[Either[Any, A]]](this, oldCache, newCache))
+      listener.changed(event)
     }
     cache = newCache
   }
 
   private def rejectedHandler(result: Any): Unit | Thenable[Unit] = {
-    val oldCache = cache
     val newCache = Some(Left(result))
+    val event = new ChangedEvent[Option[Either[Any, A]]](this, newCache)
     for (listener <- publisher) {
-      listener.changed(new ChangedEvent[Option[Either[Any, A]]](this, oldCache, newCache))
+      listener.changed(event)
     }
     cache = newCache
   }

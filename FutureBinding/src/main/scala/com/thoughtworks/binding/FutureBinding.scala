@@ -54,8 +54,9 @@ final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionCont
   private var isHandlerRegiested: Boolean = false
 
   private def completeHandler(result: Try[A]): Unit = {
+    val event = new ChangedEvent[Option[Try[A]]](this, Some(result))
     for (listener <- publisher) {
-      listener.changed(new ChangedEvent[Option[Try[A]]](this, None, Some(result)))
+      listener.changed(event)
     }
   }
 
