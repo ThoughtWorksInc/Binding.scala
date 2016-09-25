@@ -916,7 +916,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         for (listener <- publisher) {
           listener.patched(new PatchedEvent(Vars.this, cache, cache.length, seq, 0))
         }
-        cache = seq ++ cache
+        cache = cache ++ seq
         Proxy.this
       }
 
