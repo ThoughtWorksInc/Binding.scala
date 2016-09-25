@@ -599,5 +599,11 @@ final class BindingTest extends FreeSpec with Matchers {
     }
   }
 
+    '++= {
+      val myVars = Vars(1, 2, 3)
+      myVars.watch()
+      myVars.get ++= Seq(4, 5)
+      assert(myVars.get == Seq(1, 2, 3, 4, 5))
+    }
 
 }
