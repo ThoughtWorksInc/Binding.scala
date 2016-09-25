@@ -20,7 +20,7 @@ jdk:
   - oraclejdk8
 
 script:
-  - sbt "set parallelExecution in Global := false" +test
+  - sbt +test
 
 notifications:
   webhooks:

@@ -1,3 +1,5 @@
+parallelExecution in Global := false
+
 lazy val Binding = crossProject.crossType(CrossType.Pure)
 
 lazy val FutureBinding = crossProject.crossType(CrossType.Pure).dependsOn(Binding)
