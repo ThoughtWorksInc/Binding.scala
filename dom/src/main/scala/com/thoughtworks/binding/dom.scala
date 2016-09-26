@@ -244,7 +244,7 @@ object dom {
   }
 
   @bundle
-  private[binding] final class Macros(context: whitebox.Context) extends Preprocessor(context) with XmlExtractor {
+  private[dom] final class Macros(context: whitebox.Context) extends Preprocessor(context) with XmlExtractor {
 
     import Macros._
     import c.universe._
