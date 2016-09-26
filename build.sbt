@@ -4,7 +4,7 @@ lazy val Binding = crossProject.crossType(CrossType.Pure)
 
 lazy val FutureBinding = crossProject.crossType(CrossType.Pure).dependsOn(Binding)
 
-lazy val dom = project.dependsOn(BindingJS)
+lazy val dom = project.dependsOn(BindingJS).dependsOn(XmlExtractorJS)
 
 lazy val JsPromiseBinding = project.dependsOn(BindingJS)
 
@@ -15,6 +15,13 @@ lazy val BindingJVM = Binding.jvm.addSbtFiles(file("../build.sbt.shared"))
 lazy val FutureBindingJS = FutureBinding.js.addSbtFiles(file("../build.sbt.shared"))
 
 lazy val FutureBindingJVM = FutureBinding.jvm.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val XmlExtractor = crossProject.crossType(CrossType.Pure)
+
+lazy val XmlExtractorJS = XmlExtractor.js.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val XmlExtractorJVM = XmlExtractor.jvm.addSbtFiles(file("../build.sbt.shared"))
+
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
@@ -39,7 +46,7 @@ name in ThisBuild := "Binding.scala"
 publishArtifact := false
 
 lazy val unidoc = project.settings(scalaJavaUnidocSettings).settings(
-  UnidocKeys.unidocProjectFilter in ScalaUnidoc in UnidocKeys.unidoc := inAnyProject -- inProjects(BindingJVM, FutureBindingJVM),
+  UnidocKeys.unidocProjectFilter in ScalaUnidoc in UnidocKeys.unidoc := inAnyProject -- inProjects(XmlExtractorJVM, BindingJVM, FutureBindingJVM),
   doc in Compile := (UnidocKeys.unidoc in Compile).value.head,
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions += "-Xexperimental",

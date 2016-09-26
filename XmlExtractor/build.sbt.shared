@@ -1,0 +1,9 @@
+libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1"
+
+libraryDependencies += "com.thoughtworks.extractor" %%% "extractor" % "1.0.3"
+
+libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+
+libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided

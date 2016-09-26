@@ -244,7 +244,7 @@ object dom {
   }
 
   @bundle
-  private[binding] final class Macros(context: whitebox.Context) extends Preprocessor(context) {
+  private[binding] final class Macros(context: whitebox.Context) extends Preprocessor(context) with XmlExtractor {
 
     import Macros._
     import c.universe._
@@ -256,10 +256,6 @@ object dom {
 
         private def transformXml(tree: Tree): (Map[TermName, TagName], Tree) = {
           tree match {
-            case Block(Nil, Block(Nil, partialTransformXml.extract(transformedPair))) =>
-              transformedPair
-            case Block(Nil, partialTransformXml.extract(transformedPair)) =>
-              transformedPair
             case partialTransformXml.extract(transformedPair) =>
               transformedPair
             case _ =>
@@ -268,15 +264,10 @@ object dom {
         }
 
         private def partialTransformXml: PartialFunction[Tree, (Map[TermName, TagName], Tree)] = {
-          case tree@q"""{
-            val $$buf = new _root_.scala.xml.NodeBuffer()
-            ..$pushChildrenTree
-            $$buf
-          }""" =>
+          case tree@NodeBuffer(children@_*) =>
             val transformedPairs = for {
-              pushChild <- pushChildrenTree
+              child <- children
             } yield {
-              val q"$$buf.$$amp$$plus($child)" = pushChild
               val (definitions, transformedChild) = transformXml(child)
               definitions -> atPos(child.pos) {
                 q"""
@@ -290,15 +281,9 @@ object dom {
             definitions.reduce(_ ++ _) -> atPos(tree.pos) {
               q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
             }
-          case tree@q"""
-            {
-              var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
-              ..$attributes
-              new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, $$md, $$scope, $minimizeEmpty, ..$child)
-            }
-          """ =>
+          case tree@Elem(label, attributes, _, child) =>
             val idOption = attributes.collectFirst {
-              case q"""$$md = new _root_.scala.xml.UnprefixedAttribute("id", new _root_.scala.xml.Text(${Literal(Constant(id: String))}), $$md)""" =>
+              case Left(("id", Text(id))) =>
                 id
             }
             val elementName = idOption match {
@@ -311,15 +296,15 @@ object dom {
               attribute <- attributes
             } yield {
               val (attributeAccess, value) = attribute match {
-                case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
+                case Left((key, value)) =>
                   val keyName = TermName(key)
                   q"""$elementName.$keyName""" -> value
-                case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(Constant(key: String))}, $value, $$md)""" =>
+                case Right((pre, key, value)) =>
                   key.split(':').foldLeft(q"""$elementName.${TermName(pre)}""") { (prefixExpr, propertyName) =>
                     q"""$prefixExpr.${TermName(propertyName)}"""
                   } -> value
               }
-              atPos(attribute.pos) {
+              atPos(value.pos) {
                 q"""
                   _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
                     _root_.com.thoughtworks.binding.Binding,
@@ -372,40 +357,7 @@ object dom {
                   $elementName
                 """
             }
-          case tree@q"new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, _root_.scala.xml.Null, $$scope, $minimizeEmpty, ..$child)" =>
-            val elementName = TermName(c.freshName("element"))
-            val labelName = TermName(label)
-            val (definitions, transformedChild) = child match {
-              case Seq() =>
-                Map.empty[TermName, TagName] -> Nil
-              case Seq(q"""$nodeBuffer: _*""") =>
-                val (definitions, transformedBuffer) = transformXml(nodeBuffer)
-                definitions -> List(atPos(nodeBuffer.pos) {
-                  q"""
-                  _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
-                    _root_.com.thoughtworks.binding.Binding,
-                    _root_.scala.Unit
-                  ](
-                    new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
-                      $elementName,
-                      {
-                        implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                          new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                        $transformedBuffer
-                      }
-                    )
-                  )
-                  """
-                })
-            }
-            definitions -> atPos(tree.pos) {
-              q"""
-                val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
-                ..$transformedChild
-                $elementName
-              """
-            }
-          case tree@q"""new _root_.scala.xml.EntityRef(${Literal(Constant(reference: String))})""" =>
+          case tree@EntityRef(reference)=>
             EntityRefMap.get(reference) match {
               case Some(unescapedCharacter) =>
                 Map.empty -> atPos(tree.pos) {
@@ -415,13 +367,13 @@ object dom {
                 c.error(tree.pos, s"Unknown HTML entity reference: $reference")
                 Map.empty -> q"""???"""
             }
-          case tree@q"""new _root_.scala.xml.Comment($text)""" =>
+          case tree@Comment(value) =>
             Map.empty -> atPos(tree.pos) {
-              q"""_root_.org.scalajs.dom.document.createComment(${transform(text)})"""
+              q"""_root_.org.scalajs.dom.document.createComment(${value})"""
             }
-          case tree@q"""new _root_.scala.xml.Text($text)""" =>
+          case tree@Text(value) =>
             Map.empty -> atPos(tree.pos) {
-              transform(text)
+              q"$value"
             }
         }
 
@@ -441,13 +393,6 @@ object dom {
               """
             case Block(stats, expr) =>
               super.transform(Block(stats.flatMap {
-                case Block(Nil, partialTransformXml.extract((definitions, transformedTree))) =>
-                  ((for {
-                    (termName, tagName) <- definitions
-                  } yield {
-                    val methodName = TermName(tagName)
-                    q"val $termName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$methodName().render"
-                  }))(collection.breakOut(Vector.canBuildFrom)) :+ transformedTree
                 case partialTransformXml.extract((definitions, transformedTree)) =>
                   ((for {
                     (termName, tagName) <- definitions
