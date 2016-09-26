@@ -255,7 +255,7 @@ object dom {
 
         type TagName = String
 
-        @inline private def transformXml(tree: Tree): (Map[TermName, TagName], Tree) = {
+        private def transformXml(tree: Tree): (Map[TermName, TagName], Tree) = {
           tree match {
             case q"{ { ${partialTransformXml.extract(transformedPair)} } }" =>
               transformedPair
