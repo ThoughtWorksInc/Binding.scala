@@ -256,9 +256,9 @@ object dom {
 
         private def transformXml(tree: Tree): (Map[TermName, TagName], Tree) = {
           tree match {
-            case q"{ { ${partialTransformXml.extract(transformedPair)} } }" =>
+            case Block(Nil, Block(Nil, partialTransformXml.extract(transformedPair))) =>
               transformedPair
-            case q"{ ${partialTransformXml.extract(transformedPair)} }" =>
+            case Block(Nil, partialTransformXml.extract(transformedPair)) =>
               transformedPair
             case partialTransformXml.extract(transformedPair) =>
               transformedPair
@@ -441,7 +441,7 @@ object dom {
               """
             case Block(stats, expr) =>
               super.transform(Block(stats.flatMap {
-                case q"{${partialTransformXml.extract((definitions, transformedTree))}}" =>
+                case Block(Nil, partialTransformXml.extract((definitions, transformedTree))) =>
                   ((for {
                     (termName, tagName) <- definitions
                   } yield {
