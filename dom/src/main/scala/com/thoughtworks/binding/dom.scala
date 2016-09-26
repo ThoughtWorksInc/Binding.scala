@@ -26,6 +26,7 @@ package com.thoughtworks.binding
 
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
+import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.Binding.BindingSeq
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
@@ -228,10 +229,10 @@ object dom {
     *
     * @example {{{<br id={ "This BR element's tagName is:" + dom.currentTarget.tagName } />}}}
     */
+  @deprecated(message = "Use id attribute instead", since = "10.0.0")
   def currentTarget[A](implicit implicitCurrentTarget: Runtime.CurrentTargetReference[A]): A = {
     implicitCurrentTarget.value
   }
-
 
   private object Macros {
 
@@ -252,155 +253,193 @@ object dom {
     def macroTransform(annottees: Tree*): Tree = {
       val transformer = new ComprehensionTransformer {
 
-        override def transform(tree: Tree): Tree = {
+        type TagName = String
+
+        @inline private def transformXml(tree: Tree): (Map[TermName, TagName], Tree) = {
           tree match {
-            case q"""{
-              val $$buf = new _root_.scala.xml.NodeBuffer()
-              ..$pushChildrenTree
-              $$buf
-            }""" =>
-              atPos(tree.pos) {
+            case q"{ ${partialTransformXml.extract(transformedPair)} }" =>
+              transformedPair
+            case partialTransformXml.extract(transformedPair) =>
+              transformedPair
+            case _ =>
+              Map.empty -> super.transform(tree)
+          }
+        }
+
+        private def partialTransformXml: PartialFunction[Tree, (Map[TermName, TagName], Tree)] = {
+          case tree@q"""{
+            val $$buf = new _root_.scala.xml.NodeBuffer()
+            ..$pushChildrenTree
+            $$buf
+          }""" =>
+            val transformedPairs = for {
+              pushChild <- pushChildrenTree
+            } yield {
+              val q"$$buf.$$amp$$plus($child)" = pushChild
+              val (definitions, transformedChild) = transformXml(child)
+              definitions -> atPos(child.pos) {
                 q"""
-                  _root_.com.thoughtworks.binding.Binding.Constants(
-                    ..${
-                      for {
-                        pushChild <- pushChildrenTree
-                      } yield {
-                        val q"$$buf.$$amp$$plus($child)" = pushChild
-                        atPos(child.pos) {
-                          q"""
-                            _root_.com.thoughtworks.binding.Binding.apply {
-                              _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq(${transform(child)})
-                            }
-                          """
-                        }
-                      }
-                    }
-                  ).flatMapBinding(_root_.scala.Predef.locally _)
+                  _root_.com.thoughtworks.binding.Binding.apply {
+                    _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)
+                  }
                 """
               }
-            case q"""
-              {
-                var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
-                ..$attributes
-                new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, $$md, $$scope, $minimizeEmpty, ..$child)
+            }
+            val (definitions, transformedChildren) = transformedPairs.unzip
+            definitions.reduce(_ ++ _) -> atPos(tree.pos) {
+              q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
+            }
+          case tree@q"""
+            {
+              var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
+              ..$attributes
+              new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, $$md, $$scope, $minimizeEmpty, ..$child)
+            }
+          """ =>
+            val idOption = attributes.collectFirst {
+              case q"""$$md = new _root_.scala.xml.UnprefixedAttribute("id", new _root_.scala.xml.Text(${Literal(Constant(id: String))}), $$md)""" =>
+                id
+            }
+            val elementName = idOption match {
+              case None => TermName(c.freshName("element"))
+              case Some(id) => TermName(id)
+            }
+            val labelName = TermName(label)
+
+            val attributeMountPoints = for {
+              attribute <- attributes
+            } yield {
+              val (attributeAccess, value) = attribute match {
+                case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
+                  val keyName = TermName(key)
+                  q"""$elementName.$keyName""" -> value
+                case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(Constant(key: String))}, $value, $$md)""" =>
+                  key.split(':').foldLeft(q"""$elementName.${TermName(pre)}""") { (prefixExpr, propertyName) =>
+                    q"""$prefixExpr.${TermName(propertyName)}"""
+                  } -> value
               }
-            """ =>
-              val elementName = TermName(c.freshName("element"))
-              val labelName = TermName(label)
-              val attributeMountPoints = for {
-                attribute <- attributes
-              } yield {
-                val (attributeAccess, value) = attribute match {
-                  case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
-                    val keyName = TermName(key)
-                    q"""$elementName.$keyName""" -> value
-                  case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(Constant(key: String))}, $value, $$md)""" =>
-                    key.split(':').foldLeft(q"""$elementName.${TermName(pre)}""") { (prefixExpr, propertyName) =>
-                      q"""$prefixExpr.${TermName(propertyName)}"""
-                    } -> value
-                }
-                atPos(attribute.pos) {
+              atPos(attribute.pos) {
+                q"""
+                  _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+                    _root_.com.thoughtworks.binding.Binding,
+                    _root_.scala.Unit
+                  ](
+                    new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
+                      implicit def ${TermName(c.freshName("currentTargetReference"))} =
+                        new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
+                      _root_.com.thoughtworks.binding.Binding.apply(${transform(value)})
+                    })({ attributeValue => if ($attributeAccess != attributeValue) $attributeAccess = attributeValue })
+                  )
+                """
+              }
+            }
+            val (definitions, transformedChild) = child match {
+              case Seq() =>
+                Map.empty[TermName, TagName] -> Nil
+              case Seq(q"""$nodeBuffer: _*""") =>
+                val (definitions, transformedBuffer) = transformXml(nodeBuffer)
+                definitions -> List(atPos(nodeBuffer.pos) {
                   q"""
-                    _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
-                      _root_.com.thoughtworks.binding.Binding,
-                      _root_.scala.Unit
-                    ](
-                      new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
+                  _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+                    _root_.com.thoughtworks.binding.Binding,
+                    _root_.scala.Unit
+                  ](
+                    new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
+                      $elementName,
+                      {
                         implicit def ${TermName(c.freshName("currentTargetReference"))} =
                           new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                        _root_.com.thoughtworks.binding.Binding.apply(${transform(value)})
-                      })({ attributeValue => if ($attributeAccess != attributeValue) $attributeAccess = attributeValue })
+                        $transformedBuffer
+                      }
                     )
+                  )
                   """
-                }
-              }
-              atPos(tree.pos) {
-                q"""
+                })
+            }
+            idOption match {
+              case None =>
+                definitions -> q"""
+                  val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
+                  ..$transformedChild
+                  ..$attributeMountPoints
+                  $elementName
+                """
+              case Some(id) =>
+                (definitions + (elementName -> label)) -> q"""
+                  ..$transformedChild
+                  ..$attributeMountPoints
+                  $elementName
+                """
+            }
+          case tree@q"new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, _root_.scala.xml.Null, $$scope, $minimizeEmpty, ..$child)" =>
+            val elementName = TermName(c.freshName("element"))
+            val labelName = TermName(label)
+            val (definitions, transformedChild) = child match {
+              case Seq() =>
+                Map.empty[TermName, TagName] -> Nil
+              case Seq(q"""$nodeBuffer: _*""") =>
+                val (definitions, transformedBuffer) = transformXml(nodeBuffer)
+                definitions -> List(atPos(nodeBuffer.pos) {
+                  q"""
+                  _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+                    _root_.com.thoughtworks.binding.Binding,
+                    _root_.scala.Unit
+                  ](
+                    new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
+                      $elementName,
+                      {
+                        implicit def ${TermName(c.freshName("currentTargetReference"))} =
+                          new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
+                        $transformedBuffer
+                      }
+                    )
+                  )
+                  """
+                })
+            }
+            definitions -> atPos(tree.pos) {
+              q"""
                   {
                     val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
-                    ..${
-                  child match {
-                    case Seq() =>
-                      Nil
-                    case Seq(q"""$nodeBuffer: _*""") =>
-                      List(atPos(nodeBuffer.pos) {
-                        q"""
-                          _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
-                            _root_.com.thoughtworks.binding.Binding,
-                            _root_.scala.Unit
-                          ](
-                            new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
-                              $elementName,
-                              {
-                                implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                                  new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                                ${transform(nodeBuffer)}
-                              }
-                            )
-                          )
-                        """
-                      })
-                  }
-                }
-                    ..$attributeMountPoints
+                    ..$transformedChild
                     $elementName
                   }
                 """
-              }
-            case q"new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, _root_.scala.xml.Null, $$scope, $minimizeEmpty, ..$child)" =>
-              val elementName = TermName(c.freshName("element"))
-              val labelName = TermName(label)
-              atPos(tree.pos) {
-                q"""
-                  {
-                    val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
-                    ..${
-                  child match {
-                    case Seq() =>
-                      Nil
-                    case Seq(q"""$nodeBuffer: _*""") =>
-                      List(atPos(nodeBuffer.pos) {
-                        q"""
-                          _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
-                            _root_.com.thoughtworks.binding.Binding,
-                            _root_.scala.Unit
-                          ](
-                            new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
-                              $elementName,
-                              {
-                                implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                                  new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                                ${transform(nodeBuffer)}
-                              }
-                            )
-                          )
-                        """
-                      })
+            }
+          case tree@q"""new _root_.scala.xml.EntityRef(${Literal(Constant(reference: String))})""" =>
+            EntityRefMap.get(reference) match {
+              case Some(unescapedCharacter) =>
+                Map.empty -> atPos(tree.pos) {
+                  q"""$unescapedCharacter"""
+                }
+              case None =>
+                c.error(tree.pos, s"Unknown HTML entity reference: $reference")
+                Map.empty -> q"""???"""
+            }
+          case tree@q"""new _root_.scala.xml.Comment($text)""" =>
+            Map.empty -> atPos(tree.pos) {
+              q"""_root_.org.scalajs.dom.document.createComment(${transform(text)})"""
+            }
+          case tree@q"""new _root_.scala.xml.Text($text)""" =>
+            Map.empty -> atPos(tree.pos) {
+              transform(text)
+            }
+        }
+
+        override def transform(tree: Tree): Tree = {
+          tree match {
+            case partialTransformXml.extract((definitions,transformedTree)) =>
+              q"""{
+                ..${
+                  for {
+                    (termName, tagName) <- definitions
+                  } yield {
+                    val methodName = TermName(tagName)
+                    q"val $termName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$methodName().render"
                   }
                 }
-                    $elementName
-                  }
-                """
-              }
-            case q"""new _root_.scala.xml.EntityRef(${Literal(Constant(reference: String))})""" =>
-              EntityRefMap.get(reference) match {
-                case Some(unescapedCharacter) =>
-                  atPos(tree.pos) {
-                    q"""$unescapedCharacter"""
-                  }
-                case None =>
-                  c.error(tree.pos, s"Unknown HTML entity reference: $reference")
-                  q"""???"""
-              }
-            case q"""new _root_.scala.xml.Comment($text)""" =>
-              atPos(tree.pos) {
-                q"""_root_.org.scalajs.dom.document.createComment(${transform(text)})"""
-              }
-            case q"""new _root_.scala.xml.Text($text)""" =>
-              atPos(tree.pos) {
-                transform(text)
-              }
+                $transformedTree
+              }"""
             case _ =>
               super.transform(tree)
           }

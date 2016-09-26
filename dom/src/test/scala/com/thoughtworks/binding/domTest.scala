@@ -26,7 +26,7 @@ package com.thoughtworks.binding
 
 import Binding.{BindingSeq, Constant, Var, Vars}
 import org.scalajs.dom.document
-import org.scalajs.dom.html.{BR, Div, HR, Paragraph}
+import org.scalajs.dom.html._
 import org.scalajs.dom.raw.{Comment, Event, Node}
 import org.scalatest._
 
@@ -279,6 +279,18 @@ final class domTest extends FreeSpec with Matchers {
     val div = document.createElement("div")
     dom.render(div, hr)
     assert(div.firstChild.asInstanceOf[HR].getAttribute("custom-key") == "value")
+  }
+
+  "id" in {
+    val v = Var("Initial value")
+    @dom val input = <input id="foo" onclick={ _: Event => v := s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><label id="bar">Label Text</label>
+    val div = document.createElement("div")
+    dom.render(div, input)
+    assert(v.get == "Initial value")
+    assert(input.get.get(0).asInstanceOf[Input].value == "Initial value")
+    div.firstChild.asInstanceOf[Input].onclick(null)
+    assert(v.get == "INPUT and Label Text")
+    assert(input.get.get(0).asInstanceOf[Input].value == "INPUT and Label Text")
   }
 
 }
