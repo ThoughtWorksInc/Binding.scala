@@ -283,7 +283,7 @@ final class domTest extends FreeSpec with Matchers {
 
   "id in BindingSeq" in {
     val v = Var("Initial value")
-    @dom val input = <input id="foo" onclick={ _: Event => v := s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><label id="bar">Label Text</label>
+    @dom val input = <input id="foo" onclick={ _: Event => v := s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><div> <hr class="h"/> <div><label id="bar">Label Text</label></div></div>
     val div = document.createElement("div")
     dom.render(div, input)
     assert(v.get == "Initial value")
