@@ -281,7 +281,7 @@ final class domTest extends FreeSpec with Matchers {
     assert(div.firstChild.asInstanceOf[HR].getAttribute("custom-key") == "value")
   }
 
-  "id" in {
+  "id in BindingSeq" in {
     val v = Var("Initial value")
     @dom val input = <input id="foo" onclick={ _: Event => v := s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><label id="bar">Label Text</label>
     val div = document.createElement("div")
@@ -291,6 +291,22 @@ final class domTest extends FreeSpec with Matchers {
     div.firstChild.asInstanceOf[Input].onclick(null)
     assert(v.get == "INPUT and Label Text")
     assert(input.get.get(0).asInstanceOf[Input].value == "INPUT and Label Text")
+  }
+
+  "id in Binding" in {
+    val v = Var("Initial value")
+    @dom val input = {
+      <input id="foo" onclick={ _: Event => v := s"${foo.tagName}"}/>
+      foo.value = v.bind
+      foo
+    }
+    val div = document.createElement("div")
+    dom.render(div, input)
+    assert(v.get == "Initial value")
+    assert(input.get.value == "Initial value")
+    div.firstChild.asInstanceOf[Input].onclick(null)
+    assert(v.get == "INPUT")
+    assert(input.get.value == "INPUT")
   }
 
 }

@@ -399,12 +399,10 @@ object dom {
             }
             definitions -> atPos(tree.pos) {
               q"""
-                  {
-                    val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
-                    ..$transformedChild
-                    $elementName
-                  }
-                """
+                val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
+                ..$transformedChild
+                $elementName
+              """
             }
           case tree@q"""new _root_.scala.xml.EntityRef(${Literal(Constant(reference: String))})""" =>
             EntityRefMap.get(reference) match {
@@ -428,8 +426,8 @@ object dom {
 
         override def transform(tree: Tree): Tree = {
           tree match {
-            case partialTransformXml.extract((definitions,transformedTree)) =>
-              q"""{
+            case partialTransformXml.extract((definitions, transformedTree)) =>
+              q"""
                 ..${
                   for {
                     (termName, tagName) <- definitions
@@ -439,7 +437,26 @@ object dom {
                   }
                 }
                 $transformedTree
-              }"""
+              """
+            case Block(stats, expr) =>
+              super.transform(Block(stats.flatMap {
+                case q"{${partialTransformXml.extract((definitions, transformedTree))}}" =>
+                  ((for {
+                    (termName, tagName) <- definitions
+                  } yield {
+                    val methodName = TermName(tagName)
+                    q"val $termName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$methodName().render"
+                  }))(collection.breakOut(Vector.canBuildFrom)) :+ transformedTree
+                case partialTransformXml.extract((definitions, transformedTree)) =>
+                  ((for {
+                    (termName, tagName) <- definitions
+                  } yield {
+                    val methodName = TermName(tagName)
+                    q"val $termName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$methodName().render"
+                  }))(collection.breakOut(Vector.canBuildFrom)) :+ transformedTree
+                case stat =>
+                  Seq(stat)
+              }, expr))
             case _ =>
               super.transform(tree)
           }
