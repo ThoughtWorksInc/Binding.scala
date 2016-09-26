@@ -15,4 +15,4 @@ scalacOptions in doc in Compile += "-implicits"
 
 releasePublishArtifactsAction <<= PgpKeys.publishSigned
 
-incOptions := incOptions.value.withNameHashing(true).withRecompileOnMacroDef(false)
+incOptions := incOptions.value.withNameHashing(true)
