@@ -27,7 +27,6 @@ package com.thoughtworks.binding
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
-import com.thoughtworks.binding.Binding.BindingSeq
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
 import org.apache.commons.lang3.text.translate.EntityArrays
