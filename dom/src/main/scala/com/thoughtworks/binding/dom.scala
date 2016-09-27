@@ -238,31 +238,44 @@ object dom {
             case transformedWithValDefs.extract(transformedPair) =>
               transformedPair
             case transformed.extract(transformedTree) =>
-              Nil.view -> transformedTree
+              Vector.empty -> transformedTree
             case _ =>
-              Nil.view -> super.transform(tree)
+              Vector.empty -> super.transform(tree)
+          }
+        }
+
+        private def nodeSeq(children: Seq[Tree]) = {
+          children match {
+            case Seq() =>
+              Vector.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
+            case Seq(child) =>
+              Vector.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
+              val (valDefs, transformedChild) = transformXml(child)
+              valDefs -> atPos(child.pos) {
+                q"""_root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)"""
+              }
+            case _ =>
+              val transformedPairs = for {
+                child <- children
+              } yield {
+                val (valDefs, transformedChild) = transformXml(child)
+                valDefs -> atPos(child.pos) {
+                  q"""
+                    _root_.com.thoughtworks.binding.Binding.apply {
+                      _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)
+                    }
+                  """
+                }
+              }
+              val (valDefs, transformedChildren) = transformedPairs.unzip
+              valDefs.reduce(_ ++ _) -> q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
           }
         }
 
         private def transformedWithValDefs: PartialFunction[Tree, (Seq[ValDef], Tree)] = {
           case tree@NodeBuffer(children@_*) =>
-            val transformedPairs = for {
-              child <- children
-            } yield {
-              val (valDefs, transformedChild) = transformXml(child)
-              valDefs -> atPos(child.pos) {
-                q"""
-                  _root_.com.thoughtworks.binding.Binding.apply {
-                    _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)
-                  }
-                """
-              }
-            }
-            val (valDefs, transformedChildren) = transformedPairs.unzip
-            valDefs.reduce(_ ++ _) -> atPos(tree.pos) {
-              q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
-            }
-          case tree@Elem(label, attributes, _, child) =>
+            nodeSeq(children)
+          case tree@Elem(label, attributes, _, children) =>
             val idOption = attributes.collectFirst { case Left(("id", Text(id))) => id }
             val elementName = idOption match {
               case None => TermName(c.freshName("element"))
@@ -304,12 +317,12 @@ object dom {
                 """
               }
             }
-            val (valDefs, transformedChild) = child match {
+            val (valDefs, transformedChild) = children match {
               case Seq() =>
-                Nil.view -> Nil
-              case Seq(q"""$nodeBuffer: _*""") =>
-                val (valDefs, transformedBuffer) = transformXml(nodeBuffer)
-                valDefs -> List(atPos(nodeBuffer.pos) {
+                Vector.empty -> Nil
+              case _ =>
+                val (valDefs, transformedBuffer) = nodeSeq(children)
+                valDefs -> List(atPos(tree.pos) {
                   q"""
                   _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
                     _root_.com.thoughtworks.binding.Binding,

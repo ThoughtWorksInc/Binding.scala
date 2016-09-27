@@ -55,7 +55,16 @@ private[binding] trait XmlExtractor {
 
   protected val NodeBuffer = nodeBuffer.extractSeq
 
-  private def elem: PartialFunction[Tree, (String, List[Either[(String, Tree), (String, String, Tree)]], Boolean, List[Tree])] = {
+  private def nodeBufferStar(child: List[Tree]): Seq[Tree] = {
+    child match {
+      case Nil =>
+        Nil
+      case Seq(q"""${NodeBuffer(children@_*)}: _*""") =>
+        children
+    }
+  }
+
+  private def elem: PartialFunction[Tree, (String, List[Either[(String, Tree), (String, String, Tree)]], Boolean, Seq[Tree])] = {
     case Block(Nil, q"""
       {
         var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
@@ -68,11 +77,11 @@ private[binding] trait XmlExtractor {
           Left(key -> value)
         case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(Constant(key: String))}, $value, $$md)""" =>
           Right((pre, key, value))
-      }, minimizeEmpty, child)
+      }, minimizeEmpty, nodeBufferStar(child))
     case Block(Nil, Block(Nil, q"""
       new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, _root_.scala.xml.Null, $$scope, ${Literal(Constant(minimizeEmpty: Boolean))}, ..$child)
     """)) =>
-      (label, Nil, minimizeEmpty, child)
+      (label, Nil, minimizeEmpty, nodeBufferStar(child))
   }
 
   protected val Elem = elem.extract
