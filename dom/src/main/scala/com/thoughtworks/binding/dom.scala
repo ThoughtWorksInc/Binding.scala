@@ -29,7 +29,6 @@ import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
-import org.apache.commons.lang3.text.translate.EntityArrays
 import org.scalajs.dom.raw._
 
 import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
@@ -233,20 +232,9 @@ object dom {
     implicitCurrentTarget.value
   }
 
-  private object Macros {
-
-    private val EntityRefRegex = "&(.*);".r
-
-    private val EntityRefMap = (for {
-      Array(character, EntityRefRegex(reference)) <- EntityArrays.BASIC_ESCAPE.view ++ EntityArrays.ISO8859_1_ESCAPE ++ EntityArrays.HTML40_EXTENDED_ESCAPE
-    } yield reference -> character).toMap
-
-  }
-
   @bundle
   private[dom] final class Macros(context: whitebox.Context) extends Preprocessor(context) with XmlExtractor {
 
-    import Macros._
     import c.universe._
 
     def macroTransform(annottees: Tree*): Tree = {
@@ -357,15 +345,9 @@ object dom {
                   $elementName
                 """
             }
-          case tree@EntityRef(reference)=>
-            EntityRefMap.get(reference) match {
-              case Some(unescapedCharacter) =>
-                Map.empty -> atPos(tree.pos) {
-                  q"""$unescapedCharacter"""
-                }
-              case None =>
-                c.error(tree.pos, s"Unknown HTML entity reference: $reference")
-                Map.empty -> q"""???"""
+          case tree@EntityRef(EntityName(unescapedCharacter))=>
+            Map.empty -> atPos(tree.pos) {
+              q"""$unescapedCharacter"""
             }
           case tree@Comment(value) =>
             Map.empty -> atPos(tree.pos) {

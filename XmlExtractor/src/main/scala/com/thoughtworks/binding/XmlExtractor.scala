@@ -28,6 +28,7 @@ import macrocompat.bundle
 
 import scala.reflect.macros.blackbox
 import com.thoughtworks.Extractor._
+import org.apache.commons.lang3.text.translate.EntityArrays
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -103,5 +104,17 @@ private[binding] trait XmlExtractor {
   }
 
   protected val ProcInstr = procInstr.extract
+
+  protected val EntityName = XmlExtractor.EntityRefMap.extract
+
+}
+
+private object XmlExtractor {
+
+  private val EntityRefRegex = "&(.*);".r
+
+  private val EntityRefMap = (for {
+    Array(character, EntityRefRegex(reference)) <- EntityArrays.BASIC_ESCAPE.view ++ EntityArrays.ISO8859_1_ESCAPE ++ EntityArrays.HTML40_EXTENDED_ESCAPE
+  } yield reference -> character).toMap
 
 }
