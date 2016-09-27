@@ -240,24 +240,24 @@ object dom {
     def macroTransform(annottees: Tree*): Tree = {
       val transformer = new ComprehensionTransformer {
 
-        type TagName = String
-
-        private def transformXml(tree: Tree): (Map[TermName, TagName], Tree) = {
+        private def transformXml(tree: Tree): (Seq[ValDef], Tree) = {
           tree match {
-            case partialTransformXml.extract(transformedPair) =>
+            case definitionAndTransformed.extract(transformedPair) =>
               transformedPair
+            case transformed.extract(transformedTree) =>
+              Nil.view -> transformedTree
             case _ =>
-              Map.empty -> super.transform(tree)
+              Nil.view -> super.transform(tree)
           }
         }
 
-        private def partialTransformXml: PartialFunction[Tree, (Map[TermName, TagName], Tree)] = {
+        private def definitionAndTransformed: PartialFunction[Tree, (Seq[ValDef], Tree)] = {
           case tree@NodeBuffer(children@_*) =>
             val transformedPairs = for {
               child <- children
             } yield {
-              val (definitions, transformedChild) = transformXml(child)
-              definitions -> atPos(child.pos) {
+              val (valDefs, transformedChild) = transformXml(child)
+              valDefs -> atPos(child.pos) {
                 q"""
                   _root_.com.thoughtworks.binding.Binding.apply {
                     _root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)
@@ -265,15 +265,12 @@ object dom {
                 """
               }
             }
-            val (definitions, transformedChildren) = transformedPairs.unzip
-            definitions.reduce(_ ++ _) -> atPos(tree.pos) {
+            val (valDefs, transformedChildren) = transformedPairs.unzip
+            valDefs.reduce(_ ++ _) -> atPos(tree.pos) {
               q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
             }
           case tree@Elem(label, attributes, _, child) =>
-            val idOption = attributes.collectFirst {
-              case Left(("id", Text(id))) =>
-                id
-            }
+            val idOption = attributes.collectFirst { case Left(("id", Text(id))) => id }
             val elementName = idOption match {
               case None => TermName(c.freshName("element"))
               case Some(id) => TermName(id)
@@ -307,12 +304,12 @@ object dom {
                 """
               }
             }
-            val (definitions, transformedChild) = child match {
+            val (valDefs, transformedChild) = child match {
               case Seq() =>
-                Map.empty[TermName, TagName] -> Nil
+                Nil.view -> Nil
               case Seq(q"""$nodeBuffer: _*""") =>
-                val (definitions, transformedBuffer) = transformXml(nodeBuffer)
-                definitions -> List(atPos(nodeBuffer.pos) {
+                val (valDefs, transformedBuffer) = transformXml(nodeBuffer)
+                valDefs -> List(atPos(nodeBuffer.pos) {
                   q"""
                   _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
                     _root_.com.thoughtworks.binding.Binding,
@@ -330,61 +327,55 @@ object dom {
                   """
                 })
             }
+            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render"
             idOption match {
               case None =>
-                definitions -> q"""
-                  val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render
+                valDefs -> q"""
+                  $elementDef
                   ..$transformedChild
                   ..$attributeMountPoints
                   $elementName
                 """
               case Some(id) =>
-                (definitions + (elementName -> label)) -> q"""
+                (valDefs :+ elementDef) -> q"""
                   ..$transformedChild
                   ..$attributeMountPoints
                   $elementName
                 """
             }
+        }
+
+        private def transformed: PartialFunction[Tree, Tree] = {
+          case Block(stats, expr) =>
+            super.transform(Block(stats.flatMap {
+              case definitionAndTransformed.extract((valDefs, transformedTree)) =>
+                valDefs :+ transformedTree
+              case stat =>
+                Seq(stat)
+            }, expr))
           case tree@EntityRef(EntityName(unescapedCharacter))=>
-            Map.empty -> atPos(tree.pos) {
+            atPos(tree.pos) {
               q"""$unescapedCharacter"""
             }
           case tree@Comment(value) =>
-            Map.empty -> atPos(tree.pos) {
-              q"""_root_.org.scalajs.dom.document.createComment(${value})"""
+            atPos(tree.pos) {
+              q"""_root_.org.scalajs.dom.document.createComment($value)"""
             }
           case tree@Text(value) =>
-            Map.empty -> atPos(tree.pos) {
+            atPos(tree.pos) {
               q"$value"
             }
         }
 
         override def transform(tree: Tree): Tree = {
           tree match {
-            case partialTransformXml.extract((definitions, transformedTree)) =>
+            case definitionAndTransformed.extract((valDefs, transformedTree)) =>
               q"""
-                ..${
-                  for {
-                    (termName, tagName) <- definitions
-                  } yield {
-                    val methodName = TermName(tagName)
-                    q"val $termName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$methodName().render"
-                  }
-                }
+                ..$valDefs
                 $transformedTree
               """
-            case Block(stats, expr) =>
-              super.transform(Block(stats.flatMap {
-                case partialTransformXml.extract((definitions, transformedTree)) =>
-                  ((for {
-                    (termName, tagName) <- definitions
-                  } yield {
-                    val methodName = TermName(tagName)
-                    q"val $termName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$methodName().render"
-                  }))(collection.breakOut(Vector.canBuildFrom)) :+ transformedTree
-                case stat =>
-                  Seq(stat)
-              }, expr))
+            case transformed.extract(transformedTree) =>
+              transformedTree
             case _ =>
               super.transform(tree)
           }
