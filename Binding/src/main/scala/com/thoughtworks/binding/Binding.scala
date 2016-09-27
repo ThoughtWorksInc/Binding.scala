@@ -966,7 +966,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  sealed trait MountPoint extends Binding[Unit] {
+  private[Binding] sealed trait MountPoint extends Binding[Unit] {
 
     private var referenceCount = 0
 
@@ -1028,6 +1028,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
+  @deprecated(message = "Use `Binding[Unit]` instead", since = "10.0.0")
   abstract class SingleMountPoint[-Value](upstream: Binding[Value]) extends MountPoint {
 
     protected def set(value: Value): Unit

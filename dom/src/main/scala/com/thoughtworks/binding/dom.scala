@@ -63,13 +63,6 @@ object dom {
 
     final class CurrentTargetReference[A](val value: A) extends AnyVal
 
-    final class AttributeMountPoint[-Value](valueBinding: Binding[Value])(setter: Value => Unit)
-      extends SingleMountPoint[Value](valueBinding) {
-      override protected def set(value: Value): Unit = {
-        setter(value)
-      }
-    }
-
     final class TextMountPoint(parent: Text, childBinding: Binding[String])
       extends SingleMountPoint[String](childBinding) {
       override protected def set(value: String): Unit = {
@@ -242,7 +235,7 @@ object dom {
 
         private def transformXml(tree: Tree): (Seq[ValDef], Tree) = {
           tree match {
-            case definitionAndTransformed.extract(transformedPair) =>
+            case transformedWithValDefs.extract(transformedPair) =>
               transformedPair
             case transformed.extract(transformedTree) =>
               Nil.view -> transformedTree
@@ -251,7 +244,7 @@ object dom {
           }
         }
 
-        private def definitionAndTransformed: PartialFunction[Tree, (Seq[ValDef], Tree)] = {
+        private def transformedWithValDefs: PartialFunction[Tree, (Seq[ValDef], Tree)] = {
           case tree@NodeBuffer(children@_*) =>
             val transformedPairs = for {
               child <- children
@@ -275,7 +268,6 @@ object dom {
               case None => TermName(c.freshName("element"))
               case Some(id) => TermName(id)
             }
-            val labelName = TermName(label)
 
             val attributeMountPoints = for {
               attribute <- attributes
@@ -290,16 +282,24 @@ object dom {
                   } -> value
               }
               atPos(value.pos) {
+                val assignName = TermName(c.freshName("assignAttribute"))
+                val newValueName = TermName(c.freshName("newValue"))
                 q"""
                   _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
                     _root_.com.thoughtworks.binding.Binding,
                     _root_.scala.Unit
                   ](
-                    new _root_.com.thoughtworks.binding.dom.Runtime.AttributeMountPoint({
+                    _root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Unit]({
                       implicit def ${TermName(c.freshName("currentTargetReference"))} =
                         new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                      _root_.com.thoughtworks.binding.Binding.apply(${transform(value)})
-                    })({ attributeValue => if ($attributeAccess != attributeValue) $attributeAccess = attributeValue })
+                      val $newValueName = ${transform(value)}
+                      @_root_.scala.inline def $assignName() = {
+                        if ($attributeAccess != $newValueName) {
+                          $attributeAccess = $newValueName
+                        }
+                      }
+                      $assignName()
+                    })
                   )
                 """
               }
@@ -327,7 +327,7 @@ object dom {
                   """
                 })
             }
-            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$labelName().render"
+            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}().render"
             idOption match {
               case None =>
                 valDefs -> q"""
@@ -348,7 +348,7 @@ object dom {
         private def transformed: PartialFunction[Tree, Tree] = {
           case Block(stats, expr) =>
             super.transform(Block(stats.flatMap {
-              case definitionAndTransformed.extract((valDefs, transformedTree)) =>
+              case transformedWithValDefs.extract((valDefs, transformedTree)) =>
                 valDefs :+ transformedTree
               case stat =>
                 Seq(stat)
@@ -369,7 +369,7 @@ object dom {
 
         override def transform(tree: Tree): Tree = {
           tree match {
-            case definitionAndTransformed.extract((valDefs, transformedTree)) =>
+            case transformedWithValDefs.extract((valDefs, transformedTree)) =>
               q"""
                 ..$valDefs
                 $transformedTree
