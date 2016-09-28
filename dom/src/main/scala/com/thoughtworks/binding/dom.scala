@@ -27,6 +27,7 @@ package com.thoughtworks.binding
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
+import com.thoughtworks.binding.XmlExtractor.{PrefixedName, UnprefixedName}
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
 import org.scalajs.dom.raw._
@@ -275,24 +276,24 @@ object dom {
         private def transformedWithValDefs: PartialFunction[Tree, (Seq[ValDef], Tree)] = {
           case tree@NodeBuffer(children@_*) =>
             nodeSeq(children)
-          case tree@Elem(label, attributes, _, children) =>
-            val idOption = attributes.collectFirst { case Left(("id", Text(id))) => id }
+          case tree@Elem(UnprefixedName(label), attributes, _, children) =>
+            val idOption = attributes.collectFirst { case (UnprefixedName("id"), Text(id)) => id }
             val elementName = idOption match {
               case None => TermName(c.freshName("element"))
               case Some(id) => TermName(id)
             }
 
             val attributeMountPoints = for {
-              attribute <- attributes
+              (key, value) <- attributes
             } yield {
-              val (attributeAccess, value) = attribute match {
-                case Left((key, value)) =>
-                  val keyName = TermName(key)
-                  q"""$elementName.$keyName""" -> value
-                case Right((pre, key, value)) =>
-                  key.split(':').foldLeft(q"""$elementName.${TermName(pre)}""") { (prefixExpr, propertyName) =>
+              val attributeAccess = key match {
+                case UnprefixedName(localPart) =>
+                  val keyName = TermName(localPart)
+                  q"""$elementName.$keyName"""
+                case PrefixedName(prefix, localPart) =>
+                  localPart.split(':').foldLeft(q"""$elementName.${TermName(prefix)}""") { (prefixExpr, propertyName) =>
                     q"""$prefixExpr.${TermName(propertyName)}"""
-                  } -> value
+                  }
               }
               atPos(value.pos) {
                 val assignName = TermName(c.freshName("assignAttribute"))

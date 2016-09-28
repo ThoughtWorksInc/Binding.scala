@@ -28,6 +28,7 @@ import macrocompat.bundle
 
 import scala.reflect.macros.blackbox
 import com.thoughtworks.Extractor._
+import com.thoughtworks.binding.XmlExtractor._
 import org.apache.commons.lang3.text.translate.EntityArrays
 
 /**
@@ -64,24 +65,29 @@ private[binding] trait XmlExtractor {
     }
   }
 
-  private def elem: PartialFunction[Tree, (String, List[Either[(String, Tree), (String, String, Tree)]], Boolean, Seq[Tree])] = {
+  private def prefix: PartialFunction[Tree, Option[String]] = {
+    case q"null" => None
+    case Literal(Constant(p: String)) => Some(p)
+  }
+
+  private def elem: PartialFunction[Tree, (QName, List[(QName, Tree)], Boolean, Seq[Tree])] = {
     case Block(Nil, q"""
       {
         var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
         ..$attributes
-        new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, $$md, $$scope, ${Literal(Constant(minimizeEmpty: Boolean))}, ..$child)
+        new _root_.scala.xml.Elem(${prefix.extract(prefixOption)}, ${Literal(Constant(localPart: String))}, $$md, $$scope, ${Literal(Constant(minimizeEmpty: Boolean))}, ..$child)
       }
     """) =>
-      (label, attributes.map {
+      (QName(prefixOption, localPart), attributes.map {
         case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
-          Left(key -> value)
+          UnprefixedName(key) -> value
         case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(Constant(key: String))}, $value, $$md)""" =>
-          Right((pre, key, value))
+          PrefixedName(pre, key) -> value
       }, minimizeEmpty, nodeBufferStar(child))
     case Block(Nil, Block(Nil, q"""
-      new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, _root_.scala.xml.Null, $$scope, ${Literal(Constant(minimizeEmpty: Boolean))}, ..$child)
+      new _root_.scala.xml.Elem(${prefix.extract(prefixOption)}, ${Literal(Constant(localPart: String))}, _root_.scala.xml.Null, $$scope, ${Literal(Constant(minimizeEmpty: Boolean))}, ..$child)
     """)) =>
-      (label, Nil, minimizeEmpty, nodeBufferStar(child))
+      (QName(prefixOption, localPart), Nil, minimizeEmpty, nodeBufferStar(child))
   }
 
   protected val Elem = elem.extract
@@ -118,7 +124,22 @@ private[binding] trait XmlExtractor {
 
 }
 
-private object XmlExtractor {
+private[binding] object XmlExtractor {
+
+  sealed trait QName
+
+  object QName {
+    def apply(prefixOption: Option[String], localPart: String) = {
+      prefixOption match {
+        case None => UnprefixedName(localPart)
+        case Some(prefix) => PrefixedName(prefix, localPart)
+      }
+    }
+  }
+
+  final case class UnprefixedName(localPart: String) extends QName
+
+  final case class PrefixedName(prefix: String, localPart: String) extends QName
 
   private val EntityRefRegex = "&(.*);".r
 
