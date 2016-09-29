@@ -224,7 +224,7 @@ def table: Binding[BindingSeq[Node]] = {
 当你点击 "Modify the name" 按钮时，对应联系人的 `name` 将会发生改变，
 这是因为 Binding.scala 将对应的 `tr` 中 `name` 的值改变了。
 
-完整的例子请参考 https://github.com/ThoughtWorksInc/Binding.scala-sample。
+完整的例子请参考 https://github.com/ThoughtWorksInc/Binding.scala-sample 。
 
 
 ## 设计
