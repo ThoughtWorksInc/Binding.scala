@@ -25,12 +25,10 @@ SOFTWARE.
 package com.thoughtworks.binding
 
 import java.util.EventObject
-
 import com.thoughtworks.sde.core.MonadicFactory._
 import com.thoughtworks.enableIf
 import com.thoughtworks.sde.core.MonadicFactory
 import macrocompat.bundle
-
 import scala.annotation.tailrec
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
@@ -145,11 +143,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
-    final def subscribe(subscriber: Subscriber): Unit = {
+    def subscribe(subscriber: Subscriber): Unit = {
       subscribers += subscriber
     }
 
-    final def unsubscribe(subscriber: Subscriber): Unit = {
+    def unsubscribe(subscriber: Subscriber): Unit = {
       state match {
         case Idle =>
           subscribers -= subscriber
@@ -187,7 +185,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   }
 
   /**
-    * An data binding expression that never changes.
+    * A data binding expression that never changes.
     *
     * @group expressions
     */
@@ -238,7 +236,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
      *
      * @note This method must not be invoked inside a `@dom` method body.
      */
-    final def :=(newValue: A): Unit = {
+    def :=(newValue: A): Unit = {
       if (value != newValue) {
         for (listener <- publisher) {
           listener.changed(new ChangedEvent(this, value, newValue))
@@ -276,7 +274,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
-    override private[binding] final def changed(event: ChangedEvent[B]) = {
+    override private[binding] def changed(event: ChangedEvent[B]) = {
       for (listener <- publisher) {
         listener.changed(new ChangedEvent(FlatMap.this, event.oldValue, event.newValue))
       }
@@ -292,7 +290,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private var cache: Binding[B] = f(upstream.get)
 
-    override private[binding] final def get: B = {
+    override private[binding] def get: B = {
       @tailrec
       def tailrecGetValue(binding: Binding[B]): B = {
         binding match {
@@ -411,7 +409,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       publisher.subscribe(listener)
     }
 
-    override private[binding] final def patched(patchedEvent: PatchedEvent[Any]): Unit = {
+    override private[binding] def patched(patchedEvent: PatchedEvent[Any]): Unit = {
       val oldLength = patchedEvent.oldSeq.length
       val changedEvent = new ChangedEvent[Int](this, oldLength, oldLength + patchedEvent.that.length - patchedEvent.replaced)
       for (subscriber <- publisher) {
@@ -781,7 +779,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         *
         * @note Don't use this method in user code.
         */
-      final def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
+      def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
         new WithFilter({ a =>
           Binding {
             if (Instructions.each[Binding, Boolean](condition(a))) {
@@ -798,7 +796,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         *
         * @note Don't use this method in user code.
         */
-      final def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
+      def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a =>
           Binding {
             if (Instructions.each[Binding, Boolean](condition(a))) {
@@ -815,7 +813,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         *
         * @note Don't use this method in user code.
         */
-      final def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
+      def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a =>
           Binding {
             if (Instructions.each[Binding, Boolean](condition(a))) {
@@ -873,7 +871,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *
       * Whenever you change the returned buffer,
       * other binding expressions that depend on this [[Vars]] will be automatically changed.
-      * 
+      *
       * @note This method must not be invoked inside a `@dom` method body.
       */
     @inline
