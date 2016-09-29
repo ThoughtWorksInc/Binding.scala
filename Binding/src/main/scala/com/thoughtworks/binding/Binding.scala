@@ -869,10 +869,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     private[binding] val publisher = new Publisher[PatchedListener[A]]
 
     /**
-      * Returns a [[scala.collection.mutable.Buffer]] that allow you change the content of this [[Vars]].
-      *
-      * Whenever you change the returned buffer,
-      * other binding expressions that depend on this [[Vars]] will be automatically changed.
+      * Returns a [[scala.collection.mutable.Buffer]] that represents the content of this [[Vars]]
+      * 
+      * You can change the returned buffer.
+      * Whenever you change it,
+      * other binding expressions that depends on this [[Vars]] will be automatically changed.
       * 
       * @note This method must not be invoked inside a `@dom` method body.
       */
