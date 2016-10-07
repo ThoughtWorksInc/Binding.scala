@@ -243,6 +243,44 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
+  private final class Map[A, B](upstream: Binding[A], f: A => B)
+    extends Binding[B] with ChangedListener[A] {
+
+    private val publisher = new Publisher[ChangedListener[B]]
+
+    private var cache: B = f(upstream.get)
+
+    override private[binding] def get: B = {
+      cache
+    }
+
+    override private[binding] def addChangedListener(listener: ChangedListener[B]): Unit = {
+      if (publisher.isEmpty) {
+        upstream.addChangedListener(this)
+      }
+      publisher.subscribe(listener)
+    }
+
+    override private[binding] def removeChangedListener(listener: ChangedListener[B]): Unit = {
+      publisher.unsubscribe(listener)
+      if (publisher.isEmpty) {
+        upstream.removeChangedListener(this)
+      }
+    }
+
+    override final def changed(upstreamEvent: ChangedEvent[A]): Unit = {
+      val oldCache = cache
+      val newCache = f(upstreamEvent.newValue)
+      cache = newCache
+      if (oldCache != newCache) {
+        val event = new ChangedEvent(Map.this, newCache)
+        for (listener <- publisher) {
+          listener.changed(event)
+        }
+      }
+    }
+  }
+
   private final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B])
     extends Binding[B] with ChangedListener[B] {
 
@@ -309,7 +347,17 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     * @group typeClasses
     */
   implicit object BindingInstances extends Monad[Binding] {
-    override def bind[A, B](fa: Binding[A])(f: (A) => Binding[B]): Binding[B] = {
+
+    override def map[A, B](fa: Binding[A])(f: A => B): Binding[B] = {
+      fa match {
+        case Constant(a) =>
+          Constant(f(a))
+        case _ =>
+          new Map[A, B](fa, f)
+      }
+    }
+
+    override def bind[A, B](fa: Binding[A])(f: A => Binding[B]): Binding[B] = {
       fa match {
         case Constant(a) =>
           f(a)
