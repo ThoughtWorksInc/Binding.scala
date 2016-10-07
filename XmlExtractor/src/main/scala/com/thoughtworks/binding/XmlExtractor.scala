@@ -56,11 +56,11 @@ private[binding] trait XmlExtractor {
 
   protected val NodeBuffer = nodeBuffer.extractSeq
 
-  private def nodeBufferStar(child: List[Tree]): Seq[Tree] = {
+  private def nodeBufferStar(child: List[Tree]): List[Tree] = {
     child match {
       case Nil =>
         Nil
-      case Seq(q"""${NodeBuffer(children@_*)}: _*""") =>
+      case List(q"""${nodeBuffer.extract(children)}: _*""") =>
         children
     }
   }
@@ -70,7 +70,7 @@ private[binding] trait XmlExtractor {
     case Literal(Constant(p: String)) => Some(p)
   }
 
-  private def elem: PartialFunction[Tree, (QName, List[(QName, Tree)], Boolean, Seq[Tree])] = {
+  private def elem: PartialFunction[Tree, (QName, List[(QName, Tree)], Boolean, List[Tree])] = {
     case Block(Nil, q"""
       {
         var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
