@@ -515,7 +515,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         } yield f(child))(collection.breakOut(Vector.canBuildFrom))
         val oldCache = cache
         if (upstreamEvent.from == 0) {
-          cache = mappedNewChildren.foldRight(oldCache.drop(upstreamEvent.replaced))(_ +: _)
+          cache = mappedNewChildren ++ oldCache.drop(upstreamEvent.replaced)
         } else {
           cache = oldCache.patch(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
         }
