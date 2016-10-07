@@ -40,6 +40,8 @@ import scalatags.JsDom
 import scalatags.jsdom
 import org.scalajs.dom.document
 
+import scala.collection.immutable.Queue
+
 /**
   * Enable XML DOM literal for Binding.scala
   *
@@ -234,29 +236,29 @@ object dom {
     def macroTransform(annottees: Tree*): Tree = {
       val transformer = new ComprehensionTransformer {
 
-        private def transformXml(tree: Tree): (Seq[ValDef], Tree) = {
+        private def transformXml(tree: Tree): (Queue[ValDef], Tree) = {
           tree match {
             case transformedWithValDefs.extract(transformedPair) =>
               transformedPair
             case transformed.extract(transformedTree) =>
-              Stream.empty -> transformedTree
+              Queue.empty -> transformedTree
             case _ =>
-              Stream.empty -> super.transform(tree)
+              Queue.empty -> super.transform(tree)
           }
         }
 
-        private def nodeSeq(children: Seq[Tree]) = {
+        private def nodeSeq(children: Seq[Tree]): (Queue[ValDef], Tree) = {
           children match {
             case Seq() =>
-              Stream.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
+              Queue.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
             case Seq(child) =>
-              Stream.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
+              Queue.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
               val (valDefs, transformedChild) = transformXml(child)
               valDefs -> atPos(child.pos) {
                 q"""_root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)"""
               }
             case _ =>
-              val transformedPairs = for {
+              val transformedPairs = (for {
                 child <- children
               } yield {
                 val (valDefs, transformedChild) = transformXml(child)
@@ -267,13 +269,13 @@ object dom {
                     }
                   """
                 }
-              }
+              })(collection.breakOut(Queue.canBuildFrom))
               val (valDefs, transformedChildren) = transformedPairs.unzip
-              valDefs.reduce(_ ++ _) -> q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
+              valDefs.flatten -> q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
           }
         }
 
-        private def transformedWithValDefs: PartialFunction[Tree, (Seq[ValDef], Tree)] = {
+        private def transformedWithValDefs: PartialFunction[Tree, (Queue[ValDef], Tree)] = {
           case tree@NodeBuffer(children@_*) =>
             nodeSeq(children)
           case tree@Elem(UnprefixedName(label), attributes, _, children) =>
@@ -320,7 +322,7 @@ object dom {
             }
             val (valDefs, transformedChild) = children match {
               case Seq() =>
-                Stream.empty -> Nil
+                Queue.empty -> Nil
               case _ =>
                 val (valDefs, transformedBuffer) = nodeSeq(children)
                 valDefs -> List(atPos(tree.pos) {
