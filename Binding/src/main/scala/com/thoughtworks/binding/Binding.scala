@@ -514,7 +514,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
           child <- upstreamEvent.that.view
         } yield f(child)).toVector
         val oldCache = cache
-        cache = oldCache.patch(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
+        if (upstreamEvent.from == 0) {
+          cache = mappedNewChildren.foldRight(oldCache.drop(upstreamEvent.replaced))(_ +: _)
+        } else {
+          cache = oldCache.patch(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
+        }
         val event = new PatchedEvent(MapBinding.this, upstreamEvent.from, new ValueProxy(mappedNewChildren), upstreamEvent.replaced)
         for (listener <- publisher) {
           listener.patched(event)
