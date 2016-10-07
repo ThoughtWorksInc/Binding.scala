@@ -239,18 +239,18 @@ object dom {
             case transformedWithValDefs.extract(transformedPair) =>
               transformedPair
             case transformed.extract(transformedTree) =>
-              Vector.empty -> transformedTree
+              Stream.empty -> transformedTree
             case _ =>
-              Vector.empty -> super.transform(tree)
+              Stream.empty -> super.transform(tree)
           }
         }
 
         private def nodeSeq(children: Seq[Tree]) = {
           children match {
             case Seq() =>
-              Vector.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
+              Stream.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
             case Seq(child) =>
-              Vector.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
+              Stream.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
               val (valDefs, transformedChild) = transformXml(child)
               valDefs -> atPos(child.pos) {
                 q"""_root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)"""
@@ -320,7 +320,7 @@ object dom {
             }
             val (valDefs, transformedChild) = children match {
               case Seq() =>
-                Vector.empty -> Nil
+                Stream.empty -> Nil
               case _ =>
                 val (valDefs, transformedBuffer) = nodeSeq(children)
                 valDefs -> List(atPos(tree.pos) {
