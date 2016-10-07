@@ -502,8 +502,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     var cache: Vector[Binding[B]] = {
       (for {
-        a <- upstream.get.view
-      } yield f(a)).toVector
+        a <- upstream.get
+      } yield f(a))(collection.breakOut)
     }
 
     override private[binding] def get: Seq[B] = new ValueProxy(cache)
@@ -511,8 +511,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     private val upstreamListener = new PatchedListener[A] {
       override def patched(upstreamEvent: PatchedEvent[A]): Unit = {
         val mappedNewChildren = (for {
-          child <- upstreamEvent.that.view
-        } yield f(child)).toVector
+          child <- upstreamEvent.that
+        } yield f(child))(collection.breakOut(Vector.canBuildFrom))
         val oldCache = cache
         if (upstreamEvent.from == 0) {
           cache = mappedNewChildren.foldRight(oldCache.drop(upstreamEvent.replaced))(_ +: _)
@@ -604,8 +604,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     var cache: Vector[BindingSeq[B]] = {
       (for {
-        a <- upstream.get.view
-      } yield f(a)).toVector
+        a <- upstream.get
+      } yield f(a))(collection.breakOut)
     }
 
     @inline
@@ -619,8 +619,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     private val upstreamListener = new PatchedListener[A] {
       override private[binding] def patched(upstreamEvent: PatchedEvent[A]): Unit = {
         val mappedNewChildren = (for {
-          child <- upstreamEvent.that.view
-        } yield f(child)).toVector
+          child <- upstreamEvent.that
+        } yield f(child))(collection.breakOut(Vector.canBuildFrom))
         val flatNewChildren = new FlatProxy(mappedNewChildren)
         val oldCache = cache
         cache = oldCache.patch(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
@@ -1123,6 +1123,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 trait Binding[+A] extends Any {
+
+  type RawValue <: A
 
   @deprecated(message = "Use [[Binding#bind]] instead", since = "7.0.0")
   final def each: A = macro Binding.Macros.bind
