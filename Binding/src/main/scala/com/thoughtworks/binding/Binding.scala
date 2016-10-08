@@ -159,7 +159,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   private[binding] final class PatchedEvent[+Element](source: AnyRef,
                                                       val from: Int,
-                                                      val that: Seq[Element],
+                                                      val that: GenSeq[Element],
                                                       val replaced: Int) extends EventObject(source) {
     override def toString = raw"""PatchedEvent[source=$source from=$from that=$that replaced=$replaced]"""
   }
