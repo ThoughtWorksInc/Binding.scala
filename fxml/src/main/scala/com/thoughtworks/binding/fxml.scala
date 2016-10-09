@@ -259,7 +259,7 @@ object fxml {
 
         private def transformImport: PartialFunction[Tree, Tree] = {
           case tree@ProcInstr("import", proctext) =>
-             atPos(tree.pos) {
+            atPos(tree.pos) {
               c.parse(raw"""import $proctext""") match {
                 case q"import $parent.*" => q"import $parent._"
                 case i => i
@@ -346,22 +346,21 @@ object fxml {
                 val builderBuilderName = c.freshName[TermName]("builderBuilder")
                 val bindingName = TermName(s"${elementName.decodedName}$$binding")
 
-                val definitions = childrenMembers.
-                  enqueue {
-                    val bindProperties = for ((propertyName, pos, values) <- childrenProperties) yield {
-                      atPos(pos) {
-                        q"""_root_.com.thoughtworks.binding.fxml.Runtime.bindProperty($elementName, $propertyName, ..$values)"""
-                      }
+                def bindingDef = {
+                  val bindProperties = for ((propertyName, pos, values) <- childrenProperties) yield {
+                    atPos(pos) {
+                      q"""_root_.com.thoughtworks.binding.fxml.Runtime.bindProperty($elementName, $propertyName, ..$values)"""
                     }
-                    val bindDefaultProperties = if (defaultProperties.isEmpty) {
-                      Nil
-                    } else {
-                      List(atPos(tree.pos) {
-                        q"_root_.com.thoughtworks.binding.fxml.Runtime.bindDefaultProperty($elementName, ..$defaultProperties)"
-                      })
-                    }
-                    atPos(tree.pos) {
-                      q"""
+                  }
+                  val bindDefaultProperties = if (defaultProperties.isEmpty) {
+                    Nil
+                  } else {
+                    List(atPos(tree.pos) {
+                      q"_root_.com.thoughtworks.binding.fxml.Runtime.bindDefaultProperty($elementName, ..$defaultProperties)"
+                    })
+                  }
+                  atPos(tree.pos) {
+                    q"""
                         val $bindingName = {
                           val $builderBuilderName = _root_.com.thoughtworks.binding.fxml.Runtime.BuilderBuilder.apply[${TypeName(className)}]
                           val $elementName = $builderBuilderName.newBuilder
@@ -372,11 +371,18 @@ object fxml {
                           })
                         }
                       """
-                    }
-                  }.
-                  enqueue(atPos(tree.pos) {
+                  }
+                }
+
+                val definitions = if (idOption.isDefined) {
+                  val autoBindDef = atPos(tree.pos) {
                     q"def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind"
-                  })
+                  }
+                  childrenMembers.enqueue(bindingDef).enqueue(autoBindDef)
+                } else {
+                  childrenMembers.enqueue(bindingDef)
+                }
+
                 definitions -> atPos(tree.pos)(q"$bindingName")
               case Some(factory) =>
                 ???
