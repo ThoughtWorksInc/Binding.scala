@@ -160,8 +160,14 @@ object fxml {
     def bindDefaultProperty(parentBean: Tree, values: Tree*): Tree = {
       val beanClass = Class.forName(parentBean.tpe.typeSymbol.fullName)
       val beanInfo = Introspector.getBeanInfo(beanClass)
-      val descriptor = beanInfo.getPropertyDescriptors.apply(beanInfo.getDefaultPropertyIndex)
-      bindPropertyFromDescriptor(parentBean, Some(descriptor), values)
+      beanInfo.getDefaultPropertyIndex match {
+        case -1 =>
+          c.error(parentBean.pos, s"Default property for ${show(parentBean)}is not found.")
+          q"???"
+        case i =>
+          val descriptor = beanInfo.getPropertyDescriptors.apply(i)
+          bindPropertyFromDescriptor(parentBean, Some(descriptor), values)
+      }
     }
 
     def macroTransform(annottees: Tree*): Tree = {
@@ -179,19 +185,19 @@ object fxml {
               case head :: tail =>
                 head match {
                   // TODO: other cases
-                  case transformValue.extract(members, transformedValue) =>
-                    loop(
-                      tail,
-                      accumulatedMembers ++ members,
-                      accumulatedPropertyBindings,
-                      accumulatedDefaultBindings.enqueue(transformedValue)
-                    )
                   case Text(Macros.Spaces()) =>
                     loop(
                       tail,
                       accumulatedMembers,
                       accumulatedPropertyBindings,
                       accumulatedDefaultBindings
+                    )
+                  case transformValue.extract(members, transformedValue) =>
+                    loop(
+                      tail,
+                      accumulatedMembers ++ members,
+                      accumulatedPropertyBindings,
+                      accumulatedDefaultBindings.enqueue(transformedValue)
                     )
                   case Elem(UnprefixedName(propertyName), Seq(), _, nestedChildren) if propertyName.charAt(0).isLower =>
                     def singleEmptyString(value: String) = {
@@ -256,8 +262,8 @@ object fxml {
 
         private def transformValue: PartialFunction[Tree, (Queue[Tree], Tree)] = {
           // TODO: static property
-          //          case Text(data) =>
-
+          case Text(data) =>
+            Queue.empty -> q"_root_.com.thoughtworks.binding.Binding.Constant($data)"
           case tree@Elem(UnprefixedName(className), attributes, _, children) if className.charAt(0).isUpper =>
 
             // TODO: create new instance
@@ -317,7 +323,9 @@ object fxml {
                     if (defaultProperties.isEmpty) {
                       Nil
                     } else {
-                      List(q"_root_.com.thoughtworks.binding.fxml.Runtime.bindDefaultProperty($elementName, ..$defaultProperties)")
+                      List(atPos(tree.pos) {
+                        q"_root_.com.thoughtworks.binding.fxml.Runtime.bindDefaultProperty($elementName, ..$defaultProperties)"
+                      })
                     }
                   }
                           $builderBuilderName.build($elementName)

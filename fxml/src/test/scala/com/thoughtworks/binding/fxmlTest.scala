@@ -14,6 +14,30 @@ import scala.collection.JavaConverters._
 final class fxmlTest extends FreeSpec with Matchers with Inside {
 
 
+  "VBox of empty content" in {
+
+
+    @fxml val vbox = {
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      <VBox>
+        <children>
+          <Button>
+            <text>My Button</text>
+          </Button>
+        </children>
+      </VBox>
+    }
+
+    vbox.watch()
+
+    inside(vbox.get.getChildren.asScala) {
+      case Seq(button: javafx.scene.control.Button) =>
+        button.getText should be("My Button")
+    }
+
+  }
+
   "simple VBox" in {
     @fxml val vbox = {
       import javafx.scene.layout.VBox
