@@ -204,41 +204,41 @@ object fxml {
         private def transformChildren(children: List[Tree]) = {
           @tailrec
           def loop(children: List[Tree],
-                   accumulatedMembers: Queue[Tree],
+                   accumulatedDefinitions: Queue[Tree],
                    accumulatedPropertyBindings: Queue[(String, Position, Queue[Tree])],
                    accumulatedDefaultBindings: Queue[Tree])
           : (Queue[Tree], Queue[(String, Position, Queue[Tree])], Queue[Tree]) = {
             children match {
               case Nil =>
-                (accumulatedMembers, accumulatedPropertyBindings, accumulatedDefaultBindings)
+                (accumulatedDefinitions, accumulatedPropertyBindings, accumulatedDefaultBindings)
               case head :: tail =>
                 head match {
                   // TODO: other cases
                   case transformImport.extract(transformedImport) =>
                     loop(
                       tail,
-                      accumulatedMembers.enqueue(transformedImport),
+                      accumulatedDefinitions.enqueue(transformedImport),
                       accumulatedPropertyBindings,
                       accumulatedDefaultBindings
                     )
                   case Text(Macros.Spaces()) =>
                     loop(
                       tail,
-                      accumulatedMembers,
+                      accumulatedDefinitions,
                       accumulatedPropertyBindings,
                       accumulatedDefaultBindings
                     )
-                  case transformValue.extract(members, transformedValue) =>
+                  case transformValue.extract(definitions, transformedValue) =>
                     loop(
                       tail,
-                      accumulatedMembers ++ members,
+                      accumulatedDefinitions ++ definitions,
                       accumulatedPropertyBindings,
                       accumulatedDefaultBindings.enqueue(transformedValue)
                     )
                   case tree@Elem(UnprefixedName(propertyName), Seq(), _, transformValues.extract(definitions, transformedValues)) if propertyName.charAt(0).isLower =>
                     loop(
                       tail,
-                      accumulatedMembers ++ definitions,
+                      accumulatedDefinitions ++ definitions,
                       accumulatedPropertyBindings.enqueue((propertyName, tree.pos, transformedValues)),
                       accumulatedDefaultBindings
                     )
@@ -277,21 +277,21 @@ object fxml {
           case children =>
             @tailrec
             def loop(nestedChildren: List[Tree],
-                     accumulatedMembers: Queue[Tree],
+                     accumulatedDefinitions: Queue[Tree],
                      accumulatedBindings: Queue[Tree])
             : (Queue[Tree], Queue[Tree]) = {
               nestedChildren match {
                 case Nil =>
-                  (accumulatedMembers, accumulatedBindings)
+                  (accumulatedDefinitions, accumulatedBindings)
                 case head :: tail =>
                   head match {
                     // TODO: other cases
                     case transformImport.extract(transformedImport) =>
-                      loop(tail, accumulatedMembers.enqueue(transformedImport), accumulatedBindings)
+                      loop(tail, accumulatedDefinitions.enqueue(transformedImport), accumulatedBindings)
                     case Text(Macros.Spaces()) =>
-                      loop(tail, accumulatedMembers, accumulatedBindings)
-                    case transformValue.extract(members, transformedValue) =>
-                      loop(tail, accumulatedMembers ++ members, accumulatedBindings.enqueue(transformedValue))
+                      loop(tail, accumulatedDefinitions, accumulatedBindings)
+                    case transformValue.extract(definitions, transformedValue) =>
+                      loop(tail, accumulatedDefinitions ++ definitions, accumulatedBindings.enqueue(transformedValue))
                   }
               }
             }
@@ -342,7 +342,7 @@ object fxml {
               case None =>
                 // TODO: attribute
 
-                val (childrenMembers, childrenProperties, defaultProperties) = transformChildren(children)
+                val (childrenDefinitions, childrenProperties, defaultProperties) = transformChildren(children)
                 val builderBuilderName = c.freshName[TermName]("builderBuilder")
                 val bindingName = TermName(s"${elementName.decodedName}$$binding")
 
@@ -378,9 +378,9 @@ object fxml {
                   val autoBindDef = atPos(tree.pos) {
                     q"def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind"
                   }
-                  childrenMembers.enqueue(bindingDef).enqueue(autoBindDef)
+                  childrenDefinitions.enqueue(bindingDef).enqueue(autoBindDef)
                 } else {
-                  childrenMembers.enqueue(bindingDef)
+                  childrenDefinitions.enqueue(bindingDef)
                 }
 
                 definitions -> atPos(tree.pos)(q"$bindingName")
