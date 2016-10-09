@@ -1,6 +1,8 @@
 package com.thoughtworks.binding
 
 import java.beans.{Introspector, PropertyDescriptor}
+import javafx.application.Platform
+import javax.swing.SwingUtilities
 
 import com.thoughtworks.binding.Binding.{BindingSeq, Constants, MultiMountPoint}
 import com.thoughtworks.sde.core.Preprocessor
@@ -24,6 +26,31 @@ class fxml extends StaticAnnotation {
 }
 
 object fxml {
+
+  private def initializeJavaFx() = {
+    val lock = new AnyRef
+    @volatile var initialized = false
+    lock.synchronized {
+      SwingUtilities.invokeLater(new Runnable {
+        override def run(): Unit = {
+          new javafx.embed.swing.JFXPanel
+          Platform.runLater(new Runnable() {
+            override def run(): Unit = {
+              lock.synchronized {
+                initialized = true
+                lock.notify()
+              }
+            }
+          })
+        }
+      })
+      while (!initialized) {
+        lock.wait()
+      }
+    }
+  }
+
+  initializeJavaFx()
 
   private[fxml] sealed trait LowPriorityRuntime {
 
