@@ -249,12 +249,8 @@ object fxml {
         }
 
         private def singleEmptyText(value: String) = {
-          val id = c.freshName("emptyText")
-          val bindingName = TermName(s"$id$$binding")
-          Queue(
-            q"def $bindingName = _root_.com.thoughtworks.binding.Binding.Constant(new _root_.com.thoughtworks.binding.fxml.Runtime.EmptyText($value))",
-            q"def ${TermName(id)}: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind"
-          ) -> q"$bindingName"
+          val bindingName = c.freshName[TermName]("emptyText")
+          q"def $bindingName = _root_.com.thoughtworks.binding.Binding.Constant(new _root_.com.thoughtworks.binding.fxml.Runtime.EmptyText($value))" -> q"$bindingName"
         }
 
         private def transformImport: PartialFunction[Tree, Tree] = {
@@ -270,10 +266,10 @@ object fxml {
         private def transformNodeSeq: PartialFunction[List[Tree], (Seq[Tree], Seq[Tree])] = {
           case Seq() =>
             val (defs, binding) = singleEmptyText("")
-            defs -> Queue(binding)
-          case Seq(Text(singleText@Macros.Spaces())) =>
+            Seq(defs) -> Seq(binding)
+          case Seq(tree@Text(singleText@Macros.Spaces())) =>
             val (defs, binding) = singleEmptyText(singleText)
-            defs -> Queue(binding)
+            Seq(defs) -> Seq(binding)
           case children =>
             @tailrec
             def loop(nestedChildren: List[Tree],
