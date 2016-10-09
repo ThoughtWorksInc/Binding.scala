@@ -353,7 +353,7 @@ object dom {
                   $elementName
                 """
               case Some(id) =>
-                (valDefs :+ elementDef) -> q"""
+                (valDefs.enqueue(elementDef)) -> q"""
                   ..$transformedChild
                   ..$attributeMountPoints
                   $elementName
@@ -365,11 +365,11 @@ object dom {
           case Block(stats, expr) =>
             super.transform(Block(stats.flatMap {
               case transformedWithValDefs.extract((valDefs, transformedTree)) =>
-                valDefs :+ transformedTree
+                valDefs.enqueue(transformedTree)
               case stat =>
                 Seq(stat)
             }, expr))
-          case tree@EntityRef(EntityName(unescapedCharacter))=>
+          case tree@EntityRef(EntityName(unescapedCharacter)) =>
             atPos(tree.pos) {
               q"""$unescapedCharacter"""
             }
