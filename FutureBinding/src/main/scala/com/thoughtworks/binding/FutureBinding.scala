@@ -51,7 +51,7 @@ final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionCont
     publisher.unsubscribe(listener)
   }
 
-  private var isHandlerRegiested: Boolean = false
+  private var isHandlerRegistered: Boolean = false
 
   private def completeHandler(result: Try[A]): Unit = {
     val event = new ChangedEvent[Option[Try[A]]](this, Some(result))
@@ -61,8 +61,8 @@ final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionCont
   }
 
   override private[binding] def addChangedListener(listener: ChangedListener[Option[Try[A]]]): Unit = {
-    if (!isHandlerRegiested) {
-      isHandlerRegiested = true
+    if (!isHandlerRegistered) {
+      isHandlerRegistered = true
       if (!future.isCompleted) {
         future.onComplete(completeHandler)
       }
