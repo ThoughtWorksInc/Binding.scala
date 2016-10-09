@@ -27,31 +27,6 @@ class fxml extends StaticAnnotation {
 
 object fxml {
 
-  private def initializeJavaFx() = {
-    val lock = new AnyRef
-    @volatile var initialized = false
-    lock.synchronized {
-      SwingUtilities.invokeLater(new Runnable {
-        override def run(): Unit = {
-          new javafx.embed.swing.JFXPanel
-          Platform.runLater(new Runnable() {
-            override def run(): Unit = {
-              lock.synchronized {
-                initialized = true
-                lock.notify()
-              }
-            }
-          })
-        }
-      })
-      while (!initialized) {
-        lock.wait()
-      }
-    }
-  }
-
-  initializeJavaFx()
-
   private[fxml] sealed trait LowPriorityRuntime {
 
     final def toBindingSeqBinding[A](binding: Binding[A], dummy: Unit = ()) = {
@@ -148,6 +123,34 @@ object fxml {
   }
 
   private object Macros {
+
+    private def initializeJavaFx() = {
+      if (!Platform.isFxApplicationThread) {
+        val lock = new AnyRef
+        @volatile var initialized = false
+        lock.synchronized {
+          SwingUtilities.invokeLater(new Runnable {
+            override def run(): Unit = {
+              new javafx.embed.swing.JFXPanel
+              Platform.runLater(new Runnable() {
+                override def run(): Unit = {
+                  lock.synchronized {
+                    initialized = true
+                    lock.notify()
+                  }
+                }
+              })
+            }
+          })
+          while (!initialized) {
+            lock.wait()
+          }
+        }
+      }
+    }
+
+    initializeJavaFx()
+
     val Spaces = """\s*""".r
   }
 
