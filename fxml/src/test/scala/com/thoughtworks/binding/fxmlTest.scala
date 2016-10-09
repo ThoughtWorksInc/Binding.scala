@@ -16,13 +16,13 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
   "simple VBox" in {
     @fxml val vbox = {
-      import _root_.javafx.scene.layout.VBox
+      import javafx.scene.layout.VBox
       <VBox></VBox>
     }
 
     vbox.watch()
 
-    vbox.get should be(a[_root_.javafx.scene.layout.VBox])
+    vbox.get should be(a[javafx.scene.layout.VBox])
   }
 
   override protected def withFixture(test: NoArgTest): Outcome = {
