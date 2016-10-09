@@ -14,5 +14,3 @@ scalacOptions in doc in Compile += "-groups"
 scalacOptions in doc in Compile += "-implicits"
 
 releasePublishArtifactsAction <<= PgpKeys.publishSigned
-
-incOptions := incOptions.value.withNameHashing(true)
