@@ -16,7 +16,6 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
   "VBox of empty content" in {
 
-
     @fxml val vbox = {
       import javafx.scene.layout.VBox
       import javafx.scene.control.Button
@@ -41,6 +40,33 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "simple VBox" in {
     @fxml val vbox = {
       import javafx.scene.layout.VBox
+      <VBox></VBox>
+    }
+
+    vbox.watch()
+
+    vbox.get should be(a[javafx.scene.layout.VBox])
+  }
+
+  "two VBoxes" in {
+    @fxml val vbox = {
+      import javafx.scene.layout.VBox
+      <VBox></VBox>
+      <VBox></VBox>
+    }
+
+    vbox.watch()
+
+    inside(vbox.get.get) {
+      case Seq(vbox0, vbox1) =>
+        vbox0 should be(a[javafx.scene.layout.VBox])
+        vbox1 should be(a[javafx.scene.layout.VBox])
+    }
+  }
+
+  "<?import javafx.scene.layout.VBox?>" in {
+    @fxml val vbox = {
+      <?import javafx.scene.layout.VBox?>
       <VBox></VBox>
     }
 

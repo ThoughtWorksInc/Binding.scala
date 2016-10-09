@@ -54,7 +54,7 @@ private[binding] trait XmlExtractor {
       }
   }
 
-  protected val NodeBuffer = nodeBuffer.extractSeq
+  protected val NodeBuffer = nodeBuffer.extract
 
   private def nodeBufferStar(child: List[Tree]): List[Tree] = {
     child match {

@@ -276,7 +276,7 @@ object dom {
         }
 
         private def transformedWithValDefs: PartialFunction[Tree, (Queue[ValDef], Tree)] = {
-          case tree@NodeBuffer(children@_*) =>
+          case tree@NodeBuffer(children) =>
             nodeSeq(children)
           case tree@Elem(UnprefixedName(label), attributes, _, children) =>
             val idOption = attributes.collectFirst { case (UnprefixedName("id"), Text(id)) => id }
