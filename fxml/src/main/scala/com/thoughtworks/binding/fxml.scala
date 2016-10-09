@@ -142,9 +142,15 @@ object fxml {
                   ).bind"""
               }
             case writeMethod =>
-              val Seq(name) = values
-              val monadicBody = q"$parentBean.${TermName(writeMethod.getName)}($name.bind)"
-              q"_root_.com.thoughtworks.binding.Binding[_root_.scala.Unit]($monadicBody).bind"
+              val Seq(value) = values
+              atPos(value.pos) {
+                if (value.tpe <:< typeOf[Binding.Constant[_]]) {
+                  q"$parentBean.${TermName(writeMethod.getName)}($value.get)"
+                } else {
+                  val monadicBody = q"$parentBean.${TermName(writeMethod.getName)}($value.bind)"
+                  q"_root_.com.thoughtworks.binding.Binding[_root_.scala.Unit]($monadicBody).bind"
+                }
+              }
           }
       }
     }
