@@ -481,14 +481,15 @@ object fxml {
         override def transform(tree: Tree): Tree = {
           tree match {
             case transformNode.extract(defs, transformedValue) =>
-              val bindingsName = c.freshName[TermName]("Bindings")
+              val xmlScopeName = c.freshName[TypeName]("XmlScope")
+              val rootName = c.freshName[TermName]("root")
 
               q"""
-                object $bindingsName {
+                final class $xmlScopeName {
                   ..$defs
+                  def $rootName = $transformedValue
                 }
-                import $bindingsName.{!= => _, ## => _, == => _, asInstanceOf => _, eq => _, equals => _, getClass => _, hashCode => _, ne => _, notify => _, notifyAll => _, isInstanceOf => _, synchronized => _, toString => _, wait => _, _}
-                $transformedValue.bind
+                (new $xmlScopeName).$rootName.bind
               """
             case _ =>
               super.transform(tree)
