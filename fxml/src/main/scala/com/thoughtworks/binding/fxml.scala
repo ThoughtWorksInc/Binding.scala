@@ -205,65 +205,55 @@ object fxml {
                       accumulatedPropertyBindings,
                       accumulatedDefaultBindings.enqueue(transformedValue)
                     )
-                  case Elem(UnprefixedName(propertyName), Seq(), _, nestedChildren) if propertyName.charAt(0).isLower =>
-                    def singleEmptyString(value: String) = {
-                      val id = c.freshName(s"$propertyName$$empty")
-                      val bindingName = TermName(s"$id$$binding")
-                      (
-                        q"def $bindingName = _root_.com.thoughtworks.binding.Binding.Constant(new _root_.com.thoughtworks.binding.fxml.Runtime.EmptyText($value))",
-                        q"def ${TermName(id)}: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind",
-                        q"$bindingName"
-                        )
-                    }
-                    nestedChildren match {
-                      case Seq() =>
-                        val (member0, member1, binding) = singleEmptyString("")
-                        loop(
-                          tail,
-                          accumulatedMembers.enqueue(member0).enqueue(member1),
-                          accumulatedPropertyBindings.enqueue(propertyName -> Queue(binding)),
-                          accumulatedDefaultBindings
-                        )
-                      case Seq(Text(singleText@Macros.Spaces())) =>
-                        val (member0, member1, binding) = singleEmptyString(singleText)
-                        loop(
-                          tail,
-                          accumulatedMembers.enqueue(member0).enqueue(member1),
-                          accumulatedPropertyBindings.enqueue(propertyName -> Queue(binding)),
-                          accumulatedDefaultBindings
-                        )
-                      case _ =>
-                        @tailrec
-                        def nestedLoop(nestedChildren: List[Tree],
-                                       accumulatedMembers: Queue[Tree],
-                                       accumulatedBindings: Queue[Tree])
-                        : (Queue[Tree], Queue[Tree]) = {
-                          nestedChildren match {
-                            case Nil =>
-                              (accumulatedMembers, accumulatedBindings)
-                            case head :: tail =>
-                              head match {
-                                // TODO: other cases
-                                case Text(Macros.Spaces()) =>
-                                  nestedLoop(tail, accumulatedMembers, accumulatedBindings)
-                                case transformValue.extract(members, transformedValue) =>
-                                  nestedLoop(tail, accumulatedMembers ++ members, accumulatedBindings.enqueue(transformedValue))
-                              }
-
-                          }
-                        }
-                        val (members, currentPropertyBindings) = nestedLoop(nestedChildren, Queue.empty, Queue.empty)
-                        loop(
-                          tail,
-                          accumulatedMembers ++ members,
-                          accumulatedPropertyBindings.enqueue(propertyName -> currentPropertyBindings),
-                          accumulatedDefaultBindings
-                        )
-                    }
+                  case Elem(UnprefixedName(propertyName), Seq(), _, transformValues.extract(definitions, transformedValues)) if propertyName.charAt(0).isLower =>
+                    loop(
+                      tail,
+                      accumulatedMembers ++ definitions,
+                      accumulatedPropertyBindings.enqueue(propertyName->transformedValues),
+                      accumulatedDefaultBindings
+                    )
                 }
             }
           }
           loop(children, Queue.empty, Queue.empty, Queue.empty)
+        }
+
+        private def singleEmptyText(value: String) = {
+          val id = c.freshName("emptyText")
+          val bindingName = TermName(s"$id$$binding")
+          Queue(
+            q"def $bindingName = _root_.com.thoughtworks.binding.Binding.Constant(new _root_.com.thoughtworks.binding.fxml.Runtime.EmptyText($value))",
+            q"def ${TermName(id)}: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind"
+          ) -> q"$bindingName"
+        }
+
+        private def transformValues: PartialFunction[List[Tree], (Queue[Tree], Queue[Tree])] = {
+          case Seq() =>
+            val (definitions, binding) = singleEmptyText("")
+            definitions -> Queue(binding)
+          case Seq(Text(singleText@Macros.Spaces())) =>
+            val (definitions, binding) = singleEmptyText(singleText)
+            definitions -> Queue(binding)
+          case children =>
+            @tailrec
+            def nestedLoop(nestedChildren: List[Tree],
+                           accumulatedMembers: Queue[Tree],
+                           accumulatedBindings: Queue[Tree])
+            : (Queue[Tree], Queue[Tree]) = {
+              nestedChildren match {
+                case Nil =>
+                  (accumulatedMembers, accumulatedBindings)
+                case head :: tail =>
+                  head match {
+                    // TODO: other cases
+                    case Text(Macros.Spaces()) =>
+                      nestedLoop(tail, accumulatedMembers, accumulatedBindings)
+                    case transformValue.extract(members, transformedValue) =>
+                      nestedLoop(tail, accumulatedMembers ++ members, accumulatedBindings.enqueue(transformedValue))
+                  }
+              }
+            }
+            nestedLoop(children, Queue.empty, Queue.empty)
         }
 
         private def transformValue: PartialFunction[Tree, (Queue[Tree], Tree)] = {
