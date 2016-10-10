@@ -6,6 +6,8 @@ lazy val FutureBinding = crossProject.crossType(CrossType.Pure).dependsOn(Bindin
 
 lazy val dom = project.dependsOn(BindingJS).dependsOn(XmlExtractorJS)
 
+lazy val route = project.dependsOn(BindingJS)
+
 lazy val JsPromiseBinding = project.dependsOn(BindingJS)
 
 lazy val BindingJS = Binding.js.addSbtFiles(file("../build.sbt.shared"))
