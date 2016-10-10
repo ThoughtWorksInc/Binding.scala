@@ -309,5 +309,16 @@ final class domTest extends FreeSpec with Matchers {
     assert(input.get.value == "INPUT")
   }
 
+  "Seq in DOM" in {
+    @dom def myUl = {
+      <ul>{Seq(<li>data1</li>, <li>data2</li>)}</ul>
+    }
+
+    val div = document.createElement("div")
+
+    dom.render(div, myUl)
+    div.firstChild.childNodes.length should be(2)
+  }
+
 }
 
