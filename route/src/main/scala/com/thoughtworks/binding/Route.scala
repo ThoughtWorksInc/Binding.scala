@@ -25,7 +25,7 @@ SOFTWARE.
 package com.thoughtworks.binding
 
 import com.thoughtworks.binding.Binding.Var
-import org.scalajs.dom.window
+import org.scalajs.dom.{HashChangeEvent, window}
 import simulacrum.typeclass
 import upickle.default._
 
@@ -69,7 +69,7 @@ object Route {
 
   def hash[PageState](format: Format[PageState]): Binding[PageState] = {
     val state = Var(format.read(window.location.hash))
-    window.onhashchange = { _: Any =>
+    window.onhashchange = { _: HashChangeEvent =>
       state := format.read(window.location.hash)
     }
     Binding {
