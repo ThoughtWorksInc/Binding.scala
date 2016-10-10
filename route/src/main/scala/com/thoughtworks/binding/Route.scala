@@ -26,7 +26,6 @@ package com.thoughtworks.binding
 
 import com.thoughtworks.binding.Binding.Var
 import org.scalajs.dom.{HashChangeEvent, window}
-import simulacrum.typeclass
 import upickle.default._
 
 /**
@@ -34,7 +33,6 @@ import upickle.default._
   */
 object Route {
 
-  @typeclass
   trait Format[PageState] {
     def read(hashText: String): PageState
 
