@@ -573,4 +573,30 @@ final class BindingTest extends FreeSpec with Matchers {
     assert(myVars.get == Seq(1, 2, 3, 4, 5))
   }
 
+  "ScalaRxLeakExample" in {
+    import scalaz._, Scalaz._
+
+    var count: Int = 0
+    val a: Var[Int] = Var(1)
+    val b: Var[Int] = Var(2)
+    def mkRx(i: Int) = (b: Binding[Int]).map { v => count += 1; i + v }
+
+    val c: Binding[Int] = (a: Binding[Int]).flatMap(mkRx)
+    c.watch()
+
+    var result: (Int, Int) = null
+    assert((3, 1) == ((c.get, count)))
+
+    a := 4
+    assert((6, 2) == ((c.get, count)))
+
+    b := 3
+    assert((7, 3) == ((c.get, count)))
+
+    (0 to 100).foreach { i => a := i }
+    assert((103, 104) == ((c.get, count)))
+
+    b := 4
+    assert((104, 105) == ((c.get, count)))
+  }
 }

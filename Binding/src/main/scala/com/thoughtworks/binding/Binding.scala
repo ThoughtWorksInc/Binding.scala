@@ -1083,8 +1083,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     protected def set(value: Value): Unit
 
-    private var referenceCount = 0
-
     private[binding] final def mount(): Unit = {
       set(upstream.get)
       upstream.addChangedListener(upstreamListener)
