@@ -65,15 +65,12 @@ object Route {
 
   }
 
-  def hash[PageState](format: Format[PageState]): Binding[PageState] = {
-    val state = Var(format.read(window.location.hash))
+  def hash[PageState](state: Var[PageState], format: Format[PageState]): Binding[Unit] = {
     window.onhashchange = { _: HashChangeEvent =>
       state := format.read(window.location.hash)
     }
     Binding {
-      val stateValue = state.bind
-      window.location.hash = format.write(stateValue)
-      stateValue
+      window.location.hash = format.write(state.bind)
     }
   }
 }
