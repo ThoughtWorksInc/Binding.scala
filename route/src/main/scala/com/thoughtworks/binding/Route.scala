@@ -34,43 +34,46 @@ import upickle.default._
 object Route {
 
   trait Format[PageState] {
-    def read(hashText: String): PageState
+    def unapply(hashText: String): Option[PageState]
 
-    def write(state: PageState): String
+    def apply(state: PageState): String
   }
 
   object Format {
 
-    final case class Json[PageState: Reader : Writer](defaultValue: PageState)
-      extends Format[PageState] {
+    implicit def json[PageState: Reader : Writer] = new Format[PageState] {
 
-      def write(state: PageState) = {
+      def apply(state: PageState) = {
         upickle.default.write(state)
       }
 
-      def read(hashText: String) = {
+      def unapply(hashText: String) = {
         (hashText: Seq[Char]) match {
           case Seq('#', rest@_*) =>
             try {
-              upickle.default.read[PageState](rest.mkString)
+              Some(upickle.default.read[PageState](rest.mkString))
             } catch {
               case _: Exception =>
-                defaultValue
+                None
             }
           case _ =>
-            defaultValue
+            None
         }
       }
     }
 
   }
 
-  def hash[PageState](state: Var[PageState], format: Format[PageState]): Binding[Unit] = {
+  def watchHash[PageState](state: Var[PageState])(implicit format: Format[PageState]): Unit = {
     window.onhashchange = { _: HashChangeEvent =>
-      state := format.read(window.location.hash)
+      format.unapply(window.location.hash) match {
+        case None =>
+        case Some(newState) =>
+          state := newState
+      }
     }
     Binding {
-      window.location.hash = format.write(state.bind)
-    }
+      window.location.hash = format(state.bind)
+    }.watch()
   }
 }

@@ -9,3 +9,7 @@ libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.1"
 releasePublishArtifactsAction <<= PgpKeys.publishSigned
 
 scalacOptions += "-Xexperimental"
+
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0" % Test
+
+jsDependencies += RuntimeDOM % Test
