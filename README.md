@@ -495,7 +495,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 ## Links
 
-* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/9.0.2/unidoc_2.11-9.0.2-javadoc.jar/!/com/thoughtworks/binding/package.html)
+* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/9.0.3/unidoc_2.11-9.0.3-javadoc.jar/!/com/thoughtworks/binding/package.html)
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [Other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/)
 * [Frequently Asked Questions](https://github.com/ThoughtWorksInc/Binding.scala/wiki/FAQ)
