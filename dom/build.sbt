@@ -27,3 +27,9 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 releasePublishArtifactsAction <<= PgpKeys.publishSigned
 
 scalacOptions += "-Xexperimental"
+
+tutSettings
+
+tutSourceDirectory := file(".") / "docs"
+
+tutTargetDirectory := file(".")
