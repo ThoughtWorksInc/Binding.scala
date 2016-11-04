@@ -16,8 +16,6 @@ jsDependencies += RuntimeDOM
 
 libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0" % Test
 
-resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
-
 libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1"
 
 libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided

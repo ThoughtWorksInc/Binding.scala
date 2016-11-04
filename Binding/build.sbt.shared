@@ -12,21 +12,13 @@ libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0" % Test
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-scalacOptions += "-feature"
-
 // Enable SAM type
 scalacOptions += "-Xexperimental"
-
-scalacOptions in doc in Compile += "-groups"
-
-scalacOptions in doc in Compile += "-implicits"
 
 libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1"
 
 libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
-
-releasePublishArtifactsAction <<= PgpKeys.publishSigned
 
 incOptions := incOptions.value.withNameHashing(true).withRecompileOnMacroDef(false)
