@@ -22,6 +22,4 @@ libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value 
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
-releasePublishArtifactsAction <<= PgpKeys.publishSigned
-
 scalacOptions += "-Xexperimental"
