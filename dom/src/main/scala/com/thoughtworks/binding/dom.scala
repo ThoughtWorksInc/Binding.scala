@@ -57,12 +57,17 @@ class dom extends StaticAnnotation {
   */
 object dom {
 
+  private[dom] sealed trait LowPriorityRuntime {
+    @inline
+    final def notEqual[A, B](left: A, right: B, dummy: Unit = ()) = left != right
+  }
+
   /**
     * Internal helpers for `@dom` annotation
     *
     * @note Do not use methods and classes in this object.
     */
-  object Runtime {
+  object Runtime extends LowPriorityRuntime {
 
     final class CurrentTargetReference[A](val value: A) extends AnyVal
 
@@ -146,6 +151,7 @@ object dom {
 
     def domBindingSeq(text: String) = Constants(document.createTextNode(text))
 
+    def notEqual[A](left: A, right: A) = left != right
   }
 
 
@@ -269,7 +275,7 @@ object dom {
                     }
                   """
                 }
-              })(collection.breakOut(Queue.canBuildFrom))
+              }) (collection.breakOut(Queue.canBuildFrom))
               val (valDefs, transformedChildren) = transformedPairs.unzip
               valDefs.flatten -> q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
           }
@@ -310,7 +316,7 @@ object dom {
                         new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
                       val $newValueName = ${transform(value)}
                       @_root_.scala.inline def $assignName() = {
-                        if ($attributeAccess != $newValueName) {
+                        if (_root_.com.thoughtworks.binding.dom.Runtime.notEqual($attributeAccess, $newValueName)) {
                           $attributeAccess = $newValueName
                         }
                       }

@@ -8,9 +8,3 @@ scalacOptions += "-feature"
 
 // Enable SAM type
 scalacOptions += "-Xexperimental"
-
-scalacOptions in doc in Compile += "-groups"
-
-scalacOptions in doc in Compile += "-implicits"
-
-releasePublishArtifactsAction <<= PgpKeys.publishSigned
