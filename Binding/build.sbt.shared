@@ -4,7 +4,7 @@ name := "Binding"
 
 description := "Reactive data-binding for Scala. This artifact is available for both Scala.js and JVM."
 
-libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.2"
+libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.4"
 
 libraryDependencies += "com.thoughtworks.sde" %%% "core" % "3.0.1"
 
