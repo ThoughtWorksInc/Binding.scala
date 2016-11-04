@@ -18,9 +18,8 @@ organization in ThisBuild := "com.thoughtworks.binding"
 
 crossScalaVersions := Seq(
   "2.10.6",
-  "2.11.8"
-  // Don't build on 2.12.0-RC1 because ScalaTags did not support 2.12.0-RC1 yet
-  // "2.12.0-RC1"
+  "2.11.8",
+  "2.12.0"
 )
 
 developers in ThisBuild := List(
