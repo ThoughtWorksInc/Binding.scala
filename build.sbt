@@ -36,20 +36,14 @@ name in ThisBuild := "Binding.scala"
 
 publishArtifact := false
 
-lazy val unidoc = project.settings(scalaJavaUnidocSettings).settings(
-  UnidocKeys.unidocProjectFilter in ScalaUnidoc in UnidocKeys.unidoc := inAnyProject -- inProjects(BindingJVM, FutureBindingJVM),
-  doc in Compile := (UnidocKeys.unidoc in Compile).value.head,
-  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
-  scalacOptions += "-Xexperimental",
-  scalacOptions in Compile in doc ++= {
-    Seq("-doc-title", (name in ThisBuild).value)
-  },
-  scalacOptions in Compile in doc ++= {
-    Seq("-doc-version", version.value)
-  },
-  publishArtifact in packageSrc := false,
-  publishArtifact in packageBin := false,
-  releasePublishArtifactsAction <<= PgpKeys.publishSigned
-)
+lazy val unidoc = project
+  .enablePlugins(StandaloneUnidoc)
+  .settings(
+    UnidocKeys.unidocProjectFilter in ScalaUnidoc in UnidocKeys.unidoc := {
+      inAnyProject -- inProjects(BindingJVM, FutureBindingJVM)
+    },
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+    scalacOptions += "-Xexperimental"
+  )
 
 startYear in ThisBuild := Some(2015)
