@@ -1,6 +1,6 @@
 enablePlugins(ScalaJSPlugin)
 
-libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.4.1"
+libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.4.4"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
