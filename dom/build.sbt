@@ -6,7 +6,7 @@ name := "dom"
 
 description := "Reactive web framework for Scala.js."
 
-libraryDependencies += "com.thoughtworks.extractor" %% "extractor" % "1.0.2"
+libraryDependencies += "com.thoughtworks.extractor" %% "extractor" % "1.1.1"
 
 libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.2"
 
