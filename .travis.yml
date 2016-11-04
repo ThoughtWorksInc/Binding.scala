@@ -7,6 +7,9 @@ addons:
 
 language: scala
 
+jdk:
+  - oraclejdk8
+
 before_cache:
   - find $HOME/.sbt -name '*.lock' -delete
   - find $HOME/.ivy2 -name 'ivydata-*.properties' -delete
