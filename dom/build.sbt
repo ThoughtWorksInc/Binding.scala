@@ -23,3 +23,7 @@ libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
 scalacOptions += "-Xexperimental"
+
+enablePlugins(ScalaJSBundlerPlugin)
+
+npmDependencies in Test += "jsdom" -> "9.8.3"
