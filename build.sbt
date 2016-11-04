@@ -46,5 +46,3 @@ lazy val unidoc = project
   )
 
 startYear in ThisBuild := Some(2015)
-
-scalaJSUseRhino in ThisBuild := false
