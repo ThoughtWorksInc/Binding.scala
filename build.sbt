@@ -36,7 +36,7 @@ name in ThisBuild := "Binding.scala"
 publishArtifact := false
 
 lazy val unidoc = project
-  .enablePlugins(StandaloneUnidoc)
+  .enablePlugins(TravisUnidocTitle)
   .settings(
     UnidocKeys.unidocProjectFilter in ScalaUnidoc in UnidocKeys.unidoc := {
       inAnyProject -- inProjects(BindingJVM, FutureBindingJVM)
