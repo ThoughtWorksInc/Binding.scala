@@ -71,13 +71,6 @@ object dom {
 
     final class CurrentTargetReference[A](val value: A) extends AnyVal
 
-    final class TextMountPoint(parent: Text, childBinding: Binding[String])
-      extends SingleMountPoint[String](childBinding) {
-      override protected def set(value: String): Unit = {
-        parent.textContent = value
-      }
-    }
-
     final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
       extends MultiMountPoint[Node](childrenBinding) {
 
@@ -303,27 +296,33 @@ object dom {
                     q"""$prefixExpr.${TermName(propertyName)}"""
                   }
               }
+
               atPos(value.pos) {
-                val assignName = TermName(c.freshName("assignAttribute"))
-                val newValueName = TermName(c.freshName("newValue"))
-                q"""
-                  _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
-                    _root_.com.thoughtworks.binding.Binding,
-                    _root_.scala.Unit
-                  ](
-                    _root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Unit]({
-                      implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                        new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                      val $newValueName = ${transform(value)}
-                      @_root_.scala.inline def $assignName() = {
-                        if (_root_.com.thoughtworks.binding.dom.Runtime.notEqual($attributeAccess, $newValueName)) {
-                          $attributeAccess = $newValueName
-                        }
-                      }
-                      $assignName()
-                    })
-                  )
-                """
+                value match {
+                  case Text(textLiteral) =>
+                    q"$attributeAccess = $textLiteral"
+                  case _ =>
+                    val assignName = TermName(c.freshName("assignAttribute"))
+                    val newValueName = TermName(c.freshName("newValue"))
+                    q"""
+                      _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+                        _root_.com.thoughtworks.binding.Binding,
+                        _root_.scala.Unit
+                      ](
+                        _root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Unit]({
+                          implicit def ${TermName(c.freshName("currentTargetReference"))} =
+                            new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
+                          val $newValueName = ${transform(value)}
+                          @_root_.scala.inline def $assignName() = {
+                            if (_root_.com.thoughtworks.binding.dom.Runtime.notEqual($attributeAccess, $newValueName)) {
+                              $attributeAccess = $newValueName
+                            }
+                          }
+                          $assignName()
+                        })
+                      )
+                    """
+                }
               }
             }
             val (valDefs, transformedChild) = children match {
