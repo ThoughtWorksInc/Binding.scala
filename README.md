@@ -4,10 +4,11 @@
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
 [![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/unidoc_2.11.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/unidoc_2.11/latest/com/thoughtworks/binding/package.html)
 
-[![Maven Central (core funtionality)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/binding_2.11.svg?label=maven-central%20%28Binding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/binding_2.11)
-[![Maven Central (DOM integration)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/dom_sjs0.6_2.11.svg?label=maven-central%20%28dom.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/dom_sjs0.6_2.11)
-[![Maven Central (remote data-binding for scala.concurrent.Future)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/futurebinding_2.11.svg?label=maven-central%20%28FutureBinding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/futurebinding_2.11)
-[![Maven Central (remote data-binding for ECMAScript 2015 Promise)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/jspromisebinding_sjs0.6_2.11.svg?label=maven-central%20%28JsPromiseBinding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/jspromisebinding_sjs0.6_2.11)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/binding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/binding)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/dom/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/dom)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/futurebinding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/futurebinding)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/jspromisebinding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/jspromisebinding)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/route/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/route)
 
 **Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
