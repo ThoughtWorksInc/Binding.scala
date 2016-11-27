@@ -251,7 +251,6 @@ object dom {
             case Seq() =>
               Queue.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
             case Seq(child) =>
-              Queue.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
               val (valDefs, transformedChild) = transformXml(child)
               valDefs -> atPos(child.pos) {
                 q"""_root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)"""
