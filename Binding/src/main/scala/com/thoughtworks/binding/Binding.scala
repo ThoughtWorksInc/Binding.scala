@@ -897,7 +897,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   object Vars {
 
     @inline
-    def apply[A](initialValues: A*) = new Vars(Vector(initialValues: _*))
+    def apply[A](initialValues: A*) = new Vars(initialValues.toVector)
 
     @inline
     def empty[A] = new Vars(Vector.empty[A])
