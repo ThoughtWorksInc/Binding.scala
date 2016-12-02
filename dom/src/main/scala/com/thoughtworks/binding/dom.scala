@@ -280,7 +280,7 @@ object dom {
             val idOption = attributes.collectFirst { case (UnprefixedName("id"), Text(id)) => id }
             val elementName = idOption match {
               case None => TermName(c.freshName("element"))
-              case Some(id) => TermName(id)
+              case Some(id) => TermName(id).encodedName.toTermName
             }
 
             val attributeMountPoints = for {
