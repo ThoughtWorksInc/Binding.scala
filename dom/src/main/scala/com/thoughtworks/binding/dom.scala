@@ -237,8 +237,8 @@ object dom {
 
         private def transformXml(tree: Tree): (Queue[ValDef], Tree) = {
           tree match {
-            case transformedWithValDefs.extract(transformedPair) =>
-              transformedPair
+            case transformedWithValDefs.extract(queue, tree) =>
+              (queue, tree)
             case transformed.extract(transformedTree) =>
               Queue.empty -> transformedTree
             case _ =>
