@@ -41,6 +41,7 @@ import scalatags.jsdom
 import org.scalajs.dom.document
 
 import scala.collection.immutable.Queue
+import scala.scalajs.runtime.AnonFunction1
 
 /**
   * Enable XML DOM literal for Binding.scala
@@ -157,13 +158,13 @@ object dom {
 
       import scala.language.dynamics
 
-      @inline object data extends Dynamic {
+      object data extends Dynamic {
 
-        @inline final def selectDynamic(attributeName: String): String = {
+        final def selectDynamic(attributeName: String): String = {
           node.getAttribute(attributeName)
         }
 
-        @inline final def updateDynamic(attributeName: String)(attributeValue: String): Unit = {
+        final def updateDynamic(attributeName: String)(attributeValue: String): Unit = {
           node.setAttribute(attributeName, attributeValue)
         }
 
@@ -347,7 +348,7 @@ object dom {
                   """
                 })
             }
-            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}().render"
+            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}.render"
             idOption match {
               case None =>
                 valDefs -> q"""
