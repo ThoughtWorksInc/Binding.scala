@@ -24,8 +24,7 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
-import dom.Runtime.NodeSeqMountPoint
+import Binding._
 import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.XmlExtractor.{PrefixedName, UnprefixedName}
 import com.thoughtworks.sde.core.Preprocessor
@@ -41,7 +40,6 @@ import scalatags.jsdom
 import org.scalajs.dom.document
 
 import scala.collection.immutable.Queue
-import scala.scalajs.runtime.AnonFunction1
 
 /**
   * Enable XML DOM literal for Binding.scala
@@ -71,6 +69,48 @@ object dom {
   object Runtime extends LowPriorityRuntime {
 
     final class CurrentTargetReference[A](val value: A) extends AnyVal
+
+    def nodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node]) = {
+      childrenBinding match {
+        case Constants(nodes @ _*) =>
+          new Binding[Unit] {
+            override private[binding] def get = ()
+
+            var count = 0
+
+            @tailrec
+            private def removeAll(): Unit = {
+              val firstChild = parent.firstChild
+              if (firstChild != null) {
+                parent.removeChild(firstChild)
+                removeAll()
+              }
+            }
+
+            override private[binding] def removeChangedListener(listener: ChangedListener[Unit]) = {
+              count -= 1
+              if (count == 0) {
+                removeAll()
+              }
+            }
+
+            override private[binding] def addChangedListener(listener: ChangedListener[Unit]) = {
+              count += 1
+              if (count == 1) {
+                nodes.foreach(parent.appendChild)
+              }
+            }
+          }
+        case _ =>
+          new NodeSeqMountPoint(parent, childrenBinding)
+      }
+    }
+    def nodeSeqMountPoint(parent: Node, childBinding: Binding[BindingSeq[Node]], dummy: Unit = ()) = {
+      new NodeSeqMountPoint(parent, childBinding)
+    }
+    def nodeSeqMountPoint(parent: Node, childBinding: Binding[Node]) = {
+      new NodeSeqMountPoint(parent, childBinding)
+    }
 
     final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
       extends MultiMountPoint[Node](childrenBinding) {
@@ -197,7 +237,7 @@ object dom {
     */
   @inline
   def render(parent: Node, child: Binding[Node]): Unit = {
-    new NodeSeqMountPoint(parent, child).watch()
+    Runtime.nodeSeqMountPoint(parent, child).watch()
   }
 
   /**
@@ -205,7 +245,7 @@ object dom {
     */
   @inline
   def render(parent: Node, children: BindingSeq[Node]): Unit = {
-    new NodeSeqMountPoint(parent, children).watch()
+    Runtime.nodeSeqMountPoint(parent, children).watch()
   }
 
   /**
@@ -215,7 +255,7 @@ object dom {
     **/
   @inline
   def render(parent: Node, children: Binding[BindingSeq[Node]], dummy: Unit = ()): Unit = {
-    new NodeSeqMountPoint(parent, children).watch()
+    Runtime.nodeSeqMountPoint(parent, children).watch()
   }
 
   /**
@@ -336,7 +376,7 @@ object dom {
                     _root_.com.thoughtworks.binding.Binding,
                     _root_.scala.Unit
                   ](
-                    new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
+                    _root_.com.thoughtworks.binding.dom.Runtime.nodeSeqMountPoint(
                       $elementName,
                       {
                         implicit def ${TermName(c.freshName("currentTargetReference"))} =
