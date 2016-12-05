@@ -55,6 +55,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   @enableMembersIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   private[Binding] object Jvm {
 
+    type ConstantsData[+A] = Seq[A]
+
+    @inline
+    def toConstantsData[A](seq: Seq[A]) = seq
+
     def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
 
     def toCacheData[A](seq: Seq[A]) = seq.toVector
@@ -133,6 +138,14 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   @enableMembersIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   private[Binding] object Js {
+
+    type ConstantsData[+A] = scalajs.js.Array[_ <: A]
+
+    @inline
+    def toConstantsData[A](seq: Seq[A]) = {
+      import scalajs.js.JSConverters._
+      seq.toJSArray
+    }
 
     @inline
     def newBuffer[A] = new scalajs.js.Array[A]
@@ -1023,13 +1036,21 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  final case class Constants[+A](override val get: A*) extends AnyVal with BindingSeq[A] {
+  final class Constants[+A] private(val underlying: ConstantsData[A]) extends AnyVal with BindingSeq[A] {
+
+    override def get: Seq[A] = underlying
 
     @inline
     override private[binding] def removePatchedListener(listener: PatchedListener[A]): Unit = {}
 
     @inline
     override private[binding] def addPatchedListener(listener: PatchedListener[A]): Unit = {}
+
+  }
+
+  object Constants {
+
+    def apply[A](elements: A*) = new Constants(toConstantsData(elements))
 
   }
 
