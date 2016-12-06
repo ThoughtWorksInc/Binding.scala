@@ -70,8 +70,6 @@ object dom {
     */
   object Runtime extends LowPriorityRuntime {
 
-    final class CurrentTargetReference[A](val value: A) extends AnyVal
-
     final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
       extends MultiMountPoint[Node](childrenBinding) {
 
@@ -226,16 +224,6 @@ object dom {
     new NodeSeqMountPoint(parent, children).watch()
   }
 
-  /**
-    * Returns the current element. This method must be called in attribute value expressions.
-    *
-    * @example {{{<br id={ "This BR element's tagName is:" + dom.currentTarget.tagName } />}}}
-    */
-  @deprecated(message = "Use id attribute instead", since = "10.0.0")
-  def currentTarget[A](implicit implicitCurrentTarget: Runtime.CurrentTargetReference[A]): A = {
-    implicitCurrentTarget.value
-  }
-
   @bundle
   private[dom] final class Macros(context: whitebox.Context) extends Preprocessor(context) with XmlExtractor {
 
@@ -318,8 +306,6 @@ object dom {
                         _root_.scala.Unit
                       ](
                         _root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Unit]({
-                          implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                            new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
                           val $newValueName = ${transform(value)}
                           @_root_.scala.inline def $assignName() = {
                             if (_root_.com.thoughtworks.binding.dom.Runtime.notEqual($attributeAccess, $newValueName)) {
@@ -346,11 +332,7 @@ object dom {
                   ](
                     new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
                       $elementName,
-                      {
-                        implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                          new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                        $transformedBuffer
-                      }
+                      $transformedBuffer
                     )
                   )
                   """
