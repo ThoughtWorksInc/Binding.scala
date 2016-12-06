@@ -344,7 +344,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  final case class Constant[+A](override val get: A) extends AnyVal with Binding[A] {
+  final case class Constant[+A](override val get: A) extends Binding[A] {
 
     @inline
     override private[binding] def removeChangedListener(listener: ChangedListener[A]): Unit = {
@@ -1085,7 +1085,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  final class Constants[+A] private(val underlying: ConstantsData[A]) extends AnyVal with BindingSeq[A] {
+  final class Constants[+A] private(underlying: ConstantsData[A]) extends BindingSeq[A] {
 
     @inline
     override def get: Seq[A] = underlying
@@ -1102,6 +1102,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     @inline
     def apply[A](elements: A*) = new Constants(toConstantsData(elements))
+
+    @inline
+    def upapplySeq[A](constants: Constants[A]) = Some(constants.get)
 
   }
 
