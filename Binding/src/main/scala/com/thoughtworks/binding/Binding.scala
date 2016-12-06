@@ -1087,6 +1087,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   final class Constants[+A] private(val underlying: ConstantsData[A]) extends AnyVal with BindingSeq[A] {
 
+    @inline
     override def get: Seq[A] = underlying
 
     @inline
@@ -1099,6 +1100,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   object Constants {
 
+    @inline
     def apply[A](elements: A*) = new Constants(toConstantsData(elements))
 
   }
