@@ -75,14 +75,17 @@ object dom {
     final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
       extends MultiMountPoint[Node](childrenBinding) {
 
+      @inline
       def this(parent: Node, childBinding: Binding[BindingSeq[Node]], dummy: Unit = ()) = {
         this(parent, Constants(()).flatMapBinding { _ => childBinding })
       }
 
+      @inline
       def this(parent: Node, childBinding: Binding[Node]) = {
         this(parent, Constants(()).mapBinding { _ => childBinding })
       }
 
+      @inline
       @tailrec
       private def removeAll(): Unit = {
         val firstChild = parent.firstChild
@@ -137,14 +140,19 @@ object dom {
 
     object TagsAndTags2 extends JsDom.Cap with jsdom.Tags with jsdom.Tags2
 
+    @inline
     def domBindingSeq(bindingSeq: BindingSeq[Node]) = bindingSeq
 
+    @inline
     def domBindingSeq(seq: Seq[Node]) = Constants(seq: _*)
 
+    @inline
     def domBindingSeq(node: Node) = Constants(node)
 
+    @inline
     def domBindingSeq(text: String) = Constants(document.createTextNode(text))
 
+    @inline
     def notEqual[A](left: A, right: A) = left != right
   }
 
