@@ -920,7 +920,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  sealed trait BindingSeq[+A] extends Any {
+  sealed trait BindingSeq[+A] {
 
     /**
       * Enables automatic recalculation.
@@ -1355,7 +1355,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-trait Binding[+A] extends Any {
+trait Binding[+A] {
 
   type RawValue <: A
 
