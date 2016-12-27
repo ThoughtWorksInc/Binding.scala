@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 package com.thoughtworks.binding
 
@@ -71,16 +71,20 @@ object dom {
   object Runtime extends LowPriorityRuntime {
 
     final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
-      extends MultiMountPoint[Node](childrenBinding) {
+        extends MultiMountPoint[Node](childrenBinding) {
 
       @inline
       def this(parent: Node, childBinding: Binding[BindingSeq[Node]], dummy: Unit = ()) = {
-        this(parent, Constants(()).flatMapBinding { _ => childBinding })
+        this(parent, Constants(()).flatMapBinding { _ =>
+          childBinding
+        })
       }
 
       @inline
       def this(parent: Node, childBinding: Binding[Node]) = {
-        this(parent, Constants(()).mapBinding { _ => childBinding })
+        this(parent, Constants(()).mapBinding { _ =>
+          childBinding
+        })
       }
 
       @inline
@@ -154,7 +158,6 @@ object dom {
     def notEqual[A](left: A, right: A) = left != right
   }
 
-
   /**
     * This object contains implicit views imported automatically for @dom methods.
     */
@@ -183,6 +186,32 @@ object dom {
 
       @inline def style_=(value: String) = node.style.cssText = value
     }
+
+    implicit final class CheckedOps @inline()(node: HTMLInputElement) {
+      @inline def checked = node.getAttribute("checked")
+
+      @inline def checked_=(value: String) = node.setAttribute("checked", value)
+    }
+
+    implicit final class IsMapOps @inline()(node: HTMLImageElement) {
+      @inline def isMap = node.getAttribute("isMap")
+
+      @inline def isMap_=(value: String) = node.setAttribute("isMap", value)
+    }
+
+    implicit final class TypeMustMatchOps @inline()(node: HTMLObjectElement) {
+      @inline def typeMustMatch = node.getAttribute("typeMustMatch")
+
+      @inline def typeMustMatch_=(value: String) = node.setAttribute("typeMustMatch", value)
+    }
+
+    implicit final class DefaultOps @inline()(node: HTMLTrackElement) {
+      @inline def default = node.getAttribute("default")
+
+      @inline def default_=(value: String) = node.setAttribute("default", value)
+    }
+
+    // TODO: other boolean attributes
 
     implicit final class ClassOps @inline()(node: HTMLElement) {
       @inline def `class` = node.className
@@ -264,16 +293,16 @@ object dom {
                     }
                   """
                 }
-              }) (collection.breakOut(Queue.canBuildFrom))
+              })(collection.breakOut(Queue.canBuildFrom))
               val (valDefs, transformedChildren) = transformedPairs.unzip
               valDefs.flatten -> q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
           }
         }
 
         private def transformedWithValDefs: PartialFunction[Tree, (Queue[ValDef], Tree)] = {
-          case tree@NodeBuffer(children@_*) =>
+          case tree @ NodeBuffer(children @ _ *) =>
             nodeSeq(children)
-          case tree@Elem(UnprefixedName(label), attributes, _, children) =>
+          case tree @ Elem(UnprefixedName(label), attributes, _, children) =>
             val idOption = attributes.collectFirst { case (UnprefixedName("id"), Text(id)) => id }
             val elementName = idOption match {
               case None => TermName(c.freshName("element"))
@@ -288,8 +317,9 @@ object dom {
                   val keyName = TermName(localPart)
                   q"""$elementName.$keyName"""
                 case PrefixedName(prefix, localPart) =>
-                  localPart.split(':').foldLeft(q"""$elementName.${TermName(prefix)}""") { (prefixExpr, propertyName) =>
-                    q"""$prefixExpr.${TermName(propertyName)}"""
+                  localPart.split(':').foldLeft(q"""$elementName.${TermName(prefix)}""") {
+                    (prefixExpr, propertyName) =>
+                      q"""$prefixExpr.${TermName(propertyName)}"""
                   }
               }
 
@@ -338,7 +368,8 @@ object dom {
                   """
                 })
             }
-            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}.render"
+            val elementDef =
+              q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}.render"
             idOption match {
               case None =>
                 valDefs -> q"""
@@ -364,15 +395,15 @@ object dom {
               case stat =>
                 Seq(stat)
             }, expr))
-          case tree@EntityRef(EntityName(unescapedCharacter)) =>
+          case tree @ EntityRef(EntityName(unescapedCharacter)) =>
             atPos(tree.pos) {
               q"""$unescapedCharacter"""
             }
-          case tree@Comment(value) =>
+          case tree @ Comment(value) =>
             atPos(tree.pos) {
               q"""_root_.org.scalajs.dom.document.createComment($value)"""
             }
-          case tree@Text(value) =>
+          case tree @ Text(value) =>
             atPos(tree.pos) {
               q"$value"
             }

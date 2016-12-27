@@ -295,7 +295,7 @@ final class domTest extends FreeSpec with Matchers {
   "id in Binding" in {
     val v = Var("Initial value")
     @dom val input = {
-      <input id="foo" onclick={ _: Event => v := s"${foo.tagName}"}/>
+      <input checked="checked" id="foo" onclick={ _: Event => v := s"${foo.tagName}"}/>
       foo.value = v.bind
       foo
     }
@@ -320,4 +320,3 @@ final class domTest extends FreeSpec with Matchers {
   }
 
 }
-
