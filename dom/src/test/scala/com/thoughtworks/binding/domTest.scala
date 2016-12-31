@@ -172,35 +172,34 @@ final class domTest extends FreeSpec with Matchers {
 
   }
 
-  "NestedContentCurrentTarget" in {
+  "reference by id from nested content" in {
     @dom def innerDiv = {
-      // FIXME: Nested element of same node type does not work, e.g. <div><div>{ dom.currentTarget[Div] }</div></div>
-      <div><p>The tagName of current Div is { dom.currentTarget[Div].tagName }. The tagName of current Paragraph is { dom.currentTarget[Paragraph].tagName }. </p></div>
+      <div id="my-div"><p id="myParagraph">The tagName of current Div is { `my-div`.tagName }. The tagName of current Paragraph is { myParagraph.tagName }. </p></div>
     }
     val div = document.createElement("div")
     dom.render(div, innerDiv)
     val outerHTML = div.outerHTML
-    assert(outerHTML == """<div><div><p>The tagName of current Div is DIV. The tagName of current Paragraph is P. </p></div></div>""")
+    assert(outerHTML == """<div><div id="my-div"><p id="myParagraph">The tagName of current Div is DIV. The tagName of current Paragraph is P. </p></div></div>""")
   }
 
-  "ContentCurrentTarget" in {
+  "reference by id from content" in {
     @dom def innerDiv = {
-        <p>The tagName of current element is { dom.currentTarget.tagName }.</p>
+        <p id="currentElement">The tagName of current element is { currentElement.tagName }.</p>
     }
     val div = document.createElement("div")
     dom.render(div, innerDiv)
     val outerHTML = div.outerHTML
-    assert(outerHTML == """<div><p>The tagName of current element is P.</p></div>""")
+    assert(outerHTML == """<div><p id="currentElement">The tagName of current element is P.</p></div>""")
   }
 
-  "AttributeCurrentTarget" in {
+  "reference by id from attributes" in {
     @dom def input = {
-        <br id={dom.currentTarget.tagName}/>
+        <br id="myBr" class={myBr.tagName}/>
     }
     val div = document.createElement("div")
     dom.render(div, input)
     val outerHTML = div.outerHTML
-    assert(outerHTML == """<div><br id="BR"/></div>""")
+    assert(outerHTML == """<div><br class="BR" id="myBr"/></div>""")
   }
 
   "StyleVisibility" in {

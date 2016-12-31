@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 package com.thoughtworks.binding
 
@@ -41,7 +41,7 @@ object Route {
 
   object Format {
 
-    implicit def json[PageState: Reader : Writer] = new Format[PageState] {
+    implicit def json[PageState: Reader: Writer] = new Format[PageState] {
 
       def apply(state: PageState) = {
         upickle.default.write(state)
@@ -49,7 +49,7 @@ object Route {
 
       def unapply(hashText: String) = {
         (hashText: Seq[Char]) match {
-          case Seq('#', rest@_*) =>
+          case '#' +: rest =>
             try {
               Some(upickle.default.read[PageState](rest.mkString))
             } catch {
@@ -64,13 +64,21 @@ object Route {
 
   }
 
+  /**
+    * Let `state` always reflect the [[org.scalajs.dom.raw.Location.hash hash]] of the [[org.scalajs.dom.raw.Window.location location]] of the current [[org.scalajs.dom.window window]].
+    */
   def watchHash[PageState](state: Var[PageState])(implicit format: Format[PageState]): Unit = {
     window.onhashchange = { _: HashChangeEvent =>
-      format.unapply(window.location.hash) match {
-        case None =>
-        case Some(newState) =>
+      window.location.hash match {
+        case format(newState) =>
           state := newState
+        case _ =>
       }
+    }
+    window.location.hash match {
+      case format(newState) =>
+        state := newState
+      case _ =>
     }
     Binding {
       window.location.hash = format(state.bind)

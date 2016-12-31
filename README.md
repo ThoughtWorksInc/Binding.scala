@@ -2,10 +2,13 @@
 
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
-[![Maven Central (core funtionality)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/binding_2.11.svg?label=maven-central%20%28Binding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/binding_2.11)
-[![Maven Central (DOM integration)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/dom_sjs0.6_2.11.svg?label=maven-central%20%28dom.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/dom_sjs0.6_2.11)
-[![Maven Central (remote data-binding for scala.concurrent.Future)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/futurebinding_2.11.svg?label=maven-central%20%28FutureBinding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/futurebinding_2.11)
-[![Maven Central (remote data-binding for ECMAScript 2015 Promise)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/jspromisebinding_sjs0.6_2.11.svg?label=maven-central%20%28JsPromiseBinding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/jspromisebinding_sjs0.6_2.11)
+[![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/unidoc_2.11.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/unidoc_2.11/latest/com/thoughtworks/binding/package.html)
+
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/binding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/binding)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/dom/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/dom)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/futurebinding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/futurebinding)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/jspromisebinding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/jspromisebinding)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/route/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/route)
 
 **Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
@@ -495,7 +498,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 ## Links
 
-* [The API documentation](https://oss.sonatype.org/service/local/repositories/releases/archive/com/thoughtworks/binding/unidoc_2.11/9.0.3/unidoc_2.11-9.0.3-javadoc.jar/!/com/thoughtworks/binding/package.html)
+* [The API documentation](https://javadoc.io/page/com.thoughtworks.binding/unidoc_2.11/latest/com/thoughtworks/binding/package.html)
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [Other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/)
 * [Frequently Asked Questions](https://github.com/ThoughtWorksInc/Binding.scala/wiki/FAQ)

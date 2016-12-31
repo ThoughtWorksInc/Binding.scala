@@ -41,6 +41,7 @@ import scalatags.jsdom
 import org.scalajs.dom.document
 
 import scala.collection.immutable.Queue
+import scala.scalajs.runtime.AnonFunction1
 
 /**
   * Enable XML DOM literal for Binding.scala
@@ -69,26 +70,20 @@ object dom {
     */
   object Runtime extends LowPriorityRuntime {
 
-    final class CurrentTargetReference[A](val value: A) extends AnyVal
-
-    final class TextMountPoint(parent: Text, childBinding: Binding[String])
-      extends SingleMountPoint[String](childBinding) {
-      override protected def set(value: String): Unit = {
-        parent.textContent = value
-      }
-    }
-
     final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
       extends MultiMountPoint[Node](childrenBinding) {
 
+      @inline
       def this(parent: Node, childBinding: Binding[BindingSeq[Node]], dummy: Unit = ()) = {
         this(parent, Constants(()).flatMapBinding { _ => childBinding })
       }
 
+      @inline
       def this(parent: Node, childBinding: Binding[Node]) = {
         this(parent, Constants(()).mapBinding { _ => childBinding })
       }
 
+      @inline
       @tailrec
       private def removeAll(): Unit = {
         val firstChild = parent.firstChild
@@ -143,14 +138,19 @@ object dom {
 
     object TagsAndTags2 extends JsDom.Cap with jsdom.Tags with jsdom.Tags2
 
+    @inline
     def domBindingSeq(bindingSeq: BindingSeq[Node]) = bindingSeq
 
+    @inline
     def domBindingSeq(seq: Seq[Node]) = Constants(seq: _*)
 
+    @inline
     def domBindingSeq(node: Node) = Constants(node)
 
+    @inline
     def domBindingSeq(text: String) = Constants(document.createTextNode(text))
 
+    @inline
     def notEqual[A](left: A, right: A) = left != right
   }
 
@@ -164,13 +164,13 @@ object dom {
 
       import scala.language.dynamics
 
-      @inline object data extends Dynamic {
+      object data extends Dynamic {
 
-        @inline final def selectDynamic(attributeName: String): String = {
+        final def selectDynamic(attributeName: String): String = {
           node.getAttribute(attributeName)
         }
 
-        @inline final def updateDynamic(attributeName: String)(attributeValue: String): Unit = {
+        final def updateDynamic(attributeName: String)(attributeValue: String): Unit = {
           node.setAttribute(attributeName, attributeValue)
         }
 
@@ -224,16 +224,6 @@ object dom {
     new NodeSeqMountPoint(parent, children).watch()
   }
 
-  /**
-    * Returns the current element. This method must be called in attribute value expressions.
-    *
-    * @example {{{<br id={ "This BR element's tagName is:" + dom.currentTarget.tagName } />}}}
-    */
-  @deprecated(message = "Use id attribute instead", since = "10.0.0")
-  def currentTarget[A](implicit implicitCurrentTarget: Runtime.CurrentTargetReference[A]): A = {
-    implicitCurrentTarget.value
-  }
-
   @bundle
   private[dom] final class Macros(context: whitebox.Context) extends Preprocessor(context) with XmlExtractor {
 
@@ -244,8 +234,8 @@ object dom {
 
         private def transformXml(tree: Tree): (Queue[ValDef], Tree) = {
           tree match {
-            case transformedWithValDefs.extract(transformedPair) =>
-              transformedPair
+            case transformedWithValDefs.extract(queue, tree) =>
+              (queue, tree)
             case transformed.extract(transformedTree) =>
               Queue.empty -> transformedTree
             case _ =>
@@ -258,7 +248,6 @@ object dom {
             case Seq() =>
               Queue.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
             case Seq(child) =>
-              Queue.empty -> q"""_root_.com.thoughtworks.binding.Binding.Constants.empty"""
               val (valDefs, transformedChild) = transformXml(child)
               valDefs -> atPos(child.pos) {
                 q"""_root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)"""
@@ -288,7 +277,7 @@ object dom {
             val idOption = attributes.collectFirst { case (UnprefixedName("id"), Text(id)) => id }
             val elementName = idOption match {
               case None => TermName(c.freshName("element"))
-              case Some(id) => TermName(id)
+              case Some(id) => TermName(id).encodedName.toTermName
             }
 
             val attributeMountPoints = for {
@@ -303,27 +292,31 @@ object dom {
                     q"""$prefixExpr.${TermName(propertyName)}"""
                   }
               }
+
               atPos(value.pos) {
-                val assignName = TermName(c.freshName("assignAttribute"))
-                val newValueName = TermName(c.freshName("newValue"))
-                q"""
-                  _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
-                    _root_.com.thoughtworks.binding.Binding,
-                    _root_.scala.Unit
-                  ](
-                    _root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Unit]({
-                      implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                        new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                      val $newValueName = ${transform(value)}
-                      @_root_.scala.inline def $assignName() = {
-                        if (_root_.com.thoughtworks.binding.dom.Runtime.notEqual($attributeAccess, $newValueName)) {
-                          $attributeAccess = $newValueName
-                        }
-                      }
-                      $assignName()
-                    })
-                  )
-                """
+                value match {
+                  case Text(textLiteral) =>
+                    q"$attributeAccess = $textLiteral"
+                  case _ =>
+                    val assignName = TermName(c.freshName("assignAttribute"))
+                    val newValueName = TermName(c.freshName("newValue"))
+                    q"""
+                      _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
+                        _root_.com.thoughtworks.binding.Binding,
+                        _root_.scala.Unit
+                      ](
+                        _root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Unit]({
+                          val $newValueName = ${transform(value)}
+                          @_root_.scala.inline def $assignName() = {
+                            if (_root_.com.thoughtworks.binding.dom.Runtime.notEqual($attributeAccess, $newValueName)) {
+                              $attributeAccess = $newValueName
+                            }
+                          }
+                          $assignName()
+                        })
+                      )
+                    """
+                }
               }
             }
             val (valDefs, transformedChild) = children match {
@@ -339,17 +332,13 @@ object dom {
                   ](
                     new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
                       $elementName,
-                      {
-                        implicit def ${TermName(c.freshName("currentTargetReference"))} =
-                          new _root_.com.thoughtworks.binding.dom.Runtime.CurrentTargetReference($elementName)
-                        $transformedBuffer
-                      }
+                      $transformedBuffer
                     )
                   )
                   """
                 })
             }
-            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}().render"
+            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}.render"
             idOption match {
               case None =>
                 valDefs -> q"""
