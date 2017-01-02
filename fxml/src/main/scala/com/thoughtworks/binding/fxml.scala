@@ -174,7 +174,7 @@ object fxml {
                 case Seq() =>
                   q"()"
                 case Seq(name) =>
-                  val mountPointName = c.freshName[TermName](s"${descriptor.getName}$$mountPoint")
+                  val mountPointName = TermName(c.freshName(s"${descriptor.getName}$$mountPoint"))
                   q"""
                     val $mountPointName = new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
                       $list,
@@ -186,7 +186,7 @@ object fxml {
                   val valueBindings = for (name <- values) yield {
                     q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($name)"
                   }
-                  val mountPointName = c.freshName[TermName](s"${descriptor.getName}$$mountPoint")
+                  val mountPointName = TermName(c.freshName(s"${descriptor.getName}$$mountPoint"))
                   q"""
                     val $mountPointName = new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
                       $list,
@@ -297,7 +297,7 @@ object fxml {
         }
 
         private def singleEmptyText(value: String) = {
-          val bindingName = c.freshName[TermName]("emptyText")
+          val bindingName = TermName(c.freshName("emptyText"))
           q"def $bindingName = _root_.com.thoughtworks.binding.Binding.Constant(new _root_.com.thoughtworks.binding.fxml.Runtime.EmptyText($value))" -> q"$bindingName"
         }
 
@@ -418,7 +418,7 @@ object fxml {
                 //            }
                 //
                 val (childrenDefinitions, childrenProperties, defaultProperties) = transformChildren(children)
-                val builderBuilderName = c.freshName[TermName]("builderBuilder")
+                val builderBuilderName = TermName(c.freshName("builderBuilder"))
                 val bindingName = TermName(s"${elementName.decodedName}$$binding")
 
                 def bindingDef = {
@@ -496,8 +496,8 @@ object fxml {
         override def transform(tree: Tree): Tree = {
           tree match {
             case transformNode.extract(defs, transformedValue) =>
-              val xmlScopeName = c.freshName[TypeName]("XmlScope")
-              val rootName = c.freshName[TermName]("root")
+              val xmlScopeName = TypeName(c.freshName("XmlScope"))
+              val rootName = TermName(c.freshName("root"))
 
               q"""
                 final class $xmlScopeName {
