@@ -65,7 +65,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     @fxml val vbox = {
       import javafx.scene.layout.VBox
       <VBox></VBox>
-        <VBox></VBox>
+      <VBox></VBox>
     }
 
     vbox.watch()
@@ -80,7 +80,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "wildcard import and a VBox" in {
     @fxml val vbox = {
       <?import javafx.scene.layout.*?>
-        <VBox></VBox>
+      <VBox></VBox>
     }
 
     vbox.watch()
@@ -91,7 +91,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "import and a VBox" in {
     @fxml val vbox = {
       <?import javafx.scene.layout.VBox?>
-        <VBox></VBox>
+      <VBox></VBox>
     }
 
     vbox.watch()
@@ -102,8 +102,8 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "import and two VBox" in {
     @fxml val vbox = {
       <?import javafx.scene.layout.VBox?>
-        <VBox></VBox>
-        <VBox></VBox>
+      <VBox></VBox>
+      <VBox></VBox>
     }
 
     vbox.watch()
@@ -118,12 +118,12 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "Nested import and a Button" in {
     @fxml val vbox = {
       <?import javafx.scene.layout.VBox?>
-        <VBox>
-          <children>
-            <?import javafx.scene.control.Button?>
-            <Button></Button>
-          </children>
-        </VBox>
+      <VBox>
+        <children>
+          <?import javafx.scene.control.Button?>
+          <Button></Button>
+        </children>
+      </VBox>
     }
 
     vbox.watch()
