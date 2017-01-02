@@ -224,12 +224,12 @@ object fxml {
       def findDefaultProperty: Option[PropertyDescriptor] = {
         beanInfo.getDefaultPropertyIndex match {
           case -1 =>
-             beanClass.getAnnotation(classOf[DefaultProperty]) match {
-                case null =>
-                  None
-                case defaultProperty =>
-                  beanInfo.getPropertyDescriptors.find(_.getName == defaultProperty.value)
-             }
+            beanClass.getAnnotation(classOf[DefaultProperty]) match {
+              case null =>
+                None
+              case defaultProperty =>
+                beanInfo.getPropertyDescriptors.find(_.getName == defaultProperty.value)
+            }
           case i =>
             Some(beanInfo.getPropertyDescriptors.apply(i))
         }
