@@ -157,6 +157,28 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
   }
 
+  "Nested import and a bindable Button in default properties" in {
+    @fxml val vbox = {
+      @fxml val button = {
+        <?import javafx.scene.control.Button?>
+        <Button></Button>
+      }
+
+      <?import javafx.scene.layout.VBox?>
+      <VBox>
+        {button.bind}
+      </VBox>
+    }
+
+    vbox.watch()
+
+    inside(vbox.get.getChildren.asScala) {
+      case Seq(button) => {
+        button should be(a[javafx.scene.control.Button])
+      }
+    }
+  }
+
   "Nested import and a dynamic Button in properties" in {
     @fxml val vbox = {
       val button = {
