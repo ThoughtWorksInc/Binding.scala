@@ -106,6 +106,13 @@ private[binding] trait XmlExtractor {
 
   protected val Text = text.extract
 
+  private def textAttribute: PartialFunction[Tree, String] = {
+    case Text(data) => data
+    case EmptyAttribute() => ""
+  }
+
+  protected val TextAttribute = textAttribute.extract
+
   private def comment: PartialFunction[Tree, String] = {
     case q"""new _root_.scala.xml.Comment(${Literal(Constant(commentText: String))})""" =>
       commentText

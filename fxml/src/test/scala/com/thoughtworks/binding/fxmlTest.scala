@@ -13,6 +13,20 @@ import scala.collection.JavaConverters._
   */
 final class fxmlTest extends FreeSpec with Matchers with Inside {
 
+  "fx:value" in {
+    @fxml val button = {
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      <Button>
+        <text><String fx:value="My Button"/></text>
+      </Button>
+    }
+
+    button.watch()
+    button.get.getText should be("My Button")
+
+  }
+
   "VBox that contains a Button" in {
 
     @fxml val vbox = {
@@ -164,7 +178,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
   override protected def withFixture(test: NoArgTest): Outcome = {
     if (Platform.isFxApplicationThread) {
-      fxmlTest.super.withFixture(test)
+      fxmlTest. super.withFixture(test)
     } else {
       val lock = new AnyRef
       @volatile var result: Option[Outcome] = None
@@ -174,7 +188,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
             new javafx.embed.swing.JFXPanel
             Platform.runLater(new Runnable() {
               override def run(): Unit = {
-                val outcome = fxmlTest.super.withFixture(test)
+                val outcome = fxmlTest. super.withFixture(test)
                 lock.synchronized {
                   result = Some(outcome)
                   lock.notify()

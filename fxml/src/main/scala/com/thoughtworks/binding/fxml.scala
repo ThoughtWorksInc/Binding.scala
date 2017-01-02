@@ -365,22 +365,27 @@ object fxml {
 
             // TODO: If an element represents a type that already implements Map (such as java.util.HashMap), it is not wrapped and its get() and put() methods are invoked directly. For example, the following FXML creates an instance of HashMap and sets its "foo" and "bar" values to "123" and "456", respectively:
 
-            // fx:factory
-            val factoryOption = attributes.collectFirst {
-              case (PrefixedName("fx", "factory"), Text(factory)) => factory
+            val (fxAttributes, otherAttributes) = attributes.partition {
+              case (PrefixedName("fx", _), _) => true
+              case _ => false
             }
 
-            // fx:id
-            val idOption = attributes.collectFirst {
-              case (PrefixedName("fx", "id"), Text(id)) => id
-            }
-            val elementName = idOption match {
-              case None => TermName(c.freshName(className))
-              case Some(id) => TermName(id)
-            }
+            val fxAttributeMap = fxAttributes.view.map {
+              case (PrefixedName("fx", key), value) => key -> value
+            }.toMap
 
-            factoryOption match {
-              case None =>
+            val fxIdOption = fxAttributeMap.get("id").map {
+              case Text(nonEmptyId) =>
+                nonEmptyId
+              case EmptyAttribute() =>
+                c.error(tree.pos, "fx:id must not be empty.")
+                "<error>"
+            }
+            (fxAttributeMap.get("factory"), fxAttributeMap.get("value")) match {
+              case (Some(_), Some(_)) =>
+                c.error(tree.pos, "fx:factory and fx:value must not be present on the same element.")
+                Nil -> q"???"
+              case (None, None) =>
                 // TODO: attributes
                 //
                 //            val attributeMountPoints = for {
@@ -417,6 +422,13 @@ object fxml {
                 //              }
                 //            }
                 //
+
+                val elementName = fxIdOption match {
+                  case None =>
+                    TermName(c.freshName(className))
+                  case Some(id) =>
+                    TermName(id)
+                }
                 val (childrenDefinitions, childrenProperties, defaultProperties) = transformChildren(children)
                 val builderBuilderName = TermName(c.freshName("builderBuilder"))
                 val bindingName = TermName(s"${elementName.decodedName}$$binding")
@@ -436,21 +448,21 @@ object fxml {
                   }
                   atPos(tree.pos) {
                     q"""
-                        val $bindingName = {
-                          val $builderBuilderName = _root_.com.thoughtworks.binding.fxml.Runtime.BuilderBuilder.apply[${TypeName(
+                      val $bindingName = {
+                        val $builderBuilderName = _root_.com.thoughtworks.binding.fxml.Runtime.BuilderBuilder.apply[${TypeName(
                       className)}]
-                          val $elementName = $builderBuilderName.newBuilder
-                          _root_.com.thoughtworks.binding.Binding.apply({
-                            ..$bindProperties
-                            ..$bindDefaultProperties
-                            $builderBuilderName.build($elementName)
-                          })
-                        }
-                      """
+                        val $elementName = $builderBuilderName.newBuilder
+                        _root_.com.thoughtworks.binding.Binding.apply({
+                          ..$bindProperties
+                          ..$bindDefaultProperties
+                          $builderBuilderName.build($elementName)
+                        })
+                      }
+                    """
                   }
                 }
 
-                val defs = if (idOption.isDefined) {
+                val defs = if (fxIdOption.isDefined) {
                   val autoBindDef = atPos(tree.pos) {
                     q"def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind"
                   }
@@ -460,8 +472,22 @@ object fxml {
                 }
 
                 defs -> atPos(tree.pos)(q"$bindingName")
-              case Some(factory) =>
+              case (Some(EmptyAttribute()), None) =>
+                c.error(tree.pos, "fx:factory must not be empty.")
+                Nil -> q"???"
+              case (Some(Text(fxFactory)), None) =>
                 c.error(tree.pos, "fx:factory is not supported yet.")
+                Nil -> q"???"
+              case (None, Some(TextAttribute(fxValue))) =>
+                fxIdOption match {
+                  case None =>
+                    Nil -> atPos(tree.pos)(
+                      q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(className)}.valueOf($fxValue))")
+                  case Some(fxId) =>
+                    Queue(q"val ${TermName(fxId)} = $fxValue") -> q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(fxId)})"
+                }
+              case (None, Some(fxValueTree)) =>
+                c.error(tree.pos, "data-binding expression for fx:value is not supported yet.")
                 Nil -> q"???"
             }
 
