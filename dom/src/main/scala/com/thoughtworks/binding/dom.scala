@@ -295,6 +295,8 @@ object dom {
 
               atPos(value.pos) {
                 value match {
+                  case EmptyAttribute() =>
+                    q"""$attributeAccess = "" """
                   case Text(textLiteral) =>
                     q"$attributeAccess = $textLiteral"
                   case _ =>

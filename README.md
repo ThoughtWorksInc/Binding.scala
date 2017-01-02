@@ -502,3 +502,4 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [Other live DEMOs](https://thoughtworksinc.github.io/Binding.scala/)
 * [Frequently Asked Questions](https://github.com/ThoughtWorksInc/Binding.scala/wiki/FAQ)
+* [本README的中文版](https://github.com/ThoughtWorksInc/Binding.scala/blob/10.0.x/README-zh.md)

@@ -319,5 +319,10 @@ final class domTest extends FreeSpec with Matchers {
     div.firstChild.childNodes.length should be(2)
   }
 
+  "select " in {
+    import scala.collection.immutable
+    @dom def mySelect = <br class=""/>
+  }
+
 }
 
