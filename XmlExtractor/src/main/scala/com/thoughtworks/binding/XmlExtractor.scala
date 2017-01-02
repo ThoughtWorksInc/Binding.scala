@@ -122,6 +122,15 @@ private[binding] trait XmlExtractor {
 
   protected val EntityName = XmlExtractor.EntityRefMap.extract
 
+  private lazy val NilType = typeOf[scala.collection.immutable.Nil.type]
+
+  protected object EmptyAttribute {
+    def unapply(tree: Tree) = {
+      val tpe = tree.tpe
+      tpe != null && tpe =:= NilType
+    }
+  }
+
 }
 
 private[binding] object XmlExtractor {
