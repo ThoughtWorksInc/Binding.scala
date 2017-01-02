@@ -1,7 +1,8 @@
 package com.thoughtworks.binding
 
-import java.beans.{Introspector, PropertyDescriptor}
+import java.beans.{BeanInfo, Introspector, PropertyDescriptor}
 import javafx.application.Platform
+import javafx.beans.DefaultProperty
 import javax.swing.SwingUtilities
 
 import com.thoughtworks.binding.Binding.{BindingSeq, Constants, MultiMountPoint}
@@ -77,9 +78,7 @@ object fxml {
       implicit def manifestBuilderBuilder[A](implicit manifest: Manifest[A]) = new BuilderBuilder[A] {
         override final type Builder = A
 
-
         override final def newBuilder = manifest.runtimeClass.newInstance().asInstanceOf[A]
-
 
         override final def build(builder: Builder) = builder
       }
@@ -99,7 +98,8 @@ object fxml {
       def build(builder: Builder): Value
     }
 
-    final class JavaListMountPoint[A](javaList: java.util.List[A], bindingSeq: BindingSeq[A]) extends MultiMountPoint[A](bindingSeq) {
+    final class JavaListMountPoint[A](javaList: java.util.List[A], bindingSeq: BindingSeq[A])
+        extends MultiMountPoint[A](bindingSeq) {
 
       import collection.JavaConverters._
 
@@ -159,7 +159,9 @@ object fxml {
 
     import c.universe._
 
-    private def bindPropertyFromDescriptor(parentBean: Tree, descriptorOption: Option[PropertyDescriptor], values: Seq[Tree]): Tree = {
+    private def bindPropertyFromDescriptor(parentBean: Tree,
+                                           descriptorOption: Option[PropertyDescriptor],
+                                           values: Seq[Tree]): Tree = {
       descriptorOption match {
         case None =>
           // TODO: map
@@ -208,7 +210,6 @@ object fxml {
     }
 
     def bindProperty(parentBean: Tree, propertyName: Tree, values: Tree*): Tree = {
-      c.info(c.enclosingPosition, "bindProperty", true)
       val beanClass = Class.forName(parentBean.tpe.typeSymbol.fullName)
       val beanInfo = Introspector.getBeanInfo(beanClass)
       val Literal(Constant(propertyNameString: String)) = propertyName
@@ -218,13 +219,26 @@ object fxml {
 
     def bindDefaultProperty(parentBean: Tree, values: Tree*): Tree = {
       val beanClass = Class.forName(parentBean.tpe.typeSymbol.fullName)
-      val beanInfo = Introspector.getBeanInfo(beanClass)
-      beanInfo.getDefaultPropertyIndex match {
-        case -1 =>
-          c.error(parentBean.pos, s"Default property for ${show(parentBean)}is not found.")
+      val beanInfo = Introspector.getBeanInfo(beanClass, classOf[AnyRef], Introspector.USE_ALL_BEANINFO)
+
+      def findDefaultProperty: Option[PropertyDescriptor] = {
+        beanInfo.getDefaultPropertyIndex match {
+          case -1 =>
+             beanClass.getAnnotation(classOf[DefaultProperty]) match {
+                case null =>
+                  None
+                case defaultProperty =>
+                  beanInfo.getPropertyDescriptors.find(_.getName == defaultProperty.value)
+             }
+          case i =>
+            Some(beanInfo.getPropertyDescriptors.apply(i))
+        }
+      }
+      findDefaultProperty match {
+        case None =>
+          c.error(parentBean.pos, s"Default property for ${beanClass.getCanonicalName} is not found.")
           q"???"
-        case i =>
-          val descriptor = beanInfo.getPropertyDescriptors.apply(i)
+        case Some(descriptor) =>
           bindPropertyFromDescriptor(parentBean, Some(descriptor), values)
       }
     }
@@ -237,7 +251,7 @@ object fxml {
                    accumulatedDefinitions: Queue[Tree],
                    accumulatedPropertyBindings: Queue[(String, Position, Seq[Tree])],
                    accumulatedDefaultBindings: Queue[Tree])
-          : (Queue[Tree], Queue[(String, Position, Seq[Tree])], Queue[Tree]) = {
+            : (Queue[Tree], Queue[(String, Position, Seq[Tree])], Queue[Tree]) = {
             children match {
               case Nil =>
                 (accumulatedDefinitions, accumulatedPropertyBindings, accumulatedDefaultBindings)
@@ -265,7 +279,11 @@ object fxml {
                       accumulatedPropertyBindings,
                       accumulatedDefaultBindings.enqueue(transformedValue)
                     )
-                  case tree@Elem(UnprefixedName(propertyName), Seq(), _, transformNodeSeq.extract(defs, transformedValues)) if propertyName.charAt(0).isLower =>
+                  case tree @ Elem(UnprefixedName(propertyName),
+                                   Seq(),
+                                   _,
+                                   transformNodeSeq.extract(defs, transformedValues))
+                      if propertyName.charAt(0).isLower =>
                     loop(
                       tail,
                       accumulatedDefinitions ++ defs,
@@ -284,7 +302,7 @@ object fxml {
         }
 
         private def transformImport: PartialFunction[Tree, Tree] = {
-          case tree@ProcInstr("import", proctext) =>
+          case tree @ ProcInstr("import", proctext) =>
             atPos(tree.pos) {
               c.parse(raw"""import $proctext""") match {
                 case q"import $parent.*" => q"import $parent._"
@@ -297,15 +315,14 @@ object fxml {
           case Seq() =>
             val (defs, binding) = singleEmptyText("")
             Seq(defs) -> Seq(binding)
-          case Seq(tree@Text(singleText@Macros.Spaces())) =>
+          case Seq(tree @ Text(singleText @ Macros.Spaces())) =>
             val (defs, binding) = singleEmptyText(singleText)
             Seq(defs) -> Seq(binding)
           case children =>
             @tailrec
             def loop(nestedChildren: List[Tree],
                      accumulatedDefinitions: Queue[Tree],
-                     accumulatedBindings: Queue[Tree])
-            : (Queue[Tree], Queue[Tree]) = {
+                     accumulatedBindings: Queue[Tree]): (Queue[Tree], Queue[Tree]) = {
               nestedChildren match {
                 case Nil =>
                   (accumulatedDefinitions, accumulatedBindings)
@@ -326,18 +343,15 @@ object fxml {
 
         private def transformNode: PartialFunction[Tree, (Seq[Tree], Tree)] = {
           // TODO: static property
-          case tree@Text(data) =>
+          case tree @ Text(data) =>
             Nil -> atPos(tree.pos) {
               q"_root_.com.thoughtworks.binding.Binding.Constant($data)"
             }
-          case tree@Elem(UnprefixedName(className), attributes, _, children) if className.charAt(0).isUpper =>
-
+          case tree @ Elem(UnprefixedName(className), attributes, _, children) if className.charAt(0).isUpper =>
             // TODO: create new instance
-
 
             // TODO: <fx:include> (Read external files)
             // TODO: convert fx:value, fx:constant, <fx:reference> and <fx:copy> to @fxml val
-
 
             // Type Coercion
             // FXML uses "type coercion" to convert property values to the appropriate type as needed. Type coercion is required because the only data types supported by XML are elements, text, and attributes (whose values are also text). However, Java supports a number of different data types including built-in primitive value types as well as extensible reference types.
@@ -423,7 +437,8 @@ object fxml {
                   atPos(tree.pos) {
                     q"""
                         val $bindingName = {
-                          val $builderBuilderName = _root_.com.thoughtworks.binding.fxml.Runtime.BuilderBuilder.apply[${TypeName(className)}]
+                          val $builderBuilderName = _root_.com.thoughtworks.binding.fxml.Runtime.BuilderBuilder.apply[${TypeName(
+                      className)}]
                           val $elementName = $builderBuilderName.newBuilder
                           _root_.com.thoughtworks.binding.Binding.apply({
                             ..$bindProperties
@@ -450,7 +465,7 @@ object fxml {
                 Nil -> q"???"
             }
 
-          case tree@NodeBuffer(transformNodeSeq.extract(defs, values)) =>
+          case tree @ NodeBuffer(transformNodeSeq.extract(defs, values)) =>
             defs -> atPos(tree.pos) {
               values match {
                 case Seq() =>
@@ -464,16 +479,16 @@ object fxml {
                   q"_root_.com.thoughtworks.binding.Binding.Constant(_root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _))"
               }
             }
-          case tree@Elem(PrefixedName("fx", "include"), attributes, _, children) =>
+          case tree @ Elem(PrefixedName("fx", "include"), attributes, _, children) =>
             c.error(tree.pos, "fx:include is not supported yet.")
             Nil -> q"???"
-          case tree@Elem(PrefixedName("fx", "reference"), attributes, _, children) =>
+          case tree @ Elem(PrefixedName("fx", "reference"), attributes, _, children) =>
             c.error(tree.pos, "fx:include is not supported yet.")
             Nil -> q"???"
-          case tree@Elem(PrefixedName("fx", "copy"), attributes, _, children) =>
+          case tree @ Elem(PrefixedName("fx", "copy"), attributes, _, children) =>
             c.error(tree.pos, "fx:include is not supported yet.")
             Nil -> q"???"
-          case tree@Elem(PrefixedName("fx", "root"), attributes, _, children) =>
+          case tree @ Elem(PrefixedName("fx", "root"), attributes, _, children) =>
             c.error(tree.pos, "fx:root is not supported yet.")
             Nil -> q"???"
         }
@@ -498,19 +513,20 @@ object fxml {
       }
 
       import transformer.transform
-      def transform(tree: Tree): Tree = {
-        val output = transformer.transform(tree)
-        c.info(c.enclosingPosition, show(output), true)
-        output
-      }
+//      def transform(tree: Tree): Tree = {
+//        val output = transformer.transform(tree)
+//        c.info(c.enclosingPosition, show(output), true)
+//        output
+//      }
 
-      replaceDefBody(annottees, { body =>
-        q"""
+      replaceDefBody(
+        annottees, { body =>
+          q"""
           import _root_.scala.language.experimental.macros
           _root_.com.thoughtworks.binding.Binding.apply(${transform(body)})
         """
-      })
-
+        }
+      )
 
     }
   }

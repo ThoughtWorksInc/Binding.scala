@@ -122,6 +122,24 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
   }
 
+  "Nested import and a Button of default properties" in {
+    @fxml val vbox = {
+      <?import javafx.scene.layout.VBox?>
+        <VBox>
+          <?import javafx.scene.control.Button?>
+          <Button></Button>
+        </VBox>
+    }
+
+    vbox.watch()
+
+    inside(vbox.get.getChildren.asScala) {
+      case Seq(button) => {
+        button should be(a[javafx.scene.control.Button])
+      }
+    }
+  }
+
   override protected def withFixture(test: NoArgTest): Outcome = {
     if (Platform.isFxApplicationThread) {
       fxmlTest.super.withFixture(test)
