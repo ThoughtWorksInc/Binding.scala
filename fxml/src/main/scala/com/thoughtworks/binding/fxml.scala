@@ -28,32 +28,36 @@ class fxml extends StaticAnnotation {
 
 object fxml {
 
-  private[fxml] sealed trait LowPriorityRuntime {
+  object Runtime {
+
+    final class EmptyText(val value: String) extends AnyVal
+
+    final def toBindingSeqBinding[A](bindingSeqBinding: Binding[BindingSeq[A]]) = bindingSeqBinding
 
     final def toBindingSeqBinding[A](binding: Binding[A], dummy: Unit = ()) = {
       Binding.Constant(Constants(()).mapBinding(_ => binding))
     }
 
-    def toBindingSeq[A](bindingSeqBinding: Binding[A], dummy: Unit = ()) = {
+    final def toBindingSeq[A](bindingSeqBinding: Binding[BindingSeq[A]]) = {
+      bindingSeqBinding match {
+        case Binding.Constant(bindingSeq) => bindingSeq
+        case _ => Constants(()).flatMapBinding(_ => bindingSeqBinding)
+      }
+    }
+
+    final def toBindingSeq[A](bindingSeqBinding: Binding[A], dummy: Unit = ()) = {
       bindingSeqBinding match {
         case Binding.Constant(bindingSeq) => Constants(bindingSeq)
         case _ => Constants(()).mapBinding(_ => bindingSeqBinding)
       }
     }
 
-  }
+    final def toBindingSeq[A](bindingSeq: BindingSeq[A]) = {
+      bindingSeq
+    }
 
-  object Runtime extends LowPriorityRuntime {
-
-    final class EmptyText(val value: String) extends AnyVal
-
-    def toBindingSeqBinding[A](bindingSeqBinding: Binding[BindingSeq[A]]) = bindingSeqBinding
-
-    def toBindingSeq[A](bindingSeqBinding: Binding[BindingSeq[A]]) = {
-      bindingSeqBinding match {
-        case Binding.Constant(bindingSeq) => bindingSeq
-        case _ => Constants(()).flatMapBinding(_ => bindingSeqBinding)
-      }
+    final def toBindingSeq[A](bindingSeq: A) = {
+      Constants(bindingSeq)
     }
 
     def bindProperty(parentBean: Any, propertyName: String, values: Any*): Unit = macro Macros.bindProperty
@@ -98,7 +102,7 @@ object fxml {
       def build(builder: Builder): Value
     }
 
-    final class JavaListMountPoint[A](javaList: java.util.List[A], bindingSeq: BindingSeq[A])
+    final class JavaListMountPoint[A](javaList: java.util.List[A])(bindingSeq: BindingSeq[A])
         extends MultiMountPoint[A](bindingSeq) {
 
       import collection.JavaConverters._
@@ -177,7 +181,8 @@ object fxml {
                   val mountPointName = TermName(c.freshName(s"${descriptor.getName}$$mountPoint"))
                   q"""
                     val $mountPointName = new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
-                      $list,
+                      $list
+                    )(
                       _root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($name)
                     )
                     $mountPointName.bind
@@ -189,7 +194,8 @@ object fxml {
                   val mountPointName = TermName(c.freshName(s"${descriptor.getName}$$mountPoint"))
                   q"""
                     val $mountPointName = new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
-                      $list,
+                      $list
+                    )(
                       _root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _)
                     )
                     $mountPointName.bind
@@ -290,6 +296,13 @@ object fxml {
                       accumulatedPropertyBindings.enqueue((propertyName, tree.pos, transformedValues)),
                       accumulatedDefaultBindings
                     )
+                  case tree =>
+                    loop(
+                      tail,
+                      accumulatedDefinitions,
+                      accumulatedPropertyBindings,
+                      accumulatedDefaultBindings.enqueue(super.transform(tree))
+                    )
                 }
             }
           }
@@ -335,6 +348,13 @@ object fxml {
                       loop(tail, accumulatedDefinitions, accumulatedBindings)
                     case transformNode.extract(defs, transformedValue) =>
                       loop(tail, accumulatedDefinitions ++ defs, accumulatedBindings.enqueue(transformedValue))
+                    case tree =>
+                      loop(
+                        tail,
+                        accumulatedDefinitions,
+                        accumulatedBindings.enqueue(super.transform(tree))
+                      )
+
                   }
               }
             }
@@ -509,10 +529,10 @@ object fxml {
             c.error(tree.pos, "fx:include is not supported yet.")
             Nil -> q"???"
           case tree @ Elem(PrefixedName("fx", "reference"), attributes, _, children) =>
-            c.error(tree.pos, "fx:include is not supported yet.")
+            c.error(tree.pos, "fx:reference is not supported yet.")
             Nil -> q"???"
           case tree @ Elem(PrefixedName("fx", "copy"), attributes, _, children) =>
-            c.error(tree.pos, "fx:include is not supported yet.")
+            c.error(tree.pos, "fx:copy is not supported yet.")
             Nil -> q"???"
           case tree @ Elem(PrefixedName("fx", "root"), attributes, _, children) =>
             c.error(tree.pos, "fx:root is not supported yet.")
