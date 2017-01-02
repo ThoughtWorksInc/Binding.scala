@@ -13,7 +13,6 @@ import scala.collection.JavaConverters._
   */
 final class fxmlTest extends FreeSpec with Matchers with Inside {
 
-
   "VBox that contains a Button" in {
 
     @fxml val vbox = {
