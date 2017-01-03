@@ -13,6 +13,20 @@ import scala.collection.JavaConverters._
   */
 final class fxmlTest extends FreeSpec with Matchers with Inside {
 
+  "fx:value with fx:id" in {
+    @fxml val button = {
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      <Button>
+        <text><String fx:id="s" fx:value="My Button"/></text>
+      </Button>
+    }
+
+    button.watch()
+    button.get.getText should be("My Button")
+
+  }
+
   "fx:value" in {
     @fxml val button = {
       import javafx.scene.layout.VBox

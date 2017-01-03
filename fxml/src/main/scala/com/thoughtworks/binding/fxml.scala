@@ -501,14 +501,17 @@ object fxml {
               case (None, Some(TextAttribute(fxValue))) =>
                 fxIdOption match {
                   case None =>
-                    Nil -> atPos(tree.pos)(
-                      q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(className)}.valueOf($fxValue))")
+                    Nil -> atPos(tree.pos) {
+                      q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(className)}.valueOf($fxValue))"
+                    }
                   case Some(fxId) =>
-                    Queue(q"val ${TermName(fxId)} = $fxValue") -> q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(fxId)})"
+                    val idDef = atPos(tree.pos) {
+                      q"val ${TermName(fxId)} = ${TermName(className)}.valueOf($fxValue)"
+                    }
+                    Queue(idDef) -> atPos(tree.pos) {
+                      q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(fxId)})"
+                    }
                 }
-              case (None, Some(fxValueTree)) =>
-                c.error(tree.pos, "data-binding expression for fx:value is not supported yet.")
-                Nil -> q"???"
             }
 
           case tree @ NodeBuffer(transformNodeSeq.extract(defs, values)) =>
