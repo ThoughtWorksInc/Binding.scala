@@ -13,6 +13,20 @@ import scala.collection.JavaConverters._
   */
 final class fxmlTest extends FreeSpec with Matchers with Inside {
 
+  "fx:factory" in {
+    @fxml val observableArrayList = {
+      import javafx.collections.FXCollections
+      <FXCollections fx:factory="observableArrayList">
+        <String fx:value="A"/>
+        <String fx:value="B"/>
+        <String fx:value="C"/>
+      </FXCollections>
+    }
+    observableArrayList.watch()
+    import scala.collection.JavaConverters._
+    observableArrayList.get.asScala should be(Seq("A", "B", "C"))
+  }
+
   "fx:value with fx:id" in {
     @fxml val button = {
       import javafx.scene.layout.VBox

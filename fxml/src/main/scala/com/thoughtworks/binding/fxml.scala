@@ -496,8 +496,43 @@ object fxml {
                 c.error(tree.pos, "fx:factory must not be empty.")
                 Nil -> q"???"
               case (Some(Text(fxFactory)), None) =>
-                c.error(tree.pos, "fx:factory is not supported yet.")
-                Nil -> q"???"
+                transformChildren(children) match {
+                  case (childrenDefinitions, Queue(), defaultProperties) =>
+                    val elementName = fxIdOption match {
+                      case None =>
+                        TermName(c.freshName(className))
+                      case Some(id) =>
+                        TermName(id)
+                    }
+                    val bindingName = TermName(s"${elementName.decodedName}$$binding")
+                    def bindingDef = {
+                      val factoryArgumentNames = for (i <- 0 until defaultProperties.length) yield {
+                        TermName(c.freshName(s"fxFactoryArgument$i"))
+                      }
+                      val factoryArguments = for (name <- factoryArgumentNames) yield {
+                        q"val $name = $EmptyTree"
+                      }
+                      // TODO: Support more than 12 parameters by generate more sophisticated code
+                      val applyN = TermName(s"apply${defaultProperties.length}")
+                      q"""
+                        val $bindingName = _root_.com.thoughtworks.binding.Binding.BindingInstances.$applyN(..$defaultProperties)({ ..$factoryArguments =>
+                          ${TermName(className)}.${TermName(fxFactory)}(..$factoryArgumentNames)
+                        })
+                      """
+                    }
+                    val defs = if (fxIdOption.isDefined) {
+                      val autoBindDef = atPos(tree.pos) {
+                        q"def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind"
+                      }
+                      childrenDefinitions.enqueue(bindingDef).enqueue(autoBindDef)
+                    } else {
+                      childrenDefinitions.enqueue(bindingDef)
+                    }
+                    defs -> atPos(tree.pos)(q"$bindingName")
+                  case (_, (_, pos, _) +: _, _) =>
+                    c.error(pos, "fx:factory must not contain named property")
+                    Nil -> q"???"
+                }
               case (None, Some(TextAttribute(fxValue))) =>
                 fxIdOption match {
                   case None =>
