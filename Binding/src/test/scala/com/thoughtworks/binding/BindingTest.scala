@@ -599,4 +599,41 @@ final class BindingTest extends FreeSpec with Matchers {
     b := 4
     assert((104, 105) == ((c.get, count)))
   }
+
+  "multi to one dependencies" in {
+    import scalaz.syntax.all._
+    import scalaz._
+
+    val a: Var[Int] = Var(100)
+    val b: Var[Int] = Var(200)
+    var aFlushCount = 0
+    var bFlushCount = 0
+    val aPlusOne = (a: Binding[Int]).map { value =>
+      aFlushCount += 1
+      value + 1
+    }
+    val bPlusOne = (b: Binding[Int]).map { value =>
+      bFlushCount += 1
+      value + 1
+    }
+    val aPlusOneTimesBPlusOn = Binding.BindingInstances.apply2(aPlusOne, bPlusOne) { (aValue, bValue) =>
+      aValue * bValue
+    }
+    Binding.BindingInstances.ap _
+    println(aPlusOneTimesBPlusOn)
+    aPlusOneTimesBPlusOn.watch()
+    aPlusOneTimesBPlusOn.get should be((100 + 1) * (200 + 1))
+    aFlushCount should be(1)
+    bFlushCount should be(1)
+    a := 500
+    aPlusOneTimesBPlusOn.get should be((500 + 1) * (200 + 1))
+    aFlushCount should be(2)
+    bFlushCount should be(1)
+    b := 600
+    aPlusOneTimesBPlusOn.get should be((500 + 1) * (600 + 1))
+    aFlushCount should be(2)
+    bFlushCount should be(2)
+
+  }
+
 }
