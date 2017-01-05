@@ -251,12 +251,12 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "Nested import and multiple children of default properties" in {
     @fxml val vbox = {
       <?import javafx.scene.layout.VBox?>
-        <VBox>
-          <?import javafx.scene.control.Button?>
-          <Button></Button>
-          <Button></Button>
-          <VBox></VBox>
-        </VBox>
+      <VBox>
+        <?import javafx.scene.control.Button?>
+        <Button></Button>
+        <Button></Button>
+        <VBox></VBox>
+      </VBox>
     }
 
     vbox.watch()
@@ -269,6 +269,21 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
         button0 shouldNot be(button1)
       }
     }
+  }
+
+  "read-only Map properties" in {
+    @fxml def button = {
+      <?import javafx.scene.control.*?>
+      <Button>
+        <properties foo="123" bar="456"/>
+      </Button>
+    }
+    button.watch()
+    button.get should be(a[javafx.scene.control.Button])
+
+    import scala.collection.JavaConverters._
+    button.get.getProperties.asScala should be(Map("foo" -> "123", "bar" -> "456"))
+
   }
 
   override protected def withFixture(test: NoArgTest): Outcome = {
