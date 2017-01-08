@@ -272,7 +272,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   }
 
   "read-only Map properties" in {
-    @fxml def button = {
+    @fxml val button = {
       <?import javafx.scene.control.*?>
       <Button>
         <properties foo="123" bar="456"/>
