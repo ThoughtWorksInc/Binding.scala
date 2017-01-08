@@ -98,7 +98,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.get.get) {
+    inside(vbox.get) {
       case Seq(vbox0, vbox1) =>
         vbox0 should be(a[javafx.scene.layout.VBox])
         vbox1 should be(a[javafx.scene.layout.VBox])
@@ -136,7 +136,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.get.get) {
+    inside(vbox.get) {
       case Seq(vbox0, vbox1) =>
         vbox0 should be(a[javafx.scene.layout.VBox])
         vbox1 should be(a[javafx.scene.layout.VBox])

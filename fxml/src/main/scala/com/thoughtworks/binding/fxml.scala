@@ -670,7 +670,7 @@ object fxml {
                   val valueBindings = for (name <- values) yield {
                     q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($name)"
                   }
-                  q"_root_.com.thoughtworks.binding.Binding.Constant(_root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _))"
+                  q"_root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _)"
               }
             }
           case tree @ Elem(PrefixedName("fx", "include"), attributes, _, children) =>
@@ -698,7 +698,7 @@ object fxml {
                   ..$defs
                   def $rootName = $transformedValue
                 }
-                (new $xmlScopeName).$rootName.bind
+                (new $xmlScopeName).$rootName
               """
             case _ =>
               super.transform(tree)
@@ -713,14 +713,7 @@ object fxml {
 //        output
 //      }
 
-      replaceDefBody(
-        annottees, { body =>
-          q"""
-          import _root_.scala.language.experimental.macros
-          _root_.com.thoughtworks.binding.Binding.apply(${transform(body)})
-        """
-        }
-      )
+      replaceDefBody(annottees, transform)
 
     }
   }
