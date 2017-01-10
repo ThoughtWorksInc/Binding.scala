@@ -79,7 +79,7 @@ object fxml {
       c.Expr[Any](
         c.macroApplication match {
           case q"$parent.$macroName" =>
-            q"$parent.${newTermName(s"${macroName.decodedName}$$binding")}.bind"
+            q"${newTermName(s"${macroName.decodedName}$$binding")}.bind"
           case Ident(macroName) =>
             q"${newTermName(s"${macroName.decodedName}$$binding")}.bind"
         }
