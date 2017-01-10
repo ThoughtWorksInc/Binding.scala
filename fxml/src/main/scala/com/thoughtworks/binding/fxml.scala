@@ -310,6 +310,9 @@ object fxml {
                 )
               """
           }
+        case null =>
+          c.error(parentBean.pos, s"${descriptor} is not writeable")
+          q"???"
         case writeMethod =>
           def mapSetter(binding: Tree) = {
             map(binding) { value =>
@@ -329,7 +332,7 @@ object fxml {
                 mapSetter(value)
             }
           } else {
-            bindings.filterNot(EmptyBinding.unapply) match {
+            bindings match {
               case Seq() =>
                 q"""_root_.com.thoughtworks.binding.Binding.Constant(())"""
               case Seq(value) =>

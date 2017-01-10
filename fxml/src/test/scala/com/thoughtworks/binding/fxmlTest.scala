@@ -89,14 +89,14 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   }
 
   "spaces for boolean property" in {
-    @fxml val button = {
-      import javafx.scene.control.Button
-      <Button>
-        <armed>   </armed>
-      </Button>
-    }
-    button.watch()
-    button.get.isArmed should be(false) // The default value
+    """
+      @fxml val button = {
+        import javafx.scene.control.Button
+        <Button>
+          <defaultButton>   </defaultButton>
+        </Button>
+      }
+    """ shouldNot compile
   }
 
   "spaces for repeated property" in {
