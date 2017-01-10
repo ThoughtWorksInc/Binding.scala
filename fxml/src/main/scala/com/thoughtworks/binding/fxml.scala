@@ -79,7 +79,7 @@ object fxml {
       c.Expr[Any](
         c.macroApplication match {
           case q"$parent.$macroName" =>
-            q"${newTermName(s"${macroName.decodedName}$$binding")}.bind"
+            q"$parent.${newTermName(s"${macroName.decodedName}$$binding")}.bind"
           case Ident(macroName) =>
             q"${newTermName(s"${macroName.decodedName}$$binding")}.bind"
         }
@@ -778,16 +778,17 @@ object fxml {
                     (attributeDefs ++ childrenDefinitions) -> binding
                   case Some(id) =>
                     val bindingName = TermName(s"${elementName.decodedName}$$binding")
-                    val bindingDef = atPos(tree.pos) {
-                      q"val $bindingName = $binding"
-                    }
                     val macroName = TermName(c.freshName("AutoBind"))
                     val autoBindDef = atPos(tree.pos) {
-                      q"object $macroName { def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind }"
+                      q"""
+                        object $macroName {
+                          val $bindingName = $binding
+                          def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind
+                        }
+                      """
                     }
-                    val autoBindImport = q"import $macroName.$elementName"
+                    val autoBindImport = q"import $macroName.{$bindingName, $elementName}"
                     (attributeDefs ++ childrenDefinitions)
-                      .enqueue(bindingDef)
                       .enqueue(autoBindDef)
                       .enqueue(autoBindImport) -> atPos(tree.pos) {
                       q"$bindingName"
@@ -799,14 +800,7 @@ object fxml {
               case (Some(Text(fxFactory)), None) =>
                 transformChildren(children, skipEmptyText = true) match {
                   case (childrenDefinitions, Queue(), defaultProperties) =>
-                    val elementName = fxIdOption match {
-                      case None =>
-                        TermName(c.freshName(className))
-                      case Some(id) =>
-                        TermName(id)
-                    }
-                    val bindingName = TermName(s"${elementName.decodedName}$$binding")
-                    def bindingDef = {
+                    def binding = {
                       val factoryArgumentNames = for (i <- defaultProperties.indices) yield {
                         TermName(c.freshName(s"fxFactoryArgument$i"))
                       }
@@ -819,21 +813,30 @@ object fxml {
                         // TODO: Support more than 12 parameters by generate more sophisticated code
                         val applyN = mapMethodName(defaultProperties.length)
                         q"""
-                          val $bindingName = _root_.com.thoughtworks.binding.Binding.BindingInstances.$applyN(..$defaultProperties)({ ..$factoryArguments =>
+                          _root_.com.thoughtworks.binding.Binding.BindingInstances.$applyN(..$defaultProperties)({ ..$factoryArguments =>
                             ${TermName(className)}.${TermName(fxFactory)}(..$factoryArgumentNames)
                           })
                         """
                       }
                     }
-                    val defs = if (fxIdOption.isDefined) {
-                      val autoBindDef = atPos(tree.pos) {
-                        q"def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind"
-                      }
-                      childrenDefinitions.enqueue(bindingDef).enqueue(autoBindDef)
-                    } else {
-                      childrenDefinitions.enqueue(bindingDef)
+                    fxIdOption match {
+                      case None =>
+                        childrenDefinitions -> binding
+                      case Some(id) =>
+                        val elementName = TermName(id)
+                        val bindingName = TermName(s"$id$$binding")
+                        val macroName = TermName(c.freshName("AutoBind"))
+                        val autoBindDef = atPos(tree.pos) {
+                          q"""
+                            object $macroName {
+                              val $bindingName = $binding
+                              def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind
+                            }
+                          """
+                        }
+                        val autoBindImport = q"import $macroName.{$bindingName, $elementName}"
+                        childrenDefinitions.enqueue(autoBindDef).enqueue(autoBindImport) -> atPos(tree.pos)(q"$bindingName")
                     }
-                    defs -> atPos(tree.pos)(q"$bindingName")
                   case (_, (_, pos, _) +: _, _) =>
                     c.error(pos, "fx:factory must not contain named property")
                     Nil -> q"???"
@@ -890,11 +893,8 @@ object fxml {
 
               q"""
                 import _root_.scala.language.experimental.macros
-                final class $xmlScopeName {
-                  ..$defs
-                  def $rootName = $transformedValue
-                }
-                (new $xmlScopeName).$rootName
+                ..$defs
+                $transformedValue
               """
             case _ =>
               super.transform(tree)
