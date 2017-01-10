@@ -582,11 +582,15 @@ object fxml {
                           for ((key, value) <- transformedAttributes) yield {
                             (propertyName +: key, tree.pos, Seq(value))
                           }
+                        val propertiesBindings = if (transformedValues.isEmpty) {
+                          Nil
+                        } else {
+                          Seq((Seq(propertyName), tree.pos, transformedValues))
+                        }
                         loop(
                           tail,
                           accumulatedDefinitions ++ attributeDefs ++ defs,
-                          (accumulatedPropertyBindings ++ nestedAttrbutesBindings).enqueue(
-                            (Seq(propertyName), tree.pos, transformedValues)),
+                          accumulatedPropertyBindings ++ nestedAttrbutesBindings ++ propertiesBindings,
                           accumulatedDefaultBindings
                         )
                       case tree =>
@@ -835,7 +839,8 @@ object fxml {
                           """
                         }
                         val autoBindImport = q"import $macroName.{$bindingName, $elementName}"
-                        childrenDefinitions.enqueue(autoBindDef).enqueue(autoBindImport) -> atPos(tree.pos)(q"$bindingName")
+                        val defs = childrenDefinitions.enqueue(autoBindDef).enqueue(autoBindImport)
+                        defs -> atPos(tree.pos)(q"$bindingName")
                     }
                   case (_, (_, pos, _) +: _, _) =>
                     c.error(pos, "fx:factory must not contain named property")

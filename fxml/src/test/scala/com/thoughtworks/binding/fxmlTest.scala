@@ -45,10 +45,12 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     @fxml val buttons = {
       import javafx.scene.layout.VBox
       import javafx.scene.control.Button
-      <Button fx:id="b">
-        <text>{b.toString}</text>
+      <Button fx:id="b" text={b.toString}/>
+      <Button>
+        <text>
+          {b.getText}
+        </text>
       </Button>
-      <Button text={b.getText}/>
     }
 
     buttons.watch()
@@ -72,6 +74,41 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     button.watch()
     button.get.getText should be("My Button")
 
+  }
+
+  "spaces for string property" in {
+    @fxml val button = {
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      <Button>
+        <text>   </text>
+      </Button>
+    }
+    button.watch()
+    button.get.getText should be("   ")
+  }
+
+  "spaces for boolean property" in {
+    @fxml val button = {
+      import javafx.scene.control.Button
+      <Button>
+        <armed>   </armed>
+      </Button>
+    }
+    button.watch()
+    button.get.isArmed should be(false) // The default value
+  }
+
+  "spaces for repeated property" in {
+    @fxml val vbox = {
+      import javafx.scene.layout.VBox
+      <VBox>
+        <children>   </children>
+      </VBox>
+    }
+    vbox.watch()
+    import scala.collection.JavaConverters._
+    vbox.get.getChildren.asScala should be(empty)
   }
 
   "fx:value" in {
