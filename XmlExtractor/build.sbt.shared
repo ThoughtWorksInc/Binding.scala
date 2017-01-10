@@ -1,6 +1,6 @@
 libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1"
 
-libraryDependencies += "com.thoughtworks.extractor" %%% "extractor" % "1.1.1"
+libraryDependencies += "com.thoughtworks.extractor" %%% "extractor" % "1.2.0"
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 

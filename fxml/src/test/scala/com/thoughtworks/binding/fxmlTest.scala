@@ -27,6 +27,20 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     observableArrayList.get.asScala should be(Seq("A", "B", "C"))
   }
 
+  "Reference by fx:id" in {
+    @fxml val button = {
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      <Button fx:id="b">
+        <text>{b.toString}</text>
+      </Button>
+    }
+
+    button.watch()
+    button.get.getText shouldNot be("")
+
+  }
+
   "fx:value with fx:id" in {
     @fxml val button = {
       import javafx.scene.layout.VBox
@@ -172,7 +186,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
       <?import javafx.scene.layout.VBox?>
       <VBox>
-        {button}
+        {button.bind}
       </VBox>
     }
 
@@ -185,7 +199,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
   }
 
-  "Nested import and a bindable Button in default properties" in {
+  "Nested @fxml annotation" in {
     @fxml val vbox = {
       @fxml val button = {
         <?import javafx.scene.control.Button?>
@@ -217,7 +231,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       <?import javafx.scene.layout.VBox?>
       <VBox>
         <children>
-        {button}
+        {button.bind}
         </children>
       </VBox>
     }
@@ -284,6 +298,19 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     import scala.collection.JavaConverters._
     button.get.getProperties.asScala should be(Map("foo" -> "123", "bar" -> "456"))
 
+  }
+
+  "Location resolution" in {
+    import javafx.scene.image._
+    @fxml val imageView = {
+      <ImageView>
+        <image>
+          <Image url={getClass.getResource("my_image.png")}/>
+        </image>
+      </ImageView>
+    }
+    imageView.watch()
+    imageView.get.getImage.isError should be(false)
   }
 
   override protected def withFixture(test: NoArgTest): Outcome = {
