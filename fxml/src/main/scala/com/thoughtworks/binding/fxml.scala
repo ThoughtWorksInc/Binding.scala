@@ -115,8 +115,20 @@ object fxml {
 
     }
 
-    final class JavaFXBuiler[A, B <: javafx.util.Builder[A]](implicit val constructor: EmptyConstructor[B])
-        extends Builder[A] {
+    object JavaFXBuiler {
+
+      final class CurrentJavaFXBuilderFactory(val underlying: JavaFXBuilderFactory)
+
+      object CurrentJavaFXBuilderFactory {
+
+        implicit val defaultJavaFXBuilderFactory = new CurrentJavaFXBuilderFactory(new JavaFXBuilderFactory())
+
+      }
+
+    }
+    import JavaFXBuiler._
+
+    final class JavaFXBuiler[A, B](val constructor: () => B) extends Builder[A] {
 
       def build(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] =
         macro Macros.buildFromBuilder[A, B]
@@ -133,7 +145,8 @@ object fxml {
 
     object Builder extends LowPriorityBuilder {
 
-      implicit def javafxBuilder[A]: Builder[A] = macro Macros.javafxBuilder[A]
+      implicit def javafxBuilder[A]: Builder[A] =
+        macro Macros.javafxBuilder[A]
 
       implicit def JavaMapBuilder[Key, Value, M <: java.util.Map[Key, Value]](
           implicit constructor: EmptyConstructor[M]): JavaMapBuilder[Key, Value, M] = {
@@ -424,6 +437,7 @@ object fxml {
 
     def buildFromBuilder[Out: WeakTypeTag, Builder: WeakTypeTag](initializer: Tree): Tree = {
 
+      val outType = weakTypeOf[Out]
       val q"{ $valDef => $seq(..$properties) }" = initializer
 
       val builderName = TermName(c.freshName("fxBuilder"))
@@ -480,7 +494,7 @@ object fxml {
       }
       val (bindings, names, setters) = tripleSeq.unzip3
       if (bindings.isEmpty) {
-        q"_root_.com.thoughtworks.binding.Binding.Constant(${c.prefix}.constructor().build())"
+        q"_root_.com.thoughtworks.binding.Binding.Constant(${c.prefix}.constructor().build().asInstanceOf[$outType])"
       } else {
         val applyN = mapMethodName(bindings.length)
         val argumentDefinitions = for (name <- names) yield {
@@ -488,9 +502,9 @@ object fxml {
         }
         q"""
           _root_.com.thoughtworks.binding.Binding.typeClass.$applyN(..$bindings)({ ..$argumentDefinitions =>
-            val $builderName = ${c.prefix}.constructor()
+            val $builderName: $beanType = ${c.prefix}.constructor()
             ..$setters
-            $builderName.build()
+            $builderName.build().asInstanceOf[$outType]
           })
         """
       }
@@ -550,32 +564,54 @@ object fxml {
 
         }
       }
-      val binding = if (attributeBindings.isEmpty) {
-        q"_root_.com.thoughtworks.binding.Binding.Constant($beanId)"
+
+      val allBindingUnits = if (attributeBindings.isEmpty) {
+        q"_root_.com.thoughtworks.binding.Binding.Constant(())"
       } else {
-        val allBindingUnits = attributeBindings.reduce { (left, right) =>
+        attributeBindings.reduce { (left, right) =>
           q"_root_.com.thoughtworks.binding.fxml.Runtime.bindingUnitSemigroup.append($left, $right)"
         }
-        q"_root_.com.thoughtworks.binding.Binding.typeClass.map($allBindingUnits)({ _: _root_.scala.Unit => $beanId })"
       }
 
       q"""
-        ${ValDef(NoMods, valDef.name, valDef.tpt, q"${c.prefix}.constructor()").setSymbol(valDef.symbol)}
-        $binding
+        ${ValDef(valDef.mods, valDef.name, valDef.tpt, q"${c.prefix}.constructor()").setSymbol(valDef.symbol)}
+        _root_.com.thoughtworks.binding.Binding.typeClass.map($allBindingUnits)({ _: _root_.scala.Unit => $beanId })
       """
     }
 
     def javafxBuilder[Out: WeakTypeTag]: Tree = {
+      import Runtime.JavaFXBuiler.CurrentJavaFXBuilderFactory
+      val currentJavaFXBuilderFactory: Tree = c.inferImplicitValue(typeOf[CurrentJavaFXBuilderFactory])
       val outType = weakTypeOf[Out]
-      val outClass = Class.forName(outType.typeSymbol.fullName)
+      val outClass: Class[_] = Class.forName(outType.typeSymbol.fullName)
       javafxBuilderFactory.getBuilder(outClass) match {
         case null =>
           c.abort(c.enclosingPosition, s"No javafx.util.Builder found for $outType")
         case builder =>
           val runtimeSymbol = reflect.runtime.currentMirror.classSymbol(builder.getClass)
+          val builderInfo = runtimeSymbol.typeSignature
           val qBundle = new Q.MacroBundle[c.universe.type](c.universe)
-          val builderTypeTree = qBundle.fullyQualifiedSymbolTreeWithRootPrefix(runtimeSymbol)
-          q"new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXBuiler[$outType, $builderTypeTree]()"
+          val rawbuilderTypeTree: Tree = qBundle.fullyQualifiedSymbolTreeWithRootPrefix(runtimeSymbol)
+
+          val builderTypeTree = if (builderInfo.takesTypeArgs) {
+            val typeNames = for (typeParam <- builderInfo.asInstanceOf[PolyType].typeParams) yield {
+              TypeName(c.freshName(typeParam.name.toString))
+            }
+            val typeIds = for (typeName <- typeNames) yield {
+              tq"$typeName"
+            }
+            val typeDefs = for (typeName <- typeNames) yield {
+              q"type $typeName"
+            }
+
+            tq"$rawbuilderTypeTree[..$typeIds] forSome { ..$typeDefs }"
+
+          } else {
+            rawbuilderTypeTree
+          }
+          q"""new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXBuiler[$outType, $builderTypeTree]({() =>
+            $currentJavaFXBuilderFactory.underlying.getBuilder(_root_.scala.Predef.classOf[$outType]).asInstanceOf[$builderTypeTree]
+          })"""
       }
     }
 
@@ -605,7 +641,7 @@ object fxml {
                           accumulatedPropertyBindings,
                           accumulatedDefaultBindings
                         )
-                      case Text(Macros.Spaces()) =>
+                      case Text(Macros.Spaces()) | Comment(_) =>
                         loop(
                           tail,
                           accumulatedDefinitions,
@@ -716,7 +752,7 @@ object fxml {
                 case head :: tail =>
                   head match {
                     // TODO: other cases
-                    case Text(Macros.Spaces()) =>
+                    case Text(Macros.Spaces()) | Comment(_) =>
                       loop(tail, accumulatedDefinitions, accumulatedBindings)
                     case transformImport.extract(transformedImport) =>
                       loop(tail, accumulatedDefinitions.enqueue(transformedImport), accumulatedBindings)
@@ -781,12 +817,6 @@ object fxml {
                 c.error(tree.pos, "fx:factory and fx:value must not be present on the same element.")
                 Nil -> q"???"
               case (None, None) =>
-                val elementName = fxIdOption match {
-                  case None =>
-                    TermName(c.freshName(className))
-                  case Some(id) =>
-                    TermName(id)
-                }
                 val (
                   childrenDefinitions: Queue[Tree],
                   childrenProperties: Queue[(Seq[String], Position, Seq[Tree])],
@@ -825,27 +855,22 @@ object fxml {
                     $builderName.build($f)
                   """
                 }
-                fxIdOption match {
-                  case None =>
-                    (attributeDefs ++ childrenDefinitions) -> binding
-                  case Some(id) =>
-                    val bindingName = TermName(s"${elementName.decodedName}$$binding")
-                    val macroName = TermName(c.freshName("AutoBind"))
-                    val autoBindDef = atPos(tree.pos) {
-                      q"""
-                        object $macroName {
-                          val $bindingName = $binding
-                          def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind
-                        }
-                      """
+                val id = fxIdOption.getOrElse(c.freshName(className))
+                val elementName = TermName(id)
+                val bindingName = TermName(s"$id$$binding")
+                val macroName = TermName(c.freshName(s"$id$$AutoBind"))
+                val initializerName = TermName(c.freshName(s"$$initialize$id"))
+                val q"..$autoBindDef" = atPos(tree.pos) {
+                  q"""
+                    def $initializerName: _root_.com.thoughtworks.binding.Binding[$typeName] = $binding
+                    object $macroName {
+                      val $bindingName: _root_.com.thoughtworks.binding.Binding[$typeName] = $initializerName
+                      def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind
                     }
-                    val autoBindImport = q"import $macroName.{$bindingName, $elementName}"
-                    (attributeDefs ++ childrenDefinitions)
-                      .enqueue(autoBindDef)
-                      .enqueue(autoBindImport) -> atPos(tree.pos) {
-                      q"$bindingName"
-                    }
+                    import $macroName.{$bindingName, $elementName}
+                  """
                 }
+                (attributeDefs ++ childrenDefinitions ++ autoBindDef) -> atPos(tree.pos)(q"$bindingName")
               case (Some(EmptyAttribute()), None) =>
                 c.error(tree.pos, "fx:factory must not be empty.")
                 Nil -> q"???"
@@ -871,25 +896,22 @@ object fxml {
                         """
                       }
                     }
-                    fxIdOption match {
-                      case None =>
-                        childrenDefinitions -> binding
-                      case Some(id) =>
-                        val elementName = TermName(id)
-                        val bindingName = TermName(s"$id$$binding")
-                        val macroName = TermName(c.freshName("AutoBind"))
-                        val autoBindDef = atPos(tree.pos) {
-                          q"""
-                            object $macroName {
-                              val $bindingName = $binding
-                              def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind
-                            }
-                          """
+                    val id = fxIdOption.getOrElse(c.freshName(className))
+                    val elementName = TermName(id)
+                    val bindingName = TermName(s"$id$$binding")
+                    val macroName = TermName(c.freshName(s"$id$$AutoBind"))
+                    val initializerName = TermName(c.freshName(s"$$initialize$id"))
+                    val q"..$autoBindDef" = atPos(tree.pos) {
+                      q"""
+                        def $initializerName = $binding
+                        object $macroName {
+                          val $bindingName = $initializerName
+                          def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind
                         }
-                        val autoBindImport = q"import $macroName.{$bindingName, $elementName}"
-                        val defs = childrenDefinitions.enqueue(autoBindDef).enqueue(autoBindImport)
-                        defs -> atPos(tree.pos)(q"$bindingName")
+                        import $macroName.{$bindingName, $elementName}
+                      """
                     }
+                    (childrenDefinitions ++ autoBindDef) -> atPos(tree.pos)(q"$bindingName")
                   case (_, (_, pos, _) +: _, _) =>
                     c.error(pos, "fx:factory must not contain named property")
                     Nil -> q"???"

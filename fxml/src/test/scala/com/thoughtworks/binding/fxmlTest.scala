@@ -41,6 +41,32 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     scene.get.getRoot should be(a[javafx.scene.control.Button])
   }
 
+  "builder for Color" in {
+    fxml.Runtime.Builder.javafxBuilder[javafx.scene.paint.Color]
+  }
+
+  "Nested builders" in {
+    @fxml val scene = {
+      <?import javafx.scene.Scene?>
+      <Scene fx:id="z">
+        <?import javafx.scene.control.Button?>
+        <fill>
+          <?import javafx.scene.paint.Color?>
+          <Color fx:id="y">
+            <red>1.0</red>
+            <green>0.0</green>
+            <blue>0.0</blue>
+          </Color>
+        </fill>
+        <Button></Button>
+      </Scene>
+    }
+    scene.watch()
+    scene.get should be(a[javafx.scene.Scene])
+    scene.get.getRoot should be(a[javafx.scene.control.Button])
+    scene.get.getFill should be(javafx.scene.paint.Color.RED)
+  }
+
   "fx:factory" in {
     @fxml val observableArrayList = {
       import javafx.collections.FXCollections
@@ -395,6 +421,13 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
     imageView.watch()
     imageView.get.getImage.isError should be(false)
+  }
+
+  "Empty Button" in {
+    @fxml val imageView = {
+      <?import javafx.scene.control.*?>
+      <Button></Button>
+    }
   }
 
   override protected def withFixture(test: NoArgTest): Outcome = {
