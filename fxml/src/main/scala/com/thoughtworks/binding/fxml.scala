@@ -5,23 +5,19 @@ import java.beans.{BeanInfo, Introspector, PropertyDescriptor}
 import javafx.application.Platform
 import javafx.beans.DefaultProperty
 import javafx.fxml.JavaFXBuilderFactory
-import javafx.scene.image.Image
 import javax.swing.SwingUtilities
 
-import com.sun.javafx.fxml.builder.JavaFXImageBuilder
 import com.thoughtworks.binding.Binding.{BindingSeq, Constants, MultiMountPoint}
+import com.thoughtworks.binding.XmlExtractor._
+import com.thoughtworks.Extractor._
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
 
 import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
 import scala.collection.GenSeq
-import scala.reflect.macros.{TypecheckException, whitebox}
-import scala.language.experimental.macros
-import com.thoughtworks.Extractor._
-import com.thoughtworks.binding.XmlExtractor._
-
 import scala.collection.immutable.Queue
-import scalaz.{Monoid, Semigroup}
+import scala.language.experimental.macros
+import scalaz.Semigroup
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -39,6 +35,7 @@ object fxml {
       implicit val unitSemigroup: Semigroup[Unit] = Semigroup.instance { case _ => () }
       Semigroup.liftSemigroup
     }
+
     val bindingStringSemigroup: Semigroup[Binding[String]] = {
       import scalaz.std.string._
       Semigroup.liftSemigroup
@@ -118,7 +115,7 @@ object fxml {
 
     }
 
-    final class BuilderBuiler[A, B <: javafx.util.Builder[A]](implicit val constructor: EmptyConstructor[B])
+    final class JavaFXBuiler[A, B <: javafx.util.Builder[A]](implicit val constructor: EmptyConstructor[B])
         extends Builder[A] {
 
       def build(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] =
@@ -136,9 +133,7 @@ object fxml {
 
     object Builder extends LowPriorityBuilder {
 
-      implicit def imageBuilder(
-          implicit constructor: EmptyConstructor[JavaFXImageBuilder]): BuilderBuiler[Image, JavaFXImageBuilder] =
-        new BuilderBuiler
+      implicit def javafxBuilder[A]: Builder[A] = macro Macros.javafxBuilder[A]
 
       implicit def JavaMapBuilder[Key, Value, M <: java.util.Map[Key, Value]](
           implicit constructor: EmptyConstructor[M]): JavaMapBuilder[Key, Value, M] = {
@@ -175,11 +170,10 @@ object fxml {
 
   }
 
-  import com.thoughtworks.binding.fxml.Runtime._
-
   private object Macros {
 
-    private def initializeJavaFx() = {
+    private[Macros] val javafxBuilderFactory = {
+
       if (!Platform.isFxApplicationThread) {
         val lock = new AnyRef
         @volatile var initialized = false
@@ -202,9 +196,9 @@ object fxml {
           }
         }
       }
-    }
 
-    initializeJavaFx()
+      new JavaFXBuilderFactory()
+    }
 
     private[Macros] val Spaces = """\s*""".r
 
@@ -220,13 +214,14 @@ object fxml {
 
   }
 
+  import scala.reflect.macros.whitebox
+
   @bundle
   private[binding] final class Macros(context: whitebox.Context) extends Preprocessor(context) with XmlExtractor {
 
-    import c.universe._
-    import c.internal.decorators._
-
     import Macros._
+    import c.internal.decorators._
+    import c.universe._
 
     private implicit def constantLiftable[A: Liftable]: Liftable[Binding.Constant[A]] =
       new Liftable[Binding.Constant[A]] {
@@ -372,7 +367,8 @@ object fxml {
         case (head @ Literal(Constant(name: String))) +: tail =>
           beanInfo.getPropertyDescriptors.find(_.getName == name) match {
             case None =>
-              throw TypecheckException(head.pos, s"$name is not a property of ${beanInfo.getBeanDescriptor.getName}")
+              c.error(head.pos, s"$name is not a property of ${beanInfo.getBeanDescriptor.getName}")
+              (beanClass, beanInfo, bean)
             case Some(propertyDescriptor) =>
               val nestedClass = propertyDescriptor.getPropertyType
               val nestedInfo = Introspector.getBeanInfo(nestedClass)
@@ -532,6 +528,20 @@ object fxml {
         ${ValDef(NoMods, valDef.name, valDef.tpt, q"${c.prefix}.constructor()").setSymbol(valDef.symbol)}
         $binding
       """
+    }
+
+    def javafxBuilder[Out: WeakTypeTag]: Tree = {
+      val outType = weakTypeOf[Out]
+      val outClass = Class.forName(outType.typeSymbol.fullName)
+      javafxBuilderFactory.getBuilder(outClass) match {
+        case null =>
+          c.abort(c.enclosingPosition, s"No javafx.util.Builder found for $outType")
+        case builder =>
+          val runtimeSymbol = reflect.runtime.currentMirror.classSymbol(builder.getClass)
+          val qBundle = new Q.MacroBundle[c.universe.type](c.universe)
+          val builderTypeTree = qBundle.fullyQualifiedSymbolTreeWithRootPrefix(runtimeSymbol)
+          q"new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXBuiler[$outType, $builderTypeTree]()"
+      }
     }
 
     def macroTransform(annottees: Tree*): Tree = {
