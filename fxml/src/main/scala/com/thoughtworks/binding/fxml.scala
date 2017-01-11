@@ -274,6 +274,42 @@ object fxml {
       }
     }
 
+    private def buildFromDescriptor(parentBean: Tree,
+                                    descriptor: PropertyDescriptor,
+                                    bindings: Seq[Tree]): (Tree, TermName, Tree) = {
+      val name = TermName(c.freshName(descriptor.getName))
+      descriptor.getWriteMethod match {
+        case null if classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType) =>
+          val nonEmptyBindings = bindings.filterNot(EmptyBinding.unapply)
+          def list = q"$parentBean.${TermName(descriptor.getReadMethod.getName)}"
+          nonEmptyBindings match {
+            case Seq() =>
+              ???
+            case Seq(name) =>
+              ???
+            case _ =>
+              ???
+          }
+        case null =>
+          c.error(parentBean.pos, s"${descriptor.getName} is not writeable")
+          (q"???", TermName("<error>"), q"???")
+        case writeMethod =>
+          val setterName = TermName(writeMethod.getName)
+          if (classOf[String].isAssignableFrom(descriptor.getPropertyType)) {
+            ???
+          } else {
+            bindings match {
+              case Seq() =>
+                c.error(parentBean.pos, s"expect a value for ${descriptor.getName}")
+                (q"???", TermName("<error>"), q"???")
+              case Seq(value) =>
+                (value, name, q"$parentBean.$setterName($name)")
+            }
+
+          }
+      }
+    }
+
     private def bindPropertyFromDescriptor(parentBean: Tree,
                                            descriptor: PropertyDescriptor,
                                            bindings: Seq[Tree]): Tree = {
@@ -306,7 +342,7 @@ object fxml {
               """
           }
         case null =>
-          c.error(parentBean.pos, s"${descriptor} is not writeable")
+          c.error(parentBean.pos, s"${descriptor.getName} is not writeable")
           q"???"
         case writeMethod =>
           def mapSetter(binding: Tree) = {
@@ -329,7 +365,8 @@ object fxml {
           } else {
             bindings match {
               case Seq() =>
-                q"""_root_.com.thoughtworks.binding.Binding.Constant(())"""
+                c.error(parentBean.pos, s"expect a value for ${descriptor.getName}")
+                q"???"
               case Seq(value) =>
                 mapSetter(value)
             }
@@ -394,7 +431,7 @@ object fxml {
       val beanType = weakTypeOf[Builder]
       val beanClass = Class.forName(beanType.typeSymbol.fullName)
       val beanInfo = Introspector.getBeanInfo(beanClass)
-      val pairSeq: Seq[(Tree, TermName, Tree)] = for {
+      val tripleSeq: Seq[(Tree, TermName, Tree)] = for {
         property @ q"($keySeq(..$keyPath), $valueSeq(..$values))" <- properties
       } yield {
         def defaultResult = (q"???", TermName("<error>"), q"???")
@@ -406,8 +443,7 @@ object fxml {
                 c.error(property.pos, s"No default property found in ${beanInfo.getBeanDescriptor.getName}")
                 defaultResult
               case Some(descriptor) =>
-                // TODO
-                ???
+                buildFromDescriptor(beanId, descriptor, values)
             }
           case prefix :+ (lastProperty @ Literal(Constant(lastPropertyName: String))) =>
             val valueName = TermName(c.freshName(lastPropertyName))
@@ -428,11 +464,10 @@ object fxml {
                       defaultResult
                   }
               }
-
             } else {
               resolvedInfo.getPropertyDescriptors.find(_.getName == lastPropertyName) match {
                 case Some(descriptor) =>
-                  ???
+                  buildFromDescriptor(resolvedBean, descriptor, values)
                 case None =>
                   c.error(lastProperty.pos,
                           s"$lastPropertyName is not a property of ${resolvedInfo.getBeanDescriptor.getName}")
@@ -443,7 +478,7 @@ object fxml {
         }
 
       }
-      val (bindings, names, setters) = pairSeq.unzip3
+      val (bindings, names, setters) = tripleSeq.unzip3
       if (bindings.isEmpty) {
         q"_root_.com.thoughtworks.binding.Binding.Constant(${c.prefix}.constructor().build())"
       } else {

@@ -13,6 +13,34 @@ import scala.collection.JavaConverters._
   */
 final class fxmlTest extends FreeSpec with Matchers with Inside {
 
+  "Default property in Scene" in {
+    @fxml val scene = {
+      <?import javafx.scene.Scene?>
+      <Scene>
+        <?import javafx.scene.control.Button?>
+        <Button></Button>
+      </Scene>
+    }
+    scene.watch()
+    scene.get should be(a[javafx.scene.Scene])
+    scene.get.getRoot should be(a[javafx.scene.control.Button])
+  }
+
+  "root property in Scene" in {
+    @fxml val scene = {
+      <?import javafx.scene.Scene?>
+        <Scene>
+          <root>
+            <?import javafx.scene.control.Button?>
+            <Button></Button>
+          </root>
+        </Scene>
+    }
+    scene.watch()
+    scene.get should be(a[javafx.scene.Scene])
+    scene.get.getRoot should be(a[javafx.scene.control.Button])
+  }
+
   "fx:factory" in {
     @fxml val observableArrayList = {
       import javafx.collections.FXCollections
