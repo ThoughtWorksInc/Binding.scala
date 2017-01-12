@@ -145,13 +145,13 @@ object fxml {
       def apply() = f()
     }
 
-    final class JavaBeanBuilder[A](implicit val constructor: EmptyConstructor[A]) extends Builder[A] {
+    final class JavaBeanPropertyTyper[A](implicit val constructor: EmptyConstructor[A]) extends PropertyTyper[A] {
 
-      def build(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] = macro Macros.buildJavaBean[A]
+      def resolveProperties(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] = macro Macros.resolvePropertiesForJavaBean[A]
 
     }
 
-    object JavaFXBuiler {
+    object JavaFXPropertyTyper {
 
       final class CurrentJavaFXBuilderFactory(val underlying: JavaFXBuilderFactory)
 
@@ -162,33 +162,33 @@ object fxml {
       }
 
     }
-    import JavaFXBuiler._
+    import JavaFXPropertyTyper._
 
-    final class JavaFXBuiler[A, B](val constructor: () => B) extends Builder[A] {
+    final class JavaFXPropertyTyper[A, B](val constructor: () => B) extends PropertyTyper[A] {
 
-      def build(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] =
-        macro Macros.buildFromBuilder[A, B]
+      def resolveProperties(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] =
+        macro Macros.resolvePropertiesFromJavaFXBuilder[A, B]
 
     }
 
     private[Runtime] sealed trait LowPriorityBuilder {
 
-      implicit final def javaBeanBuilder[A](implicit constructor: EmptyConstructor[A]): JavaBeanBuilder[A] = {
-        new JavaBeanBuilder
+      implicit final def javaBeanTyper[A](implicit constructor: EmptyConstructor[A]): JavaBeanPropertyTyper[A] = {
+        new JavaBeanPropertyTyper
       }
 
     }
 
-    object Builder extends LowPriorityBuilder {
+    object PropertyTyper extends LowPriorityBuilder {
 
-      implicit def javafxBuilder[A]: Builder[A] =
-        macro Macros.javafxBuilder[A]
+      implicit def javafxTyper[A]: PropertyTyper[A] =
+        macro Macros.javafxTyper[A]
 
-      def apply[Value](implicit builder: Builder[Value]): builder.type = builder
+      def apply[Value](implicit typer: PropertyTyper[Value]): typer.type = typer
 
     }
 
-    trait Builder[Value]
+    trait PropertyTyper[Value]
 
     final class JavaListMountPoint[A](javaList: java.util.List[A])(bindingSeq: BindingSeq[A])
         extends MultiMountPoint[A](bindingSeq) {
@@ -488,12 +488,12 @@ object fxml {
       }
     }
 
-    def buildFromBuilder[Out: WeakTypeTag, Builder: WeakTypeTag](initializer: Tree): Tree = {
+    def resolvePropertiesFromJavaFXBuilder[Out: WeakTypeTag, Builder: WeakTypeTag](initializer: Tree): Tree = {
 
       val outType = weakTypeOf[Out]
       val q"{ $valDef => $seq(..$properties) }" = initializer
 
-      val builderName = TermName(c.freshName("fxBuilder"))
+      val builderName = TermName(c.freshName("builder"))
       val beanId = q"$builderName"
       val beanType = weakTypeOf[Builder]
       val beanClass = Class.forName(beanType.typeSymbol.fullName)
@@ -562,7 +562,7 @@ object fxml {
       c.untypecheck(result)
     }
 
-    def buildJavaBean[Bean: WeakTypeTag](initializer: Tree): Tree = {
+    def resolvePropertiesForJavaBean[Bean: WeakTypeTag](initializer: Tree): Tree = {
       val q"{ ${valDef: ValDef} => $seq(..$properties) }" = initializer
       val beanId = Ident(valDef.name)
       val beanType = weakTypeOf[Bean]
@@ -632,14 +632,14 @@ object fxml {
       c.untypecheck(result)
     }
 
-    def javafxBuilder[Out: WeakTypeTag]: Tree = {
-      import Runtime.JavaFXBuiler.CurrentJavaFXBuilderFactory
+    def javafxTyper[Out: WeakTypeTag]: Tree = {
+      import Runtime.JavaFXPropertyTyper.CurrentJavaFXBuilderFactory
       val currentJavaFXBuilderFactory: Tree = c.inferImplicitValue(typeOf[CurrentJavaFXBuilderFactory])
       val outType = weakTypeOf[Out]
       val outClass: Class[_] = Class.forName(outType.typeSymbol.fullName)
       javafxBuilderFactory.getBuilder(outClass) match {
         case null =>
-          c.abort(c.enclosingPosition, s"No javafx.util.Builder found for $outType")
+          c.abort(c.enclosingPosition, s"No javafx.util.PropertyTyper found for $outType")
         case builder =>
           val runtimeSymbol = reflect.runtime.currentMirror.classSymbol(builder.getClass)
           val builderInfo = runtimeSymbol.typeSignature
@@ -663,7 +663,7 @@ object fxml {
             rawbuilderTypeTree
           }
           val result = q"""
-            new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXBuiler[$outType, $builderTypeTree]({() =>
+            new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXPropertyTyper[$outType, $builderTypeTree]({() =>
               $currentJavaFXBuilderFactory.underlying.getBuilder(_root_.scala.Predef.classOf[$outType]).asInstanceOf[$builderTypeTree]
             })
           """
@@ -912,7 +912,6 @@ object fxml {
               }
               val build = attributesParameter ++ propertiesParameter ++ defaultPropertiesParameter
               val binding = atPos(tree.pos) {
-                val builderName = TermName(c.freshName("builder"))
                 val f = fxIdOption match {
                   case None =>
                     q"{ _: $typeName => $build }"
@@ -920,7 +919,7 @@ object fxml {
                     q"{ ${TermName(id)}: $typeName => $build }"
                 }
                 q"""
-                    _root_.com.thoughtworks.binding.fxml.Runtime.Builder[$typeName].build($f)
+                    _root_.com.thoughtworks.binding.fxml.Runtime.PropertyTyper[$typeName].resolveProperties($f)
                   """
               }
               val id = fxIdOption.getOrElse(c.freshName(className))
