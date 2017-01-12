@@ -71,10 +71,10 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "HashMap" in {
     @fxml val hashMap = {
       type StringMap = java.util.HashMap[String, String]
-      <StringMap foo="123" bar="456"/>
+      <StringMap foo="123" bar=""/>
     }
     hashMap.watch()
-    hashMap.get.asScala should be(Map("foo" -> "123", "bar" -> "456"))
+    hashMap.get.asScala should be(Map("foo" -> "123", "bar" -> ""))
   }
 
   "Nested builders" in {
@@ -105,12 +105,12 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       <FXCollections fx:factory="observableArrayList">
         <String fx:value="A"/>
         <String fx:value="B"/>
-        <String fx:value="C"/>
+        <String fx:value=""/>
       </FXCollections>
     }
     observableArrayList.watch()
     import scala.collection.JavaConverters._
-    observableArrayList.get.asScala should be(Seq("A", "B", "C"))
+    observableArrayList.get.asScala should be(Seq("A", "B", ""))
   }
 
   "Reference outer element by fx:id" in {
@@ -172,6 +172,18 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
     button.watch()
     button.get.getText should be("   ")
+  }
+
+  "empty text for string property" in {
+    @fxml val button = {
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      <Button>
+        <text></text>
+      </Button>
+    }
+    button.watch()
+    button.get.getText should be("")
   }
 
   "spaces for boolean property" in {
