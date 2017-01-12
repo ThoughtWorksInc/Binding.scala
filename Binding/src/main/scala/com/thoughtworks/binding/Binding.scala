@@ -880,6 +880,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   object BindingSeq {
 
+    @deprecated(since = "11.0.0", message = "Use `bindingSeq.all` instead")
     implicit final class AsBinding[Element](upstream: BindingSeq[Element]) extends Binding[Seq[Element]] with PatchedListener[Element] {
 
       private val publisher = new Publisher[ChangedListener[Seq[Element]]]
@@ -921,6 +922,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     * @group expressions
     */
   sealed trait BindingSeq[+A] extends Any {
+
+    final def all: Binding[Seq[A]] = new BindingSeq.AsBinding(this)
 
     /**
       * Enables automatic recalculation.
