@@ -1,7 +1,6 @@
 package com.thoughtworks.binding
 
 import javafx.application.Platform
-import javafx.embed.swing.JFXPanel
 import javax.swing.SwingUtilities
 
 import org.scalatest._
@@ -468,6 +467,29 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       <?import javafx.scene.control.*?>
       <Button></Button>
     }
+  }
+
+  "statie properties" in {
+    import javafx.scene.control.Label
+    import javafx.scene.layout.GridPane
+
+    @fxml val gridPane = {
+      <GridPane>
+        <children>
+          <Label text="My Label">
+            <GridPane.rowIndex>{2}</GridPane.rowIndex>
+            <GridPane.columnIndex>{3}</GridPane.columnIndex>
+          </Label>
+        </children>
+      </GridPane>
+    }
+    gridPane.watch()
+    inside(gridPane.get.getChildren.asScala) {
+      case Seq(label: Label) =>
+        GridPane.getRowIndex(label) should be(2)
+        GridPane.getColumnIndex(label) should be(3)
+    }
+
   }
 
   "fx:define" in {

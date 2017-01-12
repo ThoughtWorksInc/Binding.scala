@@ -147,7 +147,8 @@ object fxml {
 
     final class JavaBeanPropertyTyper[A](implicit val constructor: EmptyConstructor[A]) extends PropertyTyper[A] {
 
-      def resolveProperties(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] = macro Macros.resolvePropertiesForJavaBean[A]
+      def resolveProperties(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] =
+        macro Macros.resolvePropertiesForJavaBean[A]
 
     }
 
@@ -255,6 +256,10 @@ object fxml {
     private[Macros] val ResourceResolution = """(?s)%(.*)""".r
 
     private[Macros] val LocationResolution = """(?s)@(.*)""".r
+
+    private[Macros] val ClassName = """[A-Z][^\.]+""".r
+
+    private[Macros] val StaticProperty = """([^\.]+)\.([^\.]+)""".r
 
   }
 
@@ -370,6 +375,9 @@ object fxml {
                 (q"???", TermName("<error>"), q"???")
               case Seq(value) =>
                 (value, name, q"$parentBean.$setterName($name)")
+              case _ =>
+                c.error(parentBean.pos, s"expect only one value for ${descriptor.getName}")
+                (q"???", TermName("<error>"), q"???")
             }
 
           }
@@ -475,7 +483,7 @@ object fxml {
             case Some(propertyDescriptor) =>
               val nestedClass = propertyDescriptor.getPropertyType
               val nestedInfo = Introspector.getBeanInfo(nestedClass)
-              val nestedBean = q"$bean.${TermName(propertyDescriptor.getReadMethod.getName)}"
+              val nestedBean = atPos(head.pos)(q"$bean.${TermName(propertyDescriptor.getReadMethod.getName)}")
               resolve(nestedClass, nestedInfo, nestedBean, tail)
           }
       }
@@ -516,28 +524,44 @@ object fxml {
             val valueName = TermName(c.freshName(lastPropertyName))
             def defaultResult = (q"???", valueName, q"???")
             val (resolvedClass, resolvedInfo, resolvedBean) = resolve(beanClass, beanInfo, beanId, prefix)
-            if (classOf[java.util.Map[_, _]].isAssignableFrom(resolvedClass)) {
-              values match {
-                case Seq(value) =>
-                  (value, valueName, q"$resolvedBean.put($lastPropertyName, $valueName)")
-                case _ =>
-                  values.filterNot(EmptyBinding.unapply) match {
+            lastPropertyName match {
+              case StaticProperty(classPrefix, propertyName) =>
+                val setterName = TermName(s"set${propertyName.capitalize}")
+                val className = TermName(classPrefix)
+                values match {
+                  case Seq() =>
+                    c.error(resolvedBean.pos, s"Expect a value for $lastPropertyName")
+                    (q"???", TermName("<error>"), q"???")
+                  case Seq(value) =>
+                    (value, valueName, q"$className.$setterName($resolvedBean, $valueName)")
+                  case _ =>
+                    c.error(resolvedBean.pos, s"Expect only one value for $lastPropertyName")
+                    (q"???", TermName("<error>"), q"???")
+                }
+              case _ =>
+                if (classOf[java.util.Map[_, _]].isAssignableFrom(resolvedClass)) {
+                  values match {
                     case Seq(value) =>
                       (value, valueName, q"$resolvedBean.put($lastPropertyName, $valueName)")
                     case _ =>
-                      c.error(lastProperty.pos, "An attribute for java.util.Map must have extractly one value.")
+                      values.filterNot(EmptyBinding.unapply) match {
+                        case Seq(value) =>
+                          (value, valueName, q"$resolvedBean.put($lastPropertyName, $valueName)")
+                        case _ =>
+                          c.error(lastProperty.pos, "An attribute for java.util.Map must have extractly one value.")
+                          defaultResult
+                      }
+                  }
+                } else {
+                  resolvedInfo.getPropertyDescriptors.find(_.getName == lastPropertyName) match {
+                    case Some(descriptor) =>
+                      buildFromDescriptor(resolvedBean, descriptor, values)
+                    case None =>
+                      c.error(lastProperty.pos,
+                              s"$lastPropertyName is not a property of ${resolvedInfo.getBeanDescriptor.getName}")
                       defaultResult
                   }
-              }
-            } else {
-              resolvedInfo.getPropertyDescriptors.find(_.getName == lastPropertyName) match {
-                case Some(descriptor) =>
-                  buildFromDescriptor(resolvedBean, descriptor, values)
-                case None =>
-                  c.error(lastProperty.pos,
-                          s"$lastPropertyName is not a property of ${resolvedInfo.getBeanDescriptor.getName}")
-                  defaultResult
-              }
+                }
             }
           // TODO: onChange
         }
@@ -583,37 +607,55 @@ object fxml {
             }
           case prefix :+ (lastProperty @ Literal(Constant(lastPropertyName: String))) =>
             val (resolvedClass, resolvedInfo, resolvedBean) = resolve(beanClass, beanInfo, beanId, prefix)
-            if (classOf[java.util.Map[_, _]].isAssignableFrom(resolvedClass)) {
-              def put(binding: Tree) = {
-                map(binding) { value =>
-                  q"$resolvedBean.put($lastPropertyName, $value)"
+            lastPropertyName match {
+              case StaticProperty(classPrefix, propertyName) =>
+                val setterName = TermName(s"set${propertyName.capitalize}")
+                val className = TermName(classPrefix)
+                values match {
+                  case Seq() =>
+                    c.error(resolvedBean.pos, s"Expect a value for $lastPropertyName")
+                    q"???"
+                  case Seq(binding) =>
+                    map(binding) { value =>
+                      q"$className.$setterName($resolvedBean, $value)"
+                    }
+                  case _ =>
+                    c.error(resolvedBean.pos, s"Expect only one value for $lastPropertyName")
+                    q"???"
                 }
-              }
-              values match {
-                case Seq(value) =>
-                  put(value)
-                case _ =>
-                  values.filterNot(EmptyBinding.unapply) match {
+              case _ =>
+                if (classOf[java.util.Map[_, _]].isAssignableFrom(resolvedClass)) {
+                  def put(binding: Tree) = {
+                    map(binding) { value =>
+                      q"$resolvedBean.put($lastPropertyName, $value)"
+                    }
+                  }
+
+                  values match {
                     case Seq(value) =>
                       put(value)
                     case _ =>
-                      c.error(lastProperty.pos, "An attribute for java.util.Map must have extractly one value.")
+                      values.filterNot(EmptyBinding.unapply) match {
+                        case Seq(value) =>
+                          put(value)
+                        case _ =>
+                          c.error(lastProperty.pos, "An attribute for java.util.Map must have extractly one value.")
+                          q"???"
+                      }
+                  }
+
+                } else {
+                  resolvedInfo.getPropertyDescriptors.find(_.getName == lastPropertyName) match {
+                    case Some(descriptor) =>
+                      bindPropertyFromDescriptor(resolvedBean, descriptor, values)
+                    case None =>
+                      c.error(lastProperty.pos,
+                              s"$lastPropertyName is not a property of ${resolvedInfo.getBeanDescriptor.getName}")
                       q"???"
                   }
-              }
-
-            } else {
-              resolvedInfo.getPropertyDescriptors.find(_.getName == lastPropertyName) match {
-                case Some(descriptor) =>
-                  bindPropertyFromDescriptor(resolvedBean, descriptor, values)
-                case None =>
-                  c.error(lastProperty.pos,
-                          s"$lastPropertyName is not a property of ${resolvedInfo.getBeanDescriptor.getName}")
-                  q"???"
-              }
+                }
+              // TODO: onChange
             }
-          // TODO: onChange
-
         }
       }
 
@@ -689,7 +731,6 @@ object fxml {
                   (accumulatedDefinitions, accumulatedPropertyBindings, accumulatedDefaultBindings)
                 case head :: tail =>
                   head match {
-                    // TODO: other cases
                     case transformXmlDefinition.extract(transformedDefinitions) =>
                       loop(
                         tail,
@@ -707,8 +748,7 @@ object fxml {
                     case tree @ Elem(UnprefixedName(propertyName),
                                      attributes,
                                      _,
-                                     transformNodeSeq.extract(defs: Seq[Tree], transformedValues: Seq[Tree]))
-                        if propertyName.charAt(0).isLower =>
+                                     transformNodeSeq.extract(defs: Seq[Tree], transformedValues: Seq[Tree])) =>
                       val (attributeDefs: Queue[Tree], transformedAttributes: Seq[(Seq[String], Tree)]) =
                         transformAttributes(attributes)
                       val nestedAttrbutesBindings: Seq[(Seq[String], Position, Seq[Tree])] =
@@ -847,7 +887,7 @@ object fxml {
           Nil -> atPos(tree.pos) {
             q"_root_.com.thoughtworks.binding.Binding.Constant($data)"
           }
-        case tree @ Elem(UnprefixedName(className), attributes, _, children) if className.charAt(0).isUpper =>
+        case tree @ Elem(UnprefixedName(className @ ClassName()), attributes, _, children) =>
           // TODO: create new instance
 
           // TODO: <fx:include> (Read external files)
