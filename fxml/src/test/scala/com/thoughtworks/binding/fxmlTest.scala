@@ -462,6 +462,50 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
   }
 
+  "fx:define" in {
+    @fxml val vbox = {
+      <?import javafx.scene.layout.VBox?>
+      <VBox>
+        <?import javafx.scene.control.Button?>
+        <fx:define>
+          <Button text="Hello" fx:id="b"></Button>
+          <Button></Button>
+        </fx:define>
+        <Button>
+          <fx:define>
+            <String fx:id="space" fx:value=" "/>
+          </fx:define>
+          <text>
+            <fx:define>
+              <String fx:id="s" fx:value="World"/>
+            </fx:define>
+            {b.getText}
+            {space}
+            {s}
+          </text>
+        </Button>
+        <Button>
+          <text>
+            {b.getText}
+            {space}
+            {s}
+          </text>
+        </Button>
+      </VBox>
+    }
+
+    vbox.watch()
+
+    inside(vbox.get.getChildren.asScala) {
+      case Seq(button0: javafx.scene.control.Button, button1: javafx.scene.control.Button) => {
+        button0 shouldNot be(button1)
+        button0.getText should be("Hello World")
+        button1.getText should be("Hello World")
+      }
+    }
+
+  }
+
   override protected def withFixture(test: NoArgTest): Outcome = {
     if (Platform.isFxApplicationThread) {
       fxmlTest. super.withFixture(test)
