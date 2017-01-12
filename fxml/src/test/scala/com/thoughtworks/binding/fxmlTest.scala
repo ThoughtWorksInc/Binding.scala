@@ -573,12 +573,12 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     import javafx.event.EventHandler
     @fxml val vbox = {
       <?import javafx.scene.layout.VBox?>
-        <VBox>
-          <children>
-            <?import javafx.scene.control.Button?>
-            <Button text={buttonText.bind} onAction={_: ActionEvent => buttonText := "Clicked"}/>
-          </children>
-        </VBox>
+      <VBox>
+        <children>
+          <?import javafx.scene.control.Button?>
+          <Button text={buttonText.bind} onAction={_: ActionEvent => buttonText := "Clicked"}/>
+        </children>
+      </VBox>
     }
 
     vbox.watch()
