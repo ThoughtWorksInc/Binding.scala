@@ -46,19 +46,22 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       <?import javafx.scene.Scene?>
       <Scene>
         <?import javafx.scene.control.Button?>
-        <Button></Button>
+        <Button fx:id="b"></Button>
         <stylesheets>
-          <?import javafx.scene.control.Button?>
-          <String  fx:value="a"/>
-          <String  fx:value="b"/>
+          {"a"}
+          {b.toString}
+          <String fx:value="c"/>
         </stylesheets>
       </Scene>
     }
     scene.watch()
     scene.get should be(a[javafx.scene.Scene])
     scene.get.getRoot should be(a[javafx.scene.control.Button])
+    inside(scene.get.getStylesheets.asScala) {
+      case Seq("a", s2, "c") =>
+        s2 shouldNot be(empty)
+    }
   }
-
 
   "builder for Color" in {
     fxml.Runtime.Builder.javafxBuilder[javafx.scene.paint.Color]

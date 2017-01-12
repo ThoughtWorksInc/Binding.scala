@@ -47,6 +47,10 @@ object fxml {
       Binding.Constant(Constants(()).mapBinding(_ => binding))
     }
 
+    final def toBindingSeqBinding[A](seq: Seq[A]) = {
+      Binding.Constant(Constants(seq: _*))
+    }
+
     final def toBindingSeq[A](bindingSeqBinding: Binding[BindingSeq[A]]) = {
       bindingSeqBinding match {
         case Binding.Constant(bindingSeq) => bindingSeq
@@ -63,6 +67,10 @@ object fxml {
 
     final def toBindingSeq[A](bindingSeq: BindingSeq[A]) = {
       bindingSeq
+    }
+
+    final def toBindingSeq[A](seq: Seq[A]) = {
+      Constants(seq: _*)
     }
 
     final def toBindingSeq[A](bindingSeq: A) = {
@@ -137,7 +145,7 @@ object fxml {
 
     private[Runtime] sealed trait LowPriorityBuilder {
 
-      implicit final def buildJavaBeaner[A](implicit constructor: EmptyConstructor[A]): JavaBeanBuilder[A] = {
+      implicit final def javaBeanBuilder[A](implicit constructor: EmptyConstructor[A]): JavaBeanBuilder[A] = {
         new JavaBeanBuilder
       }
 
@@ -505,7 +513,7 @@ object fxml {
 
       }
       val (bindings, names, setters) = tripleSeq.unzip3
-      if (bindings.isEmpty) {
+      val result = if (bindings.isEmpty) {
         q"_root_.com.thoughtworks.binding.Binding.Constant(${c.prefix}.constructor().build().asInstanceOf[$outType])"
       } else {
         val applyN = mapMethodName(bindings.length)
@@ -520,11 +528,12 @@ object fxml {
           })
         """
       }
+      c.untypecheck(result)
     }
 
     def buildJavaBean[Bean: WeakTypeTag](initializer: Tree): Tree = {
       val q"{ ${valDef: ValDef} => $seq(..$properties) }" = initializer
-      val beanId = Ident(valDef.symbol)
+      val beanId = Ident(valDef.name)
       val beanType = weakTypeOf[Bean]
       val beanClass = Class.forName(beanType.typeSymbol.fullName)
       val beanInfo = Introspector.getBeanInfo(beanClass)
@@ -585,10 +594,11 @@ object fxml {
         }
       }
 
-      q"""
-        ${ValDef(valDef.mods, valDef.name, valDef.tpt, q"${c.prefix}.constructor()").setSymbol(valDef.symbol)}
+      val result = q"""
+        ${q"val ${valDef.name}: $beanType = ${c.prefix}.constructor()".setSymbol(valDef.symbol)}
         _root_.com.thoughtworks.binding.Binding.typeClass.map($allBindingUnits)({ _: _root_.scala.Unit => $beanId })
       """
+      c.untypecheck(result)
     }
 
     def javafxBuilder[Out: WeakTypeTag]: Tree = {
@@ -621,9 +631,12 @@ object fxml {
           } else {
             rawbuilderTypeTree
           }
-          q"""new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXBuiler[$outType, $builderTypeTree]({() =>
-            $currentJavaFXBuilderFactory.underlying.getBuilder(_root_.scala.Predef.classOf[$outType]).asInstanceOf[$builderTypeTree]
-          })"""
+          val result = q"""
+            new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXBuiler[$outType, $builderTypeTree]({() =>
+              $currentJavaFXBuilderFactory.underlying.getBuilder(_root_.scala.Predef.classOf[$outType]).asInstanceOf[$builderTypeTree]
+            })
+          """
+          c.untypecheck(result)
       }
     }
 
@@ -928,19 +941,28 @@ object fxml {
                     c.error(pos, "fx:factory must not contain named property")
                     Nil -> q"???"
                 }
-              case (None, Some(TextAttribute(fxValue))) =>
-                fxIdOption match {
-                  case None =>
-                    Nil -> atPos(tree.pos) {
-                      q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(className)}.valueOf($fxValue))"
+              case (None, Some(value)) =>
+                value match {
+                  case TextAttribute(fxValue) =>
+                    c.warning(
+                      value.pos,
+                      "fx:value is not type safe. Use embedded Scala expression in curly bracket syntax instead of elements with fx:value.")
+                    fxIdOption match {
+                      case None =>
+                        Nil -> atPos(tree.pos) {
+                          q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(className)}.valueOf($fxValue))"
+                        }
+                      case Some(fxId) =>
+                        val idDef = atPos(tree.pos) {
+                          q"val ${TermName(fxId)} = ${TermName(className)}.valueOf($fxValue)"
+                        }
+                        Queue(idDef) -> atPos(tree.pos) {
+                          q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(fxId)})"
+                        }
                     }
-                  case Some(fxId) =>
-                    val idDef = atPos(tree.pos) {
-                      q"val ${TermName(fxId)} = ${TermName(className)}.valueOf($fxValue)"
-                    }
-                    Queue(idDef) -> atPos(tree.pos) {
-                      q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(fxId)})"
-                    }
+                  case _ =>
+                    c.error(value.pos, "fx:value attributes do not support embedded Scala expression")
+                    Nil -> q"???"
                 }
             }
 
@@ -990,11 +1012,11 @@ object fxml {
       }
 
       import transformer.transform
-      def transform(tree: Tree): Tree = {
-        val output = transformer.transform(tree)
-        c.info(c.enclosingPosition, show(output), true)
-        output
-      }
+//      def transform(tree: Tree): Tree = {
+//        val output = transformer.transform(tree)
+//        c.info(c.enclosingPosition, show(output), true)
+//        output
+//      }
 
       replaceDefBody(annottees, transform)
 
