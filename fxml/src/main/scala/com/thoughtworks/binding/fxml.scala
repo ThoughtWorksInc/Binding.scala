@@ -140,23 +140,6 @@ object fxml {
       def apply() = f()
     }
 
-    final class JavaMapBuilder[Key, Value, M <: java.util.Map[Key, Value]](
-        implicit val constructor: EmptyConstructor[M])
-        extends Builder[M] {
-      def build(initializer: M => Seq[(Seq[String], Seq[Binding[_]])]): Binding[M] = {
-//        val map = constructor()
-//        val properties = initializer(map)
-//        for ((key, value) <- properties) yield {
-//          key match {
-//            case Seq()
-//          }
-//        }
-//        Binding.BindingInstances.sequence()
-        ??? // TODO: Replace this implementation to macro, so that we can raise an error if key is nested, and wipe out empty text
-
-      }
-    }
-
     final class JavaBeanBuilder[A](implicit val constructor: EmptyConstructor[A]) extends Builder[A] {
 
       def build(initializer: A => Seq[(Seq[String], Seq[Binding[_]])]): Binding[A] = macro Macros.buildJavaBean[A]
@@ -195,11 +178,6 @@ object fxml {
 
       implicit def javafxBuilder[A]: Builder[A] =
         macro Macros.javafxBuilder[A]
-
-      implicit def JavaMapBuilder[Key, Value, M <: java.util.Map[Key, Value]](
-          implicit constructor: EmptyConstructor[M]): JavaMapBuilder[Key, Value, M] = {
-        new JavaMapBuilder
-      }
 
       def apply[Value](implicit builder: Builder[Value]): builder.type = builder
 
