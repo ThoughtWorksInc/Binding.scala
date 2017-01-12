@@ -64,10 +64,6 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
   }
 
-  "builder for Color" in {
-    fxml.Runtime.Builder.javafxBuilder[javafx.scene.paint.Color]
-  }
-
   "HashMap" in {
     @fxml val hashMap = {
       type StringMap = java.util.HashMap[String, String]
