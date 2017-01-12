@@ -51,6 +51,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
           {"a"}
           {b.toString}
           <String fx:value="c"/>
+          {Seq("d","e")}
         </stylesheets>
       </Scene>
     }
@@ -58,7 +59,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     scene.get should be(a[javafx.scene.Scene])
     scene.get.getRoot should be(a[javafx.scene.control.Button])
     inside(scene.get.getStylesheets.asScala) {
-      case Seq("a", s2, "c") =>
+      case Seq("a", s2, "c", "d", "e") =>
         s2 shouldNot be(empty)
     }
   }

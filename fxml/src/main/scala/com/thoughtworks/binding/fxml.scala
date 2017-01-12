@@ -41,40 +41,80 @@ object fxml {
       Semigroup.liftSemigroup
     }
 
-    final def toBindingSeqBinding[A](bindingSeqBinding: Binding[BindingSeq[A]]) = bindingSeqBinding
-
-    final def toBindingSeqBinding[A](binding: Binding[A], dummy: Unit = ()) = {
-      Binding.Constant(Constants(()).mapBinding(_ => binding))
-    }
-
-    final def toBindingSeqBinding[A](seq: Seq[A]) = {
-      Binding.Constant(Constants(seq: _*))
-    }
-
-    final def toBindingSeq[A](bindingSeqBinding: Binding[BindingSeq[A]]) = {
-      bindingSeqBinding match {
-        case Binding.Constant(bindingSeq) => bindingSeq
-        case _ => Constants(()).flatMapBinding(_ => bindingSeqBinding)
+    trait ToBindingSeq[OneOrMany] { outer =>
+      type Element
+      def toBindingSeq(binding: Binding[OneOrMany]): BindingSeq[Element]
+      def toBindingSeqBinding(binding: Binding[OneOrMany]): Binding[BindingSeq[Element]] = {
+        Binding.Constant(toBindingSeq(binding))
+      }
+      final def compose[A](f: Binding[A] => Binding[OneOrMany]): ToBindingSeq.Aux[A, Element] = new ToBindingSeq[A] {
+        override type Element = outer.Element
+        override final def toBindingSeq(binding: Binding[A]) = outer.toBindingSeq(f(binding))
+        override final def toBindingSeqBinding(binding: Binding[A]) = outer.toBindingSeqBinding(f(binding))
       }
     }
 
-    final def toBindingSeq[A](bindingSeqBinding: Binding[A], dummy: Unit = ()) = {
-      bindingSeqBinding match {
-        case Binding.Constant(bindingSeq) => Constants(bindingSeq)
-        case _ => Constants(()).mapBinding(_ => bindingSeqBinding)
+    private[thoughtworks] trait LowPriorityToBindingSeq {
+      implicit final def fromSingleElement[Element0]: ToBindingSeq.Aux[Element0, Element0] = {
+        new ToBindingSeq[Element0] {
+          override type Element = Element0
+
+          override final def toBindingSeq(binding: Binding[Element]): BindingSeq[Element] = {
+            binding match {
+              case Binding.Constant(element) => Constants(element)
+              case _ => Constants(binding).mapBinding(identity)
+            }
+          }
+        }
       }
     }
 
-    final def toBindingSeq[A](bindingSeq: BindingSeq[A]) = {
-      bindingSeq
+    object ToBindingSeq extends LowPriorityToBindingSeq {
+      type Aux[OneOrMany, Element0] = ToBindingSeq[OneOrMany] {
+        type Element = Element0
+      }
+
+      def apply[OneOrMany](implicit toBindingSeq: ToBindingSeq[OneOrMany]): toBindingSeq.type = toBindingSeq
+
+      implicit def fromBindingSeq[Element0]: ToBindingSeq.Aux[BindingSeq[Element0], Element0] = {
+        new ToBindingSeq[BindingSeq[Element0]] {
+          override type Element = Element0
+          override def toBindingSeq(binding: Binding[BindingSeq[Element0]]): BindingSeq[Element] = {
+            binding match {
+              case Binding.Constant(bindingSeq) => bindingSeq
+              case _ => Constants(binding).flatMapBinding(identity)
+            }
+          }
+
+          override def toBindingSeqBinding(binding: Binding[BindingSeq[Element0]]) = binding
+        }
+      }
+
+      implicit def fromSeq[Element0]: ToBindingSeq.Aux[Seq[Element0], Element0] = {
+        import scalaz.syntax.all._
+        fromBindingSeq[Element0].compose[Seq[Element0]](_.map { seq =>
+          Constants(seq: _*)
+        })
+      }
+
+      implicit def fromJavaList[Element0]: ToBindingSeq.Aux[java.util.List[_ <: Element0], Element0] = {
+        import scalaz.syntax.all._
+        import scala.collection.JavaConverters._
+        fromBindingSeq[Element0].compose[java.util.List[_ <: Element0]](_.map { list =>
+          Constants(list.asScala: _*)
+        })
+      }
+
     }
 
-    final def toBindingSeq[A](seq: Seq[A]) = {
-      Constants(seq: _*)
+    final def toBindingSeq[OneOrMany](binding: Binding[OneOrMany])(
+        implicit typeClass: ToBindingSeq[OneOrMany]): BindingSeq[typeClass.Element] = {
+      typeClass.toBindingSeq(binding)
     }
 
-    final def toBindingSeq[A](bindingSeq: A) = {
-      Constants(bindingSeq)
+    final def toBindingSeqBinding[OneOrMany](binding: Binding[OneOrMany])(
+        implicit typeClass: ToBindingSeq[OneOrMany]): Binding[BindingSeq[typeClass.Element]] = {
+      typeClass.toBindingSeqBinding(binding)
     }
 
     // This macro does not work if it uses a whitebox Context.
