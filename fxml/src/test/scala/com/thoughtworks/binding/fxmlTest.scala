@@ -68,6 +68,15 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     fxml.Runtime.Builder.javafxBuilder[javafx.scene.paint.Color]
   }
 
+  "HashMap" in {
+    @fxml val hashMap = {
+      type StringMap = java.util.HashMap[String, String]
+      <StringMap foo="123" bar="456"/>
+    }
+    hashMap.watch()
+    hashMap.get.asScala should be(Map("foo" -> "123", "bar" -> "456"))
+  }
+
   "Nested builders" in {
     @fxml val scene = {
       <?import javafx.scene.Scene?>
