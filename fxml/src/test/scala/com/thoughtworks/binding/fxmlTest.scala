@@ -29,17 +29,36 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "root property in Scene" in {
     @fxml val scene = {
       <?import javafx.scene.Scene?>
-        <Scene>
-          <root>
-            <?import javafx.scene.control.Button?>
-            <Button></Button>
-          </root>
-        </Scene>
+      <Scene>
+        <root>
+          <?import javafx.scene.control.Button?>
+          <Button></Button>
+        </root>
+      </Scene>
     }
     scene.watch()
     scene.get should be(a[javafx.scene.Scene])
     scene.get.getRoot should be(a[javafx.scene.control.Button])
   }
+
+  "repeated property in Scene" in {
+    @fxml val scene = {
+      <?import javafx.scene.Scene?>
+      <Scene>
+        <?import javafx.scene.control.Button?>
+        <Button></Button>
+        <stylesheets>
+          <?import javafx.scene.control.Button?>
+          <String  fx:value="a"/>
+          <String  fx:value="b"/>
+        </stylesheets>
+      </Scene>
+    }
+    scene.watch()
+    scene.get should be(a[javafx.scene.Scene])
+    scene.get.getRoot should be(a[javafx.scene.control.Button])
+  }
+
 
   "builder for Color" in {
     fxml.Runtime.Builder.javafxBuilder[javafx.scene.paint.Color]

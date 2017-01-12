@@ -295,14 +295,26 @@ object fxml {
         case null if classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType) =>
           val nonEmptyBindings = bindings.filterNot(EmptyBinding.unapply)
           def list = q"$parentBean.${TermName(descriptor.getReadMethod.getName)}"
-          nonEmptyBindings match {
+          val bindingSeq = nonEmptyBindings match {
             case Seq() =>
-              ???
-            case Seq(name) =>
-              ???
+              q"_root_.com.thoughtworks.binding.Binding.Constants(())"
+            case Seq(binding) =>
+              q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($binding)"
             case _ =>
-              ???
+              val valueBindings = for (binding <- nonEmptyBindings) yield {
+                q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($binding)"
+              }
+              q"_root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _)"
           }
+
+          (
+            bindingSeq,
+            name,
+            q"""
+              import _root_.scala.collection.JavaConverters._
+              $list.addAll($name.asJava)
+            """
+          )
         case null =>
           c.error(parentBean.pos, s"${descriptor.getName} is not writeable")
           (q"???", TermName("<error>"), q"???")
@@ -334,17 +346,17 @@ object fxml {
           nonEmptyBindings match {
             case Seq() =>
               q"_root_.com.thoughtworks.binding.Binding.Constant(())"
-            case Seq(name) =>
+            case Seq(binding) =>
               q"""
                 new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
                   $list
                 )(
-                  _root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($name)
+                  _root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($binding)
                 )
               """
             case _ =>
-              val valueBindings = for (name <- nonEmptyBindings) yield {
-                q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($name)"
+              val valueBindings = for (binding <- nonEmptyBindings) yield {
+                q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($binding)"
               }
               q"""
                  new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
@@ -851,8 +863,7 @@ object fxml {
                       q"{ ${TermName(id)}: $typeName => $build }"
                   }
                   q"""
-                    val $builderName = _root_.com.thoughtworks.binding.fxml.Runtime.Builder[$typeName]
-                    $builderName.build($f)
+                    _root_.com.thoughtworks.binding.fxml.Runtime.Builder[$typeName].build($f)
                   """
                 }
                 val id = fxIdOption.getOrElse(c.freshName(className))
@@ -867,10 +878,11 @@ object fxml {
                       val $bindingName: _root_.com.thoughtworks.binding.Binding[$typeName] = $initializerName
                       def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind
                     }
-                    import $macroName.{$bindingName, $elementName}
                   """
                 }
-                (attributeDefs ++ childrenDefinitions ++ autoBindDef) -> atPos(tree.pos)(q"$bindingName")
+                val autoDefImport = atPos(tree.pos)(q"import $macroName.{$bindingName, $elementName}")
+                (autoDefImport +: (attributeDefs ++ childrenDefinitions ++ autoBindDef)) -> atPos(tree.pos)(
+                  q"$bindingName")
               case (Some(EmptyAttribute()), None) =>
                 c.error(tree.pos, "fx:factory must not be empty.")
                 Nil -> q"???"
@@ -908,10 +920,10 @@ object fxml {
                           val $bindingName = $initializerName
                           def $elementName: _root_.scala.Any = macro _root_.com.thoughtworks.binding.fxml.Runtime.autoBind
                         }
-                        import $macroName.{$bindingName, $elementName}
                       """
                     }
-                    (childrenDefinitions ++ autoBindDef) -> atPos(tree.pos)(q"$bindingName")
+                    val autoDefImport = atPos(tree.pos)(q"import $macroName.{$bindingName, $elementName}")
+                    (autoDefImport +: (childrenDefinitions ++ autoBindDef)) -> atPos(tree.pos)(q"$bindingName")
                   case (_, (_, pos, _) +: _, _) =>
                     c.error(pos, "fx:factory must not contain named property")
                     Nil -> q"???"
@@ -978,11 +990,11 @@ object fxml {
       }
 
       import transformer.transform
-//      def transform(tree: Tree): Tree = {
-//        val output = transformer.transform(tree)
-//        c.info(c.enclosingPosition, show(output), true)
-//        output
-//      }
+      def transform(tree: Tree): Tree = {
+        val output = transformer.transform(tree)
+        c.info(c.enclosingPosition, show(output), true)
+        output
+      }
 
       replaceDefBody(annottees, transform)
 
