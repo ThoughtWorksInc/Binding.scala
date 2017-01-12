@@ -468,10 +468,10 @@ object fxml {
     }
 
     @tailrec
-    private def resolve(beanClass: Class[_],
-                        beanInfo: BeanInfo,
-                        bean: Tree,
-                        getters: Seq[Tree]): (Class[_], BeanInfo, Tree) = {
+    private def resolveGetters(beanClass: Class[_],
+                               beanInfo: BeanInfo,
+                               bean: Tree,
+                               getters: Seq[Tree]): (Class[_], BeanInfo, Tree) = {
       getters match {
         case Seq() =>
           (beanClass, beanInfo, bean)
@@ -484,7 +484,7 @@ object fxml {
               val nestedClass = propertyDescriptor.getPropertyType
               val nestedInfo = Introspector.getBeanInfo(nestedClass)
               val nestedBean = atPos(head.pos)(q"$bean.${TermName(propertyDescriptor.getReadMethod.getName)}")
-              resolve(nestedClass, nestedInfo, nestedBean, tail)
+              resolveGetters(nestedClass, nestedInfo, nestedBean, tail)
           }
       }
     }
@@ -523,7 +523,7 @@ object fxml {
           case prefix :+ (lastProperty @ Literal(Constant(lastPropertyName: String))) =>
             val valueName = TermName(c.freshName(lastPropertyName))
             def defaultResult = (q"???", valueName, q"???")
-            val (resolvedClass, resolvedInfo, resolvedBean) = resolve(beanClass, beanInfo, beanId, prefix)
+            val (resolvedClass, resolvedInfo, resolvedBean) = resolveGetters(beanClass, beanInfo, beanId, prefix)
             lastPropertyName match {
               case StaticProperty(classPrefix, propertyName) =>
                 val setterName = TermName(s"set${propertyName.capitalize}")
@@ -606,7 +606,7 @@ object fxml {
                 bindPropertyFromDescriptor(beanId, descriptor, values)
             }
           case prefix :+ (lastProperty @ Literal(Constant(lastPropertyName: String))) =>
-            val (resolvedClass, resolvedInfo, resolvedBean) = resolve(beanClass, beanInfo, beanId, prefix)
+            val (resolvedClass, resolvedInfo, resolvedBean) = resolveGetters(beanClass, beanInfo, beanId, prefix)
             lastPropertyName match {
               case StaticProperty(classPrefix, propertyName) =>
                 val setterName = TermName(s"set${propertyName.capitalize}")
