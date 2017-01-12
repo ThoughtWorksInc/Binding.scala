@@ -29,6 +29,16 @@ class fxml extends StaticAnnotation {
 
 object fxml {
 
+  object AutoImports {
+
+    import javafx.event._
+
+    implicit final class FunctionEventHandler[E <: Event](f: E => Unit) extends EventHandler[E] {
+      override def handle(event: E): Unit = f(event)
+    }
+
+  }
+
   object Runtime {
 
     val bindingUnitSemigroup: Semigroup[Binding[Unit]] = {
@@ -671,6 +681,7 @@ object fxml {
         ${q"val ${valDef.name}: $beanType = ${c.prefix}.constructor()".setSymbol(valDef.symbol)}
         _root_.com.thoughtworks.binding.Binding.typeClass.map($allBindingUnits)({ _: _root_.scala.Unit => $beanId })
       """
+//      c.info(c.enclosingPosition, show(result), true)
       c.untypecheck(result)
     }
 
@@ -1091,6 +1102,22 @@ object fxml {
 
             q"""
                 import _root_.scala.language.experimental.macros
+                import _root_.com.thoughtworks.binding.fxml.AutoImports.{
+                  != => _,
+                  ## => _,
+                  == => _,
+                  eq => _,
+                  equals => _,
+                  getClass => _,
+                  hashCode => _,
+                  ne => _,
+                  notify => _,
+                  notifyAll => _,
+                  synchronized => _,
+                  toString => _,
+                  wait => _,
+                  _
+                }
                 ..$defs
                 $transformedValue
               """

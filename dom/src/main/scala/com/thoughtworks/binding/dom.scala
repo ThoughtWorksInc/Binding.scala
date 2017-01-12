@@ -406,7 +406,22 @@ object dom {
 
       replaceDefBody(annottees, { body =>
         q"""_root_.com.thoughtworks.binding.Binding.apply{
-          import _root_.com.thoughtworks.binding.dom.AutoImports._
+          import _root_.com.thoughtworks.binding.dom.AutoImports.{
+            != => _,
+            ## => _,
+            == => _,
+            eq => _,
+            equals => _,
+            getClass => _,
+            hashCode => _,
+            ne => _,
+            notify => _,
+            notifyAll => _,
+            synchronized => _,
+            toString => _,
+            wait => _,
+            _
+          }
           ${transform(body)}
         }"""
       })

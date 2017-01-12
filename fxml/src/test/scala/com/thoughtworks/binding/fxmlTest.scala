@@ -567,6 +567,30 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
   }
 
+  "inline onAction" in {
+    val buttonText = Var("Click Me!")
+    import javafx.event.ActionEvent
+    import javafx.event.EventHandler
+    @fxml val vbox = {
+      <?import javafx.scene.layout.VBox?>
+        <VBox>
+          <children>
+            <?import javafx.scene.control.Button?>
+            <Button text={buttonText.bind} onAction={_: ActionEvent => buttonText := "Clicked"}/>
+          </children>
+        </VBox>
+    }
+
+    vbox.watch()
+    inside(vbox.get.getChildren.asScala) {
+      case Seq(button: javafx.scene.control.Button) =>
+        button.getText should be("Click Me!")
+        button.getOnAction.handle(new ActionEvent)
+        button.getText should be("Clicked")
+    }
+
+  }
+
   override protected def withFixture(test: NoArgTest): Outcome = {
     if (Platform.isFxApplicationThread) {
       fxmlTest. super.withFixture(test)
