@@ -80,11 +80,11 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   "Nested builders" in {
     @fxml val scene = {
       <?import javafx.scene.Scene?>
-      <Scene fx:id="z">
+      <Scene>
         <?import javafx.scene.control.Button?>
         <fill>
           <?import javafx.scene.paint.Color?>
-          <Color fx:id="y">
+          <Color>
             <red>1.0</red>
             <green>0.0</green>
             <blue>0.0</blue>
