@@ -1,8 +1,10 @@
 package com.thoughtworks.binding
 
 import javafx.application.Platform
+import javafx.scene.layout.VBox
 import javax.swing.SwingUtilities
 
+import com.thoughtworks.binding.Binding.{BindingSeq, Var}
 import org.scalatest._
 
 import scala.collection.JavaConverters._
@@ -253,7 +255,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   }
 
   "two VBoxes" in {
-    @fxml val vbox = {
+    @fxml val vbox: BindingSeq[VBox] = {
       import javafx.scene.layout.VBox
       <VBox></VBox>
       <VBox></VBox>
@@ -532,6 +534,35 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
         button0.getText should be("Hello World")
         button1.getText should be("Hello World")
       }
+    }
+
+  }
+
+  "onAction" in {
+    val buttonText = Var("Click Me!")
+    import javafx.event.ActionEvent
+    import javafx.event.EventHandler
+    val handleButtonAction = new EventHandler[ActionEvent] {
+      override def handle(event: ActionEvent) = {
+        buttonText := "Clicked"
+      }
+    }
+    @fxml val vbox = {
+      <?import javafx.scene.layout.VBox?>
+      <VBox>
+        <children>
+          <?import javafx.scene.control.Button?>
+          <Button text={buttonText.bind} onAction={handleButtonAction}/>
+        </children>
+      </VBox>
+    }
+
+    vbox.watch()
+    inside(vbox.get.getChildren.asScala) {
+      case Seq(button: javafx.scene.control.Button) =>
+        button.getText should be("Click Me!")
+        button.getOnAction.handle(new ActionEvent)
+        button.getText should be("Clicked")
     }
 
   }
