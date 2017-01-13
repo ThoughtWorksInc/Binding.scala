@@ -1,6 +1,7 @@
 package com.thoughtworks.binding
 
 import javafx.application.Platform
+import javafx.collections.ListChangeListener
 import javafx.collections.ListChangeListener.Change
 import javax.swing.SwingUtilities
 
@@ -668,6 +669,19 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
         b4.getText should be("last button")
     }
 
+  }
+  "inline onChange" in {
+    @fxml val vbox = {
+      import javafx.collections.ListChangeListener
+      import javafx.scene.Node
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      <VBox>
+        <children onChange={event: ListChangeListener.Change[_ <: Node] =>}>
+        </children>
+      </VBox>
+    }
+    // should compile
   }
 
   override protected def withFixture(test: NoArgTest): Outcome = {

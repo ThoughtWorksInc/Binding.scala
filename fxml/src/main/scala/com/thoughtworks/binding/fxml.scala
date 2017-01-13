@@ -4,7 +4,8 @@ package binding
 import java.beans.{BeanInfo, Introspector, PropertyDescriptor}
 import javafx.application.Platform
 import javafx.beans.DefaultProperty
-import javafx.collections.{ListChangeListener, ObservableList}
+import javafx.event._
+import javafx.collections.{ListChangeListener, MapChangeListener, ObservableList, SetChangeListener}
 import javafx.fxml.JavaFXBuilderFactory
 import javax.swing.SwingUtilities
 
@@ -19,8 +20,9 @@ import scala.collection.{GenSeq, mutable}
 import scala.collection.immutable.Queue
 import scala.collection.JavaConverters._
 import scala.language.experimental.macros
+import scala.language.implicitConversions
 import scalaz.Semigroup
-
+import scalaz.syntax.all._
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -34,10 +36,44 @@ object fxml {
 
   object AutoImports {
 
-    import javafx.event._
-
     implicit final class FunctionEventHandler[E <: Event](f: E => Unit) extends EventHandler[E] {
       override def handle(event: E): Unit = f(event)
+    }
+
+    implicit final def functionBindingToEventHandlerBinding[E <: Event](
+        binding: Binding[E => Unit]): Binding[FunctionEventHandler[E]] = {
+      binding.map(new FunctionEventHandler[E](_))
+    }
+
+    implicit final class FunctionListChangeListener[E](f: ListChangeListener.Change[_ <: E] => Unit)
+        extends ListChangeListener[E] {
+      override def onChanged(c: ListChangeListener.Change[_ <: E]): Unit = f(c)
+    }
+
+    implicit final def functionBindingToListChangeListenerBinding[E](
+        binding: Binding[ListChangeListener.Change[_ <: E] => Unit]): Binding[FunctionListChangeListener[E]] = {
+      binding.map(new FunctionListChangeListener[E](_))
+    }
+
+    implicit final class FunctionSetChangeListener[E](f: SetChangeListener.Change[_ <: E] => Unit)
+        extends SetChangeListener[E] {
+      override def onChanged(c: SetChangeListener.Change[_ <: E]): Unit = f(c)
+    }
+
+    implicit final def functionBindingToSetChangeListenerBinding[E](
+        binding: Binding[SetChangeListener.Change[_ <: E] => Unit]): Binding[FunctionSetChangeListener[E]] = {
+      binding.map(new FunctionSetChangeListener[E](_))
+    }
+
+    implicit final class FunctionMapChangeListener[K, V](f: MapChangeListener.Change[_ <: K, _ <: V] => Unit)
+        extends MapChangeListener[K, V] {
+      override def onChanged(c: MapChangeListener.Change[_ <: K, _ <: V]): Unit = f(c)
+    }
+
+    implicit final def functionBindingToMapChangeListenerBinding[K, V](
+        binding: Binding[MapChangeListener.Change[_ <: K, _ <: V] => Unit])
+      : Binding[FunctionMapChangeListener[K, V]] = {
+      binding.map(new FunctionMapChangeListener[K, V](_))
     }
 
   }
