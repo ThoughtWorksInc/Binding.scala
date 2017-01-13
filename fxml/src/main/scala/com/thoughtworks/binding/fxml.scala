@@ -218,39 +218,6 @@ object fxml {
         Parent,
         PropertyName] = macro Macros.onChangeMountPointFactory[Parent, PropertyName]
 
-//      implicit
-
-//
-//      trait JavaBeanMountPointFactory[Parent] extends MountPointFactory[Parent] with Dynamic {
-//        // TODO: resolve java bean from macros
-//        def applyDynamic()
-//      }
-//
-//      implicit final class OnChangeOps[Element](mountPointFactory: MountPointFactory[ObservableList[Element]]) {
-//        import mountPointFactory.parent
-////        def onChange(binding: Binding[ListChangeListener[Element]]): Binding[Unit] = {
-////          new SingleMountPoint(binding) {
-////
-////            var lastListener: ListChangeListener[Element] = _
-////
-////            override protected def set(value: ListChangeListener[Element]): Unit = {
-////              if (lastListener != null) {
-////                parent.removeListener(lastListener)
-////              }
-////              lastListener = value
-////              parent.addListener(value)
-////            }
-////
-////            override protected def unmount(): Unit = {
-////              if (lastListener != null) {
-////                parent.removeListener(lastListener)
-////              }
-////              lastListener = null
-////              super.unmount()
-////            }
-////          }
-////        }
-//      }
     }
 
     val bindingUnitSemigroup: Semigroup[Binding[Unit]] = {
@@ -523,12 +490,12 @@ object fxml {
       val ConstantType(Constant(OnXxxChange(propertyPrefix))) = propertyNameType
       val parentName = TermName(c.freshName("parent"))
       if (propertyPrefix == "") {
-        q"""_root_.com.thoughtworks.binding.fxml.Runtime.MountPointFactory.FunctionMountPointFactory({ ($parentName: $parentType, _: $propertyNameType) =>
+        q"""new _root_.com.thoughtworks.binding.fxml.Runtime.MountPointFactory.FunctionMountPointFactory({ ($parentName: $parentType, _: $propertyNameType) =>
           _root_.com.thoughtworks.binding.fxml.Runtime.listenMountPoint($parentName)
         })"""
       } else {
         val propertyName = TermName(s"${Introspector.decapitalize(propertyPrefix)}Property")
-        q"""_root_.com.thoughtworks.binding.fxml.Runtime.MountPointFactory.FunctionMountPointFactory({ ($parentName: $parentType, _: $propertyNameType) =>
+        q"""new _root_.com.thoughtworks.binding.fxml.Runtime.MountPointFactory.FunctionMountPointFactory({ ($parentName: $parentType, _: $propertyNameType) =>
           _root_.com.thoughtworks.binding.fxml.Runtime.listenMountPoint($parentName.$propertyName)
         })"""
       }
