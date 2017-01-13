@@ -1290,9 +1290,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private var referenceCount = 0
 
-    private[binding] def mount(): Unit
+    protected def mount(): Unit
 
-    private[binding] def unmount(): Unit
+    protected def unmount(): Unit
 
     @inline
     override private[binding] def addChangedListener(listener: ChangedListener[Unit]): Unit = {
@@ -1322,14 +1322,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element]) extends MountPoint {
 
-    @inline
-    private[binding] final def mount(): Unit = {
+    protected def mount(): Unit = {
       upstream.addPatchedListener(upstreamListener)
       set(upstream.get)
     }
 
-    @inline
-    private[binding] final def unmount(): Unit = {
+    protected def unmount(): Unit = {
       upstream.removePatchedListener(upstreamListener)
       set(Seq.empty)
     }
@@ -1352,21 +1350,21 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   /**
     * A mechanism that mounts the result of a data binding expression of a single value into DOM or other system.
     *
+    * Use this class only if you must override [[mount]] or [[unmount]].
+    * If you only want to override [[set]], you can use `Binding[Unit] { onUpstreamChange(upstream.bind) }` instead.
+    *
     * @group expressions
     */
-  @deprecated(message = "Use `Binding[Unit]` instead", since = "10.0.0")
   abstract class SingleMountPoint[-Value](upstream: Binding[Value]) extends MountPoint {
 
     protected def set(value: Value): Unit
 
-    @inline
-    private[binding] final def mount(): Unit = {
+    protected def mount(): Unit = {
       set(upstream.get)
       upstream.addChangedListener(upstreamListener)
     }
 
-    @inline
-    private[binding] final def unmount(): Unit = {
+    protected def unmount(): Unit = {
       upstream.removeChangedListener(upstreamListener)
     }
 
