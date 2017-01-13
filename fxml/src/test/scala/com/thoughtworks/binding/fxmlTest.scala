@@ -1,8 +1,6 @@
 package com.thoughtworks.binding
 
 import javafx.application.Platform
-import javafx.collections.ListChangeListener
-import javafx.collections.ListChangeListener.Change
 import javax.swing.SwingUtilities
 
 import com.thoughtworks.binding.Binding.{BindingSeq, Var, Vars}
@@ -136,6 +134,30 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
           {b.getText}
         </text>
       </Button>
+    }
+
+    buttons.watch()
+    inside(buttons.get) {
+      case Seq(button1, button2) =>
+        button1.getText shouldNot be("")
+        button1.getText should be(button2.getText)
+    }
+
+  }
+
+  "Pattern matching" in {
+    @fxml val (buttons, 2) = {
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      (
+        <Button fx:id="b" text={b.toString}/>
+        <Button>
+          <text>
+            {b.getText}
+          </text>
+        </Button>,
+        2
+      )
     }
 
     buttons.watch()
@@ -599,9 +621,9 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     import javafx.scene.layout.VBox
     import javafx.scene.control.Button
 
-    val eventHandlers = mutable.Queue.empty[Change[_ <: Node] => Assertion]
+    val eventHandlers = mutable.Queue.empty[ListChangeListener.Change[_ <: Node] => Assertion]
     val handler = new ListChangeListener[Node] {
-      override def onChanged(c: Change[_ <: Node]): Unit = {
+      override def onChanged(c: ListChangeListener.Change[_ <: Node]): Unit = {
         while (c.next()) {
           eventHandlers.dequeue().apply(c)
         }
@@ -666,6 +688,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
 
   }
+
   "inline onChange" in {
     @fxml val vbox = {
       import javafx.collections.ListChangeListener
@@ -679,6 +702,31 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
     // should compile
   }
+
+  "onParentChange" in {
+    @fxml val vbox = {
+      import javafx.collections._
+      import javafx.scene.Node
+      import javafx.scene.layout.VBox
+      import javafx.scene.control.Button
+      import javafx.beans.value._
+      import javafx.scene.Parent
+      <VBox>
+        <Button onParentChange={ (event: ObservableValue[_ <: Parent], oldValue:Parent, newValue:Parent) => println(event)}/>
+      </VBox>
+    }
+    vbox.watch()
+    // should compile
+  }
+//final val onChange = "onChange"
+//
+//  {
+//    import javafx.scene.Node
+//  import javafx.scene.control.Button
+//    import javafx.collections._
+//    fxml.Runtime.MountPointFactory.onChangeMountPointFactory[ObservableList[Node], onChange.type ]
+//
+//  }
 
   override protected def withFixture(test: NoArgTest): Outcome = {
     if (Platform.isFxApplicationThread) {

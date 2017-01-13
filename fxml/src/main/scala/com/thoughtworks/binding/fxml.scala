@@ -1,11 +1,13 @@
 package com.thoughtworks
 package binding
 
+import java.beans
 import java.beans.{BeanInfo, Introspector, PropertyDescriptor}
 import javafx.application.Platform
 import javafx.beans.DefaultProperty
+import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.event._
-import javafx.collections.{ListChangeListener, MapChangeListener, ObservableList, SetChangeListener}
+import javafx.collections._
 import javafx.fxml.JavaFXBuilderFactory
 import javax.swing.SwingUtilities
 
@@ -15,7 +17,7 @@ import com.thoughtworks.Extractor._
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
 
-import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
+import scala.annotation.{StaticAnnotation, compileTimeOnly, implicitNotFound, tailrec}
 import scala.collection.{GenSeq, mutable}
 import scala.collection.immutable.Queue
 import scala.collection.JavaConverters._
@@ -23,6 +25,7 @@ import scala.language.experimental.macros
 import scala.language.implicitConversions
 import scalaz.Semigroup
 import scalaz.syntax.all._
+import scala.language.dynamics
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -43,6 +46,16 @@ object fxml {
     implicit final def functionBindingToEventHandlerBinding[E <: Event](
         binding: Binding[E => Unit]): Binding[FunctionEventHandler[E]] = {
       binding.map(new FunctionEventHandler[E](_))
+    }
+
+    implicit final class FunctionChangeListener[E](f: (ObservableValue[_ <: E], E, E) => Unit)
+        extends ChangeListener[E] {
+      override def changed(c: ObservableValue[_ <: E], oldValue: E, newValue: E): Unit = f(c, oldValue, newValue)
+    }
+
+    implicit final def functionBindingToListListenerBinding[E](
+        binding: Binding[(ObservableValue[_ <: E], E, E) => Unit]): Binding[FunctionChangeListener[E]] = {
+      binding.map(new FunctionChangeListener[E](_))
     }
 
     implicit final class FunctionListChangeListener[E](f: ListChangeListener.Change[_ <: E] => Unit)
@@ -80,67 +93,164 @@ object fxml {
 
   object Runtime {
 
-    trait MountPointFactoryFactory[Parent] {
-      type Out <: MountPointFactory[Parent]
-      def apply(parent: Parent): Out
+    trait Listen[-Source] {
+      type Listener
+      def addListener(source: Source, listener: Listener): Unit
+      def removeListener(source: Source, listener: Listener): Unit
     }
 
-    object MountPointFactoryFactory {
-      import MountPointFactory._
+    object Listen {
 
-      implicit def JavaBeanMountPointFactoryFactory[Parent] = new MountPointFactoryFactory[Parent] {
-        override type Out = JavaBeanMountPointFactory[Parent]
+      type Aux[-Source, -Listener0] = Listen[Source] {
+        type Listener >: Listener0
+      }
 
-        override def apply(parent0: Parent): Out = new JavaBeanMountPointFactory[Parent] {
-          override val parent = parent0
+      implicit def ValueListen[Value]: Listen.Aux[ObservableValue[_ <: Value], ChangeListener[_ >: Value]] = {
+        new Listen[ObservableValue[_ <: Value]] {
+          override type Listener = ChangeListener[_ >: Value]
+          override def addListener(source: ObservableValue[_ <: Value], listener: ChangeListener[_ >: Value]): Unit = {
+            source.addListener(listener)
+          }
+
+          override def removeListener(source: ObservableValue[_ <: Value],
+                                      listener: ChangeListener[_ >: Value]): Unit = {
+            source.removeListener(listener)
+          }
+        }
+      }
+
+      implicit def MapListen[Key, Value]
+        : Listen.Aux[ObservableMap[_ <: Key, _ <: Value], MapChangeListener[_ >: Key, _ >: Value]] = {
+        new Listen[ObservableMap[_ <: Key, _ <: Value]] {
+          override type Listener = MapChangeListener[_ >: Key, _ >: Value]
+          override def addListener(source: ObservableMap[_ <: Key, _ <: Value],
+                                   listener: MapChangeListener[_ >: Key, _ >: Value]): Unit = {
+            source.addListener(listener)
+          }
+
+          override def removeListener(source: ObservableMap[_ <: Key, _ <: Value],
+                                      listener: MapChangeListener[_ >: Key, _ >: Value]): Unit = {
+            source.removeListener(listener)
+          }
+        }
+      }
+
+      implicit def SetListen[Element]: Listen.Aux[ObservableSet[_ <: Element], SetChangeListener[_ >: Element]] = {
+        new Listen[ObservableSet[_ <: Element]] {
+          override type Listener = SetChangeListener[_ >: Element]
+          override def addListener(source: ObservableSet[_ <: Element],
+                                   listener: SetChangeListener[_ >: Element]): Unit = {
+            source.addListener(listener)
+          }
+
+          override def removeListener(source: ObservableSet[_ <: Element],
+                                      listener: SetChangeListener[_ >: Element]): Unit = {
+            source.removeListener(listener)
+          }
+        }
+      }
+
+      implicit def ListListen[Element]: Listen.Aux[ObservableList[_ <: Element], ListChangeListener[_ >: Element]] = {
+        new Listen[ObservableList[_ <: Element]] {
+          override type Listener = ListChangeListener[_ >: Element]
+          override def addListener(source: ObservableList[_ <: Element],
+                                   listener: ListChangeListener[_ >: Element]): Unit = {
+            source.addListener(listener)
+          }
+
+          override def removeListener(source: ObservableList[_ <: Element],
+                                      listener: ListChangeListener[_ >: Element]): Unit = {
+            source.removeListener(listener)
+          }
         }
       }
     }
 
-    def mountPoints[Parent](parent: Parent)(
-        implicit mountPointFactoryFactory: MountPointFactoryFactory[Parent]): mountPointFactoryFactory.Out =
-      mountPointFactoryFactory(parent)
+    def listenMountPoint[Source](source: Source)(
+        implicit listen: Listen[Source]): Binding[listen.Listener] => ListenMountPoint[Source, listen.Listener] = {
+      ListenMountPoint[Source, listen.Listener](source, _)(listen)
+    }
 
-    /**
-      * An adapter to create mount points for [[parent]]
-      */
-    trait MountPointFactory[Parent] {
-      val parent: Parent
+    final case class ListenMountPoint[Source, Listener](source: Source, binding: Binding[Listener])(
+        implicit listen: Listen.Aux[Source, Listener])
+        extends SingleMountPoint[Listener](binding) {
+      var lastListenerOption: Option[Listener] = None
+
+      override protected def set(value: Listener): Unit = {
+        lastListenerOption.foreach(listen.removeListener(source, _))
+        lastListenerOption = Some(value)
+        listen.addListener(source, value)
+      }
+      override protected def unmount(): Unit = {
+        lastListenerOption.foreach(listen.removeListener(source, _))
+        lastListenerOption = None
+        super.unmount()
+      }
+    }
+
+    def mountPoint(parent: AnyRef, propertyName: String with Singleton)(
+        implicit mountPointFactory: MountPointFactory[parent.type, propertyName.type]): mountPointFactory.Out =
+      mountPointFactory(parent, propertyName)
+
+    @implicitNotFound(msg = "${PropertyName} is not a valid property")
+    trait MountPointFactory[Parent, PropertyName <: String with Singleton] {
+      type Out
+
+      def apply(parent: Parent, propertyName: PropertyName): Out
     }
 
     object MountPointFactory {
       import scala.language.dynamics
 
-      trait JavaBeanMountPointFactory[Parent] extends MountPointFactory[Parent] with Dynamic {
-        // TODO: resolve java bean from macros
+      type Aux[Parent, PropertyName <: String with Singleton, Out0] = MountPointFactory[Parent, PropertyName] {
+        type Out = Out0
       }
 
-      implicit final class OnChangeOps[Element](mountPointFactory: MountPointFactory[ObservableList[Element]]) {
-        import mountPointFactory.parent
-        def onChange(binding: Binding[ListChangeListener[Element]]): Binding[Unit] = {
-          new SingleMountPoint(binding) {
+      implicit final class FunctionMountPointFactory[Parent, PropertyName <: String with Singleton, Out0](
+          underlying: (Parent, PropertyName) => Out0)
+          extends MountPointFactory[Parent, PropertyName] { this: MountPointFactory.Aux[Parent, PropertyName, Out0] =>
+        type Out = Out0
 
-            var lastListener: ListChangeListener[Element] = _
-
-            override protected def set(value: ListChangeListener[Element]): Unit = {
-              if (lastListener != null) {
-                parent.removeListener(lastListener)
-              }
-              lastListener = value
-              parent.addListener(value)
-            }
-
-            override protected def mount(): Unit = {
-              if (lastListener != null) {
-                parent.removeListener(lastListener)
-
-              }
-              lastListener = null
-              super.mount()
-            }
-          }
-        }
+        override def apply(parent: Parent, propertyName: PropertyName) = underlying(parent, propertyName)
       }
+
+      implicit def onChangeMountPointFactory[Parent, PropertyName <: String with Singleton]: MountPointFactory[
+        Parent,
+        PropertyName] = macro Macros.onChangeMountPointFactory[Parent, PropertyName]
+
+//      implicit
+
+//
+//      trait JavaBeanMountPointFactory[Parent] extends MountPointFactory[Parent] with Dynamic {
+//        // TODO: resolve java bean from macros
+//        def applyDynamic()
+//      }
+//
+//      implicit final class OnChangeOps[Element](mountPointFactory: MountPointFactory[ObservableList[Element]]) {
+//        import mountPointFactory.parent
+////        def onChange(binding: Binding[ListChangeListener[Element]]): Binding[Unit] = {
+////          new SingleMountPoint(binding) {
+////
+////            var lastListener: ListChangeListener[Element] = _
+////
+////            override protected def set(value: ListChangeListener[Element]): Unit = {
+////              if (lastListener != null) {
+////                parent.removeListener(lastListener)
+////              }
+////              lastListener = value
+////              parent.addListener(value)
+////            }
+////
+////            override protected def unmount(): Unit = {
+////              if (lastListener != null) {
+////                parent.removeListener(lastListener)
+////              }
+////              lastListener = null
+////              super.unmount()
+////            }
+////          }
+////        }
+//      }
     }
 
     val bindingUnitSemigroup: Semigroup[Binding[Unit]] = {
@@ -393,6 +503,8 @@ object fxml {
 
     private[Macros] val StaticProperty = """([^\.]+)\.([^\.]+)""".r
 
+    private[Macros] val OnXxxChange = """on(\w*)Change""".r
+
   }
 
   import scala.reflect.macros.whitebox
@@ -403,6 +515,24 @@ object fxml {
     import Macros._
     import c.internal.decorators._
     import c.universe._
+
+    def onChangeMountPointFactory[Parent: WeakTypeTag, PropertyName <: String with Singleton: WeakTypeTag]: Tree = {
+
+      val parentType = weakTypeOf[Parent]
+      val propertyNameType = weakTypeOf[PropertyName]
+      val ConstantType(Constant(OnXxxChange(propertyPrefix))) = propertyNameType
+      val parentName = TermName(c.freshName("parent"))
+      if (propertyPrefix == "") {
+        q"""_root_.com.thoughtworks.binding.fxml.Runtime.MountPointFactory.FunctionMountPointFactory({ ($parentName: $parentType, _: $propertyNameType) =>
+          _root_.com.thoughtworks.binding.fxml.Runtime.listenMountPoint($parentName)
+        })"""
+      } else {
+        val propertyName = TermName(s"${Introspector.decapitalize(propertyPrefix)}Property")
+        q"""_root_.com.thoughtworks.binding.fxml.Runtime.MountPointFactory.FunctionMountPointFactory({ ($parentName: $parentType, _: $propertyNameType) =>
+          _root_.com.thoughtworks.binding.fxml.Runtime.listenMountPoint($parentName.$propertyName)
+        })"""
+      }
+    }
 
     private implicit def constantLiftable[A: Liftable]: Liftable[Binding.Constant[A]] =
       new Liftable[Binding.Constant[A]] {
@@ -782,8 +912,7 @@ object fxml {
                       bindPropertyFromDescriptor(resolvedBean, descriptor, values)
                     case None =>
                       atPos(property.pos) {
-                        val mountPointMethod = TermName(lastPropertyName)
-                        q"_root_.com.thoughtworks.binding.fxml.Runtime.mountPoints($resolvedBean).$mountPointMethod(..$values)"
+                        q"_root_.com.thoughtworks.binding.fxml.Runtime.mountPoint($resolvedBean, $lastPropertyName).apply(..$values)"
                       }
                   }
                 }
@@ -964,15 +1093,13 @@ object fxml {
               val (attributeDefinitions, transformedAttributeValue) = transformAttributeValue(value)
               key match {
                 case UnprefixedName(attributeName) =>
-                  loop(
-                    tail,
-                    accumulatedDefinitions ++ attributeDefinitions,
-                    accumulatedPairs.enqueue((Seq(attributeName), transformedAttributeValue))
-                  )
-                case _ =>
-                  // TODO: support prefixed attributes
-                  c.error(value.pos, "attributes should not be prefixed")
-                  loop(tail, accumulatedDefinitions, accumulatedPairs)
+                  loop(tail,
+                       accumulatedDefinitions ++ attributeDefinitions,
+                       accumulatedPairs.enqueue((Seq(attributeName), transformedAttributeValue)))
+                case PrefixedName(prefix, localPart) =>
+                  loop(tail,
+                       accumulatedDefinitions ++ attributeDefinitions,
+                       accumulatedPairs.enqueue((prefix.split(':').view :+ localPart, transformedAttributeValue)))
               }
           }
         }
