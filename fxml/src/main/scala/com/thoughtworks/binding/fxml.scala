@@ -54,7 +54,7 @@ object fxml {
         override type Out = JavaBeanMountPointFactory[Parent]
 
         override def apply(parent0: Parent): Out = new JavaBeanMountPointFactory[Parent] {
-          override def parent = parent0
+          override val parent = parent0
         }
       }
     }
