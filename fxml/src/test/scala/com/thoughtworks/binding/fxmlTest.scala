@@ -603,11 +603,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     val handler = new ListChangeListener[Node] {
       override def onChanged(c: Change[_ <: Node]): Unit = {
         while (c.next()) {
-          if (eventHandlers.isEmpty) {
-            
-          } else {
-            eventHandlers.dequeue().apply(c)
-          }
+          eventHandlers.dequeue().apply(c)
         }
       }
     }
