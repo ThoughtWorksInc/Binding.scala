@@ -598,6 +598,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     import javafx.scene.control.Button
     val handler = new ListChangeListener[Node] {
       override def onChanged(c: Change[_ <: Node]): Unit = {
+        c.next() should be true
         c.getRemovedSize should be(0)
         inside(c.getAddedSubList.asScala) {
           case Seq(button1: Button, button2: Button, button3: Button) =>
@@ -605,6 +606,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
             button2.getText should be("bar")
             button3.getText should be("baz")
         }
+        c.next() should be false
       }
     }
     val buttonTexts = Vars.empty[String]
