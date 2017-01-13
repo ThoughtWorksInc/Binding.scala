@@ -95,7 +95,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       private[Binding] final def appendCache(elements: TraversableOnce[A]): GenSeq[A] = {
-        val seq = elements.toVector
+        val seq = elements.toSeq
         cacheData = cacheData ++ seq
         seq
       }
