@@ -852,6 +852,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
+    @inline
     override private[binding] def removePatchedListener(listener: PatchedListener[B]): Unit = {
       publisher.unsubscribe(listener)
       if (publisher.isEmpty) {
@@ -862,6 +863,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
+    @inline
     override private[binding] def addPatchedListener(listener: PatchedListener[B]): Unit = {
       if (publisher.isEmpty) {
         upstream.addPatchedListener(upstreamListener)
