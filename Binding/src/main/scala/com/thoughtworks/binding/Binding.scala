@@ -1241,6 +1241,45 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   }
 
   /**
+    * A [[BindingSeq]] that contains only one element
+    *
+    * @group expressions
+    */
+  final case class SingletonBindingSeq[A](upstream: Binding[A]) extends BindingSeq[A] with ChangedListener[A] {
+
+    private[binding] val publisher = new Publisher[PatchedListener[A]]
+
+    override private[binding] def changed(event: ChangedEvent[A]) = {
+      val patchedEvent = new PatchedEvent[A](this, 0, SingleSeq(event.newValue), 1)
+      for (listener <- publisher) {
+        listener.patched(patchedEvent)
+      }
+    }
+
+    override def length: Constant[Int] = Constant(1)
+
+    @inline
+    override private[binding] def get = SingleSeq(upstream.get)
+
+    @inline
+    override private[binding] def removePatchedListener(listener: PatchedListener[A]): Unit = {
+      publisher.unsubscribe(listener)
+      if (publisher.isEmpty) {
+        upstream.removeChangedListener(this)
+      }
+    }
+
+    @inline
+    override private[binding] def addPatchedListener(listener: PatchedListener[A]): Unit = {
+      if (publisher.isEmpty) {
+        upstream.addChangedListener(this)
+      }
+      publisher.subscribe(listener)
+    }
+
+  }
+
+  /**
     * A mechanism that mounts the result of a data binding expression into DOM or other system.
     *
     * @group expressions
