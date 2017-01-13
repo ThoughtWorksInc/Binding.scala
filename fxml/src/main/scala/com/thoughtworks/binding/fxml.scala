@@ -696,7 +696,6 @@ object fxml {
                   }
                 }
             }
-          // TODO: onChange
         }
 
       }
@@ -788,7 +787,6 @@ object fxml {
                       }
                   }
                 }
-              // TODO: onChange
             }
         }
       }
@@ -1017,28 +1015,17 @@ object fxml {
         * Throws a [[MatchError]] if the input is not XML or it is not a value.
         */
       private def transformXmlValue: PartialFunction[Tree, (Seq[Tree], Tree)] = {
-        // TODO: static property
         case tree @ Text(data) =>
           Nil -> atPos(tree.pos) {
             q"_root_.com.thoughtworks.binding.Binding.Constant($data)"
           }
         case tree @ Elem(UnprefixedName(className @ ClassName()), attributes, _, children) =>
-          // TODO: create new instance
+          // Create new instance
 
           // TODO: <fx:include> (Read external files)
           // TODO: convert fx:value, fx:constant, <fx:reference> and <fx:copy> to @fxml val
 
-          // Type Coercion
-          // FXML uses "type coercion" to convert property values to the appropriate type as needed. Type coercion is required because the only data types supported by XML are elements, text, and attributes (whose values are also text). However, Java supports a number of different data types including built-in primitive value types as well as extensible reference types.
-          // The FXML loader uses the coerce() method of BeanAdapter to perform any required type conversions. This method is capable of performing basic primitive type conversions such as String to boolean or int to double, and will also convert String to Class or String to Enum. Additional conversions can be implemented by defining a static valueOf() method on the target type.
-          //
           // 不要支持Type Coercion、Location Resolution、Resource Resolution、Variable Resolution、Escape Sequences、Expression Binding，要求用户改用花括号{}以提供类型安全的代码
-
-          // fx:define 生成valDefs
-
-          // 不支持 @FXML
-
-          // TODO: If an element represents a type that already implements Map (such as java.util.HashMap), it is not wrapped and its get() and put() methods are invoked directly. For example, the following FXML creates an instance of HashMap and sets its "foo" and "bar" values to "123" and "456", respectively:
 
           val (fxAttributes, otherAttributes) = attributes.partition {
             case (PrefixedName("fx", _), _) => true
