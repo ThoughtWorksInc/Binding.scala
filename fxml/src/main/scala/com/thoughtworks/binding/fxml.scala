@@ -17,8 +17,10 @@ import macrocompat.bundle
 import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
 import scala.collection.{GenSeq, mutable}
 import scala.collection.immutable.Queue
+import scala.collection.JavaConverters._
 import scala.language.experimental.macros
 import scalaz.Semigroup
+
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -198,7 +200,6 @@ object fxml {
 
       implicit def fromJavaList[Element0]: ToBindingSeq.Aux[java.util.List[_ <: Element0], Element0] = {
         import scalaz.syntax.all._
-        import scala.collection.JavaConverters._
         fromBindingSeq[Element0].compose[java.util.List[_ <: Element0]](_.map { list =>
           Constants(list.asScala: _*)
         })
@@ -293,8 +294,6 @@ object fxml {
     final class JavaListMountPoint[A](javaList: java.util.List[A])(bindingSeq: BindingSeq[A])
         extends MultiMountPoint[A](bindingSeq) {
 
-      import collection.JavaConverters._
-
       override protected def set(children: Seq[A]): Unit = {
         javaList.clear()
         javaList.addAll(children.asJava)
@@ -306,9 +305,7 @@ object fxml {
           i.next()
           i.remove()
         }
-        for (newElement <- that) {
-          i.add(newElement)
-        }
+        javaList.addAll(from, that.seq.asJava)
       }
     }
 

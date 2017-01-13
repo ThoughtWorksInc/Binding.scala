@@ -8,6 +8,7 @@ import com.thoughtworks.binding.Binding.{BindingSeq, Var, Vars}
 import org.scalatest._
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -596,20 +597,21 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     import javafx.scene.Node
     import javafx.scene.layout.VBox
     import javafx.scene.control.Button
+
+    val eventHandlers = mutable.Queue.empty[Change[_ <: Node] => Assertion]
     val handler = new ListChangeListener[Node] {
       override def onChanged(c: Change[_ <: Node]): Unit = {
-        c.next() should be(true)
-        c.getRemovedSize should be(0)
-        inside(c.getAddedSubList.asScala) {
-          case Seq(button1: Button, button2: Button, button3: Button) =>
-            button1.getText should be("foo")
-            button2.getText should be("bar")
-            button3.getText should be("baz")
+        while (c.next()) {
+          if (eventHandlers.isEmpty) {
+            
+          } else {
+            eventHandlers.dequeue().apply(c)
+          }
         }
-        c.next() should be(false)
       }
     }
     val buttonTexts = Vars.empty[String]
+
     @fxml val vbox = {
       <VBox>
         <children onChange={handler}>
@@ -623,13 +625,40 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
         </children>
       </VBox>
     }
+    eventHandlers should be(empty)
+
+    eventHandlers.enqueue { c =>
+      c.getRemovedSize should be(0)
+      c.getFrom should be(0)
+      inside(c.getAddedSubList.asScala) {
+        case Seq(button1: Button, button2: Button) =>
+          button1.getText should be("first button")
+          button2.getText should be("last button")
+      }
+    }
     vbox.watch()
     inside(vbox.get.getChildren.asScala) {
       case Seq(b0: Button, b1: Button) =>
         b0.getText should be("first button")
         b1.getText should be("last button")
     }
+    eventHandlers should be(empty)
+
+    eventHandlers.enqueue { c =>
+      c.getRemovedSize should be(0)
+      c.getFrom should be(1)
+      inside(c.getAddedSubList.asScala) {
+        case Seq(button1: Button, button2: Button, button3: Button) =>
+          button1.getText should be("foo")
+          button2.getText should be("bar")
+          button3.getText should be("baz")
+      }
+    }
+
     buttonTexts.get ++= Seq("foo", "bar", "baz")
+
+    eventHandlers should be(empty)
+
     inside(vbox.get.getChildren.asScala) {
       case Seq(b0: Button, b1: Button, b2: Button, b3: Button, b4: Button) =>
         b0.getText should be("first button")
