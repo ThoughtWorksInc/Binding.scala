@@ -718,15 +718,6 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     vbox.watch()
     // should compile
   }
-//final val onChange = "onChange"
-//
-//  {
-//    import javafx.scene.Node
-//  import javafx.scene.control.Button
-//    import javafx.collections._
-//    fxml.Runtime.MountPointFactory.onChangeMountPointFactory[ObservableList[Node], onChange.type ]
-//
-//  }
 
   override protected def withFixture(test: NoArgTest): Outcome = {
     if (Platform.isFxApplicationThread) {
