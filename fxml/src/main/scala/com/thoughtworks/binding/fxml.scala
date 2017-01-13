@@ -4,17 +4,18 @@ package binding
 import java.beans.{BeanInfo, Introspector, PropertyDescriptor}
 import javafx.application.Platform
 import javafx.beans.DefaultProperty
+import javafx.collections.{ListChangeListener, ObservableList}
 import javafx.fxml.JavaFXBuilderFactory
 import javax.swing.SwingUtilities
 
-import com.thoughtworks.binding.Binding.{BindingSeq, Constants, MultiMountPoint}
+import com.thoughtworks.binding.Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint, SingletonBindingSeq}
 import com.thoughtworks.binding.XmlExtractor._
 import com.thoughtworks.Extractor._
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
 
 import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
-import scala.collection.GenSeq
+import scala.collection.{GenSeq, mutable}
 import scala.collection.immutable.Queue
 import scala.language.experimental.macros
 import scalaz.Semigroup
@@ -40,6 +41,69 @@ object fxml {
   }
 
   object Runtime {
+
+    trait MountPointFactoryFactory[Parent] {
+      type Out <: MountPointFactory[Parent]
+      def apply(parent: Parent): Out
+    }
+
+    object MountPointFactoryFactory {
+      import MountPointFactory._
+
+      implicit def JavaBeanMountPointFactoryFactory[Parent] = new MountPointFactoryFactory[Parent] {
+        override type Out = JavaBeanMountPointFactory[Parent]
+
+        override def apply(parent0: Parent): Out = new JavaBeanMountPointFactory[Parent] {
+          override def parent = parent0
+        }
+      }
+    }
+
+    def mountPoints[Parent](parent: Parent)(
+        implicit mountPointFactoryFactory: MountPointFactoryFactory[Parent]): mountPointFactoryFactory.Out =
+      mountPointFactoryFactory(parent)
+
+    /**
+      * An adapter to create mount points for [[parent]]
+      */
+    trait MountPointFactory[Parent] {
+      val parent: Parent
+    }
+
+    object MountPointFactory {
+      import scala.language.dynamics
+
+      trait JavaBeanMountPointFactory[Parent] extends MountPointFactory[Parent] with Dynamic {
+        // TODO: resolve java bean from macros
+      }
+
+      implicit final class OnChangeOps[Element](mountPointFactory: MountPointFactory[ObservableList[Element]]) {
+        import mountPointFactory.parent
+        def onChange(binding: Binding[ListChangeListener[Element]]): Binding[Unit] = {
+          new SingleMountPoint(binding) {
+
+            var lastListener: ListChangeListener[Element] = _
+
+            override protected def set(value: ListChangeListener[Element]): Unit = {
+              if (lastListener != null) {
+                parent.removeListener(lastListener)
+              }
+              lastListener = value
+              parent.addListener(value)
+            }
+
+            override protected def mount(): Unit = {
+              if (lastListener != null) {
+                parent.removeListener(lastListener)
+
+              }
+              lastListener = null
+              super.mount()
+            }
+          }
+        }
+      }
+    }
 
     val bindingUnitSemigroup: Semigroup[Binding[Unit]] = {
       implicit val unitSemigroup: Semigroup[Unit] = Semigroup.instance((_, _) => ())
@@ -69,27 +133,20 @@ object fxml {
       }
     }
 
-    private[thoughtworks] trait LowPriorityToBindingSeq {
+    private[thoughtworks] trait LowLowPriorityToBindingSeq {
+
       implicit final def fromSingleElement[Element0]: ToBindingSeq.Aux[Element0, Element0] = {
         new ToBindingSeq[Element0] {
           override type Element = Element0
 
-          override final def toBindingSeq(binding: Binding[Element]): BindingSeq[Element] = {
-            binding match {
-              case Binding.Constant(element) => Constants(element)
-              case _ => Constants(binding).mapBinding(identity)
-            }
+          override final def toBindingSeq(binding: Binding[Element]): SingletonBindingSeq[Element] = {
+            SingletonBindingSeq(binding)
           }
         }
       }
     }
 
-    object ToBindingSeq extends LowPriorityToBindingSeq {
-      type Aux[OneOrMany, Element0] = ToBindingSeq[OneOrMany] {
-        type Element = Element0
-      }
-
-      def apply[OneOrMany](implicit toBindingSeq: ToBindingSeq[OneOrMany]): toBindingSeq.type = toBindingSeq
+    private[thoughtworks] trait LowPriorityToBindingSeq extends LowLowPriorityToBindingSeq {
 
       implicit def fromBindingSeq[Element0]: ToBindingSeq.Aux[BindingSeq[Element0], Element0] = {
         new ToBindingSeq[BindingSeq[Element0]] {
@@ -102,6 +159,33 @@ object fxml {
           }
 
           override def toBindingSeqBinding(binding: Binding[BindingSeq[Element0]]) = binding
+        }
+      }
+    }
+
+    object ToBindingSeq extends LowPriorityToBindingSeq {
+      type Aux[OneOrMany, Element0] = ToBindingSeq[OneOrMany] {
+        type Element = Element0
+      }
+
+      def apply[OneOrMany](implicit toBindingSeq: ToBindingSeq[OneOrMany]): toBindingSeq.type = toBindingSeq
+
+      implicit def fromBindingBindingSeq[Element0]: ToBindingSeq.Aux[BindingSeq[Binding[Element0]], Element0] = {
+        import scalaz.syntax.all._
+        new ToBindingSeq[BindingSeq[Binding[Element0]]] {
+          override type Element = Element0
+          override def toBindingSeq(binding: Binding[BindingSeq[Binding[Element0]]]): BindingSeq[Element] = {
+            binding match {
+              case Binding.Constant(bindingSeq) =>
+                bindingSeq.mapBinding(identity)
+              case _ =>
+                Constants(binding).flatMapBinding(_.map(_.mapBinding(identity)))
+            }
+          }
+
+          override def toBindingSeqBinding(binding: Binding[BindingSeq[Binding[Element0]]]) = {
+            binding.map(_.mapBinding(identity))
+          }
         }
       }
 
@@ -118,6 +202,11 @@ object fxml {
         fromBindingSeq[Element0].compose[java.util.List[_ <: Element0]](_.map { list =>
           Constants(list.asScala: _*)
         })
+      }
+
+      implicit def fromBindingBinding[A]: ToBindingSeq.Aux[Binding[A], A] = {
+        import scalaz.syntax.all._
+        fromSingleElement[A].compose(_.flatMap(identity))
       }
 
     }
@@ -506,6 +595,7 @@ object fxml {
       }
     }
 
+    // FIXME: Use the same logic as JavaBean
     def resolvePropertiesFromJavaFXBuilder[Out: WeakTypeTag, Builder: WeakTypeTag](initializer: Tree): Tree = {
 
       val outType = weakTypeOf[Out]
@@ -659,9 +749,10 @@ object fxml {
                     case Some(descriptor) =>
                       bindPropertyFromDescriptor(resolvedBean, descriptor, values)
                     case None =>
-                      c.error(lastProperty.pos,
-                              s"$lastPropertyName is not a property of ${resolvedInfo.getBeanDescriptor.getName}")
-                      q"???"
+                      atPos(property.pos) {
+                        val mountPointMethod = TermName(lastPropertyName)
+                        q"_root_.com.thoughtworks.binding.fxml.Runtime.mountPoints($resolvedBean).$mountPointMethod(..$values)"
+                      }
                   }
                 }
               // TODO: onChange
@@ -1070,7 +1161,7 @@ object fxml {
           defs -> atPos(tree.pos) {
             values match {
               case Seq() =>
-                q"_root_.com.thoughtworks.binding.Binding.Constants()"
+                q"_root_.com.thoughtworks.binding.Binding.Constants(())"
               case Seq(value) =>
                 value
               case _ =>

@@ -1,10 +1,10 @@
 package com.thoughtworks.binding
 
 import javafx.application.Platform
-import javafx.scene.layout.VBox
+import javafx.collections.ListChangeListener.Change
 import javax.swing.SwingUtilities
 
-import com.thoughtworks.binding.Binding.{BindingSeq, Var}
+import com.thoughtworks.binding.Binding.{BindingSeq, Var, Vars}
 import org.scalatest._
 
 import scala.collection.JavaConverters._
@@ -255,8 +255,8 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   }
 
   "two VBoxes" in {
+    import javafx.scene.layout.VBox
     @fxml val vbox: BindingSeq[VBox] = {
-      import javafx.scene.layout.VBox
       <VBox></VBox>
       <VBox></VBox>
     }
@@ -587,6 +587,54 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
         button.getText should be("Click Me!")
         button.getOnAction.handle(new ActionEvent)
         button.getText should be("Clicked")
+    }
+
+  }
+
+  "onChange" in {
+    import javafx.collections.ListChangeListener
+    import javafx.scene.Node
+    import javafx.scene.layout.VBox
+    import javafx.scene.control.Button
+    val handler = new ListChangeListener[Node] {
+      override def onChanged(c: Change[_ <: Node]): Unit = {
+        c.getRemovedSize should be(0)
+        inside(c.getAddedSubList.asScala) {
+          case Seq(button1: Button, button2: Button, button3: Button) =>
+            button1.getText should be("foo")
+            button2.getText should be("bar")
+            button3.getText should be("baz")
+        }
+      }
+    }
+    val buttonTexts = Vars.empty[String]
+    @fxml val vbox = {
+      <VBox>
+        <children onChange={handler}>
+          <Button text="first button"/>
+          {
+            for (t <- buttonTexts) yield {
+              <Button text={t}/>
+            }
+          }
+          <Button text="last button"/>
+        </children>
+      </VBox>
+    }
+    vbox.watch()
+    inside(vbox.get.getChildren.asScala) {
+      case Seq(b0: Button, b1: Button) =>
+        b0.getText should be("first button")
+        b1.getText should be("last button")
+    }
+    buttonTexts.get ++= Seq("foo", "bar", "baz")
+    inside(vbox.get.getChildren.asScala) {
+      case Seq(b0: Button, b1: Button, b2: Button, b3: Button, b4: Button) =>
+        b0.getText should be("first button")
+        b1.getText should be("foo")
+        b2.getText should be("bar")
+        b3.getText should be("baz")
+        b4.getText should be("last button")
     }
 
   }
