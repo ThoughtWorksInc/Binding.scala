@@ -966,8 +966,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private[binding] def addPatchedListener(listener: PatchedListener[A]): Unit
 
-    @inline
-    final def length: Binding[Int] = Length(this)
+    def length: Binding[Int] = Length(this)
 
     /**
       * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
