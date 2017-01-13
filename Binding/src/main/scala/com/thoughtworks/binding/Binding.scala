@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 package com.thoughtworks.binding
 
@@ -73,10 +73,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private[Binding] var cacheData: Cache
 
       @inline
-      private[Binding] final def getCache(n:Int): A = cacheData(n)
+      private[Binding] final def getCache(n: Int): A = cacheData(n)
 
       @inline
-      private[Binding] final def updateCache(n:Int, newelem: A): Unit = {
+      private[Binding] final def updateCache(n: Int, newelem: A): Unit = {
         cacheData = cacheData.updated(n, newelem)
       }
 
@@ -118,7 +118,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         cacheData.iterator
       }
 
-      private[Binding] final def spliceCache(from: Int, mappedNewChildren: Cache, replaced: Int):TraversableOnce[A] = {
+      private[Binding] final def spliceCache(from: Int, mappedNewChildren: Cache, replaced: Int): TraversableOnce[A] = {
         val oldCache = cacheData
         if (from == 0) {
           cacheData = mappedNewChildren ++ oldCache.drop(replaced)
@@ -174,7 +174,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private[Binding] final def getCache(n: Int): A = cacheData(n)
 
       @inline
-      private[Binding] final def updateCache(n:Int, newelem: A): Unit = {
+      private[Binding] final def updateCache(n: Int, newelem: A): Unit = {
         cacheData(n) = newelem
       }
 
@@ -221,7 +221,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      private[Binding] final def spliceCache(from: Int, mappedNewChildren: Cache, replaced: Int):TraversableOnce[A] = {
+      private[Binding] final def spliceCache(from: Int, mappedNewChildren: Cache, replaced: Int): TraversableOnce[A] = {
         cacheData.splice(from, replaced, mappedNewChildren: _*)
       }
 
@@ -318,8 +318,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  private[binding] final class ChangedEvent[+Value](source: AnyRef,
-                                                    val newValue: Value) extends EventObject(source) {
+  private[binding] final class ChangedEvent[+Value](source: AnyRef, val newValue: Value) extends EventObject(source) {
     override def toString = raw"""ChangedEvent[source=$source newValue=$newValue]"""
 
   }
@@ -327,7 +326,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   private[binding] final class PatchedEvent[+Element](source: AnyRef,
                                                       val from: Int,
                                                       val that: GenSeq[Element],
-                                                      val replaced: Int) extends EventObject(source) {
+                                                      val replaced: Int)
+      extends EventObject(source) {
     override def toString = raw"""PatchedEvent[source=$source from=$from that=$that replaced=$replaced]"""
   }
 
@@ -414,8 +414,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  private final class Map[A, B](upstream: Binding[A], f: A => B)
-    extends Binding[B] with ChangedListener[A] {
+  private final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
 
     private val publisher = new Publisher[ChangedListener[B]]
 
@@ -456,7 +455,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   }
 
   private final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B])
-    extends Binding[B] with ChangedListener[B] {
+      extends Binding[B]
+      with ChangedListener[B] {
 
     private val publisher = new Publisher[ChangedListener[B]]
 
@@ -581,7 +581,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     import c.universe._
 
     final def map(f: Tree): Tree = {
-      val apply@Apply(TypeApply(Select(self, TermName("map")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
+      val apply @ Apply(TypeApply(Select(self, TermName("map")), List(b)), List(f @ Function(vparams, body))) =
+        c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[$b]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
@@ -589,7 +590,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     final def flatMap(f: Tree): Tree = {
-      val apply@Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(f@Function(vparams, body))) = c.macroApplication
+      val apply @ Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(f @ Function(vparams, body))) =
+        c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.com.thoughtworks.binding.Binding.BindingSeq[$b]]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
@@ -597,7 +599,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     final def withFilter(condition: Tree): Tree = {
-      val apply@Apply(Select(self, TermName("withFilter")), List(f@Function(vparams, body))) = c.macroApplication
+      val apply @ Apply(Select(self, TermName("withFilter")), List(f @ Function(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Boolean]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
@@ -613,7 +615,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
   }
-
 
   private[binding] final case class Length(bindingSeq: BindingSeq[_]) extends Binding[Int] with PatchedListener[Any] {
 
@@ -667,7 +668,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-
   private[binding] object Empty extends BindingSeq[Nothing] {
     @inline
     override private[binding] def removePatchedListener(listener: PatchedListener[Nothing]): Unit = {}
@@ -696,7 +696,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  private[binding] final class MapBinding[A, B](upstream: BindingSeq[A], f: A => Binding[B]) extends BindingSeq[B] with HasCache[Binding[B]] {
+  private[binding] final class MapBinding[A, B](upstream: BindingSeq[A], f: A => Binding[B])
+      extends BindingSeq[B]
+      with HasCache[Binding[B]] {
 
     private[Binding] var cacheData: Cache = {
       (for {
@@ -712,7 +714,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
           child <- upstreamEvent.that
         } yield f(child))(collection.breakOut)
         val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
-        val event = new PatchedEvent(MapBinding.this, upstreamEvent.from, new ValueProxy(mappedNewChildren), upstreamEvent.replaced)
+        val event = new PatchedEvent(MapBinding.this,
+                                     upstreamEvent.from,
+                                     new ValueProxy(mappedNewChildren),
+                                     upstreamEvent.replaced)
         for (listener <- publisher) {
           listener.patched(event)
         }
@@ -796,7 +801,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  private[binding] final class FlatMapBinding[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B]) extends BindingSeq[B] with HasCache[BindingSeq[B]] {
+  private[binding] final class FlatMapBinding[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B])
+      extends BindingSeq[B]
+      with HasCache[BindingSeq[B]] {
 
     private[Binding] var cacheData: Cache = {
       (for {
@@ -883,7 +890,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   object BindingSeq {
 
     @deprecated(since = "11.0.0", message = "Use `bindingSeq.all` instead")
-    implicit final class AsBinding[Element](upstream: BindingSeq[Element]) extends Binding[Seq[Element]] with PatchedListener[Element] {
+    implicit final class AsBinding[Element](upstream: BindingSeq[Element])
+        extends Binding[Seq[Element]]
+        with PatchedListener[Element] {
 
       private val publisher = new Publisher[ChangedListener[Seq[Element]]]
 
@@ -1090,7 +1099,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  final class Constants[+A] private(underlying: ConstantsData[A]) extends BindingSeq[A] {
+  final class Constants[+A] private (underlying: ConstantsData[A]) extends BindingSeq[A] {
 
     @inline
     override def get: Seq[A] = underlying
@@ -1131,7 +1140,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  final class Vars[A] private(private[Binding] var cacheData: HasCache[A]#Cache) extends BindingSeq[A] with HasCache[A] {
+  final class Vars[A] private (private[Binding] var cacheData: HasCache[A]#Cache)
+      extends BindingSeq[A]
+      with HasCache[A] {
 
     private[binding] val publisher = new Publisher[PatchedListener[A]]
 
@@ -1401,8 +1412,7 @@ trait Binding[+A] extends Any {
 
   type RawValue <: A
 
-  @deprecated(message = "Use [[Binding#bind]] instead", since = "7.0.0")
-  final def each: A = macro Binding.Macros.bind
+  @deprecated(message = "Use [[Binding#bind]] instead", since = "7.0.0") final def each: A = macro Binding.Macros.bind
 
   /**
     * Returns the current value of this [[Binding]] and mark the current `@dom` method depend on this [[Binding]].
@@ -1453,4 +1463,3 @@ trait Binding[+A] extends Any {
   }
 
 }
-
