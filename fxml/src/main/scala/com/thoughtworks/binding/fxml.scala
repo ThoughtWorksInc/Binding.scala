@@ -9,6 +9,7 @@ import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.event._
 import javafx.collections._
 import javafx.fxml.JavaFXBuilderFactory
+import javafx.stage.{PopupWindow, Stage, Window, WindowEvent}
 import javax.swing.SwingUtilities
 
 import com.thoughtworks.binding.Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint, SingletonBindingSeq}
@@ -36,6 +37,40 @@ class fxml extends StaticAnnotation {
 }
 
 object fxml {
+
+  def show(parent: Window, popupWindowBinding: Binding[PopupWindow]): Unit = {
+    lazy val mountPoint: Binding[Unit] = Binding {
+      val popupWindow = popupWindowBinding.bind
+      popupWindow.addEventHandler(
+        WindowEvent.WINDOW_HIDDEN,
+        new EventHandler[WindowEvent] {
+          override def handle(event: WindowEvent): Unit = {
+            popupWindow.removeEventHandler(WindowEvent.WINDOW_HIDDEN, this)
+            mountPoint.unwatch()
+          }
+        }
+      )
+      popupWindow.show(parent)
+    }
+    mountPoint.watch()
+  }
+
+  def show(stageBinding: Binding[Stage]): Unit = {
+    lazy val mountPoint: Binding[Unit] = Binding {
+      val stage = stageBinding.bind
+      stage.addEventHandler(
+        WindowEvent.WINDOW_HIDDEN,
+        new EventHandler[WindowEvent] {
+          override def handle(event: WindowEvent): Unit = {
+            stage.removeEventHandler(WindowEvent.WINDOW_HIDDEN, this)
+            mountPoint.unwatch()
+          }
+        }
+      )
+      stage.show()
+    }
+    mountPoint.watch()
+  }
 
   object AutoImports {
 
@@ -66,6 +101,17 @@ object fxml {
     implicit final def functionBindingToListChangeListenerBinding[E](
         binding: Binding[ListChangeListener.Change[_ <: E] => Unit]): Binding[FunctionListChangeListener[E]] = {
       binding.map(new FunctionListChangeListener[E](_))
+    }
+
+    implicit final class FunctionArrayChangeListener[T <: ObservableArray[T]](f: (T, Boolean, Int, Int) => Unit)
+        extends ArrayChangeListener[T] {
+      override def onChanged(observableArray: T, sizeChanged: Boolean, from: Int, to: Int): Unit =
+        f(observableArray, sizeChanged, from, to)
+    }
+
+    implicit final def functionBindingToArrayChangeListenerBinding[T <: ObservableArray[T]](
+        binding: Binding[(T, Boolean, Int, Int) => Unit]): Binding[FunctionArrayChangeListener[T]] = {
+      binding.map(new FunctionArrayChangeListener[T](_))
     }
 
     implicit final class FunctionSetChangeListener[E](f: SetChangeListener.Change[_ <: E] => Unit)
@@ -145,6 +191,19 @@ object fxml {
 
           override def removeListener(source: ObservableSet[_ <: Element],
                                       listener: SetChangeListener[_ >: Element]): Unit = {
+            source.removeListener(listener)
+          }
+        }
+      }
+
+      implicit def ArrayListen[T <: ObservableArray[T]]: Listen.Aux[ObservableArray[T], ArrayChangeListener[T]] = {
+        new Listen[ObservableArray[T]] {
+          override type Listener = ArrayChangeListener[T]
+          override def addListener(source: ObservableArray[T], listener: Listener): Unit = {
+            source.addListener(listener)
+          }
+
+          override def removeListener(source: ObservableArray[T], listener: Listener): Unit = {
             source.removeListener(listener)
           }
         }
@@ -1303,18 +1362,18 @@ object fxml {
           Nil -> q"???"
       }
 
-     private def transformBlock:PartialFunction[Block, Block] = {
-       case Block(stats, expr) =>
-         val (transformedStats :+ transformedExpr) = (stats :+ expr).flatMap {
-           case transformXmlValue.extract(defs, transformedValue) =>
-             defs :+ transformedValue
-           case transformBlock.extract(transformedBlock) =>
-             Seq(transformedBlock)
-           case subtree =>
-             Seq(super.transform(subtree))
-         }
-         Block(transformedStats.toList, transformedExpr)
-     }
+      private def transformBlock: PartialFunction[Block, Block] = {
+        case Block(stats, expr) =>
+          val (transformedStats :+ transformedExpr) = (stats :+ expr).flatMap {
+            case transformXmlValue.extract(defs, transformedValue) =>
+              defs :+ transformedValue
+            case transformBlock.extract(transformedBlock) =>
+              Seq(transformedBlock)
+            case subtree =>
+              Seq(super.transform(subtree))
+          }
+          Block(transformedStats.toList, transformedExpr)
+      }
 
       override def transform(tree: Tree): Tree = {
         tree match {
