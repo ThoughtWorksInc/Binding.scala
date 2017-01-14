@@ -24,7 +24,11 @@ lazy val XmlExtractorJS = XmlExtractor.js.addSbtFiles(file("../build.sbt.shared"
 
 lazy val XmlExtractorJVM = XmlExtractor.jvm.addSbtFiles(file("../build.sbt.shared"))
 
-lazy val fxml = project.dependsOn(BindingJVM, XmlExtractorJVM)
+lazy val fxml = crossProject.crossType(CrossType.Pure).dependsOn(Binding, XmlExtractor)
+
+lazy val fxmlJS = fxml.js.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val fxmlJVM = fxml.jvm.addSbtFiles(file("../build.sbt.shared"))
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
