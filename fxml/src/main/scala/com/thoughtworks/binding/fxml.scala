@@ -1113,6 +1113,10 @@ object fxml {
           Nil -> atPos(tree.pos) {
             q"_root_.com.thoughtworks.binding.Binding.Constant($data)"
           }
+        case tree @ EntityRef(XmlEntityName(unescapedText)) =>
+          Nil -> atPos(tree.pos) {
+            q"_root_.com.thoughtworks.binding.Binding.Constant($unescapedText)"
+          }
         case tree @ Elem(UnprefixedName(className @ ClassName()), attributes, _, children) =>
           // Create new instance
 

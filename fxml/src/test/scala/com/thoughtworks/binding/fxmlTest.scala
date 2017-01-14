@@ -730,6 +730,14 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     // should compile
   }
 
+  "entity reference" in {
+    import javafx.scene.control.Button
+    @fxml val button = <Button id="&lt; &lt; ">&gt; &gt;</Button>
+    button.watch()
+    button.get.getId should be("< < ")
+    button.get.getText should be(">>")
+  }
+
   override protected def withFixture(test: NoArgTest): Outcome = {
     if (Platform.isFxApplicationThread) {
       fxmlTest. super.withFixture(test)

@@ -368,7 +368,7 @@ object dom {
               case stat =>
                 Seq(stat)
             }, expr))
-          case tree@EntityRef(EntityName(unescapedCharacter)) =>
+          case tree@EntityRef(HtmlEntityName(unescapedCharacter)) =>
             atPos(tree.pos) {
               q"""$unescapedCharacter"""
             }

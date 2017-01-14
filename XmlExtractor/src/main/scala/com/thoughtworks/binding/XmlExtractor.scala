@@ -127,7 +127,9 @@ private[binding] trait XmlExtractor {
 
   protected val ProcInstr = procInstr.extract
 
-  protected val EntityName = XmlExtractor.EntityRefMap.extract
+  protected val HtmlEntityName = XmlExtractor.HtmlEntityRefMap.extract
+
+  protected val XmlEntityName = XmlExtractor.XmlEntityRefMap.extract
 
   private lazy val NilType = typeOf[scala.collection.immutable.Nil.type]
 
@@ -159,7 +161,11 @@ private[binding] object XmlExtractor {
 
   private val EntityRefRegex = "&(.*);".r
 
-  private val EntityRefMap = (for {
+  private val XmlEntityRefMap = (for {
+    Array(character, EntityRefRegex(reference)) <- EntityArrays.BASIC_ESCAPE
+  } yield reference -> character).toMap
+
+  private val HtmlEntityRefMap = (for {
     Array(character, EntityRefRegex(reference)) <- EntityArrays.BASIC_ESCAPE.view ++ EntityArrays.ISO8859_1_ESCAPE ++ EntityArrays.HTML40_EXTENDED_ESCAPE
   } yield reference -> character).toMap
 
