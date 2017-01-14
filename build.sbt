@@ -55,7 +55,7 @@ lazy val unidoc = project
   .enablePlugins(TravisUnidocTitle)
   .settings(
     UnidocKeys.unidocProjectFilter in ScalaUnidoc in UnidocKeys.unidoc := {
-      inAnyProject -- inProjects(XmlExtractorJVM, BindingJVM, FutureBindingJVM)
+      inAnyProject -- inProjects(XmlExtractorJVM, BindingJVM, FutureBindingJVM, fxmlJS)
     },
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     scalacOptions += "-Xexperimental"
