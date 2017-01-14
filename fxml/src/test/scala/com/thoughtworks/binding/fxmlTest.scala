@@ -111,16 +111,22 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   }
 
   "Reference outer element by fx:id" in {
-    @fxml val button = {
+    @fxml val pair = {
       import javafx.scene.layout.VBox
       import javafx.scene.control.Button
       <Button fx:id="b">
         <text>{b.toString}</text>
       </Button>
+      (Binding(b), Binding(b))
     }
 
-    button.watch()
-    button.get.getText shouldNot be("")
+    inside(pair) {
+      case (button, button2) =>
+        button.watch()
+        button.get.getText shouldNot be("")
+        button2.watch()
+        button2.get.getText shouldNot be("")
+    }
 
   }
 
@@ -170,17 +176,22 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   }
 
   "fx:value with fx:id" in {
-    @fxml val button = {
+    @fxml val bs = {
       import javafx.scene.layout.VBox
       import javafx.scene.control.Button
-      <Button>
+      <Button fx:id="b">
         <text><String fx:id="s" fx:value="My Button"/></text>
       </Button>
+
+      Binding((b, s))
     }
 
-    button.watch()
-    button.get.getText should be("My Button")
-
+    bs.watch()
+    inside(bs.get) {
+      case (b, s) =>
+        b.getText should be("My Button")
+        s should be("My Button")
+    }
   }
 
   "spaces for string property" in {

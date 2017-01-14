@@ -1299,33 +1299,28 @@ object fxml {
           Nil -> q"???"
       }
 
+     private def transformBlock:PartialFunction[Block, Block] = {
+       case Block(stats, expr) =>
+         val (transformedStats :+ transformedExpr) = (stats :+ expr).flatMap {
+           case transformXmlValue.extract(defs, transformedValue) =>
+             defs :+ transformedValue
+           case transformBlock.extract(transformedBlock) =>
+             Seq(transformedBlock)
+           case subtree =>
+             Seq(super.transform(subtree))
+         }
+         Block(transformedStats.toList, transformedExpr)
+     }
+
       override def transform(tree: Tree): Tree = {
         tree match {
           case transformXmlValue.extract(defs, transformedValue) =>
-            val xmlScopeName = TypeName(c.freshName("XmlScope"))
-            val rootName = TermName(c.freshName("root"))
-
             q"""
-                import _root_.scala.language.experimental.macros
-                import _root_.com.thoughtworks.binding.fxml.AutoImports.{
-                  != => _,
-                  ## => _,
-                  == => _,
-                  eq => _,
-                  equals => _,
-                  getClass => _,
-                  hashCode => _,
-                  ne => _,
-                  notify => _,
-                  notifyAll => _,
-                  synchronized => _,
-                  toString => _,
-                  wait => _,
-                  _
-                }
-                ..$defs
-                $transformedValue
-              """
+              ..$defs
+              $transformedValue
+            """
+          case transformBlock.extract(transformedBlock) =>
+            transformedBlock
           case _ =>
             super.transform(tree)
         }
@@ -1343,7 +1338,30 @@ object fxml {
 //        output
 //      }
 
-      replaceDefBody(annottees, transform)
+      replaceDefBody(
+        annottees, { body =>
+          q"""
+            import _root_.scala.language.experimental.macros
+            import _root_.com.thoughtworks.binding.fxml.AutoImports.{
+              != => _,
+              ## => _,
+              == => _,
+              eq => _,
+              equals => _,
+              getClass => _,
+              hashCode => _,
+              ne => _,
+              notify => _,
+              notifyAll => _,
+              synchronized => _,
+              toString => _,
+              wait => _,
+              _
+            }
+            ${transform(body)}
+          """
+        }
+      )
 
     }
 
