@@ -1,7 +1,5 @@
 package com.thoughtworks.binding
 
-import java.util.TimeZone
-
 import org.scalatest.{FreeSpec, Inside, Matchers, _}
 
 /**
