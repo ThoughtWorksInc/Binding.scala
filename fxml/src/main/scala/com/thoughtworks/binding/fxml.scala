@@ -454,6 +454,7 @@ object fxml {
 
     object PropertyTyper extends LowPriorityBuilder {
 
+      @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
       implicit def javafxTyper[A]: PropertyTyper[A] =
         macro Macros.javafxTyper[A]
 
@@ -461,6 +462,7 @@ object fxml {
 
     }
 
+    @implicitNotFound(msg = "${Value} is not a Java Bean nor a type built from JavaFXBuilderFactory")
     trait PropertyTyper[Value]
 
     final class JavaListMountPoint[A](javaList: java.util.List[A])(bindingSeq: BindingSeq[A])
@@ -485,6 +487,7 @@ object fxml {
 
   private object Macros {
 
+    @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
     private[Macros] val javafxBuilderFactory = {
 
       if (!Platform.isFxApplicationThread) {
@@ -962,6 +965,7 @@ object fxml {
       c.untypecheck(result)
     }
 
+    @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
     def javafxTyper[Out: WeakTypeTag]: Tree = {
       import Runtime.JavaFXPropertyTyper.CurrentJavaFXBuilderFactory
       val currentJavaFXBuilderFactory: Tree = c.inferImplicitValue(typeOf[CurrentJavaFXBuilderFactory])
