@@ -49,7 +49,8 @@ import scala.scalajs.runtime.AnonFunction1
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 @compileTimeOnly("enable macro paradise to expand macro annotations")
-@deprecated(message = "Use `@html` instead", since = "11.0.0")
+// TODO: @dom will be deprecated once @html is implemented
+// @deprecated(message = "Use `@html` instead", since = "11.0.0")
 class dom extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro dom.Macros.macroTransform
 }
