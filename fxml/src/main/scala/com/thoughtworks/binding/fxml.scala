@@ -454,8 +454,8 @@ object fxml {
 
     object PropertyTyper extends LowPriorityBuilder {
 
-      @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
-      implicit def javafxTyper[A]: PropertyTyper[A] =
+      @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$"""))) implicit def javafxTyper[
+          A]: PropertyTyper[A] =
         macro Macros.javafxTyper[A]
 
       def apply[Value](implicit typer: PropertyTyper[Value]): typer.type = typer
@@ -1154,6 +1154,7 @@ object fxml {
                   case transformXmlValue.extract(defs, transformedValue) =>
                     loop(tail, accumulatedDefinitions ++ defs, accumulatedBindings.enqueue(transformedValue))
                   case tree =>
+                    val binding = TermName(c.freshName("binding"))
                     loop(
                       tail,
                       accumulatedDefinitions,
@@ -1366,22 +1367,33 @@ object fxml {
           Nil -> q"???"
       }
 
+      private def expand: PartialFunction[Tree, (Seq[Tree], Tree)] = {
+        case tree @ ValDef(mods, name, tpt, transformXmlValue.extract(defs, transformedValue)) => //transformXmlValue.extract(defs, transformedValue)) =>
+          (defs, treeCopy.ValDef(tree, mods, name, tpt, transformedValue))
+        case tree @ DefDef(mods, name, tparams, vparamss, tpt, transformXmlValue.extract(defs, transformedValue)) =>
+          (defs, treeCopy.DefDef(tree, mods, name, tparams, vparamss, tpt, transformedValue))
+        case transformXmlValue.extract(defs, transformedValue) =>
+          (defs, transformedValue)
+      }
+
       private def transformBlock: PartialFunction[Block, Block] = {
         case Block(stats, expr) =>
-          val (transformedStats :+ transformedExpr) = (stats :+ expr).flatMap {
-            case transformXmlValue.extract(defs, transformedValue) =>
-              defs :+ transformedValue
-            case transformBlock.extract(transformedBlock) =>
-              Seq(transformedBlock)
-            case subtree =>
-              Seq(super.transform(subtree))
+          val (transformedStats :+ transformedExpr) = (stats :+ expr).flatMap { x =>
+            x match {
+              case expand.extract(defs, transformedValue) =>
+                defs :+ transformedValue
+              case b @ transformBlock.extract(transformedBlock) =>
+                Seq(transformedBlock)
+              case subtree =>
+                Seq(super.transform(subtree))
+            }
           }
           Block(transformedStats.toList, transformedExpr)
       }
 
       override def transform(tree: Tree): Tree = {
         tree match {
-          case transformXmlValue.extract(defs, transformedValue) =>
+          case expand.extract(defs, transformedValue) =>
             q"""
               ..$defs
               $transformedValue
@@ -1401,7 +1413,7 @@ object fxml {
       import transformer.transform
 //      def transform(tree: Tree): Tree = {
 //        val output = transformer.transform(tree)
-//        c.info(c.enclosingPosition, show(output), true)
+//        c.info(c.enclosingPosition, c.universe.show(output), true)
 //        output
 //      }
 

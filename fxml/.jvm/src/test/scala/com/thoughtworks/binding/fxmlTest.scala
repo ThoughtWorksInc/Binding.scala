@@ -148,7 +148,16 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
         button1.getText shouldNot be("")
         button1.getText should be(button2.getText)
     }
+  }
 
+  "reference by both val and fx:id" in {
+    @fxml val pair = {
+      val b1 = <?import javafx.scene.control.Button?><Button fx:id="b2"/>
+      (b1, Binding(b2))
+    }
+    pair._1.watch()
+    pair._2.watch()
+    pair._1.get should be(pair._2.get)
   }
 
   "Pattern matching" in {
