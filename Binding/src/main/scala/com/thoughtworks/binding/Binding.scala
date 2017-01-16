@@ -1417,7 +1417,7 @@ trait Binding[+A] extends Any {
     * Returns the current value of this [[Binding]] and mark the current `@dom` method depend on this [[Binding]].
     *
     * Each time the value changes, in the current `@dom` method,
-    * all code after the current `bind` expression will be re-evaluated if the current `@dom` method is [[#watch]]ing.
+    * all code after the current `bind` expression will be re-evaluated if the current `@dom` method is [[#watch watch]]ing.
     * However, code in current `@dom` method and before the current `bind` expression will not be re-evaluated.
     * This rule is not applied to DOM nodes created by XHTML literal.
     * A change related to a DOM node does not affect siblings and parents of the node.
@@ -1442,7 +1442,7 @@ trait Binding[+A] extends Any {
     *
     * You may invoke this method more than once.
     * Then, when you want to disable automatic recalculation,
-    * you must invoke [[#unwatch]] same times as the number of calls to this method.
+    * you must invoke [[#unwatch unwatch]] same times as the number of calls to this method.
     *
     * @note This method is recursive, which means that the dependencies of this [[Binding]] will be watched as well.
     */
