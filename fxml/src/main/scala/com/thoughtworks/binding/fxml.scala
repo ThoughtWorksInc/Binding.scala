@@ -9,6 +9,7 @@ import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.event._
 import javafx.collections._
 import javafx.fxml.JavaFXBuilderFactory
+import javafx.scene.Scene
 import javafx.stage.{PopupWindow, Stage, Window, WindowEvent}
 import javax.swing.SwingUtilities
 
@@ -38,38 +39,79 @@ class fxml extends StaticAnnotation {
 
 object fxml {
 
-  def show(parent: Window, popupWindowBinding: Binding[PopupWindow]): Unit = {
+  private def screenMountPoint[W <: Window](windowBinding: Binding[W])(show: W => Unit) = {
+    var shownWindow: Option[W] = None
+    lazy val unwatchHandler: EventHandler[WindowEvent] = new EventHandler[WindowEvent] {
+      override def handle(event: WindowEvent): Unit = {
+        event.getSource.asInstanceOf[W].removeEventHandler(WindowEvent.WINDOW_HIDDEN, this)
+        mountPoint.unwatch()
+      }
+    }
     lazy val mountPoint: Binding[Unit] = Binding {
-      val popupWindow = popupWindowBinding.bind
-      popupWindow.addEventHandler(
-        WindowEvent.WINDOW_HIDDEN,
-        new EventHandler[WindowEvent] {
-          override def handle(event: WindowEvent): Unit = {
-            popupWindow.removeEventHandler(WindowEvent.WINDOW_HIDDEN, this)
-            mountPoint.unwatch()
-          }
-        }
-      )
-      popupWindow.show(parent)
+      val currentWindow = windowBinding.bind
+      shownWindow match {
+        case None =>
+        case Some(originalWindow) =>
+          originalWindow.removeEventHandler(WindowEvent.WINDOW_HIDDEN, unwatchHandler)
+          originalWindow.hide()
+      }
+      shownWindow = Some(currentWindow)
+      currentWindow.addEventHandler(WindowEvent.WINDOW_HIDDEN, unwatchHandler)
+      show(currentWindow)
+    }
+    mountPoint
+  }
+
+  /**
+    * [[com.thoughtworks.binding.Binding#watch Watch]]es the value of `sceneBinding`, renders it into `parent` and shows `parent`.
+    *
+    * @note `sceneBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when `parent` is closed or hidden.
+    */
+  def show(parent: Stage, sceneBinding: Binding[Scene]): Unit = {
+    lazy val handler = new EventHandler[WindowEvent] with ChangeListener[Scene] {
+      private def cleanUp() = {
+        parent.removeEventHandler(WindowEvent.WINDOW_HIDDEN, this)
+        parent.sceneProperty.removeListener(this)
+        mountPoint.unwatch()
+
+      }
+      override def handle(event: WindowEvent): Unit = {
+        cleanUp()
+      }
+
+      override def changed(observable: ObservableValue[_ <: Scene], oldValue: Scene, newValue: Scene): Unit = {
+        cleanUp()
+      }
+    }
+    lazy val mountPoint: Binding[Unit] = Binding {
+      val scene = sceneBinding.bind
+      parent.sceneProperty.removeListener(handler)
+      parent.removeEventHandler(WindowEvent.WINDOW_HIDDEN, handler)
+      parent.setScene(scene)
+      parent.sceneProperty.addListener(handler)
+      parent.addEventHandler(WindowEvent.WINDOW_HIDDEN, handler)
+      parent.show()
     }
     mountPoint.watch()
   }
 
+
+  /**
+    * [[com.thoughtworks.binding.Binding#watch Watch]]es the value of `popupWindowBinding` and shows it as a pop-up window onto `parent`.
+    *
+    * @note `stageBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when being closed or hidden.
+    */
+  def show(parent: Window, popupWindowBinding: Binding[PopupWindow]): Unit = {
+    screenMountPoint(popupWindowBinding)(_.show(parent)).watch()
+  }
+
+  /**
+    * [[com.thoughtworks.binding.Binding#watch Watch]]es the value of `stageBinding` and shows it on the screen.
+    *
+    * @note `stageBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when being closed or hidden.
+    */
   def show(stageBinding: Binding[Stage]): Unit = {
-    lazy val mountPoint: Binding[Unit] = Binding {
-      val stage = stageBinding.bind
-      stage.addEventHandler(
-        WindowEvent.WINDOW_HIDDEN,
-        new EventHandler[WindowEvent] {
-          override def handle(event: WindowEvent): Unit = {
-            stage.removeEventHandler(WindowEvent.WINDOW_HIDDEN, this)
-            mountPoint.unwatch()
-          }
-        }
-      )
-      stage.show()
-    }
-    mountPoint.watch()
+    screenMountPoint(stageBinding)(_.show()).watch()
   }
 
   object AutoImports {
