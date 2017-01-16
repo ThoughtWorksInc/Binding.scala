@@ -99,7 +99,7 @@ object fxml {
   /**
     * [[com.thoughtworks.binding.Binding#watch Watch]]es the value of `popupWindowBinding` and shows it as a pop-up window onto `parent`.
     *
-    * @note `stageBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when being closed or hidden.
+    * @note `popupWindowBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when being closed or hidden.
     */
   def show(parent: Window, popupWindowBinding: Binding[PopupWindow]): Unit = {
     screenMountPoint(popupWindowBinding)(_.show(parent)).watch()
