@@ -1015,7 +1015,7 @@ object fxml {
       val currentJavaFXBuilderFactory: Tree = c.inferImplicitValue(typeOf[CurrentJavaFXBuilderFactory])
       val outType = weakTypeOf[Out]
       val outClass: Class[_] = Class.forName(outType.typeSymbol.fullName)
-      javafxBuilderFactory.getBuilder(outClass) match {
+      synchronized(javafxBuilderFactory.getBuilder(outClass)) match {
         case null =>
           c.abort(c.enclosingPosition, s"No javafx.util.PropertyTyper found for $outType")
         case builder =>
