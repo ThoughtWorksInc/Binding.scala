@@ -39,6 +39,7 @@ class fxml extends StaticAnnotation {
 
 object fxml {
 
+  @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   private def screenMountPoint[W <: Window](windowBinding: Binding[W])(show: W => Unit) = {
     var shownWindow: Option[W] = None
     lazy val unwatchHandler: EventHandler[WindowEvent] = new EventHandler[WindowEvent] {
@@ -67,6 +68,7 @@ object fxml {
     *
     * @note `sceneBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when `parent` is closed or hidden.
     */
+  @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   def show(parent: Stage, sceneBinding: Binding[Scene]): Unit = {
     lazy val handler = new EventHandler[WindowEvent] with ChangeListener[Scene] {
       private def cleanUp() = {
@@ -95,12 +97,12 @@ object fxml {
     mountPoint.watch()
   }
 
-
   /**
     * [[com.thoughtworks.binding.Binding#watch Watch]]es the value of `popupWindowBinding` and shows it as a pop-up window onto `parent`.
     *
     * @note `popupWindowBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when being closed or hidden.
     */
+  @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   def show(parent: Window, popupWindowBinding: Binding[PopupWindow]): Unit = {
     screenMountPoint(popupWindowBinding)(_.show(parent)).watch()
   }
@@ -110,6 +112,7 @@ object fxml {
     *
     * @note `stageBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when being closed or hidden.
     */
+  @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   def show(stageBinding: Binding[Stage]): Unit = {
     screenMountPoint(stageBinding)(_.show()).watch()
   }
@@ -497,8 +500,7 @@ object fxml {
     object PropertyTyper extends LowPriorityBuilder {
 
       @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$"""))) implicit def javafxTyper[
-          A]: PropertyTyper[A] =
-        macro Macros.javafxTyper[A]
+          A]: PropertyTyper[A] = macro Macros.javafxTyper[A]
 
       def apply[Value](implicit typer: PropertyTyper[Value]): typer.type = typer
 
