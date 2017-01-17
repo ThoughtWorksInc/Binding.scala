@@ -58,7 +58,8 @@ class dom extends StaticAnnotation {
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-@deprecated(message = "Use `@html` instead", since = "11.0.0")
+// TODO: @dom will be deprecated once @html is implemented
+// @deprecated(message = "Use `@html` instead", since = "11.0.0")
 object dom {
 
   private[dom] sealed trait LowPriorityRuntime {
