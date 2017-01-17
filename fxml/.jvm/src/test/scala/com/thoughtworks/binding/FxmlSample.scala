@@ -16,7 +16,7 @@ final class FxmlSample extends Application {
     import javafx.scene.Scene
 
     def newWindow(text: String) = fxml.show {
-      <Stage fx:id="myStage" title={text}>
+      <Stage title={text}>
         <scene>
           <Scene>
             <Label>{text}</Label>
@@ -25,7 +25,7 @@ final class FxmlSample extends Application {
       </Stage>
     }
 
-    val myScene = <Scene fx:id="myScene">
+    val myScene = <Scene>
       <VBox>
         <Button onAction={ event: ActionEvent => newWindow("Newly created window")}>New Window</Button>
       </VBox>
