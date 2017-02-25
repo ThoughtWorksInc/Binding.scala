@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
-[![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/unidoc_2.11.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/unidoc_2.11/latest/com/thoughtworks/binding/package.html)
+[![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/unidoc_2.12.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/unidoc_2.12/latest/com/thoughtworks/binding/index.html)
 
 [![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/binding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/binding)
 [![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/dom/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/dom)
