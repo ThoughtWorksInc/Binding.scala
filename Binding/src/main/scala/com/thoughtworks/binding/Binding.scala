@@ -890,7 +890,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   object BindingSeq {
 
     @deprecated(since = "11.0.0", message = "Use `bindingSeq.all` instead")
-    implicit final class AsBinding[Element](upstream: BindingSeq[Element])
+    implicit def AsBinding[Element](upstream: BindingSeq[Element]): AsBinding[Element] = new AsBinding[Element](upstream)
+
+    final class AsBinding[Element](upstream: BindingSeq[Element])
         extends Binding[Seq[Element]]
         with PatchedListener[Element] {
 
