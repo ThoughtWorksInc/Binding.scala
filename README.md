@@ -12,7 +12,7 @@
 
 **Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
-Binding.scala can be used as a **[reactive](https://en.wikipedia.org/wiki/Reactive_programming) web framework**.
+Binding.scala can be used as a **reactive templating language** in both web and [desktop](https://github.com/ThoughtWorksInc/Binding.scala/wiki/FXML) GUI development.
 It enables you use native XHTML literal syntax to create reactive DOM nodes,
 which are able to automatically change whenever the data source changes.
 
