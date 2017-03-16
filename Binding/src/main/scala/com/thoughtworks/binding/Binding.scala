@@ -900,7 +900,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   object BindingSeq {
 
-    @deprecated(since = "11.0.0", message = "Use `bindingSeq.all` instead")
+    @deprecated(since = "11.0.0", message = "Use [[BindingSeq.all]] instead")
     implicit def AsBinding[Element](upstream: BindingSeq[Element]): AsBinding[Element] = new AsBinding[Element](upstream)
 
     final class AsBinding[Element](upstream: BindingSeq[Element])
@@ -954,7 +954,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *
       * You may invoke this method more than once.
       * Then, when you want to disable automatic recalculation,
-      * you must invoke [[#unwatch]] same times as the number of calls to this method.
+      * you must invoke [[unwatch]] same times as the number of calls to this method.
       *
       * @note This method is recursive, which means that the dependencies of this [[BindingSeq]] will be watched as well.
       */
@@ -999,7 +999,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
     /**
-      * Underlying implementation of [[#map]].
+      * Underlying implementation of [[map]].
       *
       * @note Don't use this method in user code.
       */
@@ -1007,7 +1007,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     final def mapBinding[B](f: A => Binding[B]): BindingSeq[B] = new MapBinding[A, B](this, f)
 
     /**
-      * Underlying implementation of [[#flatMap]].
+      * Underlying implementation of [[flatMap]].
       *
       * @note Don't use this method in user code.
       */
@@ -1022,7 +1022,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     def withFilter(condition: A => Boolean): BindingSeq[A]#WithFilter = macro Macros.withFilter
 
     /**
-      * Underlying implementation of [[#withFilter]].
+      * Underlying implementation of [[withFilter]].
       *
       * @note Don't use this method in user code.
       */
@@ -1052,7 +1052,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       def withFilter(condition: A => Boolean): WithFilter = macro Macros.withFilter
 
       /**
-        * Underlying implementation of [[#withFilter]].
+        * Underlying implementation of [[withFilter.
         *
         * @note Don't use this method in user code.
         */
@@ -1070,7 +1070,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       /**
-        * Underlying implementation of [[#map]].
+        * Underlying implementation of [[map]].
         *
         * @note Don't use this method in user code.
         */
@@ -1088,7 +1088,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       /**
-        * Underlying implementation of [[#flatMap]].
+        * Underlying implementation of [[flatMap]].
         *
         * @note Don't use this method in user code.
         */
@@ -1436,7 +1436,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   * @dom val bindingBr: Binding[HTMLBRElement] = <br/>
   * }}}
   *
-  * A data binding expression may depend on other binding expressions via [[#bind]] method:
+  * A data binding expression may depend on other binding expressions via [[bind]] method:
   *
   * {{{
   * val bindingString: Binding[String] = bindingInt.bind.toString
@@ -1448,7 +1448,8 @@ trait Binding[+A] extends Any {
 
   type RawValue <: A
 
-  @deprecated(message = "Use [[Binding#bind]] instead", since = "7.0.0") final def each: A = macro Binding.Macros.bind
+  @deprecated(message = "Use [[Binding#bind bind]] instead", since = "7.0.0")
+  final def each: A = macro Binding.Macros.bind
 
   /**
     * Returns the current value of this [[Binding]] and mark the current `@dom` method depend on this [[Binding]].
@@ -1463,7 +1464,7 @@ trait Binding[+A] extends Any {
     */
   final def bind: A = macro Binding.Macros.bind
 
-  @deprecated(message = "Use [[Binding#value]] instead", since = "11.0.0")
+  @deprecated(message = "Use [[value]] instead", since = "11.0.0")
   private[binding] def get: A = value
 
   /**
