@@ -901,7 +901,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   object BindingSeq {
 
     @deprecated(since = "11.0.0", message = "Use [[BindingSeq.all]] instead")
-    implicit def AsBinding[Element](upstream: BindingSeq[Element]): AsBinding[Element] = new AsBinding[Element](upstream)
+    implicit def AsBinding[Element](upstream: BindingSeq[Element]): AsBinding[Element] =
+      new AsBinding[Element](upstream)
 
     final class AsBinding[Element](upstream: BindingSeq[Element])
         extends Binding[Seq[Element]]
@@ -1427,11 +1428,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   * A data binding expression that represents a value that automatically recalculates when its dependencies change.
   *
   * You may create a data binding expression via `Binding { ??? }` block or `@dom` annotation.
-  * 
+  *
   * {{{
   * val bindingInt: Binding[Int] = Binding { 100 }
   * }}}
-  * 
+  *
   * {{{
   * @dom val bindingBr: Binding[HTMLBRElement] = <br/>
   * }}}
