@@ -1446,8 +1446,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   */
 trait Binding[+A] {
 
-  type RawValue <: A
-
   @deprecated(message = "Use [[Binding#bind bind]] instead", since = "7.0.0")
   final def each: A = macro Binding.Macros.bind
 
