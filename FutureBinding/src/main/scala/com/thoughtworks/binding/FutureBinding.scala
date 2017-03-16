@@ -43,7 +43,12 @@ object FutureBinding {
   */
 final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionContext) extends Binding[Option[Try[A]]] {
 
-  override def get = future.value
+  @inline
+  override def value = future.value
+
+  @deprecated(message = "Use [[value]] instead", since = "11.0.0")
+  @inline
+  override def get = value
 
   private val publisher = new Publisher[ChangedListener[Option[Try[A]]]]
 

@@ -71,13 +71,13 @@ object Route {
     window.onhashchange = { _: HashChangeEvent =>
       window.location.hash match {
         case format(newState) =>
-          state := newState
+          state.value = newState
         case _ =>
       }
     }
     window.location.hash match {
       case format(newState) =>
-        state := newState
+        state.value = newState
       case _ =>
     }
     Binding {

@@ -48,7 +48,7 @@ final class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Ei
 
   private val publisher = new Publisher[ChangedListener[Option[Either[Any, A]]]]
 
-  override private[binding] def get = cache
+  override private[binding] def value = cache
 
   override private[binding] def removeChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
     publisher.unsubscribe(listener)

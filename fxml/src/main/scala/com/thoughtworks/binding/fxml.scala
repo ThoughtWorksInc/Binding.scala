@@ -610,7 +610,7 @@ object fxml {
     private implicit def constantLiftable[A: Liftable]: Liftable[Binding.Constant[A]] =
       new Liftable[Binding.Constant[A]] {
         override def apply(value: Binding.Constant[A]): Tree = {
-          q"_root_.com.thoughtworks.binding.Binding.Constant(..${value.get})"
+          q"_root_.com.thoughtworks.binding.Binding.Constant(..${value.value})"
         }
       }
     private implicit def seqLiftable[A: Liftable]: Liftable[Seq[A]] = new Liftable[Seq[A]] {

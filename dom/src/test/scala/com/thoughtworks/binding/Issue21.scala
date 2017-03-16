@@ -10,6 +10,6 @@ class Issue21 extends FreeSpec with Matchers {
   "dashed-id should compile" in {
     @dom def invalidId: Binding[html.Div] = <div id="dashed-id" class={ s"${`dashed-id`.tagName}-1" }></div>
     invalidId.watch()
-    invalidId.get.className should be("DIV-1")
+    invalidId.value.className should be("DIV-1")
   }
 }

@@ -43,65 +43,65 @@ final class domTest extends FreeSpec with Matchers {
   }
 
   "PrivateEmptyElement" in {
-    assert(privateMonadicBr.get.outerHTML == "<br/>")
+    assert(privateMonadicBr.value.outerHTML == "<br/>")
   }
 
   "EmptyElement" in {
     @dom val monadicBr: Binding[BR] = <br/>
-    assert(monadicBr.get.outerHTML == "<br/>")
+    assert(monadicBr.value.outerHTML == "<br/>")
   }
 
   "TextElement" in {
     @dom val monadicDiv: Binding[Div] = <div>text</div>
     monadicDiv.watch()
-    assert(monadicDiv.get.outerHTML == "<div>text</div>")
+    assert(monadicDiv.value.outerHTML == "<div>text</div>")
   }
 
   "TextInterpolationElement" in {
     @dom val monadicDiv: Binding[Div] = <div>{"text"}</div>
     monadicDiv.watch()
-    assert(monadicDiv.get.outerHTML == "<div>text</div>")
+    assert(monadicDiv.value.outerHTML == "<div>text</div>")
   }
 
   "NestedElement" in {
     @dom val monadicDiv: Binding[Div] = <div> <span> text </span> </div>
     monadicDiv.watch()
-    assert(monadicDiv.get.outerHTML == "<div> <span> text </span> </div>")
+    assert(monadicDiv.value.outerHTML == "<div> <span> text </span> </div>")
   }
 
   "ChangedElementText" in {
     val v0 = Var("original text")
     @dom val monadicDiv: Binding[Div] = <div> <span> {v0.bind} </span> </div>
     monadicDiv.watch()
-    assert(monadicDiv.get.outerHTML == "<div> <span> original text </span> </div>")
-    v0 := "changed"
-    assert(monadicDiv.get.outerHTML == "<div> <span> changed </span> </div>")
+    assert(monadicDiv.value.outerHTML == "<div> <span> original text </span> </div>")
+    v0.value = "changed"
+    assert(monadicDiv.value.outerHTML == "<div> <span> changed </span> </div>")
   }
 
   "ForYield" in {
     val v0 = Vars("original text 0","original text 1")
     @dom val monadicDiv: Binding[Div] = <div> <span> { for (s <- v0) yield <b>{s}</b> } </span> </div>
     monadicDiv.watch()
-    val div = monadicDiv.get
+    val div = monadicDiv.value
 
-    assert(monadicDiv.get.outerHTML == "<div> <span> <b>original text 0</b><b>original text 1</b> </span> </div>")
+    assert(monadicDiv.value.outerHTML == "<div> <span> <b>original text 0</b><b>original text 1</b> </span> </div>")
 
-    v0.get.prepend("prepended")
-    assert(div eq monadicDiv.get)
-    assert(monadicDiv.get.outerHTML == "<div> <span> <b>prepended</b><b>original text 0</b><b>original text 1</b> </span> </div>")
+    v0.value.prepend("prepended")
+    assert(div eq monadicDiv.value)
+    assert(monadicDiv.value.outerHTML == "<div> <span> <b>prepended</b><b>original text 0</b><b>original text 1</b> </span> </div>")
 
-    v0.get.remove(1)
-    assert(div eq monadicDiv.get)
-    assert(monadicDiv.get.outerHTML == "<div> <span> <b>prepended</b><b>original text 1</b> </span> </div>")
+    v0.value.remove(1)
+    assert(div eq monadicDiv.value)
+    assert(monadicDiv.value.outerHTML == "<div> <span> <b>prepended</b><b>original text 1</b> </span> </div>")
   }
 
   "Attribute" in {
     val id = Var("oldId")
     @dom val hr = <hr id={id.bind}/>
     hr.watch()
-    assert(hr.get.outerHTML == """<hr id="oldId"/>""")
-    id := "newId"
-    assert(hr.get.outerHTML == """<hr id="newId"/>""")
+    assert(hr.value.outerHTML == """<hr id="oldId"/>""")
+    id.value = "newId"
+    assert(hr.value.outerHTML == """<hr id="newId"/>""")
   }
 
   "ForYieldIf" in {
@@ -145,9 +145,9 @@ final class domTest extends FreeSpec with Matchers {
       <table title="My Tooltip" className="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{tbodyBinding.bind}</table>
     }
     tableBinding.watch()
-    assert(tableBinding.get.outerHTML == """<table class="my-table" title="My Tooltip"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
-    filterPattern := "o"
-    assert(tableBinding.get.outerHTML == """<table class="my-table" title="My Tooltip"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr></tbody></table>""")
+    assert(tableBinding.value.outerHTML == """<table class="my-table" title="My Tooltip"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
+    filterPattern.value = "o"
+    assert(tableBinding.value.outerHTML == """<table class="my-table" title="My Tooltip"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr></tbody></table>""")
   }
 
   "NodeSeq" in {
@@ -233,7 +233,7 @@ final class domTest extends FreeSpec with Matchers {
         myVar <- myVars
         if myVar < 10
       } yield myVar
-      assert(filtered.get == Seq(1, 2, 3))
+      assert(filtered.value == Seq(1, 2, 3))
     }
     domMethod()
   }
@@ -282,30 +282,30 @@ final class domTest extends FreeSpec with Matchers {
 
   "id in BindingSeq" in {
     val v = Var("Initial value")
-    @dom val input = <input id="foo" onclick={ _: Event => v := s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><div> <hr class="h"/> <div><label id="bar">Label Text</label></div></div>
+    @dom val input = <input id="foo" onclick={ _: Event => v.value = s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><div> <hr class="h"/> <div><label id="bar">Label Text</label></div></div>
     val div = document.createElement("div")
     dom.render(div, input)
-    assert(v.get == "Initial value")
-    assert(input.get.get(0).asInstanceOf[Input].value == "Initial value")
+    assert(v.value == "Initial value")
+    assert(input.value.value(0).asInstanceOf[Input].value == "Initial value")
     div.firstChild.asInstanceOf[Input].onclick(null)
-    assert(v.get == "INPUT and Label Text")
-    assert(input.get.get(0).asInstanceOf[Input].value == "INPUT and Label Text")
+    assert(v.value == "INPUT and Label Text")
+    assert(input.value.value(0).asInstanceOf[Input].value == "INPUT and Label Text")
   }
 
   "id in Binding" in {
     val v = Var("Initial value")
     @dom val input = {
-      <input id="foo" onclick={ _: Event => v := s"${foo.tagName}"}/>
+      <input id="foo" onclick={ _: Event => v.value = s"${foo.tagName}"}/>
       foo.value = v.bind
       foo
     }
     val div = document.createElement("div")
     dom.render(div, input)
-    assert(v.get == "Initial value")
-    assert(input.get.value == "Initial value")
+    assert(v.value == "Initial value")
+    assert(input.value.value == "Initial value")
     div.firstChild.asInstanceOf[Input].onclick(null)
-    assert(v.get == "INPUT")
-    assert(input.get.value == "INPUT")
+    assert(v.value == "INPUT")
+    assert(input.value.value == "INPUT")
   }
 
   "Seq in DOM" in {

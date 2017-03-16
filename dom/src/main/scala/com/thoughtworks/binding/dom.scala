@@ -182,6 +182,7 @@ object dom {
 
     }
 
+    // FIXME: Remove this implicit class when scala-js-dom 0.9.2 release
     implicit final class StyleOps @inline()(node: HTMLElement) {
       @inline def style = node.style.cssText
 

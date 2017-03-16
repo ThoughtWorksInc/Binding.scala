@@ -344,7 +344,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  final case class Constant[+A](override val get: A) extends Binding[A] {
+  final case class Constant[+A](override val value: A) extends Binding[A] {
+
+    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
+    @inline
+    override def get = value
 
     @inline
     override private[binding] def removeChangedListener(listener: ChangedListener[A]): Unit = {
@@ -372,35 +376,42 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * {{{
     * val bindingVar = Var("initial value")
-    * bindingVar := "changed value"
+    * bindingVar.value = "changed value"
     * }}}
     *
     * Then, any data binding expressions that depend on this [[Var]] will be changed automatically.
     *
     * @group expressions
     */
-  final class Var[A](private var value: A) extends Binding[A] {
+  final class Var[A](private var cache: A) extends Binding[A] {
 
     private val publisher = new Publisher[ChangedListener[A]]
 
     @inline
-    override def get: A = {
-      value
-    }
+    override def value = cache
+
+    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
+    @inline
+    override def get: A = value
 
     /**
       * Changes the current value of this [[Var]], and reevaluates any expressions that depends on this [[Var]].
       *
       * @note This method must not be invoked inside a `@dom` method body.
       */
-    def :=(newValue: A): Unit = {
-      if (value != newValue) {
-        value = newValue
+    def value_=(newValue: A): Unit = {
+      if (cache != newValue) {
+        cache = newValue
         val event = new ChangedEvent(this, newValue)
         for (listener <- publisher) {
           listener.changed(event)
         }
       }
+    }
+
+    @deprecated(message = "Use [[value_=]] instead.", since = "11.0.0")
+    def :=(newValue: A): Unit = {
+      value_=(newValue)
     }
 
     @inline
@@ -418,10 +429,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private val publisher = new Publisher[ChangedListener[B]]
 
-    private var cache: B = f(upstream.get)
+    private var cache: B = f(upstream.value)
 
     @inline
-    override private[binding] def get: B = {
+    override private[binding] def value: B = {
       cache
     }
 
@@ -468,8 +479,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         val newCache = f(upstreamEvent.newValue)
         cache = newCache
         newCache.addChangedListener(FlatMap.this)
-        if (oldCache.get != newCache.get) {
-          val event = new ChangedEvent(FlatMap.this, newCache.get)
+        if (oldCache.value != newCache.value) {
+          val event = new ChangedEvent(FlatMap.this, newCache.value)
           for (listener <- publisher) {
             listener.changed(event)
           }
@@ -494,15 +505,15 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       publisher.subscribe(listener)
     }
 
-    private var cache: Binding[B] = f(upstream.get)
+    private var cache: Binding[B] = f(upstream.value)
 
-    override private[binding] def get: B = {
+    override private[binding] def value: B = {
       @tailrec
       @inline
       def tailrecGetValue(binding: Binding[B]): B = {
         binding match {
           case flatMap: FlatMap[_, B] => tailrecGetValue(flatMap.cache)
-          case _ => binding.get
+          case _ => binding.value
         }
       }
       tailrecGetValue(cache)
@@ -621,7 +632,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     private val publisher = new Publisher[ChangedListener[Int]]
 
     @inline
-    override private[binding] def get: Int = bindingSeq.get.length
+    override private[binding] def value: Int = bindingSeq.value.length
 
     @inline
     override private[binding] def removeChangedListener(listener: ChangedListener[Int]): Unit = {
@@ -641,7 +652,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     @inline
     override private[binding] def patched(upstreamEvent: PatchedEvent[Any]): Unit = {
-      val event = new ChangedEvent[Int](this, bindingSeq.get.length)
+      val event = new ChangedEvent[Int](this, bindingSeq.value.length)
       for (subscriber <- publisher) {
         subscriber.changed(event)
       }
@@ -676,7 +687,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override private[binding] def addPatchedListener(listener: PatchedListener[Nothing]): Unit = {}
 
     @inline
-    override private[binding] def get = Nil
+    override private[binding] def value = Nil
   }
 
   private[Binding] final class ValueProxy[B](underlying: Seq[Binding[B]]) extends Seq[B] {
@@ -687,12 +698,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     @inline
     override def apply(idx: Int): B = {
-      underlying(idx).get
+      underlying(idx).value
     }
 
     @inline
     override def iterator: Iterator[B] = {
-      underlying.iterator.map(_.get)
+      underlying.iterator.map(_.value)
     }
   }
 
@@ -702,11 +713,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private[Binding] var cacheData: Cache = {
       (for {
-        a <- upstream.get
+        a <- upstream.value
       } yield f(a))(collection.breakOut)
     }
 
-    override private[binding] def get: Seq[B] with ValueProxy[B] = new ValueProxy(cacheData)
+    override private[binding] def value: Seq[B] with ValueProxy[B] = new ValueProxy(cacheData)
 
     private val upstreamListener = new PatchedListener[A] {
       override def patched(upstreamEvent: PatchedEvent[A]): Unit = {
@@ -769,7 +780,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     @inline
     override def length: Int = {
-      underlying.view.map(_.get.length).sum
+      underlying.view.map(_.value.length).sum
     }
 
     @inline
@@ -778,7 +789,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       @tailrec
       def findIndex(restIndex: Int): B = {
         if (i.hasNext) {
-          val subSeq = i.next().get
+          val subSeq = i.next().value
           val currentLength = subSeq.length
           if (currentLength > restIndex) {
             subSeq(restIndex)
@@ -796,7 +807,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override def iterator: Iterator[B] = {
       for {
         subSeq <- underlying.iterator
-        element <- subSeq.get.iterator
+        element <- subSeq.value.iterator
       } yield element
     }
   }
@@ -807,16 +818,16 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private[Binding] var cacheData: Cache = {
       (for {
-        a <- upstream.get
+        a <- upstream.value
       } yield f(a))(collection.breakOut)
     }
 
     @inline
-    override private[binding] def get = new FlatProxy(cacheData)
+    override private[binding] def value = new FlatProxy(cacheData)
 
     @inline
     private def flatIndex(oldCache: Cache, upstreamBegin: Int, upstreamEnd: Int): Int = {
-      oldCache.view(upstreamBegin, upstreamEnd).map(_.get.length).sum
+      oldCache.view(upstreamBegin, upstreamEnd).map(_.value.length).sum
     }
 
     private val upstreamListener = new PatchedListener[A] {
@@ -899,7 +910,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private val publisher = new Publisher[ChangedListener[Seq[Element]]]
 
       @inline
-      override private[binding] def get: Seq[Element] = upstream.get
+      override private[binding] def value: Seq[Element] = upstream.value
 
       @inline
       override private[binding] def removeChangedListener(listener: ChangedListener[Seq[Element]]): Unit = {
@@ -919,7 +930,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
       @inline
       private[binding] def patched(upstreamEvent: PatchedEvent[Element]): Unit = {
-        val event = new ChangedEvent[Seq[Element]](AsBinding.this, upstream.get)
+        val event = new ChangedEvent[Seq[Element]](AsBinding.this, upstream.value)
         for (listener <- publisher) {
           listener.changed(event)
         }
@@ -962,7 +973,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       removePatchedListener(Binding.DummyPatchedListener)
     }
 
-    private[binding] def get: Seq[A]
+    private[binding] def value: Seq[A]
+
+    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
+    private[binding] def get: Seq[A] = value
 
     private[binding] def removePatchedListener(listener: PatchedListener[A]): Unit
 
@@ -1103,7 +1117,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   final class Constants[+A] private (underlying: ConstantsData[A]) extends BindingSeq[A] {
 
     @inline
-    override def get: Seq[A] = underlying
+    override def value: Seq[A] = underlying
+
+    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
+    @inline
+    override def get = value
 
     @inline
     override private[binding] def removePatchedListener(listener: PatchedListener[A]): Unit = {}
@@ -1119,7 +1137,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     def apply[A](elements: A*) = new Constants(toConstantsData(elements))
 
     @inline
-    def upapplySeq[A](constants: Constants[A]) = Some(constants.get)
+    def upapplySeq[A](constants: Constants[A]) = Some(constants.value)
 
   }
 
@@ -1156,7 +1174,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * @note This method must not be invoked inside a `@dom` method body.
       */
     @inline
-    override def get: Buffer[A] with Proxy = new Proxy
+    override def value: Buffer[A] with Proxy = new Proxy
+
+    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
+    @inline
+    override def get = value
 
     private[binding] final class Proxy extends Buffer[A] {
       @inline
@@ -1273,7 +1295,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override def length: Constant[Int] = Constant(1)
 
     @inline
-    override private[binding] def get = SingleSeq(upstream.get)
+    override private[binding] def value = SingleSeq(upstream.value)
 
     @inline
     override private[binding] def removePatchedListener(listener: PatchedListener[A]): Unit = {
@@ -1323,7 +1345,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     @inline
-    override private[binding] def get: Unit = ()
+    override private[binding] def value: Unit = ()
 
   }
 
@@ -1336,7 +1358,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     protected def mount(): Unit = {
       upstream.addPatchedListener(upstreamListener)
-      set(upstream.get)
+      set(upstream.value)
     }
 
     protected def unmount(): Unit = {
@@ -1372,7 +1394,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     protected def set(value: Value): Unit
 
     protected def mount(): Unit = {
-      set(upstream.get)
+      set(upstream.value)
       upstream.addChangedListener(upstreamListener)
     }
 
@@ -1441,12 +1463,15 @@ trait Binding[+A] extends Any {
     */
   final def bind: A = macro Binding.Macros.bind
 
+  @deprecated(message = "Use [[Binding#value]] instead", since = "11.0.0")
+  private[binding] def get: A = value
+
   /**
     * Returns the current value of this [[Binding]]
     *
     * @note This method must not be invoked inside a `@dom` method body.
     */
-  private[binding] def get: A
+  private[binding] def value: A
 
   private[binding] def removeChangedListener(listener: Binding.ChangedListener[A]): Unit
 
