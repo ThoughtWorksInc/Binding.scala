@@ -561,28 +561,25 @@ object fxml {
 
     @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
     private[Macros] val javafxBuilderFactory = {
-
-      if (!Platform.isFxApplicationThread) {
+      if (!SwingUtilities.isEventDispatchThread) {
         val lock = new AnyRef
         @volatile var initialized = false
         lock.synchronized {
           SwingUtilities.invokeLater(new Runnable {
             override def run(): Unit = {
               new javafx.embed.swing.JFXPanel
-              Platform.runLater(new Runnable() {
-                override def run(): Unit = {
-                  lock.synchronized {
-                    initialized = true
-                    lock.notify()
-                  }
-                }
-              })
+              lock.synchronized {
+                initialized = true
+                lock.notify()
+              }
             }
           })
           while (!initialized) {
             lock.wait()
           }
         }
+      } else {
+        new javafx.embed.swing.JFXPanel
       }
 
       new JavaFXBuilderFactory()
