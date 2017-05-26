@@ -762,28 +762,47 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
   }
 
   override protected def withFixture(test: NoArgTest): Outcome = {
-    if (Platform.isFxApplicationThread) {
-      fxmlTest. super.withFixture(test)
+
+    if (SwingUtilities.isEventDispatchThread) {
+      new javafx.embed.swing.JFXPanel
     } else {
       val lock = new AnyRef
-      @volatile var result: Option[Outcome] = None
+      @volatile var initialized = false
       lock.synchronized {
         SwingUtilities.invokeLater(new Runnable {
           override def run(): Unit = {
             new javafx.embed.swing.JFXPanel
-            Platform.runLater(new Runnable() {
-              override def run(): Unit = {
-                val outcome = fxmlTest. super.withFixture(test)
-                lock.synchronized {
-                  result = Some(outcome)
-                  lock.notify()
-                }
-              }
-            })
+            lock.synchronized {
+              initialized = true
+              lock.notify()
+            }
           }
         })
-        while (result.isEmpty) {
+        while (!initialized) {
           lock.wait()
+        }
+      }
+    }
+
+    if (Platform.isFxApplicationThread) {
+      fxmlTest.super.withFixture(test)
+    } else {
+      {
+        val lock = new AnyRef
+        @volatile var result: Option[Outcome] = None
+        lock.synchronized {
+          Platform.runLater(new Runnable() {
+            override def run(): Unit = {
+              val outcome = fxmlTest.super.withFixture(test)
+              lock.synchronized {
+                result = Some(outcome)
+                lock.notify()
+              }
+            }
+          })
+          while (result.isEmpty) {
+            lock.wait()
+          }
         }
         result.get
       }
