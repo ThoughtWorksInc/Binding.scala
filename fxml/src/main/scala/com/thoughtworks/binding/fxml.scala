@@ -423,9 +423,13 @@ object fxml {
         }
       }
 
-      implicit def fromSeq[Element0]: ToBindingSeq.Aux[Seq[Element0], Element0] = {
+      private[Runtime] type InvariantSeq[E] = Seq[E]
+
+      implicit def fromSeq[From, Element0](
+          implicit constraint: From <:< InvariantSeq[Element0]
+      ): ToBindingSeq.Aux[From, Element0] = {
         import scalaz.syntax.all._
-        fromBindingSeq[BindingSeq[Element0], Element0].compose[Seq[Element0]](_.map { seq =>
+        fromBindingSeq[BindingSeq[Element0], Element0].compose[From](_.map { seq =>
           Constants(seq: _*)
         })
       }
