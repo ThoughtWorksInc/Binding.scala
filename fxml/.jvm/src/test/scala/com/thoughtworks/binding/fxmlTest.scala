@@ -3,7 +3,7 @@ package com.thoughtworks.binding
 import javafx.application.Platform
 import javax.swing.SwingUtilities
 
-import com.thoughtworks.binding.Binding.{BindingSeq, Var, Vars}
+import com.thoughtworks.binding.Binding.{BindingSeq, Var, Vars, Constants}
 import org.scalatest._
 
 import scala.collection.JavaConverters._
@@ -243,6 +243,20 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       import javafx.scene.layout.VBox
       <VBox>
         <children>   </children>
+      </VBox>
+    }
+    vbox.watch()
+    import scala.collection.JavaConverters._
+    vbox.value.getChildren.asScala should be(empty)
+  }
+
+  "Constrants for repeated property" in {
+    @fxml val vbox = {
+      import javafx.scene.layout.VBox
+      <VBox>
+        <children>{
+          Constants()
+        }</children>
       </VBox>
     }
     vbox.watch()

@@ -352,37 +352,52 @@ object fxml {
       }
     }
 
-    private[thoughtworks] trait LowLowPriorityToBindingSeq {
+    trait ToBindingSeqId[Element0] extends ToBindingSeq[Element0]
 
-      implicit final def fromSingleElement[Element0]: ToBindingSeq.Aux[Element0, Element0] = {
-        new ToBindingSeq[Element0] {
-          override type Element = Element0
+    object ToBindingSeqId {
 
-          override final def toBindingSeq(binding: Binding[Element]): SingletonBindingSeq[Element] = {
-            SingletonBindingSeq(binding)
+      type Aux[OneOrMany, Element0] = ToBindingSeqId[OneOrMany] {
+        type Element = Element0
+      }
+      implicit final def fromSingleElement[Element0, Element2 >: Element0]: ToBindingSeqId.Aux[Element0, Element2] =
+        new ToBindingSeqId[Element0] {
+          override type Element = Element2
+
+          override final def toBindingSeq(binding: Binding[Element0]): SingletonBindingSeq[Element2] = {
+            SingletonBindingSeq[Element2](binding)
           }
         }
-      }
     }
 
-    private[thoughtworks] trait LowPriorityToBindingSeq extends LowLowPriorityToBindingSeq {
+    private[Runtime] trait LowPriorityToBindingSeq1 {
 
-      implicit def fromBindingSeq[Element0]: ToBindingSeq.Aux[BindingSeq[Element0], Element0] = {
-        new ToBindingSeq[BindingSeq[Element0]] {
+      implicit final def fromSingleElement[From, Element0](
+          implicit toBindingSeqId: ToBindingSeqId.Aux[From, Element0]): ToBindingSeq.Aux[From, Element0] =
+        toBindingSeqId
+    }
+
+    private[Runtime] trait LowPriorityToBindingSeq0 extends LowPriorityToBindingSeq1 {
+
+      private[Runtime] type InvariantBindingBindingSeq[E] = Binding[BindingSeq[E]]
+
+      implicit def fromBindingSeq[From, Element0](
+          implicit constraint: Binding[From] <:< InvariantBindingBindingSeq[Element0]
+      ): ToBindingSeq.Aux[From, Element0] = {
+        new ToBindingSeq[From] {
           override type Element = Element0
-          override def toBindingSeq(binding: Binding[BindingSeq[Element0]]): BindingSeq[Element] = {
-            binding match {
+          override def toBindingSeq(binding: Binding[From]): BindingSeq[Element] = {
+            (binding: Binding[BindingSeq[Element0]]) match {
               case Binding.Constant(bindingSeq) => bindingSeq
-              case _ => Constants(binding).flatMapBinding(identity)
+              case _ => Constants(binding).flatMapBinding(constraint)
             }
           }
 
-          override def toBindingSeqBinding(binding: Binding[BindingSeq[Element0]]) = binding
+          override def toBindingSeqBinding(binding: Binding[From]) = binding
         }
       }
     }
 
-    object ToBindingSeq extends LowPriorityToBindingSeq {
+    object ToBindingSeq extends LowPriorityToBindingSeq0 {
       type Aux[OneOrMany, Element0] = ToBindingSeq[OneOrMany] {
         type Element = Element0
       }
@@ -410,21 +425,21 @@ object fxml {
 
       implicit def fromSeq[Element0]: ToBindingSeq.Aux[Seq[Element0], Element0] = {
         import scalaz.syntax.all._
-        fromBindingSeq[Element0].compose[Seq[Element0]](_.map { seq =>
+        fromBindingSeq[BindingSeq[Element0], Element0].compose[Seq[Element0]](_.map { seq =>
           Constants(seq: _*)
         })
       }
 
       implicit def fromJavaList[Element0]: ToBindingSeq.Aux[java.util.List[_ <: Element0], Element0] = {
         import scalaz.syntax.all._
-        fromBindingSeq[Element0].compose[java.util.List[_ <: Element0]](_.map { list =>
+        fromBindingSeq[BindingSeq[Element0], Element0].compose[java.util.List[_ <: Element0]](_.map { list =>
           Constants(list.asScala: _*)
         })
       }
 
       implicit def fromBindingBinding[A]: ToBindingSeq.Aux[Binding[A], A] = {
         import scalaz.syntax.all._
-        fromSingleElement[A].compose(_.flatMap(identity))
+        fromSingleElement[A,A].compose(_.flatMap(identity))
       }
 
     }
