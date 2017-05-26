@@ -434,16 +434,18 @@ object fxml {
         })
       }
 
-      implicit def fromJavaList[Element0]: ToBindingSeq.Aux[java.util.List[_ <: Element0], Element0] = {
+      implicit def fromJavaList[From, Element0](
+          implicit constraint: From <:< java.util.List[Element0]
+      ): ToBindingSeq.Aux[From, Element0] = {
         import scalaz.syntax.all._
-        fromBindingSeq[BindingSeq[Element0], Element0].compose[java.util.List[_ <: Element0]](_.map { list =>
-          Constants(list.asScala: _*)
+        fromBindingSeq[BindingSeq[Element0], Element0].compose[From](_.map { list =>
+          Constants(constraint(list).asScala: _*)
         })
       }
 
       implicit def fromBindingBinding[A]: ToBindingSeq.Aux[Binding[A], A] = {
         import scalaz.syntax.all._
-        fromSingleElement[A,A].compose(_.flatMap(identity))
+        fromSingleElement[A, A].compose(_.flatMap(identity))
       }
 
     }
@@ -518,8 +520,8 @@ object fxml {
 
     object PropertyTyper extends LowPriorityBuilder {
 
-      @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$"""))) implicit def javafxTyper[
-          A]: PropertyTyper[A] = macro Macros.javafxTyper[A]
+      @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+      implicit def javafxTyper[A]: PropertyTyper[A] = macro Macros.javafxTyper[A]
 
       def apply[Value](implicit typer: PropertyTyper[Value]): typer.type = typer
 
