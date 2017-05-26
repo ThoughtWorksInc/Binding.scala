@@ -385,10 +385,10 @@ object fxml {
       ): ToBindingSeq.Aux[From, Element0] = {
         new ToBindingSeq[From] {
           override type Element = Element0
-          override def toBindingSeq(binding: Binding[From]): BindingSeq[Element] = {
-            (binding: Binding[BindingSeq[Element0]]) match {
+          override def toBindingSeq(from: Binding[From]): BindingSeq[Element] = {
+            (from: Binding[BindingSeq[Element0]]) match {
               case Binding.Constant(bindingSeq) => bindingSeq
-              case _ => Constants(binding).flatMapBinding(constraint)
+              case binding => Constants(binding).flatMapBinding(identity)
             }
           }
 
@@ -404,48 +404,55 @@ object fxml {
 
       def apply[OneOrMany](implicit toBindingSeq: ToBindingSeq[OneOrMany]): toBindingSeq.type = toBindingSeq
 
-      implicit def fromBindingBindingSeq[Element0]: ToBindingSeq.Aux[BindingSeq[Binding[Element0]], Element0] = {
+      private[Runtime] type InvariantBindingBindingSeqBinding[E] = Binding[BindingSeq[Binding[E]]]
+
+      implicit def fromBindingBindingSeq[From, Element0](
+          implicit constraint: Binding[From] <:< InvariantBindingBindingSeqBinding[Element0]
+      ): ToBindingSeq.Aux[From, Element0] = {
         import scalaz.syntax.all._
-        new ToBindingSeq[BindingSeq[Binding[Element0]]] {
+        new ToBindingSeq[From] {
           override type Element = Element0
-          override def toBindingSeq(binding: Binding[BindingSeq[Binding[Element0]]]): BindingSeq[Element] = {
-            binding match {
+          override def toBindingSeq(from: Binding[From]): BindingSeq[Element] = {
+            (from: Binding[BindingSeq[Binding[Element]]]) match {
               case Binding.Constant(bindingSeq) =>
                 bindingSeq.mapBinding(identity)
-              case _ =>
+              case binding =>
                 Constants(binding).flatMapBinding(_.map(_.mapBinding(identity)))
             }
           }
 
-          override def toBindingSeqBinding(binding: Binding[BindingSeq[Binding[Element0]]]) = {
-            binding.map(_.mapBinding(identity))
+          override def toBindingSeqBinding(from: Binding[From]) = {
+            (from: Binding[BindingSeq[Binding[Element]]]).map(_.mapBinding(identity))
           }
         }
       }
 
       private[Runtime] type InvariantSeq[E] = Seq[E]
 
-      implicit def fromSeq[From, Element0](
-          implicit constraint: From <:< InvariantSeq[Element0]
-      ): ToBindingSeq.Aux[From, Element0] = {
+      implicit def fromSeq[From, Element](
+          implicit constraint: From <:< InvariantSeq[Element]
+      ): ToBindingSeq.Aux[From, Element] = {
         import scalaz.syntax.all._
-        fromBindingSeq[BindingSeq[Element0], Element0].compose[From](_.map { seq =>
+        fromBindingSeq[BindingSeq[Element], Element].compose[From](_.map { seq =>
           Constants(seq: _*)
         })
       }
 
-      implicit def fromJavaList[From, Element0](
-          implicit constraint: From <:< java.util.List[Element0]
-      ): ToBindingSeq.Aux[From, Element0] = {
+      implicit def fromJavaList[From, Element](
+          implicit constraint: From <:< java.util.List[Element]
+      ): ToBindingSeq.Aux[From, Element] = {
         import scalaz.syntax.all._
-        fromBindingSeq[BindingSeq[Element0], Element0].compose[From](_.map { list =>
+        fromBindingSeq[BindingSeq[Element], Element].compose[From](_.map { list =>
           Constants(constraint(list).asScala: _*)
         })
       }
+      private[Runtime] type InvariantBinding[E] = Binding[E]
 
-      implicit def fromBindingBinding[A]: ToBindingSeq.Aux[Binding[A], A] = {
+      implicit def fromBindingBinding[From, Element](
+          implicit constraint: From <:< InvariantBinding[Element]
+      ): ToBindingSeq.Aux[From, Element] = {
         import scalaz.syntax.all._
-        fromSingleElement[A, A].compose(_.flatMap(identity))
+        fromSingleElement[Element, Element].compose(_.flatMap(constraint))
       }
 
     }
