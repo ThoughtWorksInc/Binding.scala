@@ -946,6 +946,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   sealed trait BindingSeq[+A] {
 
+    /** Returns a new [[Binding]] expression of all elements in this [[BindingSeq]]. */
     final def all: Binding[Seq[A]] = new BindingSeq.AsBinding(this)
 
     /**
