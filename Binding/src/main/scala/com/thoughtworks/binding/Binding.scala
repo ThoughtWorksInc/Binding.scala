@@ -31,6 +31,7 @@ import com.thoughtworks.enableMembersIf
 import com.thoughtworks.sde.core.MonadicFactory
 import macrocompat.bundle
 
+import scala.annotation.meta.companionMethod
 import scala.annotation.tailrec
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
@@ -900,11 +901,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   object BindingSeq {
 
-    @deprecated(since = "11.0.0", message = "Use [[BindingSeq.all]] instead")
-    implicit def AsBinding[Element](upstream: BindingSeq[Element]): AsBinding[Element] =
-      new AsBinding[Element](upstream)
-
-    final class AsBinding[Element](upstream: BindingSeq[Element])
+    @(deprecated @companionMethod)(since = "11.0.0", message = "Use [[BindingSeq.all]] instead")
+    implicit final class AsBinding[Element](upstream: BindingSeq[Element])
         extends Binding[Seq[Element]]
         with PatchedListener[Element] {
 
