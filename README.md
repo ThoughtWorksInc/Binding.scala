@@ -235,29 +235,28 @@ See https://github.com/ThoughtWorksInc/Binding.scala-sample for the complete exa
 
 ### Precise data-binding
 
-ReactJS requires users provide a `render` function for each component.
+ReactJS requires users to provide a `render` function for each component.
 The `render` function should map `props` and `state` to a ReactJS's virtual DOM,
 then ReactJS framework creates a DOM with the same structure as the virtual DOM.
 
 When `state` changes, ReactJS framework invokes `render` function to get a new virtual DOM.
 Unfortunately, ReactJS framework does not precisely know what the `state` changing is.
 ReactJS framework has to compare the new virtual DOM and the original virtual DOM,
-and guesses the changeset between the two virtual DOM,
+and guess the changeset between the two virtual DOM,
 then apply the guessed changeset to the real DOM as well.
 
-For example, after you prepended a table row, say, `<tr>`, into an existing `<tbody>` in a `<table>`,
-ReactJS may think you changed the content of the every existing `<tr>`s of the `<tbody>`,
-and appended another `<tr>` at the tail of the `<tbody>`.
+For example, after you prepend a table row `<tr>` into an existing `<tbody>` in a `<table>`,
+ReactJS may think you also changed the content of every existing `<tr>` of the `<tbody>`.
 
-The reason is that the `render` function for ReactJS does not describe the relationship between `state` and DOM.
+The reason for this is that the `render` function for ReactJS does not describe the relationship between `state` and DOM.
 Instead, it describes the process to create a virtual DOM.
 As a result, the `render` function does not provide any information about the purpose of the `state` changing,
 although a data-binding framework should need the information.
 
 Unlike ReactJS, a Binding.scala `@dom` method is NOT a regular function.
 It is a template that describes the relationship between data source and the DOM.
-When partial of the data source changed, the Binding.scala framework understands the exact partial DOM corresponding to the partial data.
-Then, Binding.scala only re-evaluates partial of the `@dom` method to update the partial DOM.
+When part of the data source changes, Binding.scala knows about the exact corresponding partial DOM affected by the change,
+thus only re-evaluating that part of the `@dom` method to reflect the change in the DOM.
 
 With the help of the ability of precise data-binding provided by Binding.scala,
 you can get rid of concepts for hinting ReactJS's guessing algorithm,
@@ -337,7 +336,7 @@ In Binding.scala, unlike MetaRx or Widok, all data-binding expressions are pure 
 Binding.scala does not register any listeners when users create individual expressions,
 thus users do not need to manually unregister listeners for a single expression like MetaRx.
 
-Instead, Binding.scala create all internal listeners together,
+Instead, Binding.scala creates all internal listeners together,
 when the user calls `dom.render` or `Binding.watch` on the root expression.
 Note that `dom.render` or `Binding.watch` manages listeners on all upstream expressions,
 not only the direct listeners of the root expression.
@@ -362,13 +361,13 @@ def notificationBox(message: String): Binding[Div] = {
 }
 ```
 
-Regardless the similar syntax of HTML literal between Binding.scala and ReactJS,
-Binding.scala create real DOM instead of ReactJS's virtual DOM.
+Despite the similar syntax of HTML literal between Binding.scala and ReactJS,
+Binding.scala creates real DOM instead of ReactJS's virtual DOM.
 
-In the above example, `<div>...</div>` create a DOM element with the type of `org.scalajs.dom.html.Div`.
-Then, the magic `@dom` let the method wrap the result as a `Binding`.
+In the above example, `<div>...</div>` creates a DOM element with the type of `org.scalajs.dom.html.Div`.
+Then, the magic `@dom` lets the method wrap the result as a `Binding`.
 
-You can even assign the `Div` to a local variable and invoke native DOM method on the variable:
+You can even assign the `Div` to a local variable and invoke native DOM methods on the variable:
 
 ``` scala
 @dom
@@ -386,9 +385,9 @@ def notificationBox(message: String): Binding[Div] = {
 ```
 
 `scrollIntoView` method will be invoked when the `Div` is created.
-If you invoked another method that does not defined in `Div`,
-the Scala compiler will report an compile-time error instead of bringing the failure to run-time,
-because Scala is a statically typed language and the Scala compiler understand the type of `Div`.
+If you invoke another method not defined in `Div`,
+the Scala compiler will report a compile-time error instead of bringing the failure to run-time,
+because Scala is a statically typed language and the Scala compiler understands the type of `Div`.
 
 You may also notice `class` and `title`. They are DOM properties or HTML attributes on `Div`.
 They are type-checked by Scala compiler as well.
@@ -415,7 +414,7 @@ typo.scala:24: value typoMethod is not a member of org.scalajs.dom.html.Div
               ^
 ```
 
-With the help of static type system, `@dom` methods can be much robuster than ReactJS components.
+With the help of the static type system, `@dom` methods can be much more robust than ReactJS components.
 
 You can find a complete list of supported properties and methods on [scaladoc of scalajs-dom](http://www.scala-js.org/api/scalajs-dom/0.8/org/scalajs/dom/raw/HTMLElement.html) or [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement)
 
