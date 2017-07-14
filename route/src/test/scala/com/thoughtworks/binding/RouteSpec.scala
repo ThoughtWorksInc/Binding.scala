@@ -9,16 +9,16 @@ import org.scalajs.dom.window
   */
 final class RouteSpec extends FreeSpec with Matchers {
   "route" in {
-    val myState = Var[Option[Int]](None)
-    Route.watchHash(myState)
+    val route = Route.Hash[Option[Int]](None)
+    route.watch()
     window.location.hash should be("#[]")
-    myState.value = Some(1)
+    route.state.value = Some(1)
     window.location.hash should be("#[1]")
     window.location.hash = "#[4]"
-    window.onhashchange(null)
-    myState.value should be(Some(4))
+    route.updateState()
+    route.state.value should be(Some(4))
     window.location.hash = "#[]"
-    window.onhashchange(null)
-    myState.value should be(None)
+    route.updateState()
+    route.state.value should be(None)
   }
 }
