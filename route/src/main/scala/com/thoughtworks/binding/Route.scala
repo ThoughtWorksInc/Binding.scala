@@ -24,9 +24,11 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import com.thoughtworks.binding.Binding.Var
-import org.scalajs.dom.{HashChangeEvent, window}
+import com.thoughtworks.binding.Binding.{SingleMountPoint, Var}
+import org.scalajs.dom.{HashChangeEvent, Location, Window, window}
 import upickle.default._
+
+import scala.scalajs.js
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -67,21 +69,48 @@ object Route {
   /**
     * Let `state` always reflect the [[org.scalajs.dom.raw.Location.hash hash]] of the [[org.scalajs.dom.raw.Window.location location]] of the current [[org.scalajs.dom.window window]].
     */
-  def watchHash[PageState](state: Var[PageState])(implicit format: Format[PageState]): Unit = {
-    window.onhashchange = { _: HashChangeEvent =>
+  final class Hash[PageState](val state: Var[PageState], window: Window = window)(implicit format: Format[PageState])
+      extends SingleMountPoint(state) {
+    override protected def set(value: PageState): Unit = {
+      window.location.hash = format(value)
+    }
+
+    private[binding] def updateState(): Unit = {
       window.location.hash match {
         case format(newState) =>
           state.value = newState
         case _ =>
       }
     }
-    window.location.hash match {
-      case format(newState) =>
-        state.value = newState
-      case _ =>
+
+    private val listener: js.Function1[HashChangeEvent, Unit] = { _: HashChangeEvent =>
+      updateState()
     }
-    Binding {
-      window.location.hash = format(state.bind)
-    }.watch()
+
+    override protected def mount(): Unit = {
+      super.mount()
+      updateState()
+      window.addEventListener("hashchange", listener)
+    }
+
+    override protected def unmount(): Unit = {
+      window.removeEventListener("hashchange", listener)
+      super.unmount()
+    }
+  }
+
+  object Hash {
+    def apply[PageState](defaultState: PageState, window: Window = window)(
+        implicit format: Format[PageState]): Hash[PageState] = {
+      new Hash(Var(defaultState), window)
+    }
+  }
+
+  /**
+    * Let `state` always reflect the [[org.scalajs.dom.raw.Location.hash hash]] of the [[org.scalajs.dom.raw.Window.location location]] of the current [[org.scalajs.dom.window window]].
+    */
+  @deprecated(message = "Use `Route.Hash(state).watch() instead")
+  def watchHash[PageState](state: Var[PageState])(implicit format: Format[PageState]): Unit = {
+    new Hash(state).watch()
   }
 }
