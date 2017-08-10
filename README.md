@@ -9,6 +9,7 @@
 [![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/futurebinding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/futurebinding)
 [![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/jspromisebinding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/jspromisebinding)
 [![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/route/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/route)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/fxml/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/fxml)
 
 **Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
