@@ -844,7 +844,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       if (publisher.isEmpty) {
         upstream.removePatchedListener(upstreamListener)
         for (child <- cacheData) {
-          child.addPatchedListener(childListener)
+          child.removePatchedListener(childListener)
         }
       }
     }
