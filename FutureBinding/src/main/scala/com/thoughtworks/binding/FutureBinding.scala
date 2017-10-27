@@ -68,9 +68,7 @@ final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionCont
   override private[binding] def addChangedListener(listener: ChangedListener[Option[Try[A]]]): Unit = {
     if (!isHandlerRegistered) {
       isHandlerRegistered = true
-      if (!future.isCompleted) {
-        future.onComplete(completeHandler)
-      }
+      future.onComplete(completeHandler)
     }
     publisher.subscribe(listener)
 
