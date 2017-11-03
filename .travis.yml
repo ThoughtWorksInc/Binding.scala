@@ -6,10 +6,10 @@ addons:
      - graphviz
      - oracle-java8-installer
 
-language: scala
+language: node_js
 
-jdk:
-  - oraclejdk8
+node_js:
+  - 8
   
 before_script:
   - "export DISPLAY=:99.0"
