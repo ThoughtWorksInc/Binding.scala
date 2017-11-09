@@ -146,7 +146,7 @@ A `@dom` method is composed with other data-binding expressions in two ways:
 
 You can nest `Node` or `BindingSeq[Node]` in other HTML element literals via `{ ... }` interpolation syntax.
 
-### Step 4: render the data-binding expressions to DOM in the `main` method
+### Step 4: Render the data-binding expressions to DOM in the `main` method
 
 ``` scala
 @JSExport
