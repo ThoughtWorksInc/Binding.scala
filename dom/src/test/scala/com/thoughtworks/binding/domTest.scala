@@ -233,6 +233,7 @@ final class domTest extends FreeSpec with Matchers {
         myVar <- myVars
         if myVar < 10
       } yield myVar
+      filtered.watch()
       assert(filtered.value == Seq(1, 2, 3))
     }
     domMethod()
