@@ -445,8 +445,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override private[binding] def addChangedListener(listener: ChangedListener[B]): Unit = {
       if (publisher.isEmpty) {
         upstream.addChangedListener(this)
+        refreshCache()
       }
-      refreshCache()
       publisher.subscribe(listener)
     }
 
