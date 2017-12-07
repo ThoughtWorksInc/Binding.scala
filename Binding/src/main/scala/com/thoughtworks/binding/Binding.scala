@@ -398,7 +398,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     /**
       * Changes the current value of this [[Var]], and reevaluates any expressions that depends on this [[Var]].
       *
-      * @note This method must not be invoked inside a `@dom` method body.
+      * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block.
       */
     def value_=(newValue: A): Unit = {
       if (cache != newValue) {
@@ -1185,7 +1185,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * Whenever you change the returned buffer,
       * other binding expressions that depend on this [[Vars]] will be automatically changed.
       *
-      * @note This method must not be invoked inside a `@dom` method body.
+      * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
       */
     @inline
     override def value: Buffer[A] with Proxy = new Proxy
@@ -1472,7 +1472,7 @@ trait Binding[+A] {
     * This rule is not applied to DOM nodes created by XHTML literal.
     * A change related to a DOM node does not affect siblings and parents of the node.
     *
-    * @note This method must be invoked inside a `@dom` method body.
+    * @note This method must be invoked inside a `@dom` method body or a `Binding { ... }` block..
     */
   final def bind: A = macro Binding.Macros.bind
 
@@ -1482,7 +1482,7 @@ trait Binding[+A] {
   /**
     * Returns the current value of this [[Binding]]
     *
-    * @note This method must not be invoked inside a `@dom` method body.
+    * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
     */
   private[binding] def value: A
 
