@@ -19,6 +19,8 @@ cache:
     - $HOME/.ivy2/cache
     - $HOME/.sbt/boot/
 
+before_script:
+
 script:
   - sbt +test
 
