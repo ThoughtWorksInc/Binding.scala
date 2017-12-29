@@ -1464,7 +1464,7 @@ trait Binding[+A] {
   final def each: A = macro Binding.Macros.bind
 
   /**
-    * Returns the current value of this [[Binding]] and mark the current `@dom` method depend on this [[Binding]].
+    * Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].
     *
     * Each time the value changes, in the current `@dom` method,
     * all code after the current `bind` expression will be re-evaluated if the current `@dom` method is [[#watch watch]]ing.
