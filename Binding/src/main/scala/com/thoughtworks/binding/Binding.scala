@@ -1469,8 +1469,8 @@ trait Binding[+A] {
     * Each time the value changes, in the current `@dom` method,
     * all code after the current `bind` expression will be re-evaluated if the current `@dom` method is [[#watch watch]]ing.
     * However, code in current `@dom` method and before the current `bind` expression will not be re-evaluated.
-    * This rule is not applied to DOM nodes created by XHTML literal.
-    * A change related to a DOM node does not affect siblings and parents of the node.
+    * The above rule is not applied to DOM nodes created by XHTML literal.
+    * A `bind` expression under a DOM node does not affect siblings and parents of that node.
     *
     * @note This method must be invoked inside a `@dom` method body or a `Binding { ... }` block..
     */
