@@ -29,7 +29,11 @@ import scalaz.Semigroup
 import scalaz.syntax.all._
 import scala.language.dynamics
 
-/**
+/** An annotation to convert FXML literals to JavaFX GUI.
+  *
+  * @note The FXML support is still experimental.
+  *       API or behavior of this annotation may change without bumping a majoy version number.
+  * @see [[https://github.com/ThoughtWorksInc/Binding.scala/wiki/FXML]] for usage
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 @compileTimeOnly("enable macro paradise to expand macro annotations")
