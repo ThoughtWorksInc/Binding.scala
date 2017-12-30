@@ -31,6 +31,10 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 scalacOptions += "-Xexperimental"
 
+scalacOptions += "-Ywarn-unused-import"
+
+scalacOptions += "-Xfatal-warnings"
+
 jsDependencies in Test += RuntimeDOM
 
 inConfig(Test) {

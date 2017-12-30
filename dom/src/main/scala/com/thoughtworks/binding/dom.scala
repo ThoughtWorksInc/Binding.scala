@@ -24,7 +24,7 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
+import Binding.{BindingSeq, Constants, MultiMountPoint}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.XmlExtractor.{PrefixedName, UnprefixedName}
@@ -41,7 +41,6 @@ import scalatags.jsdom
 import org.scalajs.dom.document
 
 import scala.collection.immutable.Queue
-import scala.scalajs.runtime.AnonFunction1
 
 /**
   * Enable XML DOM literal for Binding.scala
