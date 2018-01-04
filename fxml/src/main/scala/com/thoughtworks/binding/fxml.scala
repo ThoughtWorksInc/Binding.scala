@@ -708,7 +708,7 @@ object fxml {
         }
 
         (
-          bindingSeq,
+          q"$bindingSeq.all",
           name,
           q"""
               import _root_.scala.collection.JavaConverters._
