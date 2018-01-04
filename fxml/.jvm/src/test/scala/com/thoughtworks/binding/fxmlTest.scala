@@ -1,9 +1,11 @@
 package com.thoughtworks.binding
 
 import javafx.application.Platform
+import javafx.scene.Scene
+import javafx.scene.control.TableView
 import javax.swing.SwingUtilities
 
-import com.thoughtworks.binding.Binding.{BindingSeq, Var, Vars, Constants}
+import com.thoughtworks.binding.Binding.{BindingSeq, Constants, Var, Vars}
 import org.scalatest._
 
 import scala.collection.JavaConverters._
@@ -759,6 +761,18 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     button.watch()
     button.value.getId should be("< < ")
     button.value.getText should be(">>")
+  }
+
+  "issue 65" in {
+    type StringTable = TableView[String]
+    @fxml val stringTable: Binding[StringTable] = {
+      <StringTable>
+        {Constants("Hello", "Flatmap")}
+      </StringTable>
+    }
+
+    stringTable.watch()
+    stringTable.value.getItems.size should be(2)
   }
 
   override protected def withFixture(test: NoArgTest): Outcome = {

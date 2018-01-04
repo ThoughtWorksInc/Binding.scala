@@ -392,7 +392,7 @@ object fxml {
           override def toBindingSeq(from: Binding[From]): BindingSeq[Element] = {
             (from: Binding[BindingSeq[Element0]]) match {
               case Binding.Constant(bindingSeq) => bindingSeq
-              case binding => Constants(binding).flatMapBinding(identity)
+              case binding                      => Constants(binding).flatMapBinding(identity)
             }
           }
 
@@ -691,8 +691,9 @@ object fxml {
                                     descriptor: PropertyDescriptor,
                                     bindings: Seq[Tree]): (Tree, TermName, Tree) = {
       val name = TermName(c.freshName(descriptor.getName))
+
       descriptor.getWriteMethod match {
-        case null if classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType) =>
+        case _ if classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType) =>
           val nonEmptyBindings = bindings.filterNot(EmptyBinding.unapply)
           def list = q"$parentBean.${TermName(descriptor.getReadMethod.getName)}"
           val bindingSeq = nonEmptyBindings match {
@@ -753,7 +754,7 @@ object fxml {
                                            bindings: Seq[Tree]): Tree = {
 
       descriptor.getWriteMethod match {
-        case null if classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType) =>
+        case _ if classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType) =>
           val nonEmptyBindings = bindings.filterNot(EmptyBinding.unapply)
           def list = q"$parentBean.${TermName(descriptor.getReadMethod.getName)}"
           nonEmptyBindings match {
