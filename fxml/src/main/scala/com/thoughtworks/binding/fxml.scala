@@ -711,9 +711,9 @@ object fxml {
           q"$bindingSeq.all",
           name,
           q"""
-              import _root_.scala.collection.JavaConverters._
-              $list.addAll($name.asJava)
-            """
+            import _root_.scala.collection.JavaConverters._
+            $list.addAll($name.asJava)
+          """
         )
       } else if (descriptor.getWriteMethod != null) {
         def setterName = TermName(descriptor.getWriteMethod.getName)
@@ -760,23 +760,23 @@ object fxml {
             q"_root_.com.thoughtworks.binding.Binding.Constant(())"
           case Seq(binding) =>
             q"""
-                new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
-                  $list
-                )(
-                  _root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($binding)
-                )
-              """
+              new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
+                $list
+              )(
+                _root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($binding)
+              )
+            """
           case _ =>
             val valueBindings = for (binding <- nonEmptyBindings) yield {
               q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($binding)"
             }
             q"""
-                 new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
-                  $list
-                )(
-                  _root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _)
-                )
-              """
+               new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
+                $list
+              )(
+                _root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _)
+              )
+            """
         }
       } else if (descriptor.getWriteMethod != null) {
         def mapSetter(binding: Tree) = {
