@@ -691,61 +691,59 @@ object fxml {
                                     descriptor: PropertyDescriptor,
                                     bindings: Seq[Tree]): (Tree, TermName, Tree) = {
       val name = TermName(c.freshName(descriptor.getName))
+      if (descriptor.getReadMethod != null && classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType)) {
 
-      descriptor.getWriteMethod match {
-        case _ if classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType) =>
-          val nonEmptyBindings = bindings.filterNot(EmptyBinding.unapply)
-          def list = q"$parentBean.${TermName(descriptor.getReadMethod.getName)}"
-          val bindingSeq = nonEmptyBindings match {
-            case Seq() =>
-              q"_root_.com.thoughtworks.binding.Binding.Constants(())"
-            case Seq(binding) =>
-              q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($binding)"
-            case _ =>
-              val valueBindings = for (binding <- nonEmptyBindings) yield {
-                q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($binding)"
-              }
-              q"_root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _)"
-          }
+        val nonEmptyBindings = bindings.filterNot(EmptyBinding.unapply)
+        def list = q"$parentBean.${TermName(descriptor.getReadMethod.getName)}"
+        val bindingSeq = nonEmptyBindings match {
+          case Seq() =>
+            q"_root_.com.thoughtworks.binding.Binding.Constants(())"
+          case Seq(binding) =>
+            q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($binding)"
+          case _ =>
+            val valueBindings = for (binding <- nonEmptyBindings) yield {
+              q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($binding)"
+            }
+            q"_root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _)"
+        }
 
-          (
-            bindingSeq,
-            name,
-            q"""
+        (
+          bindingSeq,
+          name,
+          q"""
               import _root_.scala.collection.JavaConverters._
               $list.addAll($name.asJava)
             """
-          )
-        case null =>
-          c.error(parentBean.pos, s"${descriptor.getName} is not writeable")
-          (q"???", TermName("<error>"), q"???")
-        case writeMethod =>
-          val setterName = TermName(writeMethod.getName)
-          if (classOf[String].isAssignableFrom(descriptor.getPropertyType)) {
-            bindings match {
-              case Seq() =>
-                (q"""_root_.com.thoughtworks.binding.Binding.Constant(())""", name, q"()")
-              case Seq(value) =>
-                (value, name, q"$parentBean.$setterName($name)")
-              case nonEmptyBindings =>
-                val value = nonEmptyBindings.reduce { (left, right) =>
-                  q"_root_.com.thoughtworks.binding.fxml.Runtime.bindingStringSemigroup.append($left, $right)"
-                }
-                (value, name, q"$parentBean.$setterName($name)")
-            }
-          } else {
-            bindings match {
-              case Seq() =>
-                c.error(parentBean.pos, s"expect a value for ${descriptor.getName}")
-                (q"???", TermName("<error>"), q"???")
-              case Seq(value) =>
-                (value, name, q"$parentBean.$setterName($name)")
-              case _ =>
-                c.error(parentBean.pos, s"expect only one value for ${descriptor.getName}")
-                (q"???", TermName("<error>"), q"???")
-            }
-
+        )
+      } else if (descriptor.getWriteMethod != null) {
+        def setterName = TermName(descriptor.getWriteMethod.getName)
+        if (classOf[String].isAssignableFrom(descriptor.getPropertyType)) {
+          bindings match {
+            case Seq() =>
+              (q"""_root_.com.thoughtworks.binding.Binding.Constant(())""", name, q"()")
+            case Seq(value) =>
+              (value, name, q"$parentBean.$setterName($name)")
+            case nonEmptyBindings =>
+              val value = nonEmptyBindings.reduce { (left, right) =>
+                q"_root_.com.thoughtworks.binding.fxml.Runtime.bindingStringSemigroup.append($left, $right)"
+              }
+              (value, name, q"$parentBean.$setterName($name)")
           }
+        } else {
+          bindings match {
+            case Seq() =>
+              c.error(parentBean.pos, s"expect a value for ${descriptor.getName}")
+              (q"???", TermName("<error>"), q"???")
+            case Seq(value) =>
+              (value, name, q"$parentBean.$setterName($name)")
+            case _ =>
+              c.error(parentBean.pos, s"expect only one value for ${descriptor.getName}")
+              (q"???", TermName("<error>"), q"???")
+          }
+        }
+      } else {
+        c.error(parentBean.pos, s"${descriptor.getName} is not writeable")
+        (q"???", TermName("<error>"), q"???")
       }
     }
 
@@ -753,69 +751,69 @@ object fxml {
                                            descriptor: PropertyDescriptor,
                                            bindings: Seq[Tree]): Tree = {
 
-      descriptor.getWriteMethod match {
-        case _ if classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType) =>
-          val nonEmptyBindings = bindings.filterNot(EmptyBinding.unapply)
-          def list = q"$parentBean.${TermName(descriptor.getReadMethod.getName)}"
-          nonEmptyBindings match {
-            case Seq() =>
-              q"_root_.com.thoughtworks.binding.Binding.Constant(())"
-            case Seq(binding) =>
-              q"""
+      if (descriptor.getReadMethod != null && classOf[java.util.List[_]].isAssignableFrom(descriptor.getPropertyType)) {
+
+        val nonEmptyBindings = bindings.filterNot(EmptyBinding.unapply)
+        def list = q"$parentBean.${TermName(descriptor.getReadMethod.getName)}"
+        nonEmptyBindings match {
+          case Seq() =>
+            q"_root_.com.thoughtworks.binding.Binding.Constant(())"
+          case Seq(binding) =>
+            q"""
                 new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
                   $list
                 )(
                   _root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeq($binding)
                 )
               """
-            case _ =>
-              val valueBindings = for (binding <- nonEmptyBindings) yield {
-                q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($binding)"
-              }
-              q"""
+          case _ =>
+            val valueBindings = for (binding <- nonEmptyBindings) yield {
+              q"_root_.com.thoughtworks.binding.fxml.Runtime.toBindingSeqBinding($binding)"
+            }
+            q"""
                  new _root_.com.thoughtworks.binding.fxml.Runtime.JavaListMountPoint(
                   $list
                 )(
                   _root_.com.thoughtworks.binding.Binding.Constants(..$valueBindings).flatMapBinding(_root_.scala.Predef.locally _)
                 )
               """
+        }
+      } else if (descriptor.getWriteMethod != null) {
+        def mapSetter(binding: Tree) = {
+          map(binding) { value =>
+            q"$parentBean.${TermName(descriptor.getWriteMethod.getName)}($value)"
           }
-        case null =>
-          c.error(parentBean.pos, s"${descriptor.getName} is not writeable")
-          q"???"
-        case writeMethod =>
-          def mapSetter(binding: Tree) = {
-            map(binding) { value =>
-              q"$parentBean.${TermName(writeMethod.getName)}($value)"
-            }
+        }
+        if (classOf[String].isAssignableFrom(descriptor.getPropertyType)) {
+          bindings match {
+            case Seq() =>
+              q"""_root_.com.thoughtworks.binding.Binding.Constant(())"""
+            case Seq(value) =>
+              mapSetter(value)
+            case nonEmptyBindings =>
+              val value = nonEmptyBindings.reduce { (left, right) =>
+                q"_root_.com.thoughtworks.binding.fxml.Runtime.bindingStringSemigroup.append($left, $right)"
+              }
+              mapSetter(value)
           }
-          if (classOf[String].isAssignableFrom(descriptor.getPropertyType)) {
-            bindings match {
-              case Seq() =>
-                q"""_root_.com.thoughtworks.binding.Binding.Constant(())"""
-              case Seq(value) =>
-                mapSetter(value)
-              case nonEmptyBindings =>
-                val value = nonEmptyBindings.reduce { (left, right) =>
-                  q"_root_.com.thoughtworks.binding.fxml.Runtime.bindingStringSemigroup.append($left, $right)"
-                }
-                mapSetter(value)
-            }
-          } else {
-            bindings match {
-              case Seq() =>
-                c.error(parentBean.pos, s"expect a value for ${descriptor.getName}")
-                q"???"
-              case Seq(value) =>
-                mapSetter(value)
-            }
+        } else {
+          bindings match {
+            case Seq() =>
+              c.error(parentBean.pos, s"expect a value for ${descriptor.getName}")
+              q"???"
+            case Seq(value) =>
+              mapSetter(value)
           }
+        }
+      } else {
+        c.error(parentBean.pos, s"${descriptor.getName} is not writeable")
+        q"???"
       }
     }
 
     private def arguments: PartialFunction[Tree, Seq[Tree]] = {
       case q"new $t(..$arguments)" => arguments
-      case q"new $t()" => Nil
+      case q"new $t()"             => Nil
     }
 
     private def findDefaultProperty(beanClass: Class[_], beanInfo: BeanInfo): Option[PropertyDescriptor] = {
@@ -1154,7 +1152,7 @@ object fxml {
           Seq(atPos(tree.pos) {
             c.parse(raw"""import $proctext""") match {
               case q"import $parent.*" => q"import $parent._"
-              case i => i
+              case i                   => i
             }
           })
         case tree @ Elem(PrefixedName("fx", "define"), attributes, _, children) =>
@@ -1265,7 +1263,7 @@ object fxml {
 
           val (fxAttributes, otherAttributes) = attributes.partition {
             case (PrefixedName("fx", _), _) => true
-            case _ => false
+            case _                          => false
           }
 
           val fxAttributeMap = fxAttributes.view.map {
@@ -1485,11 +1483,11 @@ object fxml {
       val transformer = new XmlTransformer
 
       import transformer.transform
-//      def transform(tree: Tree): Tree = {
-//        val output = transformer.transform(tree)
-//        c.info(c.enclosingPosition, c.universe.show(output), true)
-//        output
-//      }
+      def transform(tree: Tree): Tree = {
+        val output = transformer.transform(tree)
+        c.info(c.enclosingPosition, c.universe.show(output), true)
+        output
+      }
 
       replaceDefBody(
         annottees, { body =>
