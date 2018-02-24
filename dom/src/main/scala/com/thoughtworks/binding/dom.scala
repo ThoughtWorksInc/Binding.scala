@@ -24,7 +24,7 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint}
+import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint, SingletonBindingSeq}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.XmlExtractor.{PrefixedName, UnprefixedName}
@@ -79,12 +79,12 @@ object dom {
 
       @inline
       def this(parent: Node, childBinding: Binding[BindingSeq[Node]], dummy: Unit = ()) = {
-        this(parent, Constants(()).flatMapBinding { _ => childBinding })
+        this(parent, Constants(childBinding).flatMapBinding(identity))
       }
 
       @inline
       def this(parent: Node, childBinding: Binding[Node]) = {
-        this(parent, Constants(()).mapBinding { _ => childBinding })
+        this(parent, SingletonBindingSeq(childBinding))
       }
 
       @inline
