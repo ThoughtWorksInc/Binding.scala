@@ -1485,7 +1485,7 @@ object fxml {
       import transformer.transform
       def transform(tree: Tree): Tree = {
         val output = transformer.transform(tree)
-        c.info(c.enclosingPosition, c.universe.show(output), true)
+        // c.info(c.enclosingPosition, c.universe.show(output), true)
         output
       }
 
