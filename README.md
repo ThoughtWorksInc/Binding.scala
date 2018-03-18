@@ -1,5 +1,8 @@
 # Binding.scala <a href="http://thoughtworks.com/"><img align="right" src="https://www.thoughtworks.com/imgs/tw-logo.png" title="ThoughtWorks" height="15"/></a>
 
+[![Production Ready](https://img.shields.io/badge/%F0%9F%91%8C-Production%20Ready-00ddcc.svg)](https://github.com/search?l=Scala&o=desc&q="com.thoughtworks.binding"&s=indexed&type=Code&utf8=✓)
+[![Extremely Lightweight](https://img.shields.io/badge/%F0%9F%A6%8B-Extremely%20Lightweight-7799cc.svg)](http://todomvc.com/examples/binding-scala/)
+
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
 [![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/binding_2.12.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
