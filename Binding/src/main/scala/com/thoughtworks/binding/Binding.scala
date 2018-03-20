@@ -1440,21 +1440,22 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 /**
   * A data binding expression that represents a value that automatically recalculates when its dependencies change.
   *
-  * You may create a data binding expression via `Binding { ??? }` block or `@dom` annotation.
   *
-  * {{{
-  * val bindingInt: Binding[Int] = Binding { 100 }
-  * }}}
+  * @example You may create a data binding expression via `Binding { ??? }` block or `@dom` annotation.
   *
-  * {{{
-  * @dom val bindingBr: Binding[HTMLBRElement] = <br/>
-  * }}}
+  *          {{{
+  *          val bindingInt: Binding[Int] = Binding { 100 }
+  *          }}}
   *
-  * A data binding expression may depend on other binding expressions via [[bind]] method:
+  *          {{{
+  *          @dom val bindingBr: Binding[HTMLBRElement] = <br/>
+  *          }}}
   *
-  * {{{
-  * val bindingString: Binding[String] = bindingInt.bind.toString
-  * }}}
+  *          A data binding expression may depend on other binding expressions via [[bind]] method:
+  *
+  *          {{{
+  *          val bindingString: Binding[String] = Binding { bindingInt.bind.toString }
+  *          }}}
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
