@@ -436,6 +436,18 @@ If you want to suppress the static type checking of attributes, add a `data:` pr
 
 The Scala compiler will not report errors now.
 
+## Showcases
+
+ * [TodoMVC](http://todomvc.com/examples/binding-scala/): a project which offers the same Todo application implemented using MV* concepts in most of the popular JavaScript MV* frameworks of today.
+ * [Granblue Raid Finder](https://github.com/walfie/gbf-raidfinder): a site for finding Granblue Fantasy raid tweets.
+ * [Game of Life](https://github.com/zhanglongyang/game-of-life): Conway's Game of Life implemented with Binding.scala.
+ * [playground-binding.scala
+](https://github.com/ccamel/playground-binding.scala): Various DEMOs with scala, scalajs and binding.scala
+ * [CITE Application](https://github.com/cite-architecture/CITE-App): A single-page browser application for exploring citable resources
+ * [full-stack-scala.g8](https://github.com/dotn8/full-stack-scala.g8): Giter8 template for full-stack scala development
+
+(Feel free to add your project here)
+
 ## Downloads
 
 Binding.scala has an extremely tiny code base.
