@@ -6,7 +6,7 @@ lazy val FutureBinding = crossProject.crossType(CrossType.Pure).dependsOn(Bindin
 
 lazy val dom = project.dependsOn(BindingJS).dependsOn(XmlExtractorJS)
 
-lazy val route = project.dependsOn(BindingJS)
+lazy val Route = project.dependsOn(BindingJS)
 
 lazy val JsPromiseBinding = project.dependsOn(BindingJS)
 
