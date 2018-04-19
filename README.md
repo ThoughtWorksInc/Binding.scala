@@ -452,7 +452,7 @@ The Scala compiler will not report errors now.
 ## Downloads
 
 Binding.scala has an extremely tiny code base.
-The source files are split into 4 libraries, one file per library.
+The source files are split into few libraries, one file per library.
 
 ### Core data-binding expressions (Binding.scala)
 
@@ -477,8 +477,20 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 This module is only available for Scala.js. You could add it in your `build.sbt`.
 
 ``` scala
-// For Scala.js projects, or JS/JVM cross projects
+// For Scala.js projects
 libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+```
+
+
+### FXML integration (fxml.scala)
+
+This module is only available for Scala.js. You could add it in your `build.sbt`.
+
+``` scala
+// For JVM projects
+libraryDependencies += "com.thoughtworks.binding" %% "fxml" % "latest.release"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
@@ -506,7 +518,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 This module is only available for Scala.js. You could add it in your `build.sbt`.
 
 ``` scala
-// For Scala.js projects, or JS/JVM cross projects
+// For Scala.js projects
 libraryDependencies += "com.thoughtworks.binding" %%% "jspromisebinding" % "latest.release"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
