@@ -11,7 +11,7 @@ lazy val secret = project.settings(publishArtifact := false).in {
       .setURI("https://github.com/ThoughtWorksInc/tw-data-china-continuous-delivery-password.git")
       .setDirectory(secretDirectory)
       .setCredentialsProvider(
-        new org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider(sys.env.get(token, ""))
+        new org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider(sys.env.get(token), "")
       )
       .call()
       .close()
