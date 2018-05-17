@@ -446,6 +446,12 @@ The Scala compiler will not report errors now.
 ](https://github.com/ccamel/playground-binding.scala): Various DEMOs with scala, scalajs and binding.scala
  * [CITE Application](https://github.com/cite-architecture/CITE-App): A single-page browser application for exploring citable resources
  * [full-stack-scala.g8](https://github.com/dotn8/full-stack-scala.g8): Giter8 template for full-stack scala development
+ * [scala-adapters](https://pme123.github.io/scala-adapters/): A simple framework to implement your server jobs - providing a standard UI-client to monitor and test them. (Used in Production)
+ * [Binding.scala-Google-Maps](https://github.com/pme123/Binding.scala-Google-Maps): A step-by-step tutorial to get you started with Binding.scala. 
+ * [scala-adapters.g8](https://github.com/pme123/scala-adapters.g8): A Giter8 template for a full-stack Scala project that uses [scala-adapters](https://pme123.github.io/scala-adapters/).
+ * [play-akka-telegrambot4s-incidents](https://github.com/pme123/play-akka-telegrambot4s-incidents): An incident management app - where you can send incidents with a chat bot.                                                                
+ * [scala-adapters-images](https://github.com/pme123/scala-adapters-images): A demo project that uses [scala-adapters](https://pme123.github.io/scala-adapters/) and
+                                                                             [play-akka-telegrambot4s](https://github.com/pme123/play-akka-telegrambot4s)
 
 (Feel free to add your project here)
 
