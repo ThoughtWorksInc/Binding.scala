@@ -492,11 +492,18 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 ### FXML integration (fxml.scala)
 
-This module is only available for Scala.js. You could add it in your `build.sbt`.
+This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
 
 ``` scala
 // For JVM projects
 libraryDependencies += "com.thoughtworks.binding" %% "fxml" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+```
+
+``` scala
+// For Scala.js projects, or JS/JVM cross projects
+libraryDependencies += "com.thoughtworks.binding" %%% "fxml" % "latest.release"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
