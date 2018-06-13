@@ -185,7 +185,7 @@ def table: Binding[BindingSeq[Node]] = {
   <div>
     <button
       onclick={ event: Event =>
-        data.get += Contact(Var("Yang Bo"), Var("yang.bo@rea-group.com"))
+        data.value += Contact(Var("Yang Bo"), Var("yang.bo@rea-group.com"))
       }
     >
       Add a contact
@@ -212,7 +212,7 @@ def table: Binding[BindingSeq[Node]] = {
             <td>
               <button
                 onclick={ event: Event =>
-                  contact.name := "Modified Name"
+                  contact.name.value = "Modified Name"
                 }
               >
                 Modify the name
@@ -283,7 +283,7 @@ case class Contact(name: Var[String], email: Var[String])
 def bindingButton(contact: Contact): Binding[Button] = {
   <button
     onclick={ event: Event =>
-      contact.name := "Modified Name"
+      contact.name.value = "Modified Name"
     }
   >
    Modify the name
