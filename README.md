@@ -450,8 +450,9 @@ The Scala compiler will not report errors now.
  * [Binding.scala-Google-Maps](https://github.com/pme123/Binding.scala-Google-Maps): A step-by-step tutorial to get you started with Binding.scala. 
  * [scala-adapters.g8](https://github.com/pme123/scala-adapters.g8): A Giter8 template for a full-stack Scala project that uses [scala-adapters](https://pme123.github.io/scala-adapters/).
  * [play-akka-telegrambot4s-incidents](https://github.com/pme123/play-akka-telegrambot4s-incidents): An incident management app - where you can send incidents with a chat bot.                                                                
- * [scala-adapters-images](https://github.com/pme123/scala-adapters-images): A demo project that uses [scala-adapters](https://pme123.github.io/scala-adapters/) and
-                                                                             [play-akka-telegrambot4s](https://github.com/pme123/play-akka-telegrambot4s)
+ * [scala-adapters-images](https://github.com/pme123/scala-adapters-images): A demo project that uses [scala-adapters](https://pme123.github.io/scala-adapters/) and [play-akka-telegrambot4s](https://github.com/pme123/play-akka-telegrambot4s).
+ * [jmh-view](https://github.com/tom91136/jmh-view): An embeddable JMH report viewer, which is used to to create [the report for the benchmarks of Scala parsers](https://tom91136.github.io/scala-parser-benchmarks/report.html).
+
 
 (Feel free to add your project here)
 
