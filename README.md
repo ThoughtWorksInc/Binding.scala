@@ -446,7 +446,7 @@ The Scala compiler will not report errors now.
 ](https://github.com/ccamel/playground-binding.scala): Various DEMOs with scala, scalajs and binding.scala
  * [CITE Application](https://github.com/cite-architecture/CITE-App): A single-page browser application for exploring citable resources.
  * [hmt-reader](https://github.com/homermultitext/hmt-reader): A package of application and data for reading Homer Multitext textual data, in its current release.
- * [full-stack-scala.g8](https://github.com/dotn8/full-stack-scala.g8): Giter8 template for full-stack scala development
+ * [Full-Stack-Scala-Starter](https://github.com/Algomancer/Full-Stack-Scala-Starter): Play 2.5, ScalaJS, Binding.scala starter project.
  * [scala-adapters](https://pme123.github.io/scala-adapters/): A simple framework to implement your server jobs - providing a standard UI-client to monitor and test them. (Used in Production)
  * [Binding.scala-Google-Maps](https://github.com/pme123/Binding.scala-Google-Maps): A step-by-step tutorial to get you started with Binding.scala. 
  * [scala-adapters.g8](https://github.com/pme123/scala-adapters.g8): A Giter8 template for a full-stack Scala project that uses [scala-adapters](https://pme123.github.io/scala-adapters/).
