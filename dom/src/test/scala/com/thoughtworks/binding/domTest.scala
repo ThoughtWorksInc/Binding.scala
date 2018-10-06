@@ -325,5 +325,30 @@ final class domTest extends FreeSpec with Matchers {
     @dom def mySelect = <br class=""/>
   }
 
+  "Option" in {
+    val warning = Var(true)
+    @dom val text = if(warning.bind) Some(<b>warning</b>) else None
+
+    @dom val div = <div>{text.bind}</div>
+    div.watch()
+
+    assert(div.value.outerHTML == "<div><b>warning</b></div>")
+    warning.value = false
+    assert(div.value.outerHTML == "<div/>")
+  }
+
+  "OptionMonadicExpression" in {
+    import scalaz.std.option._
+    val firstName = Var[scala.Option[String]](Some("firstName"))
+    @dom val text = firstName.bind.map(text => <span>{text}</span>)
+
+    @dom val div = <div>{text.bind}</div>
+    div.watch()
+
+    assert(div.value.outerHTML == "<div><span>firstName</span></div>")
+    firstName.value = None
+    assert(div.value.outerHTML == "<div/>")
+  }
+
 }
 
