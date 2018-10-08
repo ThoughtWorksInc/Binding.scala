@@ -155,6 +155,9 @@ object dom {
     def domBindingSeq(text: String) = Constants(document.createTextNode(text))
 
     @inline
+    def domBindingSeq(optionNode: Option[Node]) = Constants(optionNode.toSeq: _*)
+
+    @inline
     def notEqual[A](left: A, right: A) = left != right
   }
 
