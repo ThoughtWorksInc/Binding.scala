@@ -88,8 +88,8 @@ object Route {
     }
 
     override protected def mount(): Unit = {
-      super.mount()
       updateState()
+      super.mount()
       window.addEventListener("hashchange", listener)
     }
 

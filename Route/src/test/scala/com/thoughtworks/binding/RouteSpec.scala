@@ -9,6 +9,7 @@ import org.scalajs.dom.window
   */
 final class RouteSpec extends FreeSpec with Matchers {
   "route" in {
+    window.location.hash = "#[]"
     val route = Route.Hash[Option[Int]](None)
     route.watch()
     window.location.hash should be("#[]")
@@ -20,5 +21,14 @@ final class RouteSpec extends FreeSpec with Matchers {
     window.location.hash = "#[]"
     route.updateState()
     route.state.value should be(None)
+  }
+
+  "route should parse hash on mount" in {
+    window.location.hash = "#[123]"
+
+    val route = Route.Hash[Option[Int]](None)
+    route.watch()
+
+    route.state.value should be(Some(123))
   }
 }
