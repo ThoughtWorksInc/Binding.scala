@@ -8,6 +8,6 @@ libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.1"
 
 scalacOptions += "-Xexperimental"
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.4" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.5" % Test
 
 jsDependencies += RuntimeDOM % Test
