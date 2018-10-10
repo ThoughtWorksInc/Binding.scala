@@ -40,6 +40,7 @@ import scalatags.JsDom
 import scalatags.jsdom
 import org.scalajs.dom.document
 
+import scala.annotation.meta.{companionClass, companionMethod}
 import scala.collection.immutable.Queue
 import scala.scalajs.runtime.AnonFunction1
 
@@ -185,7 +186,8 @@ object dom {
 
     }
 
-    // FIXME: Remove this implicit class when scala-js-dom 0.9.2 release
+    @(deprecated @companionClass)("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
+    @(deprecated @companionMethod)("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
     implicit final class StyleOps @inline()(node: HTMLElement) {
       @inline def style = node.style.cssText
 
