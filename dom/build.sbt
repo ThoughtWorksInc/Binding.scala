@@ -10,7 +10,7 @@ libraryDependencies += "com.thoughtworks.extractor" %% "extractor" % "1.1.1"
 
 libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.2"
 
-libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.1"
+libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.5"
 
 libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.4" % Test
 
