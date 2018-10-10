@@ -33,9 +33,9 @@ lazy val fxmlJVM = fxml.jvm.addSbtFiles(file("../build.sbt.shared"))
 organization in ThisBuild := "com.thoughtworks.binding"
 
 crossScalaVersions := Seq(
-  "2.10.6",
-  "2.11.11",
-  "2.12.3"
+  "2.10.7",
+  "2.11.12",
+  "2.12.7"
 )
 
 developers in ThisBuild := List(
