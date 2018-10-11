@@ -186,13 +186,17 @@ object dom {
 
     }
 
-    @(deprecated @companionClass)("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
-    @(deprecated @companionMethod)("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
-    implicit final class StyleOps @inline()(node: HTMLElement) {
+    final class StyleOps @inline @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")(
+        node: HTMLElement) {
+      @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
       @inline def style = node.style.cssText
 
+      @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
       @inline def style_=(value: String) = node.style.cssText = value
     }
+
+    @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
+    def StyleOps(node: HTMLElement) = new StyleOps(node)
 
     implicit final class ClassOps @inline()(node: HTMLElement) {
       @inline def `class` = node.className
