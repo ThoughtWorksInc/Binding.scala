@@ -186,6 +186,30 @@ object dom {
 
     }
 
+    implicit final class OptionOps @inline()(node: Element) {
+
+      import scala.language.dynamics
+
+      object option extends Dynamic {
+
+        final def selectDynamic(attributeName: String): Option[String] = {
+          if (node.hasAttribute(attributeName)) {
+            Some(node.getAttribute(attributeName))
+          } else {
+            None
+          }
+        }
+
+        final def updateDynamic(attributeName: String)(attributeValue: Option[String]): Unit = {
+          attributeValue.fold(
+            node.removeAttribute(attributeName))(
+            node.setAttribute(attributeName, _))
+        }
+
+      }
+
+    }
+
     final class StyleOps @inline @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")(
         node: HTMLElement) {
       @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")

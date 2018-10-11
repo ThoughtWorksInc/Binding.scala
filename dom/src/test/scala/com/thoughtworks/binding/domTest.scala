@@ -350,5 +350,18 @@ final class domTest extends FreeSpec with Matchers {
     assert(div.value.outerHTML == "<div/>")
   }
 
+  "OptionalAttribute" in {
+    val id = Var[scala.Option[String]](Some("oldId"))
+    @dom val hr = <hr option:id={id.bind}/>
+    hr.watch()
+    assert(hr.value.outerHTML == """<hr id="oldId"/>""")
+    id.value = Some("newId")
+    assert(hr.value.outerHTML == """<hr id="newId"/>""")
+    id.value = None
+    assert(hr.value.outerHTML == "<hr/>")
+    id.value = Some("createdId")
+    assert(hr.value.outerHTML == """<hr id="createdId"/>""")
+  }
+
 }
 
