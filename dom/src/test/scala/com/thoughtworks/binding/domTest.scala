@@ -363,5 +363,80 @@ final class domTest extends FreeSpec with Matchers {
     assert(hr.value.outerHTML == """<hr id="createdId"/>""")
   }
 
+
+  "reference by local-id from nested content" in {
+    @dom def innerDiv = {
+      <div id="html-my-id" local-id="my-div"><p local-id="myParagraph" id="htmlMyParagraph">The tagName of current Div is { `my-div`.tagName }. The tagName of current Paragraph is { myParagraph.tagName }. </p></div>
+    }
+    val div = document.createElement("div")
+    dom.render(div, innerDiv)
+    val outerHTML = div.outerHTML
+    assert(outerHTML == """<div><div id="html-my-id"><p id="htmlMyParagraph">The tagName of current Div is DIV. The tagName of current Paragraph is P. </p></div></div>""")
+  }
+
+  "reference by local-id from content" in {
+    @dom def innerDiv = {
+      <p local-id="currentElement">The tagName of current element is { currentElement.tagName }.</p>
+    }
+    val div = document.createElement("div")
+    dom.render(div, innerDiv)
+    val outerHTML = div.outerHTML
+    assert(outerHTML == """<div><p>The tagName of current element is P.</p></div>""")
+  }
+
+  "reference by local-id from attributes" in {
+    @dom def input = {
+        <br local-id="myBr" class={myBr.tagName}/>
+    }
+    val div = document.createElement("div")
+    dom.render(div, input)
+    val outerHTML = div.outerHTML
+    assert(outerHTML == """<div><br class="BR"/></div>""")
+  }
+
+  "local-id takes precedence over the id attribute" in {
+    @dom def input = {
+        <br id="html-id" local-id="myBr" class={myBr.tagName}/>
+    }
+    val div = document.createElement("div")
+    dom.render(div, input)
+    val outerHTML = div.outerHTML
+    assert(outerHTML == """<div><br class="BR" id="html-id"/></div>""")
+  }
+
+  "local-id in BindingSeq" in {
+    val v = Var("Initial value")
+    @dom val input = <input local-id="foo" onclick={ _: Event => v.value = s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><div> <hr class="h"/> <div><label local-id="bar">Label Text</label></div></div>
+    val div = document.createElement("div")
+    dom.render(div, input)
+    assert(v.value == "Initial value")
+    assert(input.value.value(0).asInstanceOf[Input].value == "Initial value")
+    div.firstChild.asInstanceOf[Input].onclick(null)
+    assert(v.value == "INPUT and Label Text")
+    assert(input.value.value(0).asInstanceOf[Input].value == "INPUT and Label Text")
+  }
+
+  "local-id in Binding" in {
+    val v = Var("Initial value")
+    @dom val input = {
+      <input local-id="foo" onclick={ _: Event => v.value = s"${foo.tagName}"}/>
+      foo.value = v.bind
+      foo
+    }
+    val div = document.createElement("div")
+    dom.render(div, input)
+    assert(v.value == "Initial value")
+    assert(input.value.value == "Initial value")
+    div.firstChild.asInstanceOf[Input].onclick(null)
+    assert(v.value == "INPUT")
+    assert(input.value.value == "INPUT")
+  }
+
+  "dashed-local-id should compile" in {
+    @dom def div = <div local-id="dashed-id" class={ s"${`dashed-id`.tagName}-1" }></div>
+    div.watch()
+    assert(div.value.className == "DIV-1")
+  }
+
 }
 
