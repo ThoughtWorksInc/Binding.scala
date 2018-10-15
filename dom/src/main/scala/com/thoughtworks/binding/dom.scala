@@ -234,12 +234,6 @@ object dom {
       @inline def for_=(value: String) = node.htmlFor = value
     }
 
-    implicit final class LocalIdDummyOps @inline()(node: Element) {
-      @inline def `local-id`: String = ""
-
-      @inline def `local-id_=`(value: String) = ()
-    }
-
   }
 
   /**
@@ -325,7 +319,12 @@ object dom {
             }
 
             val attributeMountPoints = for {
-              (key, value) <- attributes
+              (key, value) <- attributes if {
+                key match {
+                  case UnprefixedName("local-id") => false
+                  case _ => true
+                }
+              }
             } yield {
               val attributeAccess = key match {
                 case UnprefixedName(localPart) =>
