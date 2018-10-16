@@ -116,7 +116,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     @fxml val pair = {
       import javafx.scene.layout.VBox
       import javafx.scene.control.Button
-      <Button fx:id="b">
+      val _ = <Button fx:id="b">
         <text>{b.toString}</text>
       </Button>
       (Binding(b), Binding(b))
@@ -190,7 +190,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     @fxml val bs = {
       import javafx.scene.layout.VBox
       import javafx.scene.control.Button
-      <Button fx:id="b">
+      val _ = <Button fx:id="b">
         <text><String fx:id="s" fx:value="My Button"/></text>
       </Button>
 
