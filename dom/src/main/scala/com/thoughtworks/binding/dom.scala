@@ -42,6 +42,7 @@ import org.scalajs.dom.document
 
 import scala.annotation.meta.{companionClass, companionMethod}
 import scala.collection.immutable.Queue
+import scala.reflect.NameTransformer
 import scala.scalajs.runtime.AnonFunction1
 
 /**
@@ -315,7 +316,7 @@ object dom {
             val idOption = findTextAttribute("local-id", attributes).orElse(findTextAttribute("id", attributes))
             val elementName = idOption match {
               case None => TermName(c.freshName("element"))
-              case Some(id) => TermName(id).encodedName.toTermName
+              case Some(id) => TermName(NameTransformer.encode(id))
             }
 
             val attributeMountPoints = for {
@@ -328,11 +329,11 @@ object dom {
             } yield {
               val attributeAccess = key match {
                 case UnprefixedName(localPart) =>
-                  val keyName = TermName(localPart).encodedName.toTermName
+                  val keyName = TermName(NameTransformer.encode(localPart))
                   q"""$elementName.$keyName"""
                 case PrefixedName(prefix, localPart) =>
-                  localPart.split(':').foldLeft(q"""$elementName.${TermName(prefix).encodedName.toTermName}""") { (prefixExpr, propertyName) =>
-                    q"""$prefixExpr.${TermName(propertyName).encodedName.toTermName}"""
+                  localPart.split(':').foldLeft(q"""$elementName.${TermName(NameTransformer.encode(prefix))}""") { (prefixExpr, propertyName) =>
+                    q"""$prefixExpr.${TermName(NameTransformer.encode(propertyName))}"""
                   }
               }
 
