@@ -35,7 +35,7 @@ scalacOptions ++= {
   if (scalaBinaryVersion.value == "2.10") {
     Nil
   } else {
-    Seq("-Ywarn-unused-import", "-Xfatal-warnings")
+    Seq("-Ywarn-unused-import")
   }
 }
 
