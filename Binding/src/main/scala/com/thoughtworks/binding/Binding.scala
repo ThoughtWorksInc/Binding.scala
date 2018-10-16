@@ -915,7 +915,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   object BindingSeq {
 
-    @(deprecated @companionClass)("Use [[BindingSeq.all]] instead", "11.0.0")
     @(deprecated @companionMethod)("Use [[BindingSeq.all]] instead", "11.0.0")
     implicit final class AsBinding[Element](upstream: BindingSeq[Element])
         extends Binding[Seq[Element]]
