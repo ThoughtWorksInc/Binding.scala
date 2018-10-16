@@ -31,9 +31,13 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 scalacOptions += "-Xexperimental"
 
-scalacOptions += "-Ywarn-unused-import"
-
-scalacOptions += "-Xfatal-warnings"
+scalacOptions ++= {
+  if (scalaBinaryVersion.value == "2.10") {
+    Nil
+  } else {
+    Seq("-Ywarn-unused-import", "-Xfatal-warnings")
+  }
+}
 
 jsDependencies in Test += RuntimeDOM
 
