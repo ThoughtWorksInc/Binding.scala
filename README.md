@@ -1,6 +1,10 @@
 # Binding.scala <a href="http://thoughtworks.com/"><img align="right" src="https://www.thoughtworks.com/imgs/tw-logo.png" title="ThoughtWorks" height="15"/></a>
 
+[![Production Ready](https://img.shields.io/badge/%F0%9F%91%8C-Production%20Ready-00ddcc.svg)](https://github.com/search?l=Scala&o=desc&q="com.thoughtworks.binding"&s=indexed&type=Code&utf8=✓)
+[![Extremely Lightweight](https://img.shields.io/badge/%F0%9F%A6%8B-Extremely%20Lightweight-7799cc.svg)](http://todomvc.com/examples/binding-scala/)
+
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![StackOverflow](https://img.shields.io/stackexchange/stackoverflow/t/Binding.scala.svg?maxAge=604800&label=StackOverflow+questions)](https://stackoverflow.com/questions/tagged/binding.scala)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
 [![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/binding_2.12.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
 
@@ -181,7 +185,7 @@ def table: Binding[BindingSeq[Node]] = {
   <div>
     <button
       onclick={ event: Event =>
-        data.get += Contact(Var("Yang Bo"), Var("yang.bo@rea-group.com"))
+        data.value += Contact(Var("Yang Bo"), Var("yang.bo@rea-group.com"))
       }
     >
       Add a contact
@@ -208,7 +212,7 @@ def table: Binding[BindingSeq[Node]] = {
             <td>
               <button
                 onclick={ event: Event =>
-                  contact.name := "Modified Name"
+                  contact.name.value = "Modified Name"
                 }
               >
                 Modify the name
@@ -279,7 +283,7 @@ case class Contact(name: Var[String], email: Var[String])
 def bindingButton(contact: Contact): Binding[Button] = {
   <button
     onclick={ event: Event =>
-      contact.name := "Modified Name"
+      contact.name.value = "Modified Name"
     }
   >
    Modify the name
@@ -433,10 +437,31 @@ If you want to suppress the static type checking of attributes, add a `data:` pr
 
 The Scala compiler will not report errors now.
 
+## Showcases
+
+ * [TodoMVC](http://todomvc.com/examples/binding-scala/): a project which offers the same Todo application implemented using MV* concepts in most of the popular JavaScript MV* frameworks of today.
+ * [Granblue Raid Finder](https://github.com/walfie/gbf-raidfinder): a site for finding Granblue Fantasy raid tweets.
+ * [Game of Life](https://github.com/zhanglongyang/game-of-life): Conway's Game of Life implemented with Binding.scala.
+ * [playground-binding.scala
+](https://github.com/ccamel/playground-binding.scala): Various DEMOs with scala, scalajs and binding.scala
+ * [CITE Application](https://github.com/cite-architecture/CITE-App): A single-page browser application for exploring citable resources.
+ * [hmt-reader](https://github.com/homermultitext/hmt-reader): A package of application and data for reading Homer Multitext textual data, in its current release.
+ * [Full-Stack-Scala-Starter](https://github.com/Algomancer/Full-Stack-Scala-Starter): Play 2.5, ScalaJS, Binding.scala starter project.
+ * [scala-adapters](https://pme123.github.io/scala-adapters/): A simple framework to implement your server jobs - providing a standard UI-client to monitor and test them. (Used in Production)
+ * [Binding.scala-Google-Maps](https://github.com/pme123/Binding.scala-Google-Maps): A step-by-step tutorial to get you started with Binding.scala. 
+ * [scala-adapters.g8](https://github.com/pme123/scala-adapters.g8): A Giter8 template for a full-stack Scala project that uses [scala-adapters](https://pme123.github.io/scala-adapters/).
+ * [play-akka-telegrambot4s-incidents](https://github.com/pme123/play-akka-telegrambot4s-incidents): An incident management app - where you can send incidents with a chat bot.                                                                
+ * [scala-adapters-images](https://github.com/pme123/scala-adapters-images): A demo project that uses [scala-adapters](https://pme123.github.io/scala-adapters/) and [play-akka-telegrambot4s](https://github.com/pme123/play-akka-telegrambot4s).
+ * [jmh-view](https://github.com/tom91136/jmh-view): An embeddable JMH report viewer, which is used to to create [the report for the benchmarks of Scala parsers](https://tom91136.github.io/scala-parser-benchmarks/report.html).
+ * [RL-Playground](https://github.com/basimkhajwal/RL-Playground): A web-based interactive reinforcement learning demonstration for games.
+
+
+(Feel free to add your project here)
+
 ## Downloads
 
 Binding.scala has an extremely tiny code base.
-The source files are split into 4 libraries, one file per library.
+The source files are split into few libraries, one file per library.
 
 ### Core data-binding expressions (Binding.scala)
 
@@ -461,8 +486,27 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 This module is only available for Scala.js. You could add it in your `build.sbt`.
 
 ``` scala
-// For Scala.js projects, or JS/JVM cross projects
+// For Scala.js projects
 libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+```
+
+
+### FXML integration (fxml.scala)
+
+This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
+
+``` scala
+// For JVM projects
+libraryDependencies += "com.thoughtworks.binding" %% "fxml" % "latest.release"
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+```
+
+``` scala
+// For Scala.js projects, or JS/JVM cross projects
+libraryDependencies += "com.thoughtworks.binding" %%% "fxml" % "latest.release"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
@@ -490,7 +534,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 This module is only available for Scala.js. You could add it in your `build.sbt`.
 
 ``` scala
-// For Scala.js projects, or JS/JVM cross projects
+// For Scala.js projects
 libraryDependencies += "com.thoughtworks.binding" %%% "jspromisebinding" % "latest.release"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
@@ -501,6 +545,5 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 * [The API documentation](https://javadoc.io/page/com.thoughtworks.binding/unidoc_2.11/latest/com/thoughtworks/binding/package.html)
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs)
-* [Frequently Asked Questions](https://github.com/ThoughtWorksInc/Binding.scala/wiki/FAQ)
 * [Binding.scala Questions on Stack Overflow](https://stackoverflow.com/questions/tagged/binding.scala)
 * [本README的中文版](https://github.com/ThoughtWorksInc/Binding.scala/blob/10.0.x/README-zh.md)
