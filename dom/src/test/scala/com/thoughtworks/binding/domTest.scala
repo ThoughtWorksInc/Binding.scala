@@ -24,10 +24,10 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{BindingSeq, Constant, Var, Vars}
+import Binding.{Constant, Var, Vars}
 import org.scalajs.dom.document
 import org.scalajs.dom.html._
-import org.scalajs.dom.raw.{Comment, Event, Node}
+import org.scalajs.dom.raw.Event
 import org.scalatest._
 
 /**
@@ -321,7 +321,6 @@ final class domTest extends FreeSpec with Matchers {
   }
 
   "select " in {
-    import scala.collection.immutable
     @dom def mySelect = <br class=""/>
   }
 

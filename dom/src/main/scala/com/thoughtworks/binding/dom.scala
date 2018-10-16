@@ -24,7 +24,7 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint, SingletonBindingSeq}
+import Binding.{BindingSeq, Constants, MultiMountPoint, SingletonBindingSeq}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.XmlExtractor.{PrefixedName, UnprefixedName}
@@ -230,6 +230,7 @@ object dom {
       @inline def for_=(value: String) = node.htmlFor = value
     }
 
+    @inline def workaroundUnusedImport() = ()
   }
 
   /**
@@ -466,6 +467,7 @@ object dom {
             wait => _,
             _
           }
+          workaroundUnusedImport()
           ${transform(body)}
         }"""
       }
