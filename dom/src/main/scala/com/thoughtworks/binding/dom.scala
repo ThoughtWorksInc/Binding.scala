@@ -312,22 +312,27 @@ object dom {
           case tree@NodeBuffer(children) =>
             nodeSeq(children)
           case tree@Elem(UnprefixedName(label), attributes, _, children) =>
-            val idOption = attributes.collectFirst { case (UnprefixedName("id"), Text(id)) => id }
+            val idOption = findTextAttribute("local-id", attributes).orElse(findTextAttribute("id", attributes))
             val elementName = idOption match {
               case None => TermName(c.freshName("element"))
               case Some(id) => TermName(id).encodedName.toTermName
             }
 
             val attributeMountPoints = for {
-              (key, value) <- attributes
+              (key, value) <- attributes if {
+                key match {
+                  case UnprefixedName("local-id") => false
+                  case _ => true
+                }
+              }
             } yield {
               val attributeAccess = key match {
                 case UnprefixedName(localPart) =>
-                  val keyName = TermName(localPart)
+                  val keyName = TermName(localPart).encodedName.toTermName
                   q"""$elementName.$keyName"""
                 case PrefixedName(prefix, localPart) =>
-                  localPart.split(':').foldLeft(q"""$elementName.${TermName(prefix)}""") { (prefixExpr, propertyName) =>
-                    q"""$prefixExpr.${TermName(propertyName)}"""
+                  localPart.split(':').foldLeft(q"""$elementName.${TermName(prefix).encodedName.toTermName}""") { (prefixExpr, propertyName) =>
+                    q"""$prefixExpr.${TermName(propertyName).encodedName.toTermName}"""
                   }
               }
 
@@ -394,6 +399,10 @@ object dom {
                   $elementName
                 """
             }
+        }
+
+        private def findTextAttribute(unprefixedName: String, attributes: Seq[(XmlExtractor.QName, Tree)]): Option[String] = {
+          attributes.collectFirst { case (UnprefixedName(`unprefixedName`), Text(text)) => text }
         }
 
         private def transformed: PartialFunction[Tree, Tree] = {
