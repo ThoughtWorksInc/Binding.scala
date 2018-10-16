@@ -1268,7 +1268,7 @@ object fxml {
             case _                          => false
           }
 
-          val fxAttributeMap = fxAttributes.view.map {
+          val fxAttributeMap = fxAttributes.view.collect {
             case (PrefixedName("fx", key), value) => key -> value
           }.toMap
 
