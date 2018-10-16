@@ -200,7 +200,7 @@ object dom {
       @inline def for_=(value: String) = node.htmlFor = value
     }
 
-    implicit val workaroundUnusedImport = new WorkaroundUnusedImport {}
+    @inline def workaroundUnusedImport() = ()
   }
 
   /**
@@ -425,7 +425,7 @@ object dom {
             wait => _,
             _
           }
-          implicitly[_root_.com.thoughtworks.binding.dom.WorkaroundUnusedImport]
+          workaroundUnusedImport()
           ${transform(body)}
         }"""
       })
@@ -433,5 +433,4 @@ object dom {
 
   }
 
-  trait WorkaroundUnusedImport
 }
