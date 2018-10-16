@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 package com.thoughtworks.binding
 
@@ -41,6 +41,7 @@ import scalatags.jsdom
 import org.scalajs.dom.document
 
 import scala.collection.immutable.Queue
+import scala.reflect.NameTransformer
 
 /**
   * Enable XML DOM literal for Binding.scala
@@ -74,7 +75,7 @@ object dom {
   object Runtime extends LowPriorityRuntime {
 
     final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
-      extends MultiMountPoint[Node](childrenBinding) {
+        extends MultiMountPoint[Node](childrenBinding) {
 
       @inline
       def this(parent: Node, childBinding: Binding[BindingSeq[Node]], dummy: Unit = ()) = {
@@ -154,9 +155,11 @@ object dom {
     def domBindingSeq(text: String) = Constants(document.createTextNode(text))
 
     @inline
+    def domBindingSeq(optionNode: Option[Node]) = Constants(optionNode.toSeq: _*)
+
+    @inline
     def notEqual[A](left: A, right: A) = left != right
   }
-
 
   /**
     * This object contains implicit views imported automatically for @dom methods.
@@ -181,12 +184,39 @@ object dom {
 
     }
 
-    // FIXME: Remove this implicit class when scala-js-dom 0.9.2 release
-    implicit final class StyleOps @inline()(node: HTMLElement) {
+    implicit final class OptionOps @inline()(node: Element) {
+
+      import scala.language.dynamics
+
+      object option extends Dynamic {
+
+        final def selectDynamic(attributeName: String): Option[String] = {
+          if (node.hasAttribute(attributeName)) {
+            Some(node.getAttribute(attributeName))
+          } else {
+            None
+          }
+        }
+
+        final def updateDynamic(attributeName: String)(attributeValue: Option[String]): Unit = {
+          attributeValue.fold(node.removeAttribute(attributeName))(node.setAttribute(attributeName, _))
+        }
+
+      }
+
+    }
+
+    final class StyleOps @inline @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")(
+        node: HTMLElement) {
+      @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
       @inline def style = node.style.cssText
 
+      @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
       @inline def style_=(value: String) = node.style.cssText = value
     }
+
+    @deprecated("Use [[org.scalajs.dom.raw.HTMLElement.style]] instead", "11.2.0")
+    def StyleOps(node: HTMLElement) = new StyleOps(node)
 
     implicit final class ClassOps @inline()(node: HTMLElement) {
       @inline def `class` = node.className
@@ -269,32 +299,38 @@ object dom {
                     }
                   """
                 }
-              }) (collection.breakOut(Queue.canBuildFrom))
+              })(collection.breakOut(Queue.canBuildFrom))
               val (valDefs, transformedChildren) = transformedPairs.unzip
               valDefs.flatten -> q"""_root_.com.thoughtworks.binding.Binding.Constants(..$transformedChildren).flatMapBinding(_root_.scala.Predef.locally _)"""
           }
         }
 
         private def transformedWithValDefs: PartialFunction[Tree, (Queue[ValDef], Tree)] = {
-          case tree@NodeBuffer(children) =>
+          case tree @ NodeBuffer(children) =>
             nodeSeq(children)
-          case tree@Elem(UnprefixedName(label), attributes, _, children) =>
-            val idOption = attributes.collectFirst { case (UnprefixedName("id"), Text(id)) => id }
+          case tree @ Elem(UnprefixedName(label), attributes, _, children) =>
+            val idOption = findTextAttribute("local-id", attributes).orElse(findTextAttribute("id", attributes))
             val elementName = idOption match {
-              case None => TermName(c.freshName("element"))
-              case Some(id) => TermName(id).encodedName.toTermName
+              case None     => TermName(c.freshName("element"))
+              case Some(id) => TermName(NameTransformer.encode(id))
             }
 
             val attributeMountPoints = for {
-              (key, value) <- attributes
+              (key, value) <- attributes if {
+                key match {
+                  case UnprefixedName("local-id") => false
+                  case _                          => true
+                }
+              }
             } yield {
               val attributeAccess = key match {
                 case UnprefixedName(localPart) =>
-                  val keyName = TermName(localPart)
+                  val keyName = TermName(NameTransformer.encode(localPart))
                   q"""$elementName.$keyName"""
                 case PrefixedName(prefix, localPart) =>
-                  localPart.split(':').foldLeft(q"""$elementName.${TermName(prefix)}""") { (prefixExpr, propertyName) =>
-                    q"""$prefixExpr.${TermName(propertyName)}"""
+                  localPart.split(':').foldLeft(q"""$elementName.${TermName(NameTransformer.encode(prefix))}""") {
+                    (prefixExpr, propertyName) =>
+                      q"""$prefixExpr.${TermName(NameTransformer.encode(propertyName))}"""
                   }
               }
 
@@ -345,7 +381,8 @@ object dom {
                   """
                 })
             }
-            val elementDef = q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}.render"
+            val elementDef =
+              q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}.render"
             idOption match {
               case None =>
                 valDefs -> q"""
@@ -363,6 +400,11 @@ object dom {
             }
         }
 
+        private def findTextAttribute(unprefixedName: String,
+                                      attributes: Seq[(XmlExtractor.QName, Tree)]): Option[String] = {
+          attributes.collectFirst { case (UnprefixedName(`unprefixedName`), Text(text)) => text }
+        }
+
         private def transformed: PartialFunction[Tree, Tree] = {
           case Block(stats, expr) =>
             super.transform(Block(stats.flatMap {
@@ -371,15 +413,15 @@ object dom {
               case stat =>
                 Seq(stat)
             }, expr))
-          case tree@EntityRef(HtmlEntityName(unescapedCharacter)) =>
+          case tree @ EntityRef(HtmlEntityName(unescapedCharacter)) =>
             atPos(tree.pos) {
               q"""$unescapedCharacter"""
             }
-          case tree@Comment(value) =>
+          case tree @ Comment(value) =>
             atPos(tree.pos) {
               q"""_root_.org.scalajs.dom.document.createComment($value)"""
             }
-          case tree@Text(value) =>
+          case tree @ Text(value) =>
             atPos(tree.pos) {
               q"$value"
             }
@@ -407,8 +449,8 @@ object dom {
       //        output
       //      }
 
-      replaceDefBody(annottees, { body =>
-        q"""_root_.com.thoughtworks.binding.Binding.apply{
+      def autoImportAndTransform(body: Tree) = {
+        q"""_root_.com.thoughtworks.binding.Binding.apply {
           import _root_.com.thoughtworks.binding.dom.AutoImports.{
             != => _,
             ## => _,
@@ -428,7 +470,8 @@ object dom {
           workaroundUnusedImport()
           ${transform(body)}
         }"""
-      })
+      }
+      replaceDefBody(annottees, autoImportAndTransform)
     }
 
   }

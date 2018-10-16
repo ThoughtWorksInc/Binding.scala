@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 package com.thoughtworks.binding
 
@@ -29,7 +29,7 @@ import macrocompat.bundle
 import scala.reflect.macros.blackbox
 import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.XmlExtractor._
-import org.apache.commons.lang3.text.translate.EntityArrays
+import org.apache.commons.lang3.text.translate.EntityArrays._
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
@@ -66,27 +66,46 @@ private[binding] trait XmlExtractor {
   }
 
   private def prefix: PartialFunction[Tree, Option[String]] = {
-    case q"null" => None
+    case q"null"                      => None
     case Literal(Constant(p: String)) => Some(p)
   }
 
   private def elem: PartialFunction[Tree, (QName, List[(QName, Tree)], Boolean, List[Tree])] = {
-    case Block(Nil, q"""
-      {
-        var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
-        ..$attributes
-        new _root_.scala.xml.Elem(${prefix.extract(prefixOption)}, ${Literal(Constant(localPart: String))}, $$md, $$scope, ${Literal(Constant(minimizeEmpty: Boolean))}, ..$child)
-      }
-    """) =>
+    case Block(Nil,
+               q"""
+                 {
+                   var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
+                   ..$attributes
+                   new _root_.scala.xml.Elem(
+                     ${prefix.extract(prefixOption)},
+                     ${Literal(Constant(localPart: String))},
+                     $$md, $$scope,
+                     ${Literal(Constant(minimizeEmpty: Boolean))},
+                     ..$child
+                   )
+                 }
+               """) =>
       (QName(prefixOption, localPart), attributes.map {
         case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
           UnprefixedName(key) -> value
-        case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(Constant(key: String))}, $value, $$md)""" =>
+        case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(
+              Constant(key: String))}, $value, $$md)""" =>
           PrefixedName(pre, key) -> value
       }, minimizeEmpty, nodeBufferStar(child))
-    case Block(Nil, Block(Nil, q"""
-      new _root_.scala.xml.Elem(${prefix.extract(prefixOption)}, ${Literal(Constant(localPart: String))}, _root_.scala.xml.Null, $$scope, ${Literal(Constant(minimizeEmpty: Boolean))}, ..$child)
-    """)) =>
+    case Block(Nil,
+               Block(
+                 Nil,
+                 q"""
+                   new _root_.scala.xml.Elem(
+                     ${prefix.extract(prefixOption)},
+                     ${Literal(Constant(localPart: String))},
+                     _root_.scala.xml.Null,
+                     $$scope,
+                     ${Literal(Constant(minimizeEmpty: Boolean))},
+                     ..$child
+                   )
+                 """
+               )) =>
       (QName(prefixOption, localPart), Nil, minimizeEmpty, nodeBufferStar(child))
   }
 
@@ -107,7 +126,7 @@ private[binding] trait XmlExtractor {
   protected val Text = text.extract
 
   private def textAttribute: PartialFunction[Tree, String] = {
-    case Text(data) => data
+    case Text(data)       => data
     case EmptyAttribute() => ""
   }
 
@@ -121,7 +140,12 @@ private[binding] trait XmlExtractor {
   protected val Comment = comment.extract
 
   private def procInstr: PartialFunction[Tree, (String, String)] = {
-    case q"new _root_.scala.xml.ProcInstr(${Literal(Constant(target: String))}, ${Literal(Constant(proctext: String))})" =>
+    case q"""
+      new _root_.scala.xml.ProcInstr(
+        ${Literal(Constant(target: String))},
+        ${Literal(Constant(proctext: String))}
+      )
+    """ =>
       (target, proctext)
   }
 
@@ -149,7 +173,7 @@ private[binding] object XmlExtractor {
   object QName {
     def apply(prefixOption: Option[String], localPart: String) = {
       prefixOption match {
-        case None => UnprefixedName(localPart)
+        case None         => UnprefixedName(localPart)
         case Some(prefix) => PrefixedName(prefix, localPart)
       }
     }
@@ -162,11 +186,12 @@ private[binding] object XmlExtractor {
   private val EntityRefRegex = "&(.*);".r
 
   private val XmlEntityRefMap = (for {
-    Array(character, EntityRefRegex(reference)) <- EntityArrays.BASIC_ESCAPE
+    Array(character, EntityRefRegex(reference)) <- BASIC_ESCAPE.view
   } yield reference -> character).toMap
 
   private val HtmlEntityRefMap = (for {
-    Array(character, EntityRefRegex(reference)) <- EntityArrays.BASIC_ESCAPE.view ++ EntityArrays.ISO8859_1_ESCAPE ++ EntityArrays.HTML40_EXTENDED_ESCAPE
+    entityArray <- Seq(BASIC_ESCAPE, ISO8859_1_ESCAPE, HTML40_EXTENDED_ESCAPE).view
+    Array(character, EntityRefRegex(reference)) <- entityArray.view
   } yield reference -> character).toMap
 
 }
