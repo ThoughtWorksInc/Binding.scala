@@ -110,7 +110,9 @@ object Route {
     * Let `state` always reflect the [[org.scalajs.dom.raw.Location.hash hash]] of the [[org.scalajs.dom.raw.Window.location location]] of the current [[org.scalajs.dom.window window]].
     */
   @deprecated(
-    message = "This `watchHash` method does not support `unwatch`. Use `(new Route.Hash(state)).watch() instead")
+    message = "This `watchHash` method does not support `unwatch`. Use `(new Route.Hash(state)).watch() instead",
+    since = "10.0.0"
+  )
   def watchHash[PageState](state: Var[PageState])(implicit format: Format[PageState]): Unit = {
     new Hash(state).watch()
   }
