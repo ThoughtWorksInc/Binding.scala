@@ -1,7 +1,6 @@
 package com.thoughtworks
 package binding
 
-import java.beans
 import java.beans.{BeanInfo, Introspector, PropertyDescriptor}
 import javafx.application.Platform
 import javafx.beans.DefaultProperty
@@ -28,6 +27,7 @@ import scala.language.implicitConversions
 import scalaz.Semigroup
 import scalaz.syntax.all._
 import scala.language.dynamics
+import scala.language.existentials
 
 /** An annotation to convert FXML literals to JavaFX GUI.
   *
