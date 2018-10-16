@@ -1069,8 +1069,10 @@ object fxml {
             rawbuilderTypeTree
           }
           val result = q"""
-            new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXPropertyTyper[$outType, $builderTypeTree]({() =>
-              $currentJavaFXBuilderFactory.underlying.getBuilder(_root_.scala.Predef.classOf[$outType]).asInstanceOf[$builderTypeTree]
+            new _root_.com.thoughtworks.binding.fxml.Runtime.JavaFXPropertyTyper[$outType, $builderTypeTree]({ () =>
+              $currentJavaFXBuilderFactory.underlying
+                .getBuilder(_root_.scala.Predef.classOf[$outType])
+                .asInstanceOf[$builderTypeTree]
             })
           """
           c.untypecheck(result)
@@ -1355,15 +1357,19 @@ object fxml {
                       q"val $name = $EmptyTree"
                     }
                     if (defaultProperties.isEmpty) {
-                      q"_root_.com.thoughtworks.binding.Binding.Constant(${TermName(className)}.${TermName(fxFactory)}())"
+                      q"""
+                        _root_.com.thoughtworks.binding.Binding.Constant(
+                          ${TermName(className)}.${TermName(fxFactory)}()
+                        )
+                      """
                     } else {
                       // TODO: Support more than 12 parameters by generate more sophisticated code
                       val applyN = mapMethodName(defaultProperties.length)
                       q"""
-                          _root_.com.thoughtworks.binding.Binding.BindingInstances.$applyN(..$defaultProperties)({ ..$factoryArguments =>
-                            ${TermName(className)}.${TermName(fxFactory)}(..$factoryArgumentNames)
-                          })
-                        """
+                        _root_.com.thoughtworks.binding.Binding.BindingInstances.$applyN(..$defaultProperties) { ..$factoryArguments =>
+                          ${TermName(className)}.${TermName(fxFactory)}(..$factoryArgumentNames)
+                        }
+                      """
                     }
                   }
                   val id = fxIdOption.getOrElse(c.freshName(className))
