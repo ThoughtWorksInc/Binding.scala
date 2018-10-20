@@ -140,7 +140,19 @@ object dom {
 
     }
 
-    object TagsAndTags2 extends JsDom.Cap with jsdom.Tags with jsdom.Tags2
+    object TagsAndTags2 extends JsDom.Cap with jsdom.Tags with jsdom.Tags2 {
+
+      import scala.language.dynamics
+
+      object raw extends Dynamic {
+
+        final def selectDynamic(tagName: String): ConcreteHtmlTag[Element] = {
+          tag(tagName)
+        }
+
+      }
+
+    }
 
     @inline
     def domBindingSeq(bindingSeq: BindingSeq[Node]) = bindingSeq
@@ -308,7 +320,7 @@ object dom {
         private def transformedWithValDefs: PartialFunction[Tree, (Queue[ValDef], Tree)] = {
           case tree @ NodeBuffer(children) =>
             nodeSeq(children)
-          case tree @ Elem(UnprefixedName(label), attributes, _, children) =>
+          case tree @ Elem(tag, attributes, _, children) =>
             val idOption = findTextAttribute("local-id", attributes).orElse(findTextAttribute("id", attributes))
             val elementName = idOption match {
               case None     => TermName(c.freshName("element"))
@@ -381,8 +393,20 @@ object dom {
                   """
                 })
             }
+
+            val tagAccess = tag match {
+              case UnprefixedName(localPart) =>
+                val tagName = TermName(NameTransformer.encode(localPart))
+                q"""_root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$tagName"""
+              case PrefixedName(prefix, localPart) =>
+                localPart.split(':').foldLeft(q"""_root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(NameTransformer.encode(prefix))}""") {
+                  (prefixExpr, segmentName) =>
+                    q"""$prefixExpr.${TermName(NameTransformer.encode(segmentName))}"""
+                }
+            }
+
             val elementDef =
-              q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}.render"
+              q"val $elementName = $tagAccess.render"
             idOption match {
               case None =>
                 valDefs -> q"""

@@ -437,5 +437,15 @@ final class domTest extends FreeSpec with Matchers {
     assert(div.value.className == "DIV-1")
   }
 
+  "CustomTag" in {
+    @dom def tag = {
+      <raw:custom-tag local-id="customTag" id="custom" data:custom-key="value"><data id="123">{customTag.tagName}</data></raw:custom-tag>
+    }
+    val div = document.createElement("div")
+    dom.render(div, tag)
+
+    assert(div.outerHTML == """<div><custom-tag custom-key="value" id="custom"><data id="123">CUSTOM-TAG</data></custom-tag></div>""")
+  }
+
 }
 
