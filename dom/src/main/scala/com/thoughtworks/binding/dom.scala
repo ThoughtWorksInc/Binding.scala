@@ -27,7 +27,7 @@ package com.thoughtworks.binding
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingletonBindingSeq}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
-import com.thoughtworks.binding.XmlExtractor.{PrefixedName, UnprefixedName}
+import com.thoughtworks.binding.XmlExtractor.{PrefixedName, QName, UnprefixedName}
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
 import org.scalajs.dom.raw._
@@ -335,16 +335,7 @@ object dom {
                 }
               }
             } yield {
-              val attributeAccess = key match {
-                case UnprefixedName(localPart) =>
-                  val keyName = TermName(NameTransformer.encode(localPart))
-                  q"""$elementName.$keyName"""
-                case PrefixedName(prefix, localPart) =>
-                  localPart.split(':').foldLeft(q"""$elementName.${TermName(NameTransformer.encode(prefix))}""") {
-                    (prefixExpr, propertyName) =>
-                      q"""$prefixExpr.${TermName(NameTransformer.encode(propertyName))}"""
-                  }
-              }
+              val attributeAccess = propertyAccess(key, q"$elementName")
 
               atPos(value.pos) {
                 value match {
@@ -394,19 +385,9 @@ object dom {
                 })
             }
 
-            val tagAccess = tag match {
-              case UnprefixedName(localPart) =>
-                val tagName = TermName(NameTransformer.encode(localPart))
-                q"""_root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.$tagName"""
-              case PrefixedName(prefix, localPart) =>
-                localPart.split(':').foldLeft(q"""_root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(NameTransformer.encode(prefix))}""") {
-                  (prefixExpr, segmentName) =>
-                    q"""$prefixExpr.${TermName(NameTransformer.encode(segmentName))}"""
-                }
-            }
+            val tagAccess = propertyAccess(tag, q"_root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2")
 
-            val elementDef =
-              q"val $elementName = $tagAccess.render"
+            val elementDef = q"val $elementName = $tagAccess.render"
             idOption match {
               case None =>
                 valDefs -> q"""
@@ -427,6 +408,18 @@ object dom {
         private def findTextAttribute(unprefixedName: String,
                                       attributes: Seq[(XmlExtractor.QName, Tree)]): Option[String] = {
           attributes.collectFirst { case (UnprefixedName(`unprefixedName`), Text(text)) => text }
+        }
+
+        private def propertyAccess(xmlName: QName, objectAccess: RefTree): Select = {
+          xmlName match {
+            case UnprefixedName(localPart) =>
+              q"$objectAccess.${TermName(NameTransformer.encode(localPart))}"
+            case PrefixedName(prefix, localPart) =>
+              localPart.split(':').foldLeft(q"$objectAccess.${TermName(NameTransformer.encode(prefix))}") {
+                (prefixExpr, segmentName) =>
+                  q"$prefixExpr.${TermName(NameTransformer.encode(segmentName))}"
+              }
+          }
         }
 
         private def transformed: PartialFunction[Tree, Tree] = {
