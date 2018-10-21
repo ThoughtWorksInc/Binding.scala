@@ -39,6 +39,8 @@ import scala.language.experimental.macros
 import scalatags.JsDom
 import scalatags.jsdom
 import org.scalajs.dom.document
+import scalatags.JsDom.TypedTag
+import scalatags.generic.Namespace
 
 import scala.collection.immutable.Queue
 import scala.reflect.NameTransformer
@@ -144,13 +146,15 @@ object dom {
 
       import scala.language.dynamics
 
-      object raw extends Dynamic {
-
+      final class DynamicDataTag private[TagsAndTags2] ()
+          extends TypedTag[HTMLElement]("data", Nil, false, Namespace.htmlNamespaceConfig)
+          with Dynamic {
         final def selectDynamic(tagName: String): ConcreteHtmlTag[Element] = {
-          tag(tagName)
+          TagsAndTags2.tag(tagName)
         }
-
       }
+
+      override lazy val data = new DynamicDataTag()
 
     }
 

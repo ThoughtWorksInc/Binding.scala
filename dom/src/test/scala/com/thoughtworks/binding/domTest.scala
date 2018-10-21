@@ -439,7 +439,7 @@ final class domTest extends FreeSpec with Matchers {
 
   "CustomTag" in {
     @dom def tag = {
-      <raw:custom-tag local-id="customTag" id="custom" data:custom-key="value"><data id="123">{customTag.tagName}</data></raw:custom-tag>
+      <data:custom-tag local-id="customTag" id="custom" data:custom-key="value"><data id="123">{customTag.tagName}</data></data:custom-tag>
     }
     val div = document.createElement("div")
     dom.render(div, tag)
