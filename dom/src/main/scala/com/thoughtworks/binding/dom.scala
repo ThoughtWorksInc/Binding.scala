@@ -27,7 +27,7 @@ package com.thoughtworks.binding
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingletonBindingSeq}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
-import com.thoughtworks.binding.XmlExtractor.{PrefixedName, UnprefixedName}
+import com.thoughtworks.binding.XmlExtractor.{PrefixedName, QName, UnprefixedName}
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
 import org.scalajs.dom.raw._
@@ -39,6 +39,8 @@ import scala.language.experimental.macros
 import scalatags.JsDom
 import scalatags.jsdom
 import org.scalajs.dom.document
+import scalatags.JsDom.TypedTag
+import scalatags.generic.Namespace
 
 import scala.collection.immutable.Queue
 import scala.reflect.NameTransformer
@@ -140,7 +142,21 @@ object dom {
 
     }
 
-    object TagsAndTags2 extends JsDom.Cap with jsdom.Tags with jsdom.Tags2
+    object TagsAndTags2 extends JsDom.Cap with jsdom.Tags with jsdom.Tags2 {
+
+      import scala.language.dynamics
+
+      final class DynamicDataTag private[TagsAndTags2] ()
+          extends TypedTag[HTMLElement]("data", Nil, false, Namespace.htmlNamespaceConfig)
+          with Dynamic {
+        final def selectDynamic(tagName: String): ConcreteHtmlTag[Element] = {
+          TagsAndTags2.tag(tagName)
+        }
+      }
+
+      override lazy val data = new DynamicDataTag()
+
+    }
 
     @inline
     def domBindingSeq(bindingSeq: BindingSeq[Node]) = bindingSeq
@@ -308,7 +324,7 @@ object dom {
         private def transformedWithValDefs: PartialFunction[Tree, (Queue[ValDef], Tree)] = {
           case tree @ NodeBuffer(children) =>
             nodeSeq(children)
-          case tree @ Elem(UnprefixedName(label), attributes, _, children) =>
+          case tree @ Elem(tag, attributes, _, children) =>
             val idOption = findTextAttribute("local-id", attributes).orElse(findTextAttribute("id", attributes))
             val elementName = idOption match {
               case None     => TermName(c.freshName("element"))
@@ -323,16 +339,7 @@ object dom {
                 }
               }
             } yield {
-              val attributeAccess = key match {
-                case UnprefixedName(localPart) =>
-                  val keyName = TermName(NameTransformer.encode(localPart))
-                  q"""$elementName.$keyName"""
-                case PrefixedName(prefix, localPart) =>
-                  localPart.split(':').foldLeft(q"""$elementName.${TermName(NameTransformer.encode(prefix))}""") {
-                    (prefixExpr, propertyName) =>
-                      q"""$prefixExpr.${TermName(NameTransformer.encode(propertyName))}"""
-                  }
-              }
+              val attributeAccess = propertyAccess(key, q"$elementName")
 
               atPos(value.pos) {
                 value match {
@@ -381,8 +388,10 @@ object dom {
                   """
                 })
             }
-            val elementDef =
-              q"val $elementName = _root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2.${TermName(label)}.render"
+
+            val tagAccess = propertyAccess(tag, q"_root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2")
+
+            val elementDef = q"val $elementName = $tagAccess.render"
             idOption match {
               case None =>
                 valDefs -> q"""
@@ -403,6 +412,18 @@ object dom {
         private def findTextAttribute(unprefixedName: String,
                                       attributes: Seq[(XmlExtractor.QName, Tree)]): Option[String] = {
           attributes.collectFirst { case (UnprefixedName(`unprefixedName`), Text(text)) => text }
+        }
+
+        private def propertyAccess(xmlName: QName, objectAccess: RefTree): Select = {
+          xmlName match {
+            case UnprefixedName(localPart) =>
+              q"$objectAccess.${TermName(NameTransformer.encode(localPart))}"
+            case PrefixedName(prefix, localPart) =>
+              localPart.split(':').foldLeft(q"$objectAccess.${TermName(NameTransformer.encode(prefix))}") {
+                (prefixExpr, segmentName) =>
+                  q"$prefixExpr.${TermName(NameTransformer.encode(segmentName))}"
+              }
+          }
         }
 
         private def transformed: PartialFunction[Tree, Tree] = {
