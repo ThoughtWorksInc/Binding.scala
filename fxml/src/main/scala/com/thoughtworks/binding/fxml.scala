@@ -1031,7 +1031,7 @@ object fxml {
 
       val result = q"""
         ${q"val ${valDef.name}: $beanType = ${c.prefix}.constructor()".setSymbol(valDef.symbol)}
-        _root_.com.thoughtworks.binding.Binding.typeClass.map($allBindingUnits)({ _: _root_.scala.Unit => $beanId })
+        _root_.com.thoughtworks.binding.Binding.typeClass.map($allBindingUnits)({ ${c.freshName[TermName]("unit")}: _root_.scala.Unit => $beanId })
       """
 //      c.info(c.enclosingPosition, show(result), true)
       c.untypecheck(result)
