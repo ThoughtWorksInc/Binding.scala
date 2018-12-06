@@ -5,7 +5,7 @@ addons:
    packages:
      - graphviz
 
-language: java
+language: scala
 
 jdk:
   - oraclejdk8
