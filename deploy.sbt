@@ -8,6 +8,13 @@ releaseProcess := {
   releaseProcess.value.patch(stepIndex, Seq[ReleaseStep](step), 1)
 }
 
+publishTo := Some(
+  if (isSnapshot.value)
+    Opts.resolver.sonatypeSnapshots
+  else
+    Opts.resolver.sonatypeStaging
+)
+
 lazy val secret = project settings(publishArtifact := false) configure { secret =>
   sys.env.get("GITHUB_PERSONAL_ACCESS_TOKEN") match {
     case Some(pat) =>
