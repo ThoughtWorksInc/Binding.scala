@@ -327,7 +327,7 @@ object dom {
           case tree @ Elem(tag, attributes, _, children) =>
             val idOption = findTextAttribute("local-id", attributes).orElse(findTextAttribute("id", attributes))
             val elementName = idOption match {
-              case None     => TermName(c.freshName("element"))
+              case None     => TermName(c.freshName("htmlElement"))
               case Some(id) => TermName(NameTransformer.encode(id))
             }
 
