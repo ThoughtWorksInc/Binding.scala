@@ -2,6 +2,12 @@ enablePlugins(Travis)
 
 enablePlugins(SonatypeRelease)
 
+releaseProcess := {
+  val stepIndex = releaseProcess.value.indexOf(sbtrelease.ReleaseStateTransformations.publishArtifacts)
+  val step = releaseStepCommand(Sonatype.SonatypeCommand.sonatypeOpen, s" ${version.value}")
+  releaseProcess.value.patch(stepIndex, Seq[ReleaseStep](step), 0)
+}
+
 lazy val secret = project settings(publishArtifact := false) configure { secret =>
   sys.env.get("GITHUB_PERSONAL_ACCESS_TOKEN") match {
     case Some(pat) =>
