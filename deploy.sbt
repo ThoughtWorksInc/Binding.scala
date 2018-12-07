@@ -3,9 +3,9 @@ enablePlugins(Travis)
 enablePlugins(SonatypeRelease)
 
 releaseProcess := {
-  val stepIndex = releaseProcess.value.indexOf(sbtrelease.ReleaseStateTransformations.publishArtifacts)
-  val step = releaseStepCommand(Sonatype.SonatypeCommand.sonatypeOpen, s" ${version.value}")
-  releaseProcess.value.patch(stepIndex, Seq[ReleaseStep](step), 0)
+  val stepIndex = releaseProcess.value.indexOf(sbtrelease.ReleaseStateTransformations.pushChanges) - 1
+  val step = releaseStepCommand(Sonatype.SonatypeCommand.sonatypeReleaseAll)
+  releaseProcess.value.patch(stepIndex, Seq[ReleaseStep](step), 1)
 }
 
 lazy val secret = project settings(publishArtifact := false) configure { secret =>
