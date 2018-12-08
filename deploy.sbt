@@ -8,8 +8,8 @@ releaseProcess := {
   releaseProcess.value.patch(stepIndex, Seq[ReleaseStep](step), 1)
 }
 
-publishTo := Some(
-  if (isSnapshot.value)
+publishTo in ThisBuild := Some(
+  if ((isSnapshot in ThisBuild).value)
     Opts.resolver.sonatypeSnapshots
   else
     Opts.resolver.sonatypeStaging
