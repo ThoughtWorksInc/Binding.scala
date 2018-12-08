@@ -25,6 +25,8 @@ SOFTWARE.
 package com.thoughtworks.binding
 
 import Binding._
+import BindingSeq.removePatchedListener
+import BindingSeq.addPatchedListener
 import scala.collection.mutable.ArrayBuffer
 import org.scalatest._
 
@@ -34,11 +36,11 @@ final class BindingTest extends FreeSpec with Matchers {
 
   final class BufferListener extends ArrayBuffer[Any] {
     val listener = new ChangedListener[Any] with PatchedListener[Any] {
-      override private[binding] def changed(event: ChangedEvent[Any]): Unit = {
+      override def changed(event: ChangedEvent[Any]): Unit = {
         BufferListener.this += event
       }
 
-      override private[binding] def patched(event: PatchedEvent[Any]): Unit = {
+      override def patched(event: PatchedEvent[Any]): Unit = {
         BufferListener.this += event
       }
     }
@@ -51,9 +53,9 @@ final class BindingTest extends FreeSpec with Matchers {
     }
     hello.watch()
 
-    assert(hello.value == "Hello, World!")
+    assert(hello.get == "Hello, World!")
     target.value = "Each"
-    assert(hello.value == "Hello, Each!")
+    assert(hello.get == "Hello, Each!")
   }
 
   "TripleBinding" in {
@@ -62,10 +64,10 @@ final class BindingTest extends FreeSpec with Matchers {
       input.bind + input.bind + input.bind
     }
     output.watch()
-    assert(output.value == 0)
+    assert(output.get == 0)
     for (i <- 0 until 10) {
       input.value = i
-      assert(output.value == i * 3)
+      assert(output.get == i * 3)
     }
   }
 
@@ -87,21 +89,21 @@ final class BindingTest extends FreeSpec with Matchers {
 
     var resultChanged = 0
 
-    assert(expr1.value == 0)
+    assert(expr1.get == 0)
 
-    expr1.addChangedListener(new ChangedListener[Any] {
+    addChangedListener(expr1, new ChangedListener[Any] {
       override def changed(event: ChangedEvent[Any]): Unit = {
         resultChanged += 1
       }
     })
 
     assert(resultChanged == 0)
-    assert(expr1.value == 32100)
+    assert(expr1.get == 32100)
 
     expr3.value = 4000
 
     assert(resultChanged == 1)
-    assert(expr1.value == 34100)
+    assert(expr1.get == 34100)
 
   }
 
@@ -115,15 +117,15 @@ final class BindingTest extends FreeSpec with Matchers {
     }
     var resultChanged = 0
 
-    result.addChangedListener(new ChangedListener[Any] {
+    addChangedListener(result, new ChangedListener[Any] {
       override def changed(event: ChangedEvent[Any]): Unit = {
         resultChanged += 1
       }
     })
-    assert(result.value == 0.5)
+    assert(result.get == 0.5)
     assert(resultChanged == 0)
     source.value = 4.0
-    assert(result.value == 0.25)
+    assert(result.get == 0.25)
     assert(resultChanged == 1)
   }
 
@@ -139,9 +141,9 @@ final class BindingTest extends FreeSpec with Matchers {
     })
     val mappedEvents = new BufferListener
     val sourceEvents = new BufferListener
-    mapped.addPatchedListener(mappedEvents.listener)
+    addPatchedListener(mapped, mappedEvents.listener)
     assert(source.publisher.nonEmpty)
-    source.addPatchedListener(sourceEvents.listener)
+    addPatchedListener(source, sourceEvents.listener)
     assert(source.publisher.nonEmpty)
 
     assert(sourceEvents == ArrayBuffer.empty)
@@ -216,7 +218,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.that == Seq("ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
     }
     assert(
-      mapped.value == Seq(
+      mapped.get == Seq(
         "ForYield 0/2",
         "ForYield 1/2",
         "ForYield 0/3",
@@ -232,10 +234,10 @@ final class BindingTest extends FreeSpec with Matchers {
       ))
     prefix.value = "3"
     assert(sourceEvents.length == 4)
-    assert(mapped.value == Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4"))
+    assert(mapped.get == Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4"))
 
-    mapped.removePatchedListener(mappedEvents.listener)
-    source.removePatchedListener(sourceEvents.listener)
+    removePatchedListener(mapped, mappedEvents.listener)
+    removePatchedListener(source, sourceEvents.listener)
 
     assert(source.publisher.isEmpty)
   }
@@ -251,9 +253,9 @@ final class BindingTest extends FreeSpec with Matchers {
     })
     val mappedEvents = new BufferListener
     val sourceEvents = new BufferListener
-    mapped.addPatchedListener(mappedEvents.listener)
+    addPatchedListener(mapped, mappedEvents.listener)
     assert(source.publisher.nonEmpty)
-    source.addPatchedListener(sourceEvents.listener)
+    addPatchedListener(source, sourceEvents.listener)
     assert(source.publisher.nonEmpty)
 
     assert(sourceEvents == ArrayBuffer.empty)
@@ -341,8 +343,8 @@ final class BindingTest extends FreeSpec with Matchers {
       }
     }
 
-    mapped.removePatchedListener(mappedEvents.listener)
-    source.removePatchedListener(sourceEvents.listener)
+    removePatchedListener(mapped, mappedEvents.listener)
+    removePatchedListener(source, sourceEvents.listener)
 
     assert(source.publisher.isEmpty)
   }
@@ -350,8 +352,8 @@ final class BindingTest extends FreeSpec with Matchers {
   "FlatMappedVarBuffer" in {
     val prefix = new Var("")
     val source = Vars(1, 2, 3)
-    val mapped = new FlatMapBinding(source, { sourceElement: Int =>
-      new MapBinding(Constants((0 until sourceElement): _*), { i: Int =>
+    val mapped = new BindingSeq.FlatMapBinding(source, { sourceElement: Int =>
+      new BindingSeq.MapBinding(Constants((0 until sourceElement): _*), { i: Int =>
         Binding {
           raw"""${prefix.bind}$sourceElement"""
         }
@@ -359,10 +361,10 @@ final class BindingTest extends FreeSpec with Matchers {
     })
     val mappedEvents = new BufferListener
     val sourceEvents = new BufferListener
-    mapped.addPatchedListener(mappedEvents.listener)
+    addPatchedListener(mapped, mappedEvents.listener)
     assert(mapped.publisher.nonEmpty)
     assert(source.publisher.nonEmpty)
-    source.addPatchedListener(sourceEvents.listener)
+    addPatchedListener(source, sourceEvents.listener)
     assert(mapped.publisher.nonEmpty)
     assert(source.publisher.nonEmpty)
 
@@ -441,8 +443,8 @@ final class BindingTest extends FreeSpec with Matchers {
       }
     }
 
-    mapped.removePatchedListener(mappedEvents.listener)
-    source.removePatchedListener(sourceEvents.listener)
+    removePatchedListener(mapped, mappedEvents.listener)
+    removePatchedListener(source, sourceEvents.listener)
 
     assert(mapped.publisher.isEmpty)
     assert(source.publisher.isEmpty)
@@ -451,17 +453,17 @@ final class BindingTest extends FreeSpec with Matchers {
   "MappedVarBuffer" in {
     val prefix = new Var("")
     val source = Vars(1, 2, 3)
-    val mapped = new MapBinding(source, { a: Int =>
+    val mapped = new BindingSeq.MapBinding(source, { a: Int =>
       Binding {
         raw"""${prefix.bind}${a}"""
       }
     })
     val mappedEvents = new BufferListener
     val sourceEvents = new BufferListener
-    mapped.addPatchedListener(mappedEvents.listener)
+    addPatchedListener(mapped, mappedEvents.listener)
     assert(mapped.publisher.nonEmpty)
     assert(source.publisher.nonEmpty)
-    source.addPatchedListener(sourceEvents.listener)
+    addPatchedListener(source, sourceEvents.listener)
     assert(mapped.publisher.nonEmpty)
     assert(source.publisher.nonEmpty)
 
@@ -547,8 +549,8 @@ final class BindingTest extends FreeSpec with Matchers {
       }
     }
 
-    mapped.removePatchedListener(mappedEvents.listener)
-    source.removePatchedListener(sourceEvents.listener)
+    removePatchedListener(mapped, mappedEvents.listener)
+    removePatchedListener(source, sourceEvents.listener)
 
     assert(mapped.publisher.isEmpty)
     assert(source.publisher.isEmpty)
@@ -558,7 +560,7 @@ final class BindingTest extends FreeSpec with Matchers {
     val source = Vars(1)
     val length = source.length
     val lengthEvents = new BufferListener
-    length.addChangedListener(lengthEvents.listener)
+    addChangedListener(length, lengthEvents.listener)
     source.value(0) = 100
     assert(lengthEvents.length == 1)
     lengthEvents(0) match {
@@ -590,7 +592,7 @@ final class BindingTest extends FreeSpec with Matchers {
       val myVars = Vars(1, 2, 100, 3)
       val filtered = myVars.withFilter(_ < 10).map(x => x)
       filtered.watch()
-      assert(filtered.value == Seq(1, 2, 3))
+      assert(filtered.get == Seq(1, 2, 3))
     }
   }
 
@@ -615,21 +617,21 @@ final class BindingTest extends FreeSpec with Matchers {
     c.watch()
 
     var result: (Int, Int) = null
-    assert((3, 1) == ((c.value, count)))
+    assert((3, 1) == ((c.get, count)))
 
     a.value = 4
-    assert((6, 2) == ((c.value, count)))
+    assert((6, 2) == ((c.get, count)))
 
     b.value = 3
-    assert((7, 3) == ((c.value, count)))
+    assert((7, 3) == ((c.get, count)))
 
     (0 to 100).foreach { i =>
       a.value = i
     }
-    assert((103, 104) == ((c.value, count)))
+    assert((103, 104) == ((c.get, count)))
 
     b.value = 4
-    assert((104, 105) == ((c.value, count)))
+    assert((104, 105) == ((c.get, count)))
   }
 
   "multi to one dependencies" in {
@@ -654,15 +656,15 @@ final class BindingTest extends FreeSpec with Matchers {
     Binding.BindingInstances.ap _
     println(aPlusOneTimesBPlusOn)
     aPlusOneTimesBPlusOn.watch()
-    aPlusOneTimesBPlusOn.value should be((100 + 1) * (200 + 1))
+    aPlusOneTimesBPlusOn.get should be((100 + 1) * (200 + 1))
     aFlushCount should be(1)
     bFlushCount should be(1)
     a.value = 500
-    aPlusOneTimesBPlusOn.value should be((500 + 1) * (200 + 1))
+    aPlusOneTimesBPlusOn.get should be((500 + 1) * (200 + 1))
     aFlushCount should be(2)
     bFlushCount should be(2)
     b.value = 600
-    aPlusOneTimesBPlusOn.value should be((500 + 1) * (600 + 1))
+    aPlusOneTimesBPlusOn.get should be((500 + 1) * (600 + 1))
     aFlushCount should be(2)
     bFlushCount should be(3)
 
@@ -676,7 +678,7 @@ final class BindingTest extends FreeSpec with Matchers {
         if myVar < 10
       } yield myVar
       filtered.watch()
-      assert(filtered.value == Seq(1, 2, 3))
+      assert(filtered.get == Seq(1, 2, 3))
     }
     domMethod()
   }

@@ -34,11 +34,11 @@ import scala.collection.mutable.ArrayBuffer
   */
 final class BufferListener extends ArrayBuffer[Any] {
   val listener = new ChangedListener[Seq[Any]] with PatchedListener[Any] {
-    override private[binding] def changed(event: ChangedEvent[Seq[Any]]): Unit = {
+    override def changed(event: ChangedEvent[Seq[Any]]): Unit = {
       BufferListener.this += event
     }
 
-    override private[binding] def patched(event: PatchedEvent[Any]): Unit = {
+    override def patched(event: PatchedEvent[Any]): Unit = {
       BufferListener.this += event
     }
   }
