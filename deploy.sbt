@@ -9,7 +9,7 @@ releaseProcess := {
 }
 
 publishTo in ThisBuild := Some(
-  if ((isSnapshot in ThisBuild).value)
+  if (isSnapshot.value)
     Opts.resolver.sonatypeSnapshots
   else
     Opts.resolver.sonatypeStaging
