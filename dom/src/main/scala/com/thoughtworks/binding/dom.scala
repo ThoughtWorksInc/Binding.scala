@@ -24,7 +24,7 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import Binding.{BindingSeq, Constants, MultiMountPoint, SingletonBindingSeq}
+import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint, SingletonBindingSeq}
 import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.XmlExtractor.{PrefixedName, QName, UnprefixedName}
@@ -69,12 +69,48 @@ object dom {
     final def notEqual[A, B](left: A, right: B, dummy: Unit = ()) = left != right
   }
 
+  @inline
+  @tailrec
+  private def removeAll(parent: Node): Unit = {
+    val firstChild = parent.firstChild
+    if (firstChild != null) {
+      parent.removeChild(firstChild)
+      removeAll(parent)
+    }
+  }
+
   /**
     * Internal helpers for `@dom` annotation
     *
     * @note Do not use methods and classes in this object.
     */
   object Runtime extends LowPriorityRuntime {
+
+    @inline
+    def mount(parent: Node, childrenBinding: BindingSeq[Node]): NodeSeqMountPoint = {
+      new NodeSeqMountPoint(parent, childrenBinding)
+    }
+
+    @inline
+    def mount(parent: Node, childBinding: Binding[BindingSeq[Node]], dummy: Unit = ()): NodeSeqMountPoint = {
+      new NodeSeqMountPoint(parent, childBinding, dummy)
+    }
+
+    @inline
+    def mount(parent: Node, childBinding: Binding[Node]): NodeMountPoint = {
+      new NodeMountPoint(parent, childBinding)
+    }
+
+    final class NodeMountPoint private[Runtime] (parent: Node, childBinding: Binding[Node])
+        extends SingleMountPoint[Node](childBinding) {
+      protected def set(child: Node): Unit = {
+        removeAll(parent)
+        if (child.parentNode != null) {
+          throw new IllegalStateException(raw"""Cannot insert ${child.nodeName} twice!""")
+        }
+        parent.appendChild(child)
+      }
+    }
 
     final class NodeSeqMountPoint(parent: Node, childrenBinding: BindingSeq[Node])
         extends MultiMountPoint[Node](childrenBinding) {
@@ -85,22 +121,13 @@ object dom {
       }
 
       @inline
+      @deprecated("Use [[NodeMountPoint]] instead", "11.4.0")
       def this(parent: Node, childBinding: Binding[Node]) = {
         this(parent, SingletonBindingSeq(childBinding))
       }
 
-      @inline
-      @tailrec
-      private def removeAll(): Unit = {
-        val firstChild = parent.firstChild
-        if (firstChild != null) {
-          parent.removeChild(firstChild)
-          removeAll()
-        }
-      }
-
       override protected def set(children: Seq[Node]): Unit = {
-        removeAll()
+        removeAll(parent)
         for (child <- children) {
           if (child.parentNode != null) {
             throw new IllegalStateException(raw"""Cannot insert ${child.nodeName} twice!""")
@@ -249,7 +276,7 @@ object dom {
     /**
       * @param node HTMLDialogElement or HTMLDetailElement
       */
-    implicit final class OpenOps @inline()(node: Element { var open: Boolean }) {
+    implicit final class OpenOps @inline private[dom] (node: Element { var open: Boolean }) {
       @inline def open = node.getAttribute("open")
       @inline def open_=(value: String) = node.setAttribute("open", value)
     }
@@ -432,7 +459,7 @@ object dom {
     */
   @inline
   def render(parent: Node, child: Binding[Node]): Unit = {
-    new NodeSeqMountPoint(parent, child).watch()
+    Runtime.mount(parent, child).watch()
   }
 
   /**
@@ -440,7 +467,7 @@ object dom {
     */
   @inline
   def render(parent: Node, children: BindingSeq[Node]): Unit = {
-    new NodeSeqMountPoint(parent, children).watch()
+    Runtime.mount(parent, children).watch()
   }
 
   /**
@@ -450,7 +477,7 @@ object dom {
     **/
   @inline
   def render(parent: Node, children: Binding[BindingSeq[Node]], dummy: Unit = ()): Unit = {
-    new NodeSeqMountPoint(parent, children).watch()
+    Runtime.mount(parent, children).watch()
   }
 
   @bundle
@@ -558,7 +585,7 @@ object dom {
                     _root_.com.thoughtworks.binding.Binding,
                     _root_.scala.Unit
                   ](
-                    new _root_.com.thoughtworks.binding.dom.Runtime.NodeSeqMountPoint(
+                    _root_.com.thoughtworks.binding.dom.Runtime.mount(
                       $elementName,
                       $transformedBuffer
                     )
