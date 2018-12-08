@@ -1,0 +1,10 @@
+organization := "com.thoughtworks.binding"
+
+name := "AsyncBinding"
+
+libraryDependencies += "org.typelevel" %%% "cats-effect" % "1.1.0"
+
+scalacOptions += "-feature"
+
+// Enable SAM type
+scalacOptions += "-Xexperimental"

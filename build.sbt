@@ -4,6 +4,8 @@ lazy val Binding = crossProject.crossType(CrossType.Pure)
 
 lazy val FutureBinding = crossProject.crossType(CrossType.Pure).dependsOn(Binding)
 
+lazy val AsyncBinding = crossProject.crossType(CrossType.Pure).dependsOn(Binding)
+
 lazy val dom = project.dependsOn(BindingJS).dependsOn(XmlExtractorJS)
 
 lazy val Route = project.dependsOn(BindingJS)
@@ -17,6 +19,10 @@ lazy val BindingJVM = Binding.jvm.addSbtFiles(file("../build.sbt.shared"))
 lazy val FutureBindingJS = FutureBinding.js.addSbtFiles(file("../build.sbt.shared"))
 
 lazy val FutureBindingJVM = FutureBinding.jvm.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val AsyncBindingJS = AsyncBinding.js.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val AsyncBindingJVM = AsyncBinding.jvm.addSbtFiles(file("../build.sbt.shared"))
 
 lazy val XmlExtractor = crossProject.crossType(CrossType.Pure)
 
