@@ -24,6 +24,9 @@ project/plugins/project/
 .project
 .settings/
 
+# jenv
+.java-version
+
 # Files created for deployment
 secret/
 local.sbt
