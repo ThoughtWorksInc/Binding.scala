@@ -25,8 +25,8 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </Scene>
     }
     scene.watch()
-    scene.value should be(a[javafx.scene.Scene])
-    scene.value.getRoot should be(a[javafx.scene.control.Button])
+    scene.get should be(a[javafx.scene.Scene])
+    scene.get.getRoot should be(a[javafx.scene.control.Button])
   }
 
   "root property in Scene" in {
@@ -40,8 +40,8 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </Scene>
     }
     scene.watch()
-    scene.value should be(a[javafx.scene.Scene])
-    scene.value.getRoot should be(a[javafx.scene.control.Button])
+    scene.get should be(a[javafx.scene.Scene])
+    scene.get.getRoot should be(a[javafx.scene.control.Button])
   }
 
   "repeated property in Scene" in {
@@ -59,9 +59,9 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </Scene>
     }
     scene.watch()
-    scene.value should be(a[javafx.scene.Scene])
-    scene.value.getRoot should be(a[javafx.scene.control.Button])
-    inside(scene.value.getStylesheets.asScala) {
+    scene.get should be(a[javafx.scene.Scene])
+    scene.get.getRoot should be(a[javafx.scene.control.Button])
+    inside(scene.get.getStylesheets.asScala) {
       case Seq("a", s2, "c", "d", "e") =>
         s2 shouldNot be(empty)
     }
@@ -73,7 +73,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       <StringMap foo="123" bar=""/>
     }
     hashMap.watch()
-    hashMap.value.asScala should be(Map("foo" -> "123", "bar" -> ""))
+    hashMap.get.asScala should be(Map("foo" -> "123", "bar" -> ""))
   }
 
   "Nested builders" in {
@@ -93,9 +93,9 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </Scene>
     }
     scene.watch()
-    scene.value should be(a[javafx.scene.Scene])
-    scene.value.getRoot should be(a[javafx.scene.control.Button])
-    scene.value.getFill should be(javafx.scene.paint.Color.RED)
+    scene.get should be(a[javafx.scene.Scene])
+    scene.get.getRoot should be(a[javafx.scene.control.Button])
+    scene.get.getFill should be(javafx.scene.paint.Color.RED)
   }
 
   "fx:factory" in {
@@ -109,7 +109,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
     observableArrayList.watch()
     import scala.collection.JavaConverters._
-    observableArrayList.value.asScala should be(Seq("A", "B", ""))
+    observableArrayList.get.asScala should be(Seq("A", "B", ""))
   }
 
   "Reference outer element by fx:id" in {
@@ -125,9 +125,9 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     inside(pair) {
       case (button, button2) =>
         button.watch()
-        button.value.getText shouldNot be("")
+        button.get.getText shouldNot be("")
         button2.watch()
-        button2.value.getText shouldNot be("")
+        button2.get.getText shouldNot be("")
     }
 
   }
@@ -145,7 +145,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
 
     buttons.watch()
-    inside(buttons.value) {
+    inside(buttons.get) {
       case Seq(button1, button2) =>
         button1.getText shouldNot be("")
         button1.getText should be(button2.getText)
@@ -159,7 +159,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
     pair._1.watch()
     pair._2.watch()
-    pair._1.value should be(pair._2.value)
+    pair._1.get should be(pair._2.get)
   }
 
   "Pattern matching" in {
@@ -178,7 +178,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
 
     buttons.watch()
-    inside(buttons.value) {
+    inside(buttons.get) {
       case Seq(button1, button2) =>
         button1.getText shouldNot be("")
         button1.getText should be(button2.getText)
@@ -198,7 +198,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
 
     bs.watch()
-    inside(bs.value) {
+    inside(bs.get) {
       case (b, s) =>
         b.getText should be("My Button")
         s should be("My Button")
@@ -214,7 +214,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </Button>
     }
     button.watch()
-    button.value.getText should be("   ")
+    button.get.getText should be("   ")
   }
 
   "empty text for string property" in {
@@ -226,7 +226,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </Button>
     }
     button.watch()
-    button.value.getText should be("")
+    button.get.getText should be("")
   }
 
   "spaces for boolean property" in {
@@ -249,7 +249,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
     vbox.watch()
     import scala.collection.JavaConverters._
-    vbox.value.getChildren.asScala should be(empty)
+    vbox.get.getChildren.asScala should be(empty)
   }
 
   "Constrants for repeated property" in {
@@ -263,7 +263,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
     vbox.watch()
     import scala.collection.JavaConverters._
-    vbox.value.getChildren.asScala should be(empty)
+    vbox.get.getChildren.asScala should be(empty)
   }
 
   "fx:value" in {
@@ -276,7 +276,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
 
     button.watch()
-    button.value.getText should be("My Button")
+    button.get.getText should be("My Button")
 
   }
 
@@ -296,7 +296,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button: javafx.scene.control.Button) =>
         button.getText should be("My Button")
     }
@@ -311,7 +311,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    vbox.value should be(a[javafx.scene.layout.VBox])
+    vbox.get should be(a[javafx.scene.layout.VBox])
   }
 
   "two VBoxes" in {
@@ -323,7 +323,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value) {
+    inside(vbox.get) {
       case Seq(vbox0, vbox1) =>
         vbox0 should be(a[javafx.scene.layout.VBox])
         vbox1 should be(a[javafx.scene.layout.VBox])
@@ -338,7 +338,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    vbox.value should be(a[javafx.scene.layout.VBox])
+    vbox.get should be(a[javafx.scene.layout.VBox])
   }
 
   "import and a VBox" in {
@@ -349,7 +349,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    vbox.value should be(a[javafx.scene.layout.VBox])
+    vbox.get should be(a[javafx.scene.layout.VBox])
   }
 
   "import and two VBox" in {
@@ -361,7 +361,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value) {
+    inside(vbox.get) {
       case Seq(vbox0, vbox1) =>
         vbox0 should be(a[javafx.scene.layout.VBox])
         vbox1 should be(a[javafx.scene.layout.VBox])
@@ -381,7 +381,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button) => {
         button should be(a[javafx.scene.control.Button])
       }
@@ -403,7 +403,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button) => {
         button should be(a[javafx.scene.control.Button])
       }
@@ -425,7 +425,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button) => {
         button should be(a[javafx.scene.control.Button])
       }
@@ -449,7 +449,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button) => {
         button should be(a[javafx.scene.control.Button])
       }
@@ -466,7 +466,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button) => {
         button should be(a[javafx.scene.control.Button])
       }
@@ -486,7 +486,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button0, button1, button2) => {
         button0 should be(a[javafx.scene.control.Button])
         button1 should be(a[javafx.scene.control.Button])
@@ -504,10 +504,10 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </Button>
     }
     button.watch()
-    button.value should be(a[javafx.scene.control.Button])
+    button.get should be(a[javafx.scene.control.Button])
 
     import scala.collection.JavaConverters._
-    button.value.getProperties.asScala should be(Map("foo" -> "123", "bar" -> "456"))
+    button.get.getProperties.asScala should be(Map("foo" -> "123", "bar" -> "456"))
 
   }
 
@@ -521,7 +521,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </ImageView>
     }
     imageView.watch()
-    imageView.value.getImage.isError should be(false)
+    imageView.get.getImage.isError should be(false)
   }
 
   "Empty Button" in {
@@ -546,7 +546,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       </GridPane>
     }
     gridPane.watch()
-    inside(gridPane.value.getChildren.asScala) {
+    inside(gridPane.get.getChildren.asScala) {
       case Seq(label: Label) =>
         GridPane.getRowIndex(label) should be(2)
         GridPane.getColumnIndex(label) should be(3)
@@ -588,7 +588,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     vbox.watch()
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button0: javafx.scene.control.Button, button1: javafx.scene.control.Button) => {
         button0 shouldNot be(button1)
         button0.getText should be("Hello World")
@@ -618,7 +618,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
 
     vbox.watch()
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button: javafx.scene.control.Button) =>
         button.getText should be("Click Me!")
         button.getOnAction.handle(new ActionEvent)
@@ -642,7 +642,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
 
     vbox.watch()
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(button: javafx.scene.control.Button) =>
         button.getText should be("Click Me!")
         button.getOnAction.handle(new ActionEvent)
@@ -692,7 +692,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
       }
     }
     vbox.watch()
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(b0: Button, b1: Button) =>
         b0.getText should be("first button")
         b1.getText should be("last button")
@@ -714,7 +714,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
 
     eventHandlers should be(empty)
 
-    inside(vbox.value.getChildren.asScala) {
+    inside(vbox.get.getChildren.asScala) {
       case Seq(b0: Button, b1: Button, b2: Button, b3: Button, b4: Button) =>
         b0.getText should be("first button")
         b1.getText should be("foo")
@@ -759,8 +759,8 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     import javafx.scene.control.Button
     @fxml val button = <Button id="&lt; &lt; ">&gt; &gt;</Button>
     button.watch()
-    button.value.getId should be("< < ")
-    button.value.getText should be(">>")
+    button.get.getId should be("< < ")
+    button.get.getText should be(">>")
   }
 
   "issue 65" in {
@@ -772,7 +772,7 @@ final class fxmlTest extends FreeSpec with Matchers with Inside {
     }
 
     stringTable.watch()
-    stringTable.value.getItems.size should be(2)
+    stringTable.get.getItems.size should be(2)
   }
 
   override protected def withFixture(test: NoArgTest): Outcome = {

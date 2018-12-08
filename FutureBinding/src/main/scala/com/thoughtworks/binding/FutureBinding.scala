@@ -50,10 +50,10 @@ final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionCont
   @inline
   override def get = value
 
-  private val publisher = new Publisher[ChangedListener[Option[Try[A]]]]
+  private val publisher = new SafeBuffer[ChangedListener[Option[Try[A]]]]
 
-  override private[binding] def removeChangedListener(listener: ChangedListener[Option[Try[A]]]): Unit = {
-    publisher.unsubscribe(listener)
+  override protected def removeChangedListener(listener: ChangedListener[Option[Try[A]]]): Unit = {
+    publisher.-=(listener)
   }
 
   private var isHandlerRegistered: Boolean = false
@@ -65,14 +65,14 @@ final class FutureBinding[A](future: Future[A])(implicit executor: ExecutionCont
     }
   }
 
-  override private[binding] def addChangedListener(listener: ChangedListener[Option[Try[A]]]): Unit = {
+  override protected def addChangedListener(listener: ChangedListener[Option[Try[A]]]): Unit = {
     if (!isHandlerRegistered) {
       isHandlerRegistered = true
       if (!future.isCompleted) {
         future.onComplete(completeHandler)
       }
     }
-    publisher.subscribe(listener)
+    publisher.+=(listener)
 
   }
 

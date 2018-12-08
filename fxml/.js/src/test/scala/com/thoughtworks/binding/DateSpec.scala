@@ -14,7 +14,7 @@ final class DateSpec extends FreeSpec with Matchers with Inside {
       </Date>
     }
     date.watch()
-    date.value.getDate should be(2)
-    date.value.getMilliseconds should be(42)
+    date.get.getDate should be(2)
+    date.get.getMilliseconds should be(42)
   }
 }

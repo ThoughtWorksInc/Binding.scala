@@ -7,7 +7,7 @@ class Issue113 extends FreeSpec with Matchers {
   "name clash should be avoided" in {
     val dialog = dialogUI("id")
     dialog.watch()
-    dialog.value.outerHTML should be ("""<aside id="id">
+    dialog.get.outerHTML should be ("""<aside id="id">
     <div>
       <fieldset>
       </fieldset>

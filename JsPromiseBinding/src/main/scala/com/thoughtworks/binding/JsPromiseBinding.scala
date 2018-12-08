@@ -24,9 +24,6 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import com.thoughtworks.binding.Binding.ChangedListener
-
-import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.{Thenable, UndefOr, |, Promise => JsPromise}
 import Binding._
 
@@ -46,12 +43,12 @@ final class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Ei
   @volatile
   private var cache: Option[Either[Any, A]] = None
 
-  private val publisher = new Publisher[ChangedListener[Option[Either[Any, A]]]]
+  private val publisher = new SafeBuffer[ChangedListener[Option[Either[Any, A]]]]
 
-  override private[binding] def value = cache
+  override protected def value = cache
 
-  override private[binding] def removeChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
-    publisher.unsubscribe(listener)
+  override protected def removeChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
+    publisher.-=(listener)
   }
 
   private var isHandlerRegistered: Boolean = false
@@ -74,7 +71,7 @@ final class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Ei
     cache = newCache
   }
 
-  override private[binding] def addChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
+  override protected def addChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
     if (!isHandlerRegistered) {
       isHandlerRegistered = true
       promise.`then`[Unit]({ result: A =>
@@ -83,6 +80,6 @@ final class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Ei
         rejectedHandler(error)
       }))
     }
-    publisher.subscribe(listener)
+    publisher.+=(listener)
   }
 }

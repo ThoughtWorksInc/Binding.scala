@@ -1,6 +1,8 @@
 parallelExecution in Global := false
 
-lazy val Binding = crossProject.crossType(CrossType.Pure)
+lazy val SafeBuffer = crossProject.crossType(CrossType.Pure)
+
+lazy val Binding = crossProject.crossType(CrossType.Pure).dependsOn(SafeBuffer)
 
 lazy val FutureBinding = crossProject.crossType(CrossType.Pure).dependsOn(Binding)
 
@@ -9,6 +11,10 @@ lazy val dom = project.dependsOn(BindingJS).dependsOn(XmlExtractorJS)
 lazy val Route = project.dependsOn(BindingJS)
 
 lazy val JsPromiseBinding = project.dependsOn(BindingJS)
+
+lazy val SafeBufferJS = SafeBuffer.js.addSbtFiles(file("../build.sbt.shared"))
+
+lazy val SafeBufferJVM = SafeBuffer.jvm.addSbtFiles(file("../build.sbt.shared"))
 
 lazy val BindingJS = Binding.js.addSbtFiles(file("../build.sbt.shared"))
 
@@ -55,7 +61,7 @@ lazy val unidoc = project
   .enablePlugins(TravisUnidocTitle)
   .settings(
     UnidocKeys.unidocProjectFilter in ScalaUnidoc in UnidocKeys.unidoc := {
-      inAnyProject -- inProjects(XmlExtractorJVM, BindingJVM, FutureBindingJVM, fxmlJS)
+      inAnyProject -- inProjects(SafeBufferJVM, XmlExtractorJVM, BindingJVM, FutureBindingJVM, fxmlJS)
     },
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     scalacOptions += "-Xexperimental"
