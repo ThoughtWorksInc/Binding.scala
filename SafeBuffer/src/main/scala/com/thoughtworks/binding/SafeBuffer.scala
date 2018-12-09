@@ -41,7 +41,7 @@ private[binding] object SafeBuffer {
   * except that this [[SafeBuffer]] allows adding or removing elements via [[+=]] and [[-=]]
   * inside a [[foreach]] block.
   *
-  * @note An [[java.lang.IllegalStateException]] will be thrown when invoking methods other than [[+=]] and [[-=]] in a [[foreach]] block.
+  * @note A [[java.lang.IllegalStateException]] will be thrown when invoking methods other than [[+=]] and [[-=]] in a [[foreach]] block.
   */
 final class SafeBuffer[A] extends mutable.Buffer[A] {
 
