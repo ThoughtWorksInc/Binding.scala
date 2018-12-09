@@ -35,7 +35,7 @@ import org.apache.commons.lang3.text.translate.EntityArrays._
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 @bundle
-private[binding] trait XmlExtractor {
+trait XmlExtractor {
   val c: blackbox.Context
 
   import c.universe._
@@ -54,13 +54,13 @@ private[binding] trait XmlExtractor {
       }
   }
 
-  protected val NodeBuffer = nodeBuffer.extract
+  protected final val NodeBuffer = nodeBuffer.extract
 
   private def nodeBufferStar(child: List[Tree]): List[Tree] = {
     child match {
       case Nil =>
         Nil
-      case List(q"""${nodeBuffer.extract(children)}: _*""") =>
+      case List(q"""${NodeBuffer(children)}: _*""") =>
         children
     }
   }
@@ -70,6 +70,8 @@ private[binding] trait XmlExtractor {
     case Literal(Constant(p: String)) => Some(p)
   }
 
+  private val Prefix = prefix.extract
+
   private def elem: PartialFunction[Tree, (QName, List[(QName, Tree)], Boolean, List[Tree])] = {
     case Block(Nil,
                q"""
@@ -77,7 +79,7 @@ private[binding] trait XmlExtractor {
                    var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
                    ..$attributes
                    new _root_.scala.xml.Elem(
-                     ${prefix.extract(prefixOption)},
+                     ${Prefix(prefixOption)},
                      ${Literal(Constant(localPart: String))},
                      $$md, $$scope,
                      ${Literal(Constant(minimizeEmpty: Boolean))},
@@ -97,7 +99,7 @@ private[binding] trait XmlExtractor {
                  Nil,
                  q"""
                    new _root_.scala.xml.Elem(
-                     ${prefix.extract(prefixOption)},
+                     ${Prefix(prefixOption)},
                      ${Literal(Constant(localPart: String))},
                      _root_.scala.xml.Null,
                      $$scope,
@@ -109,35 +111,35 @@ private[binding] trait XmlExtractor {
       (QName(prefixOption, localPart), Nil, minimizeEmpty, nodeBufferStar(child))
   }
 
-  protected val Elem = elem.extract
+  protected final val Elem = elem.extract
 
   private def entityRef: PartialFunction[Tree, String] = {
     case q"""new _root_.scala.xml.EntityRef(${Literal(Constant(entityName: String))})""" =>
       entityName
   }
 
-  protected val EntityRef = entityRef.extract
+  protected final val EntityRef = entityRef.extract
 
   private def text: PartialFunction[Tree, String] = {
     case q"""new _root_.scala.xml.Text(${Literal(Constant(data: String))})""" =>
       data
   }
 
-  protected val Text = text.extract
+  protected final val Text = text.extract
 
   private def textAttribute: PartialFunction[Tree, String] = {
     case Text(data)       => data
     case EmptyAttribute() => ""
   }
 
-  protected val TextAttribute = textAttribute.extract
+  protected final val TextAttribute = textAttribute.extract
 
   private def comment: PartialFunction[Tree, String] = {
     case q"""new _root_.scala.xml.Comment(${Literal(Constant(commentText: String))})""" =>
       commentText
   }
 
-  protected val Comment = comment.extract
+  protected final val Comment = comment.extract
 
   private def procInstr: PartialFunction[Tree, (String, String)] = {
     case q"""
@@ -149,24 +151,23 @@ private[binding] trait XmlExtractor {
       (target, proctext)
   }
 
-  protected val ProcInstr = procInstr.extract
+  protected final val ProcInstr = procInstr.extract
 
-  protected val HtmlEntityName = XmlExtractor.HtmlEntityRefMap.extract
+  protected final val HtmlEntityName = XmlExtractor.HtmlEntityRefMap.extract
 
-  protected val XmlEntityName = XmlExtractor.XmlEntityRefMap.extract
+  protected final val XmlEntityName = XmlExtractor.XmlEntityRefMap.extract
 
-  private lazy val NilType = typeOf[scala.collection.immutable.Nil.type]
 
   protected object EmptyAttribute {
     def unapply(tree: Tree) = {
       val tpe = tree.tpe
-      tpe != null && tpe =:= NilType
+      tpe != null && tpe =:= typeOf[Nil.type]
     }
   }
 
 }
 
-private[binding] object XmlExtractor {
+object XmlExtractor {
 
   sealed trait QName
 
