@@ -1489,11 +1489,11 @@ object fxml {
       val transformer = new XmlTransformer
 
       import transformer.transform
-      def transform(tree: Tree): Tree = {
-        val output = transformer.transform(tree)
-        // c.info(c.enclosingPosition, c.universe.show(output), true)
-        output
-      }
+//      def transform(tree: Tree): Tree = {
+//        val output = transformer.transform(tree)
+//        c.info(c.enclosingPosition, c.universe.show(output), true)
+//        output
+//      }
 
       replaceDefBody(
         annottees, { body =>

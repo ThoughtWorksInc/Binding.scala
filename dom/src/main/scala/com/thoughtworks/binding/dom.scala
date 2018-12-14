@@ -25,14 +25,14 @@ SOFTWARE.
 package com.thoughtworks.binding
 
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint, SingletonBindingSeq}
-import dom.Runtime.NodeSeqMountPoint
+import dom.Runtime.{NodeMountPoint, NodeSeqMountPoint}
 import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.XmlExtractor.{PrefixedName, QName, UnprefixedName}
 import com.thoughtworks.sde.core.Preprocessor
 import macrocompat.bundle
 import org.scalajs.dom.raw._
 
-import scala.annotation.{StaticAnnotation, compileTimeOnly, tailrec}
+import scala.annotation.{StaticAnnotation, compileTimeOnly, implicitNotFound, tailrec}
 import scala.collection.GenSeq
 import scala.reflect.macros.whitebox
 import scala.language.experimental.macros
@@ -64,9 +64,93 @@ class dom extends StaticAnnotation {
 // @deprecated(message = "Use `@html` instead", since = "11.0.0")
 object dom {
 
-  private[dom] sealed trait LowPriorityRuntime {
+  private[dom] sealed trait LowPriorityMountable2 {
     @inline
-    final def notEqual[A, B](left: A, right: B, dummy: Unit = ()) = left != right
+    implicit final def mountableBindingBindingSeq[Parent, Child](
+        implicit mountableBindingSeq: Mountable[Parent, BindingSeq[Child]]): Mountable[Parent, Child] =
+      new Mountable[Parent, Child] {
+        def mount(parent: Parent, child: Child): Binding[Unit] = {
+          mountableBindingSeq.mount(parent, Constants(child))
+        }
+      }
+  }
+  private[dom] sealed trait LowPriorityMountable1 {
+    @inline
+    implicit final def mountableBindingBindingSeq[Parent, Child](
+        implicit mountableBindingSeq: Mountable[Parent, BindingSeq[Child]])
+      : Mountable[Parent, Binding[BindingSeq[Child]]] =
+      new Mountable[Parent, Binding[BindingSeq[Child]]] {
+        def mount(parent: Parent, children: Binding[BindingSeq[Child]]): Binding[Unit] = {
+          mountableBindingSeq.mount(parent, Constants(children).flatMapBinding(identity))
+        }
+      }
+  }
+
+  private[dom] sealed trait LowPriorityMountable0 extends LowPriorityMountable1 {
+    @inline
+    implicit final def mountableBinding[Parent, Child](
+        implicit mountableBindingSeq: Mountable[Parent, BindingSeq[Child]]): Mountable[Parent, Binding[Child]] =
+      new Mountable[Parent, Binding[Child]] {
+        def mount(parent: Parent, child: Binding[Child]): Binding[Unit] = {
+          mountableBindingSeq.mount(parent, SingletonBindingSeq(child))
+        }
+      }
+  }
+
+  @implicitNotFound("Don't know how to mount ${Children} into ${Parent}.")
+  trait Mountable[-Parent, -Children] {
+    def mount(parent: Parent, children: Children): Binding[Unit]
+  }
+
+  object Mountable extends LowPriorityMountable0 {
+    @inline
+    implicit final def mountableBindingSeqNode[Parent <: Node, Child <: Node]: Mountable[Parent, BindingSeq[Child]] =
+      new Mountable[Parent, BindingSeq[Child]] {
+        def mount(parent: Parent, children: BindingSeq[Child]): NodeSeqMountPoint = {
+          new NodeSeqMountPoint(parent, children)
+        }
+      }
+
+    @inline
+    implicit final def mountableBindingBindingSeqNode[Parent <: Node, Child <: Node]
+      : Mountable[Parent, Binding[BindingSeq[Child]]] =
+      new Mountable[Parent, Binding[BindingSeq[Child]]] {
+        def mount(parent: Parent, children: Binding[BindingSeq[Child]]): NodeSeqMountPoint = {
+          new NodeSeqMountPoint(parent, children, ())
+        }
+      }
+
+    @inline
+    implicit final def mountableBindingNode[Parent <: Node, Child <: Node]: Mountable[Parent, Binding[Child]] =
+      new Mountable[Parent, Binding[Child]] {
+        def mount(parent: Parent, child: Binding[Child]): NodeMountPoint = {
+          new NodeMountPoint(parent, child)
+        }
+      }
+  }
+  private[dom] sealed trait LowPriorityRuntime1 {
+    @inline
+    final def domBindingSeq[A](x: A) = Constants(x)
+  }
+
+  private[dom] sealed trait LowPriorityRuntime extends LowPriorityRuntime1 {
+
+    @inline
+    final def domBindingSeq[A](x: Binding[A])(implicit dummy: DummyImplicit): SingletonBindingSeq[A] = {
+      SingletonBindingSeq(x)
+    }
+
+    @inline
+    final def domBindingSeq[A](x: Option[A])(implicit dummy: DummyImplicit): Constants[A] = {
+      Constants(x.toSeq: _*)
+    }
+
+    @inline
+    final def domBindingSeq[A](x: BindingSeq[A])(implicit dummy: DummyImplicit): BindingSeq[A] = x
+
+    @inline
+    final def notEqual[A, B](left: A, right: B, dummy: Unit = ()): Boolean = left != right
+
   }
 
   @inline
@@ -87,6 +171,28 @@ object dom {
   object Runtime extends LowPriorityRuntime {
 
     @inline
+    def mount(parent: Node, children: Binding[Seq[Node]])(implicit dummy0: DummyImplicit,
+                                                          dummy1: DummyImplicit,
+                                                          dummy2: DummyImplicit) = {
+      new NodeSeqMountPoint(parent, Constants(children).flatMap { s =>
+        Constants(s.bind: _*)
+      })
+    }
+
+    @inline
+    def mount(parent: Node, childOption: Binding[Option[Node]])(implicit dummy0: DummyImplicit,
+                                                                dummy1: DummyImplicit) = {
+      new NodeSeqMountPoint(parent, Constants(childOption).flatMap { o =>
+        Constants(o.bind.toSeq: _*)
+      })
+    }
+
+    @inline
+    def mount(parent: Node, text: Binding[String])(implicit dummy: DummyImplicit): NodeMountPoint = {
+      new NodeMountPoint(parent, Binding { document.createTextNode(text.bind) })
+    }
+
+    @inline
     def mount(parent: Node, childrenBinding: BindingSeq[Node]): NodeSeqMountPoint = {
       new NodeSeqMountPoint(parent, childrenBinding)
     }
@@ -101,14 +207,17 @@ object dom {
       new NodeMountPoint(parent, childBinding)
     }
 
-    final class NodeMountPoint private[Runtime] (parent: Node, childBinding: Binding[Node])
+    @inline
+    def mount[Parent, Children](parent: Parent, children: Children)(
+        implicit mountable: Mountable[Parent, Children]): Binding[Unit] = {
+      mountable.mount(parent, children)
+    }
+
+    final class NodeMountPoint private[dom] (parent: Node, childBinding: Binding[Node])
         extends SingleMountPoint[Node](childBinding) {
       protected def set(child: Node): Unit = {
         removeAll(parent)
-        if (child.parentNode != null) {
-          throw new IllegalStateException(raw"""Cannot insert ${child.nodeName} twice!""")
-        }
-        parent.appendChild(child)
+        checkedAppendChild(parent, child)
       }
     }
 
@@ -129,10 +238,7 @@ object dom {
       override protected def set(children: Seq[Node]): Unit = {
         removeAll(parent)
         for (child <- children) {
-          if (child.parentNode != null) {
-            throw new IllegalStateException(raw"""Cannot insert ${child.nodeName} twice!""")
-          }
-          parent.appendChild(child)
+          checkedAppendChild(parent, child)
         }
       }
 
@@ -152,10 +258,7 @@ object dom {
         val child = removeChildren(parent.childNodes(from), replaced)
         if (child == null) {
           for (newChild <- that) {
-            if (newChild.parentNode != null) {
-              throw new IllegalStateException(raw"""Cannot insert a ${newChild.nodeName} element twice!""")
-            }
-            parent.appendChild(newChild)
+            checkedAppendChild(parent, newChild)
           }
         } else {
           for (newChild <- that) {
@@ -202,6 +305,13 @@ object dom {
 
     @inline
     def notEqual[A](left: A, right: A) = left != right
+  }
+
+  private def checkedAppendChild(parent: Node, child: Node): Unit = {
+    if (child.parentNode != null) {
+      throw new IllegalStateException(raw"""Cannot insert ${child.nodeName} twice!""")
+    }
+    parent.appendChild(child)
   }
 
   /**
@@ -506,7 +616,7 @@ object dom {
             case Seq(child) =>
               val (valDefs, transformedChild) = transformXml(child)
               valDefs -> atPos(child.pos) {
-                q"""_root_.com.thoughtworks.binding.dom.Runtime.domBindingSeq($transformedChild)"""
+                q"""_root_.com.thoughtworks.binding.Binding.apply($transformedChild)"""
               }
             case _ =>
               val transformedPairs = (for {
