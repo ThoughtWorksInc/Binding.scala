@@ -49,6 +49,8 @@ import scala.language.experimental.macros
   */
 object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
+  sealed trait BindingOrBindingSeq[+A]
+
   private[binding] def addChangedListener[A](binding: Binding[A], listener: ChangedListener[A]) = {
     binding.addChangedListener(listener)
   }
@@ -903,7 +905,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  trait BindingSeq[+A] {
+  trait BindingSeq[+A] extends BindingOrBindingSeq[A] {
 
     /** Returns a new [[Binding]] expression of all elements in this [[BindingSeq]]. */
     final def all: Binding[Seq[A]] = new BindingSeq.AsBinding(this)
@@ -1385,7 +1387,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-trait Binding[+A] {
+trait Binding[+A] extends Binding.BindingOrBindingSeq[A] {
 
   @deprecated(message = "Use [[Binding#bind bind]] instead", since = "7.0.0")
   final def each: A = macro Binding.Macros.bind
