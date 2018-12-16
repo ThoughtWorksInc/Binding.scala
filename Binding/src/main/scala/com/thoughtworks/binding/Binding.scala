@@ -234,13 +234,25 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   import Js._
   import Jvm._
 
-  final class ChangedEvent[+Value](source: AnyRef, val newValue: Value) extends EventObject(source) {
+  final class ChangedEvent[+Value] @deprecated("`source` must be a [[Binding]]", "11.6.0")(source: AnyRef,
+                                                                                           val newValue: Value)
+      extends EventObject(source) {
+    def this(source: Binding[Value], newValue: Value) = this(source: AnyRef, newValue)
+    override def getSource = super.getSource.asInstanceOf[Binding[Value]]
     override def toString = raw"""ChangedEvent[source=$source newValue=$newValue]"""
 
   }
 
-  final class PatchedEvent[+Element](source: AnyRef, val from: Int, val that: GenSeq[Element], val replaced: Int)
+  final class PatchedEvent[+Element] @deprecated("`source` must be a [[BindingSeq]]", "11.6.0")(
+      source: AnyRef,
+      val from: Int,
+      val that: GenSeq[Element],
+      val replaced: Int)
       extends EventObject(source) {
+    @inline
+    def this(source: BindingSeq[Element], from: Int, that: GenSeq[Element], replaced: Int) =
+      this(source: AnyRef, from, that, replaced)
+    override def getSource = super.getSource.asInstanceOf[BindingSeq[Element]]
     override def toString = raw"""PatchedEvent[source=$source from=$from that=$that replaced=$replaced]"""
   }
 
@@ -722,7 +734,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
       private val childListener = new PatchedListener[B] {
         override def patched(upstreamEvent: PatchedEvent[B]): Unit = {
-          val source = upstreamEvent.getSource.asInstanceOf[BindingSeq[B]]
+          val source = upstreamEvent.getSource
           val index = flatIndex(cacheData, 0, indexOfCache(source)) + upstreamEvent.from
           val event = new PatchedEvent(FlatMap.this, index, upstreamEvent.that, upstreamEvent.replaced)
           for (listener <- publisher) {
@@ -755,7 +767,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
-    final class MapBinding[A, B](upstream: BindingSeq[A], f: A => Binding[B]) extends BindingSeq[B] with HasCache[Binding[B]] {
+    final class MapBinding[A, B](upstream: BindingSeq[A], f: A => Binding[B])
+        extends BindingSeq[B]
+        with HasCache[Binding[B]] {
 
       private[Binding] var cacheData: Cache = _
 
@@ -780,7 +794,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
             oldChild.removeChangedListener(childListener)
           }
           val event =
-            new PatchedEvent(MapBinding.this, upstreamEvent.from, new ValueProxy(mappedNewChildren), upstreamEvent.replaced)
+            new PatchedEvent(MapBinding.this,
+                             upstreamEvent.from,
+                             new ValueProxy(mappedNewChildren),
+                             upstreamEvent.replaced)
           for (listener <- publisher) {
             listener.patched(event)
           }
@@ -1243,7 +1260,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     private val changedListener = new ChangedListener[A] {
 
       override def changed(event: ChangedEvent[A]) = {
-        val patchedEvent = new PatchedEvent[A](this, 0, SingleSeq(event.newValue), 1)
+        val patchedEvent = new PatchedEvent[A](SingletonBindingSeq.this, 0, SingleSeq(event.newValue), 1)
         for (listener <- publisher) {
           listener.patched(patchedEvent)
         }
