@@ -352,7 +352,7 @@ final class BindingTest extends FreeSpec with Matchers {
   "FlatMappedVarBuffer" in {
     val prefix = new Var("")
     val source = Vars(1, 2, 3)
-    val mapped = new BindingSeq.FlatMapBinding(source, { sourceElement: Int =>
+    val mapped = new BindingSeq.FlatMap(source, { sourceElement: Int =>
       new BindingSeq.MapBinding(Constants((0 until sourceElement): _*), { i: Int =>
         Binding {
           raw"""${prefix.bind}$sourceElement"""

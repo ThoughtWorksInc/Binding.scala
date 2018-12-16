@@ -338,7 +338,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  private final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
+  final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
 
     private val publisher = new SafeBuffer[ChangedListener[B]]
 
@@ -383,9 +383,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  private final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B])
-      extends Binding[B]
-      with ChangedListener[B] {
+  final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Binding[B] with ChangedListener[B] {
 
     private val publisher = new SafeBuffer[ChangedListener[B]]
 
@@ -675,7 +673,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     }
 
-    private[binding] final class FlatMapBinding[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B])
+    final class FlatMap[A, B](upstream: BindingSeq[A], f: A => BindingSeq[B])
         extends BindingSeq[B]
         with HasCache[BindingSeq[B]] {
 
@@ -711,7 +709,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
             oldChild.removePatchedListener(childListener)
           }
           if (upstreamEvent.replaced != 0 || flatNewChildren.nonEmpty) {
-            val event = new PatchedEvent(FlatMapBinding.this, flattenFrom, flatNewChildren, flattenReplaced)
+            val event = new PatchedEvent(FlatMap.this, flattenFrom, flatNewChildren, flattenReplaced)
             for (listener <- publisher) {
               listener.patched(event)
             }
@@ -726,7 +724,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         override def patched(upstreamEvent: PatchedEvent[B]): Unit = {
           val source = upstreamEvent.getSource.asInstanceOf[BindingSeq[B]]
           val index = flatIndex(cacheData, 0, indexOfCache(source)) + upstreamEvent.from
-          val event = new PatchedEvent(FlatMapBinding.this, index, upstreamEvent.that, upstreamEvent.replaced)
+          val event = new PatchedEvent(FlatMap.this, index, upstreamEvent.that, upstreamEvent.replaced)
           for (listener <- publisher) {
             listener.patched(event)
           }
@@ -757,9 +755,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
-    private[binding] final class MapBinding[A, B](upstream: BindingSeq[A], f: A => Binding[B])
-        extends BindingSeq[B]
-        with HasCache[Binding[B]] {
+    final class MapBinding[A, B](upstream: BindingSeq[A], f: A => Binding[B]) extends BindingSeq[B] with HasCache[Binding[B]] {
 
       private[Binding] var cacheData: Cache = _
 
@@ -783,10 +779,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
           for (oldChild <- oldChildren) {
             oldChild.removeChangedListener(childListener)
           }
-          val event = new PatchedEvent(MapBinding.this,
-                                       upstreamEvent.from,
-                                       new ValueProxy(mappedNewChildren),
-                                       upstreamEvent.replaced)
+          val event =
+            new PatchedEvent(MapBinding.this, upstreamEvent.from, new ValueProxy(mappedNewChildren), upstreamEvent.replaced)
           for (listener <- publisher) {
             listener.patched(event)
           }
@@ -971,7 +965,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       */
     @inline
     final def flatMapBinding[B](f: A => Binding[BindingSeq[B]]): BindingSeq[B] = {
-      new BindingSeq.FlatMapBinding[BindingSeq[B], B](new BindingSeq.MapBinding[A, BindingSeq[B]](this, f), locally)
+      new BindingSeq.FlatMap[BindingSeq[B], B](new BindingSeq.MapBinding[A, BindingSeq[B]](this, f), locally)
     }
 
     /**
