@@ -1,6 +1,6 @@
 package com.thoughtworks.binding
 
-import com.thoughtworks.binding.Binding.BindingSeq
+import com.thoughtworks.binding.Binding.{BindingSeq, Constant}
 import com.thoughtworks.binding.dom.Runtime.TagsAndTags2
 import org.scalajs.dom.Node
 import org.scalatest.{FreeSpec, Matchers}
@@ -80,6 +80,12 @@ class DomComponentTest extends FreeSpec with Matchers {
     implicit final class UserTags(x: TagsAndTags2.type) {
       @dom
       def dialog(): Binding[Div] = <div class="dialog"/>
+
+      @dom
+      def dialog(id: Binding[String]): Binding[Div] = <div class="dialog" id={id.bind}/>
+
+      @dom
+      def dialog(children: BindingSeq[Node], id: Binding[String] = Constant("dialog")): Binding[Div] = <div class="rich-dialog" id={id.bind}>{children}</div>
     }
 
     "can be used as child" in {
@@ -102,6 +108,27 @@ class DomComponentTest extends FreeSpec with Matchers {
       html.watch()
 
       assert(html.get.outerHTML == """<div><div class="dialog"/><div class="dialog"/></div>""")
+    }
+
+    "should support attributes" in {
+      @dom val html = <dialog id="123"/>
+      html.watch()
+
+      assert(html.get.outerHTML == """<div id="123" class="dialog"/>""")
+    }
+
+    "should support overloading" in {
+      @dom val html = <dialog id="123"><div/></dialog>
+      html.watch()
+
+      assert(html.get.outerHTML == """<div id="123" class="rich-dialog"><div/></div>""")
+    }
+
+    "should support defaults" in {
+      @dom val html = <dialog><div/></dialog>
+      html.watch()
+
+      assert(html.get.outerHTML == """<div id="dialog" class="rich-dialog"><div/></div>""")
     }
   }
 }

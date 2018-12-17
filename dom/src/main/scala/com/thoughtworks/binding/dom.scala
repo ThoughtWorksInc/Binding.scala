@@ -536,13 +536,15 @@ object dom {
               case Some(id) => TermName(NameTransformer.encode(id))
             }
 
-            val attributeMountPoints = for {
-              (key, value) <- attributes if {
-                key match {
-                  case UnprefixedName("local-id") => false
-                  case _                          => true
-                }
+            val domAttributes = attributes.withFilter {
+              case (key, value) => key match {
+                case UnprefixedName("local-id") => false
+                case _                          => true
               }
+            }
+
+            val attributeMountPoints = for {
+              (key, value) <- domAttributes
             } yield {
               val attributeAccess = propertyAccess(key, q"$elementName")
 
@@ -574,6 +576,24 @@ object dom {
                 }
               }
             }
+
+            val componentParams = for {
+              (key, value) <- domAttributes
+            } yield {
+              val attributePropertyName = TermName(componentPropertyName(key))
+
+              atPos(value.pos) {
+                value match {
+                  case EmptyAttribute() =>
+                    q"""$attributePropertyName = _root_.com.thoughtworks.binding.Binding.Constant.apply("")"""
+                  case Text(textLiteral) =>
+                    q"""$attributePropertyName = _root_.com.thoughtworks.binding.Binding.Constant.apply($textLiteral)"""
+                  case _ =>
+                    q"""$attributePropertyName = ${transform(value)}"""
+                }
+              }
+            }
+
             val (valDefs, transformedChildrenBuffer) = nodeSeq(children)
             val transformedChild = children match {
               case Seq() => Nil
@@ -592,15 +612,16 @@ object dom {
                   """
                 })
             }
-            val componentParams = children match {
-              case Seq() => Nil
-              case _ => List(q"children = $transformedChildrenBuffer")
-            }
 
             val tagAccess = propertyAccess(tag, q"_root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2")
 
             val (elementDef, elementProcessingSteps) = if(tag == UnprefixedName("dialog")) {
-              q"val $elementName = $tagAccess(..$componentParams).bind" -> Nil
+              val elementDef = children match {
+                case Seq() => q"val $elementName = $tagAccess(..$componentParams).bind"
+                case _ => q"val $elementName = $tagAccess(..$componentParams, children = $transformedChildrenBuffer).bind"
+              }
+
+              elementDef -> Nil
             } else {
               q"val $elementName = $tagAccess.render" -> List(
                 q"""
@@ -639,6 +660,16 @@ object dom {
                 (prefixExpr, segmentName) =>
                   q"$prefixExpr.${TermName(NameTransformer.encode(segmentName))}"
               }
+          }
+        }
+
+        private def componentPropertyName(xmlName: QName): String = {
+          xmlName match {
+            case UnprefixedName(localPart) =>
+              NameTransformer.encode(localPart)
+            case PrefixedName(prefix, localPart) =>
+              val name = localPart.split(':').map(_.capitalize).mkString(prefix, "", "")
+              NameTransformer.encode(name)
           }
         }
 
