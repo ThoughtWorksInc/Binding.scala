@@ -574,12 +574,11 @@ object dom {
                 }
               }
             }
-            val (valDefs, transformedChild) = children match {
-              case Seq() =>
-                Queue.empty -> Nil
+            val (valDefs, transformedChildrenBuffer) = nodeSeq(children)
+            val transformedChild = children match {
+              case Seq() => Nil
               case _ =>
-                val (valDefs, transformedBuffer) = nodeSeq(children)
-                valDefs -> List(atPos(tree.pos) {
+                List(atPos(tree.pos) {
                   q"""
                   _root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
                     _root_.com.thoughtworks.binding.Binding,
@@ -587,28 +586,40 @@ object dom {
                   ](
                     _root_.com.thoughtworks.binding.dom.Runtime.mount(
                       $elementName,
-                      $transformedBuffer
+                      $transformedChildrenBuffer
                     )
                   )
                   """
                 })
             }
+            val componentParams = children match {
+              case Seq() => Nil
+              case _ => List(q"children = $transformedChildrenBuffer")
+            }
 
             val tagAccess = propertyAccess(tag, q"_root_.com.thoughtworks.binding.dom.Runtime.TagsAndTags2")
 
-            val elementDef = q"val $elementName = $tagAccess.render"
+            val (elementDef, elementProcessingSteps) = if(tag == UnprefixedName("dialog")) {
+              q"val $elementName = $tagAccess(..$componentParams).bind" -> Nil
+            } else {
+              q"val $elementName = $tagAccess.render" -> List(
+                q"""
+                ..$transformedChild
+                ..$attributeMountPoints
+                """
+              )
+            }
+
             idOption match {
               case None =>
                 valDefs -> q"""
                   $elementDef
-                  ..$transformedChild
-                  ..$attributeMountPoints
+                  ..$elementProcessingSteps
                   $elementName
                 """
               case Some(id) =>
                 (valDefs.enqueue(elementDef)) -> q"""
-                  ..$transformedChild
-                  ..$attributeMountPoints
+                  ..$elementProcessingSteps
                   $elementName
                 """
             }
