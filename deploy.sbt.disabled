@@ -1,5 +1,3 @@
-enablePlugins(Travis)
-
 lazy val secret = project.settings(publishArtifact := false).in {
   val secretDirectory = file(sourcecode.File()).getParentFile / "secret"
   sys.env.get("GITHUB_PERSONAL_ACCESS_TOKEN").foreach { token =>
