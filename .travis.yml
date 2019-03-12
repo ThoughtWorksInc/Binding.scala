@@ -22,15 +22,10 @@ cache:
 
 before_script:
 
-script:
-  - sbt +test
-
 before_deploy:
 
 deploy:
   skip_cleanup: true
   provider: script
-  script: sbt "release with-defaults"
-  on:
-    condition: -e ./deploy.sbt
-    all_branches: true
+  script: sbt ++$TRAVIS_SCALA_VERSION releaseEarly
+
