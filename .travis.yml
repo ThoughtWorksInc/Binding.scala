@@ -25,7 +25,9 @@ before_script:
 before_deploy:
 
 deploy:
-  condition: $TRAVIS_BRANCH = master || $TRAVIS_TAG
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH = master || $TRAVIS_TAG
   skip_cleanup: true
   provider: script
   script: sbt ++$TRAVIS_SCALA_VERSION releaseEarly
