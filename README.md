@@ -542,7 +542,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 ## Links
 
-* [The API documentation](https://javadoc.io/page/com.thoughtworks.binding/unidoc_2.11/latest/com/thoughtworks/binding/package.html)
+* [The API documentation](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs)
 * [Binding.scala Questions on Stack Overflow](https://stackoverflow.com/questions/tagged/binding.scala)
