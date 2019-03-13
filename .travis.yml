@@ -29,9 +29,4 @@ deploy:
     script: sbt ++$TRAVIS_SCALA_VERSION releaseEarly
     skip_cleanup: true
     on:
-      branch: master
-  - provider: script
-    script: sbt ++$TRAVIS_SCALA_VERSION releaseEarly
-    skip_cleanup: true
-    on:
-      tags: true
+      all_branches: true
