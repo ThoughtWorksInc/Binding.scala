@@ -26,7 +26,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sbt ++$TRAVIS_SCALA_VERSION releaseEarly
+    script: sbt ++$TRAVIS_SCALA_VERSION "sonatypeOpen \"Travis Job $TRAVIS_JOB_NAME $TRAVIS_JOB_NUMBER ($TRAVIS_JOB_WEB_URL)\"" publishSigned sonatypeRelease
     skip_cleanup: true
     on:
       all_branches: true
