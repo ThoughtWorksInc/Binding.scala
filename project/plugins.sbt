@@ -4,4 +4,4 @@ addSbtPlugin("com.dwijnand" % "sbt-dynver" % "3.3.0")
 
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.2")
 
-addSbtPlugin("org.lyranthe.sbt" % "partial-unification" % "1.1.0")
+addSbtPlugin("org.lyranthe.sbt" % "partial-unification" % "1.1.2")
