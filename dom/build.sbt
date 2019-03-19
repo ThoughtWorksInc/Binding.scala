@@ -12,7 +12,7 @@ libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.7"
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.5"
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.6" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.7" % Test
 
 libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1"
 
