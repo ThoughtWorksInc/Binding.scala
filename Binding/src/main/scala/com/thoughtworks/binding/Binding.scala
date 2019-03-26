@@ -1111,6 +1111,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     @inline
     def upapplySeq[A](constants: Constants[A]) = Some(constants.value)
 
+    private final val Empty = Constants[Nothing]()
+
+    @inline
+    def empty[A]: Constants[A] = Empty
+
   }
 
   /**
