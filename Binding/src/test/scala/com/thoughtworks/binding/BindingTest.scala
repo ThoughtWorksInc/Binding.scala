@@ -561,6 +561,9 @@ final class BindingTest extends FreeSpec with Matchers {
     val length = source.length
     val lengthEvents = new BufferListener
     addChangedListener(length, lengthEvents.listener)
+    val length2 = source.length
+    length2.watch()
+    length2.unwatch()
     source.value(0) = 100
     assert(lengthEvents.length == 1)
     lengthEvents(0) match {
