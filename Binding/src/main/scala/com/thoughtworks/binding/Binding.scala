@@ -953,6 +953,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     def length: Binding[Int] = new BindingSeq.Length(this)
 
+    def isEmpty: Binding[Boolean] = BindingInstances.map(all)(_.isEmpty)
+
+    def nonEmpty: Binding[Boolean] = BindingInstances.map(all)(_.nonEmpty)
+
     /**
       * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
       *
