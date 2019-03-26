@@ -840,7 +840,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     }
 
-    private[binding] final case class Length(bindingSeq: BindingSeq[_]) extends Binding[Int] with PatchedListener[Any] {
+    private[binding] final class Length(bindingSeq: BindingSeq[_]) extends Binding[Int] with PatchedListener[Any] {
 
       private val publisher = new SafeBuffer[ChangedListener[Int]]
 
@@ -951,7 +951,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     protected def addPatchedListener(listener: PatchedListener[A]): Unit
 
-    def length: Binding[Int] = BindingSeq.Length(this)
+    def length: Binding[Int] = new BindingSeq.Length(this)
 
     /**
       * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
