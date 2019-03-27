@@ -28,5 +28,5 @@ project/plugins/project/
 .java-version
 
 # Files created for deployment
-secret/
 local.sbt
+secret/
