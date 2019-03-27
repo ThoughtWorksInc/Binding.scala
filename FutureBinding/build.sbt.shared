@@ -2,7 +2,7 @@ organization := "com.thoughtworks.binding"
 
 name := "FutureBinding"
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.4" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.7" % Test
 
 scalacOptions += "-feature"
 

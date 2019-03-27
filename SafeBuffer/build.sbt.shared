@@ -4,7 +4,7 @@ name := "SafeBuffer"
 
 libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.4"
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.4" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.7" % Test
 
 // Enable SAM type
 scalacOptions += "-Xexperimental"
