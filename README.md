@@ -7,13 +7,7 @@
 [![StackOverflow](https://img.shields.io/stackexchange/stackoverflow/t/binding.scala.svg?maxAge=604800&label=StackOverflow+questions)](https://stackoverflow.com/questions/tagged/binding.scala?sort=votes)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
 [![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/binding_2.12.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
-
-[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/binding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/binding)
-[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/dom/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/dom)
-[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/futurebinding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/futurebinding)
-[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/jspromisebinding/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/jspromisebinding)
-[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/route/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/route)
-[![Latest version](https://index.scala-lang.org/thoughtworksinc/binding.scala/fxml/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala/fxml)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/Binding.scala/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala)
 
 **Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
