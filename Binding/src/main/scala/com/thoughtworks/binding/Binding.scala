@@ -1180,7 +1180,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
       */
     @inline
-    override def value: Buffer[A] with Proxy = new Proxy
+    override def value: Buffer[A] = new Proxy
 
     @deprecated(message = "Use [[value]] instead", since = "11.0.0")
     @inline
