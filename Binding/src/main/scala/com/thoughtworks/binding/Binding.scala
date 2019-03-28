@@ -363,7 +363,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     @inline
-    override protected def value: B = {
+    override def value: B = {
       cache
     }
 
@@ -442,7 +442,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       cache = f(upstream.value)
     }
 
-    override protected def value: B = {
+    override def value: B = {
       @tailrec
       @inline
       def tailrecGetValue(binding: Binding[B]): B = {
@@ -600,7 +600,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override protected def addPatchedListener(listener: PatchedListener[Nothing]): Unit = {}
 
     @inline
-    override protected def value = Nil
+    override def value = Nil
   }
 
   private[Binding] final class ValueProxy[B](underlying: Seq[Binding[B]]) extends Seq[B] {
@@ -711,7 +711,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      override protected def value = new FlatProxy(cacheData)
+      override def value = new FlatProxy(cacheData)
 
       @inline
       private def flatIndex(oldCache: Cache, upstreamBegin: Int, upstreamEnd: Int): Int = {
@@ -792,7 +792,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         } yield f(a))(collection.breakOut)
       }
 
-      override protected def value: Seq[B] with ValueProxy[B] = new ValueProxy(cacheData)
+      override def value: Seq[B] with ValueProxy[B] = new ValueProxy(cacheData)
 
       private val upstreamListener = new PatchedListener[A] {
         override def patched(upstreamEvent: PatchedEvent[A]): Unit = {
@@ -858,7 +858,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private val publisher = new SafeBuffer[ChangedListener[Int]]
 
       @inline
-      override protected def value: Int = bindingSeq.value.length
+      override def value: Int = bindingSeq.value.length
 
       @inline
       override protected def removeChangedListener(listener: ChangedListener[Int]): Unit = {
@@ -901,7 +901,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private val publisher = new SafeBuffer[ChangedListener[Seq[Element]]]
 
       @inline
-      override protected def value: Seq[Element] = upstream.value
+      override def value: Seq[Element] = upstream.value
 
       @inline
       override protected def removeChangedListener(listener: ChangedListener[Seq[Element]]): Unit = {
@@ -956,13 +956,18 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       removePatchedListener(Binding.DummyPatchedListener)
     }
 
-    /** Returns the current value of this [[BindingSeq]]. */
-    protected def value: Seq[A]
+    /**
+      * Returns the current value of this [[BindingSeq]].
+      *
+      * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
+      */
+    def value: Seq[A]
 
     /** Returns the current value of this [[BindingSeq]].
       *
       * @note This method is used for internal testing purpose only.
       */
+    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
     private[binding] def get: Seq[A] = value
 
     protected def removePatchedListener(listener: PatchedListener[A]): Unit
@@ -1300,7 +1305,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override def length: Constant[Int] = Constant(1)
 
     @inline
-    override protected def value = SingleSeq(upstream.value)
+    override def value = SingleSeq(upstream.value)
 
     @inline
     override protected def removePatchedListener(listener: PatchedListener[A]): Unit = {
@@ -1350,7 +1355,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     @inline
-    override protected def value: Unit = ()
+    override def value: Unit = ()
 
   }
 
@@ -1443,6 +1448,7 @@ trait Binding[+A] {
     */
   final def bind: A = macro Binding.Macros.bind
 
+  @deprecated(message = "Use [[value]] instead", since = "11.0.0")
   private[binding] def get: A = value
 
   /**
@@ -1450,7 +1456,7 @@ trait Binding[+A] {
     *
     * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
     */
-  protected def value: A
+  def value: A
 
   protected def removeChangedListener(listener: Binding.ChangedListener[A]): Unit
 
