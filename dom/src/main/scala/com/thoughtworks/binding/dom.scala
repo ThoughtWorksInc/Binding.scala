@@ -25,7 +25,6 @@ SOFTWARE.
 package com.thoughtworks.binding
 
 import Binding.{BindingSeq, Constants, MultiMountPoint, SingleMountPoint, SingletonBindingSeq}
-import dom.Runtime.NodeSeqMountPoint
 import com.thoughtworks.Extractor._
 import com.thoughtworks.binding.XmlExtractor.{PrefixedName, QName, UnprefixedName}
 import com.thoughtworks.sde.core.Preprocessor
