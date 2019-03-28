@@ -28,6 +28,7 @@ import java.util.EventObject
 
 import com.thoughtworks.sde.core.MonadicFactory._
 import com.thoughtworks.enableMembersIf
+import com.thoughtworks.Extractor._
 import com.thoughtworks.sde.core.MonadicFactory
 import macrocompat.bundle
 
@@ -38,6 +39,7 @@ import scala.language.higherKinds
 import scala.collection.GenSeq
 import scala.collection.mutable.Buffer
 import scalaz.{Monad, MonadPlus}
+
 import scala.language.experimental.macros
 
 /**
@@ -524,8 +526,17 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     import c.universe._
 
+    def functionOrFunctionLiteral: PartialFunction[Tree, (List[ValDef], Tree)] = {
+      case Function(vparams, body) =>
+        (vparams, body)
+      case f =>
+        val elementName = TermName(c.freshName("flatMapElement"))
+        (List(q"val $elementName: ${TypeTree()} = $EmptyTree"), q"$f($elementName)")
+    }
+
     final def map(f: Tree): Tree = {
-      val apply @ Apply(TypeApply(Select(self, TermName("map")), List(b)), List(f @ Function(vparams, body))) =
+      val apply @ Apply(TypeApply(Select(self, TermName("map")), List(b)),
+                        List(f @ functionOrFunctionLiteral.extract(vparams, body))) =
         c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[$b]($body)"""
@@ -534,7 +545,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     final def flatMap(f: Tree): Tree = {
-      val apply @ Apply(TypeApply(Select(self, TermName("flatMap")), List(b)), List(f @ Function(vparams, body))) =
+      val apply @ Apply(TypeApply(Select(self, TermName("flatMap")), List(b)),
+                        List(f @ functionOrFunctionLiteral.extract(vparams, body))) =
         c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.com.thoughtworks.binding.Binding.BindingSeq[$b]]($body)"""
@@ -543,7 +555,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     final def withFilter(condition: Tree): Tree = {
-      val apply @ Apply(Select(self, TermName("withFilter")), List(f @ Function(vparams, body))) = c.macroApplication
+      val apply @ Apply(Select(self, TermName("withFilter")),
+                        List(f @ functionOrFunctionLiteral.extract(vparams, body))) = c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Boolean]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
@@ -943,8 +956,13 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       removePatchedListener(Binding.DummyPatchedListener)
     }
 
+    /** Returns the current value of this [[BindingSeq]]. */
     protected def value: Seq[A]
 
+    /** Returns the current value of this [[BindingSeq]].
+      *
+      * @note This method is used for internal testing purpose only.
+      */
     private[binding] def get: Seq[A] = value
 
     protected def removePatchedListener(listener: PatchedListener[A]): Unit
@@ -960,19 +978,19 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     /**
       * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
       *
-      * @note This method is only available in a `Binding { ??? }` block or a `@dom` method.
+      * @param f The mapper function, which may contain magic [[Binding#bind bind]] calls.
       */
     def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
     /**
       * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
       *
-      * @note This method is only available in a `Binding { ??? }` block or a `@dom` method.
+      * @param f The mapper function, which may contain magic [[Binding#bind bind]] calls.
       */
     def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
     /**
-      * Underlying implementation of [[map]].
+      * The underlying implementation of [[map]].
       *
       * @note Don't use this method in user code.
       */
@@ -980,7 +998,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     final def mapBinding[B](f: A => Binding[B]): BindingSeq[B] = new BindingSeq.MapBinding[A, B](this, f)
 
     /**
-      * Underlying implementation of [[flatMap]].
+      * The underlying implementation of [[flatMap]].
       *
       * @note Don't use this method in user code.
       */
@@ -991,11 +1009,13 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     /**
       * Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+      *
+      * @param f The mapper function, which may contain magic [[Binding#bind bind]] calls.
       */
     def withFilter(condition: A => Boolean): BindingSeq[A]#WithFilter = macro Macros.withFilter
 
     /**
-      * Underlying implementation of [[withFilter]].
+      * The underlying implementation of [[withFilter]].
       *
       * @note Don't use this method in user code.
       */
