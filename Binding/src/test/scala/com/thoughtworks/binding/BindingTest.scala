@@ -685,4 +685,10 @@ final class BindingTest extends FreeSpec with Matchers {
     }
     domMethod()
   }
+
+  "flatMap" in {
+    val flatMapped = Constants(Constants(1, 2), Constants(), Constants(3)).flatMap(identity)
+    flatMapped.watch()
+    flatMapped.get should be(Seq(1, 2, 3))
+  }
 }
