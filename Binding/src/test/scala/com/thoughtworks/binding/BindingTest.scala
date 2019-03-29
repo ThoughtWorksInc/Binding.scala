@@ -657,7 +657,6 @@ final class BindingTest extends FreeSpec with Matchers {
       aValue * bValue
     }
     Binding.BindingInstances.ap _
-    println(aPlusOneTimesBPlusOn)
     aPlusOneTimesBPlusOn.watch()
     aPlusOneTimesBPlusOn.value should be((100 + 1) * (200 + 1))
     aFlushCount should be(1)
@@ -690,5 +689,88 @@ final class BindingTest extends FreeSpec with Matchers {
     val flatMapped = Constants(Constants(1, 2), Constants(), Constants(3)).flatMap(identity)
     flatMapped.watch()
     flatMapped.value should be(Seq(1, 2, 3))
+  }
+
+  "foreach" in {
+    val vars = Vars(Var(1), Var(2), Var(3))
+    val logs = new StringBuilder
+
+    val mounting = Binding {
+      logs ++= "Binding\n"
+      for (i <- vars) {
+        logs ++= s"creating mount point ${i.value}\n"
+        new SingleMountPoint(i) {
+          override def mount() = {
+            super.mount()
+            logs ++= s"mount ${i.value}\n"
+          }
+          override def unmount() = {
+            logs ++= s"unmount ${i.value}\n"
+            super.unmount()
+          }
+          override def set(newValue: Int) = {
+            logs ++= s"set ${newValue}\n"
+          }
+        }.bind
+      }
+    }
+    logs.toString should be("Binding\n")
+    logs.clear()
+
+    mounting.watch()
+    logs.toString should be("""creating mount point 1
+creating mount point 2
+creating mount point 3
+set 1
+mount 1
+set 2
+mount 2
+set 3
+mount 3
+""")
+    logs.clear()
+
+    vars.value -= vars.value(1)
+    logs.toString should be("""unmount 2
+""")
+    logs.clear()
+
+    vars.value(1).value += 5
+    logs.toString should be("""set 8
+""")
+    logs.clear()
+
+    vars.value ++= Seq(Var(10), Var(20))
+    logs.toString should be("""creating mount point 10
+creating mount point 20
+set 10
+mount 10
+set 20
+mount 20
+""")
+    logs.clear()
+
+    vars.value(0) = Var(100)
+    logs.toString should be("""creating mount point 100
+set 100
+mount 100
+unmount 1
+""")
+    logs.clear()
+
+    vars.value.prepend(Var(1000), Var(2000))
+    logs.toString should be("""creating mount point 1000
+creating mount point 2000
+set 1000
+mount 1000
+set 2000
+mount 2000
+""")
+    logs.clear()
+
+    vars.value.map(_.value) should be(Seq(1000, 2000, 100, 8, 10, 20))
+
+    mounting.unwatch()
+
   }
 }
