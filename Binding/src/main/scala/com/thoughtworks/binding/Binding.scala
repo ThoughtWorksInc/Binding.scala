@@ -132,7 +132,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         } else {
           cacheData = oldCache.patch(from, mappedNewChildren, replaced)
         }
-        oldCache.view(from, replaced)
+        oldCache.view(from, from + replaced)
       }
 
       private[Binding] final def indexOfCache[B >: A](a: B): Int = {
