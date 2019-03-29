@@ -566,22 +566,13 @@ object fxml {
     @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
     private[Macros] val javafxBuilderFactory = {
       if (!SwingUtilities.isEventDispatchThread) {
-        val lock = new AnyRef
-        @volatile var initialized = false
-        lock.synchronized {
-          SwingUtilities.invokeLater(new Runnable {
-            override def run(): Unit = {
-              new javafx.embed.swing.JFXPanel
-              lock.synchronized {
-                initialized = true
-                lock.notify()
-              }
-            }
-          })
-          while (!initialized) {
-            lock.wait()
+        val panelVar = new scala.concurrent.SyncVar[javafx.embed.swing.JFXPanel]()
+        SwingUtilities.invokeLater(new Runnable {
+          override def run(): Unit = {
+            panelVar.put(new javafx.embed.swing.JFXPanel)
           }
-        }
+        })
+        panelVar.get
       } else {
         new javafx.embed.swing.JFXPanel
       }
