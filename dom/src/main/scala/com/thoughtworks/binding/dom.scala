@@ -41,6 +41,7 @@ import org.scalajs.dom.document
 import scalatags.JsDom.TypedTag
 import scalatags.generic.Namespace
 
+import scala.annotation.meta.companionMethod
 import scala.collection.immutable.Queue
 import scala.reflect.NameTransformer
 
@@ -416,14 +417,22 @@ object dom {
       @inline def declare_=(value: String) = node.setAttribute("declare", value)
     }
 
-    implicit final class TrueSpeedOps @inline()(node: HTMLMarqueeElement) {
-      @inline def trueSpeed = node.getAttribute("trueSpeed")
-      @inline def trueSpeed_=(value: String) = node.setAttribute("trueSpeed", value)
+    @(deprecated @companionMethod)("Obsolete.", "HTML 5")
+    implicit final class TrueSpeedOps @inline @deprecated("Obsolete.", "HTML 5")(
+        @deprecated("Obsolete.", "HTML 5") node: HTMLMarqueeElement
+    ) {
+      @deprecated("Obsolete.", "HTML 5") @inline def trueSpeed = node.getAttribute("trueSpeed")
+
+      @deprecated("Obsolete.", "HTML 5") @inline def trueSpeed_=(value: String) = node.setAttribute("trueSpeed", value)
     }
 
-    implicit final class NoResizeOps @inline()(node: HTMLFrameElement) {
-      @inline def noResize = node.getAttribute("noResize")
-      @inline def noResize_=(value: String) = node.setAttribute("noResize", value)
+    @(deprecated @companionMethod)("Obsolete.", "HTML 5")
+    implicit final class NoResizeOps @inline @deprecated("Obsolete.", "HTML 5")(
+        @deprecated("Obsolete.", "HTML 5") node: HTMLFrameElement
+    ) {
+      @deprecated("Obsolete.", "HTML 5") @inline def noResize = node.getAttribute("noResize")
+
+      @deprecated("Obsolete.", "HTML 5") @inline def noResize_=(value: String) = node.setAttribute("noResize", value)
     }
 
     implicit final class NoHrefOps @inline()(node: HTMLAreaElement) {

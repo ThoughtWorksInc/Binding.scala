@@ -287,10 +287,10 @@ final class domTest extends FreeSpec with Matchers {
     val div = document.createElement("div")
     dom.render(div, input)
     assert(v.value == "Initial value")
-    assert(input.value.get(0).asInstanceOf[Input].value == "Initial value")
+    assert(input.value.value(0).asInstanceOf[Input].value == "Initial value")
     div.firstChild.asInstanceOf[Input].onclick(null)
     assert(v.value == "INPUT and Label Text")
-    assert(input.value.get(0).asInstanceOf[Input].value == "INPUT and Label Text")
+    assert(input.value.value(0).asInstanceOf[Input].value == "INPUT and Label Text")
   }
 
   "id in Binding" in {
@@ -409,10 +409,10 @@ final class domTest extends FreeSpec with Matchers {
     val div = document.createElement("div")
     dom.render(div, input)
     assert(v.value == "Initial value")
-    assert(input.value.get(0).asInstanceOf[Input].value == "Initial value")
+    assert(input.value.value(0).asInstanceOf[Input].value == "Initial value")
     div.firstChild.asInstanceOf[Input].onclick(null)
     assert(v.value == "INPUT and Label Text")
-    assert(input.value.get(0).asInstanceOf[Input].value == "INPUT and Label Text")
+    assert(input.value.value(0).asInstanceOf[Input].value == "INPUT and Label Text")
   }
 
   "local-id in Binding" in {
