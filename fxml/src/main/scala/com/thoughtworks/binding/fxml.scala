@@ -2,7 +2,6 @@ package com.thoughtworks
 package binding
 
 import java.beans.{BeanInfo, Introspector, PropertyDescriptor}
-import javafx.application.Platform
 import javafx.beans.DefaultProperty
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.event._
@@ -1031,7 +1030,7 @@ object fxml {
 
       val result = q"""
         ${q"val ${valDef.name}: $beanType = ${c.prefix}.constructor()".setSymbol(valDef.symbol)}
-        _root_.com.thoughtworks.binding.Binding.typeClass.map($allBindingUnits)({ ${c.freshName[TermName]("unit")}: _root_.scala.Unit => $beanId })
+        _root_.com.thoughtworks.binding.Binding.typeClass.map($allBindingUnits)({ ${TermName(c.freshName("unit"))}: _root_.scala.Unit => $beanId })
       """
 //      c.info(c.enclosingPosition, show(result), true)
       c.untypecheck(result)
