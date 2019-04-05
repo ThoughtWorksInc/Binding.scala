@@ -1,0 +1,10 @@
+organization := "com.thoughtworks.binding"
+
+name := "FutureBinding"
+
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.7" % Test
+
+scalacOptions += "-feature"
+
+// Enable SAM type
+scalacOptions += "-Xexperimental"
