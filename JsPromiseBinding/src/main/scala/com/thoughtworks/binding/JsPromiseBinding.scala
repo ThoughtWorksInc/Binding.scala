@@ -30,6 +30,7 @@ import Binding._
 object JsPromiseBinding {
 
   def apply[A](promise: JsPromise[A]) = new JsPromiseBinding(promise)
+  def apply[A](thenable: Thenable[A]) = new JsPromiseBinding(thenable)
 
 }
 
@@ -38,7 +39,9 @@ object JsPromiseBinding {
   *
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-final class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Either[Any, A]]] {
+final class JsPromiseBinding[A](thenable: Thenable[A]) extends Binding[Option[Either[Any, A]]] {
+
+  def this(promise: JsPromise[A]) = this(promise: Thenable[A])
 
   @volatile
   private var cache: Option[Either[Any, A]] = None
@@ -74,7 +77,7 @@ final class JsPromiseBinding[A](promise: JsPromise[A]) extends Binding[Option[Ei
   override protected def addChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
     if (!isHandlerRegistered) {
       isHandlerRegistered = true
-      promise.`then`[Unit]({ result: A =>
+      thenable.`then`[Unit]({ result: A =>
         fulfilledHandler(result)
       }, UndefOr.any2undefOrA({ error: Any =>
         rejectedHandler(error)
