@@ -385,7 +385,7 @@ final class domTest extends FreeSpec with Matchers {
 
   "reference by local-id from attributes" in {
     @dom def input = {
-        <br local-id="myBr" class={myBr.tagName}/>
+      <br local-id="myBr" class={myBr.tagName}/>
     }
     val div = document.createElement("div")
     dom.render(div, input)
