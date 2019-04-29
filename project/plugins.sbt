@@ -6,7 +6,7 @@ addSbtPlugin("com.thoughtworks.sbt-best-practice" % "sbt-best-practice" % "7.0.1
 
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.5")
 
-addSbtPlugin("com.dwijnand" % "sbt-dynver" % "3.3.0+14-76cb6848")
+addSbtPlugin("com.dwijnand" % "sbt-dynver" % "3.3.0+16-0f6d7799")
 
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.2")
 
