@@ -2,11 +2,27 @@ organization := "com.thoughtworks.binding"
 
 name := "SafeBuffer"
 
-libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.4"
+libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.7"
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.7" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.8" % Test
 
 // Enable SAM type
 scalacOptions += "-Xexperimental"
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Some("-Ymacro-annotations")
+  } else {
+    None
+  }
+}
+
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    None
+  } else {
+    Some(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}

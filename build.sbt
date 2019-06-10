@@ -38,12 +38,6 @@ lazy val fxmlJVM = fxml.jvm
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
-crossScalaVersions := Seq(
-  "2.10.7",
-  "2.11.12",
-  "2.12.8"
-)
-
 developers in ThisBuild := List(
   Developer(
     "Atry",
@@ -63,7 +57,23 @@ ScalaUnidoc / unidoc / unidocProjectFilter := {
   inAnyProject -- inProjects(SafeBufferJVM, XmlExtractorJVM, BindingJVM, FutureBindingJVM, fxmlJS)
 }
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Some("-Ymacro-annotations")
+  } else {
+    None
+  }
+}
+
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    None
+  } else {
+    Some(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}
 
 scalacOptions += "-Xexperimental"
 

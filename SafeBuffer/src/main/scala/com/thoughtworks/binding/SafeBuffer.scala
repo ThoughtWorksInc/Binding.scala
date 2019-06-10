@@ -10,6 +10,14 @@ private[binding] object SafeBuffer {
   @enableMembersIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   private[SafeBuffer] object Jvm {
     def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
+
+    // Used for Scala 2.13
+    @inline
+    implicit final class ReduceToSizeOps[A] @inline()(buffer: collection.mutable.ArrayBuffer[A]) {
+      @inline def reduceToSize(newSize: Int) = {
+        buffer.remove(newSize, buffer.size - newSize)
+      }
+    }
   }
 
   @enableMembersIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))

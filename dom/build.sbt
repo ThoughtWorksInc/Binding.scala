@@ -10,11 +10,9 @@ libraryDependencies += "com.thoughtworks.extractor" %% "extractor" % "1.2.0"
 
 libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.7"
 
-libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.5"
+libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.7"
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.7" % Test
-
-libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1"
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.8" % Test
 
 libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided
 
@@ -27,7 +25,23 @@ libraryDependencies ++= {
   }
 }
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Some("-Ymacro-annotations")
+  } else {
+    None
+  }
+}
+
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    None
+  } else {
+    Some(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}
 
 scalacOptions += "-Xexperimental"
 

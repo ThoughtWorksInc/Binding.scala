@@ -1,9 +1,25 @@
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Some("-Ymacro-annotations")
+  } else {
+    None
+  }
+}
+
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    None
+  } else {
+    Some(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}
 
 libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.7" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.8" % Test
 
 libraryDependencies += "com.thoughtworks.q" %% "q" % "1.0.3"

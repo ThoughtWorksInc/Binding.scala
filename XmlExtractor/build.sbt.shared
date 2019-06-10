@@ -1,10 +1,33 @@
-libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1"
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    None
+  } else {
+    Some("org.typelevel" %% "macro-compat" % "1.1.1")
+  }
+}
 
-libraryDependencies += "com.thoughtworks.extractor" %%% "extractor" % "2.1.0"
+libraryDependencies += "com.thoughtworks.extractor" %%% "extractor" % "2.1.1+122-7cd31326"
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Some("-Ymacro-annotations")
+  } else {
+    None
+  }
+}
+
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    None
+  } else {
+    Some(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}
 
 libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided
 
