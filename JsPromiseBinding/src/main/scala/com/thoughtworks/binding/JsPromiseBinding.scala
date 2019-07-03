@@ -119,7 +119,7 @@ final class JsPromiseBinding[A](thenable: Thenable[A]) extends Binding[Option[Ei
 
   private val publisher = new SafeBuffer[ChangedListener[Option[Either[Any, A]]]]
 
-  override def value = cache
+  override protected def value = cache
 
   override protected def removeChangedListener(listener: ChangedListener[Option[Either[Any, A]]]): Unit = {
     publisher -= listener

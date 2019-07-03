@@ -56,9 +56,9 @@ final class Zhihu50863924 extends FreeSpec with Matchers {
     }
 
     render.watch()
-    assert(render.value == Left("None here!"))
+    assert(render.get == Left("None here!"))
     value.value = Some("Changed")
-    assert(render.value == Right("Changed"))
+    assert(render.get == Right("Changed"))
     assert(renderCount0 == 1)
     assert(renderCount1 == 1)
   }
