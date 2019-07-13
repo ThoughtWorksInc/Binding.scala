@@ -111,6 +111,16 @@ object fxml {
   }
 
   /**
+    * [[com.thoughtworks.binding.Binding#watch Watch]]es the value of `popupWindowBinding` and shows it as a pop-up window onto `parent` at the specified location.
+    *
+    * @note `popupWindowBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when being closed or hidden.
+    */
+  @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+  def show(parent: Window, popupWindowBinding: Binding[PopupWindow], anchorX: Double, anchorY: Double): Unit = {
+    screenMountPoint(popupWindowBinding)(_.show(parent, anchorX, anchorY)).watch()
+  }
+
+  /**
     * [[com.thoughtworks.binding.Binding#watch Watch]]es the value of `stageBinding` and shows it on the screen.
     *
     * @note `stageBinding` will be automatically [[com.thoughtworks.binding.Binding#unwatch unwatch]]ed when being closed or hidden.
