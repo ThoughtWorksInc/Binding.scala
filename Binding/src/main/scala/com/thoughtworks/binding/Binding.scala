@@ -397,6 +397,17 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
+  private object ReentryDetector extends Binding[Nothing] {
+    protected def throwException(): Nothing =
+      throw new IllegalStateException(
+        "Must not change an upstream value in a data binding expression that depends on the same upstream value!")
+    def value: Nothing = throwException()
+
+    protected def removeChangedListener(listener: ChangedListener[Nothing]): Unit = throwException()
+
+    protected def addChangedListener(listener: ChangedListener[Nothing]): Unit = throwException()
+  }
+
   final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Binding[B] with ChangedListener[B] {
 
     private val publisher = new SafeBuffer[ChangedListener[B]]
@@ -436,7 +447,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       publisher.+=(listener)
     }
 
-    private var cache: Binding[B] = _
+    private var cache: Binding[B] = ReentryDetector
 
     private def refreshCache() = {
       cache = f(upstream.value)
