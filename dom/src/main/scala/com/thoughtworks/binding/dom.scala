@@ -54,7 +54,7 @@ import scala.reflect.NameTransformer
 // TODO: @dom will be deprecated once @html is implemented
 // @deprecated(message = "Use `@html` instead", since = "11.0.0")
 class dom extends StaticAnnotation {
-  def macroTransform(annottees: Any*): Any = macro dom.Macros.macroTransform
+  def macroTransform(annotatees: Any*): Any = macro dom.Macros.macroTransform
 }
 
 /**
@@ -493,7 +493,7 @@ object dom {
 
     import c.universe._
 
-    def macroTransform(annottees: Tree*): Tree = {
+    def macroTransform(annotatees: Tree*): Tree = {
       val transformer = new ComprehensionTransformer {
 
         private def transformXml(tree: Tree): (Queue[ValDef], Tree) = {
@@ -705,7 +705,7 @@ object dom {
           ${transform(body)}
         }"""
       }
-      replaceDefBody(annottees, autoImportAndTransform)
+      replaceDefBody(annotatees, autoImportAndTransform)
     }
 
   }
