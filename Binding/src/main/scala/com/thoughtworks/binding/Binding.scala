@@ -397,7 +397,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  private object ReentryDetector extends Binding[Nothing] {
+  private val ReentryDetector = new Binding[Nothing] {
     protected def throwException(): Nothing =
       throw new IllegalStateException(
         "Must not change an upstream value in a data binding expression that depends on the same upstream value!")
@@ -618,7 +618,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  private[binding] object Empty extends BindingSeq[Nothing] {
+  private[binding] val Empty = new BindingSeq[Nothing] {
     @inline
     override protected def removePatchedListener(listener: PatchedListener[Nothing]): Unit = {}
 
@@ -1474,12 +1474,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  private[binding] object DummyPatchedListener extends PatchedListener[Any] {
+  private[binding] val DummyPatchedListener = new PatchedListener[Any] {
     @inline
     override def patched(event: PatchedEvent[Any]): Unit = {}
   }
 
-  private[binding] object DummyChangedListener extends ChangedListener[Any] {
+  private[binding] val DummyChangedListener = new ChangedListener[Any] {
     @inline
     override def changed(event: ChangedEvent[Any]): Unit = {}
   }
