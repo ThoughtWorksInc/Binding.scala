@@ -51,10 +51,12 @@ import scala.language.experimental.macros
   */
 object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
+  @inline
   private[binding] def addChangedListener[A](binding: Binding[A], listener: ChangedListener[A]) = {
     binding.addChangedListener(listener)
   }
 
+  @inline
   private[binding] def removeChangedListener[A](binding: Binding[A], listener: ChangedListener[A]) = {
     binding.removeChangedListener(listener)
   }
@@ -689,10 +691,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
+    @inline
     private[binding] def addPatchedListener[A](binding: BindingSeq[A], listener: PatchedListener[A]) = {
       binding.addPatchedListener(listener)
     }
 
+    @inline
     private[binding] def removePatchedListener[A](binding: BindingSeq[A], listener: PatchedListener[A]) = {
       binding.removePatchedListener(listener)
     }
