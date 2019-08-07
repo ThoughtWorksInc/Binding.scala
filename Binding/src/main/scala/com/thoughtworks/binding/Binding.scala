@@ -482,7 +482,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   implicit object BindingInstances extends Monad[Binding] {
 
-    @inline
     override def map[A, B](fa: Binding[A])(f: A => B): Binding[B] = {
       fa match {
         case Constant(a) =>
@@ -492,7 +491,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
-    @inline
     override def bind[A, B](fa: Binding[A])(f: A => Binding[B]): Binding[B] = {
       fa match {
         case Constant(a) =>
@@ -505,27 +503,22 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     @inline
     override def point[A](a: => A): Binding[A] = Constant(a)
 
-    @inline
     override def ifM[B](value: Binding[Boolean], ifTrue: => Binding[B], ifFalse: => Binding[B]): Binding[B] = {
       bind(value)(if (_) ifTrue else ifFalse)
     }
 
-    @inline
     override def whileM[G[_], A](p: Binding[Boolean], body: => Binding[A])(implicit G: MonadPlus[G]): Binding[G[A]] = {
       ifM(p, bind(body)(x => map(whileM(p, body))(xs => G.plus(G.point(x), xs))), point(G.empty))
     }
 
-    @inline
     override def whileM_[A](p: Binding[Boolean], body: => Binding[A]): Binding[Unit] = {
       ifM(p, bind(body)(_ => whileM_(p, body)), point(()))
     }
 
-    @inline
     override def untilM[G[_], A](f: Binding[A], cond: => Binding[Boolean])(implicit G: MonadPlus[G]): Binding[G[A]] = {
       bind(f)(x => map(whileM(map(cond)(!_), f))(xs => G.plus(G.point(x), xs)))
     }
 
-    @inline
     override def untilM_[A](f: Binding[A], cond: => Binding[Boolean]): Binding[Unit] = {
       bind(f)(_ => whileM_(map(cond)(!_), f))
     }
