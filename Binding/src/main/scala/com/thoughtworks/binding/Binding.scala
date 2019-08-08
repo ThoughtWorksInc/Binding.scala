@@ -727,6 +727,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         extends BindingSeq[B]
         with HasCache[BindingSeq[B]] {
 
+      override def mapBinding[C](f2: B => Binding[C]): BindingSeq[C] = {
+        new FlatMap[A, C](upstream, { a =>
+          f(a).mapBinding(f2)
+        })
+      }
       private[Binding] var cacheData: Cache = _
 
       private def refreshCache() = {
@@ -849,6 +854,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     final class MapBinding[A, B](upstream: BindingSeq[A], f: A => Binding[B])
         extends BindingSeq[B]
         with HasCache[Binding[B]] {
+
+      override def mapBinding[C](f2: B => Binding[C]): BindingSeq[C] = {
+        new MapBinding[A, C](upstream, { a =>
+          BindingInstances.bind(f(a))(f2)
+        })
+      }
 
       private[Binding] var cacheData: Cache = _
 
@@ -1076,8 +1087,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *
       * @note Don't use this method in user code.
       */
-    @inline
-    final def mapBinding[B](f: A => Binding[B]): BindingSeq[B] = new BindingSeq.MapBinding[A, B](this, f)
+    def mapBinding[B](f: A => Binding[B]): BindingSeq[B] = new BindingSeq.MapBinding[A, B](this, f)
 
     /**
       * The underlying implementation of [[flatMap]].
