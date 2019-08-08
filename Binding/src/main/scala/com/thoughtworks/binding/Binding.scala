@@ -352,7 +352,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
+
+ /**
+   * @group expressions
+   */
+ final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
 
     private val publisher = new SafeBuffer[ChangedListener[B]]
 
@@ -407,7 +411,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     protected def addChangedListener(listener: ChangedListener[Nothing]): Unit = throwException()
   }
-
+  /**
+    * @group expressions
+    */
   final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Binding[B] with ChangedListener[B] {
 
     private val publisher = new SafeBuffer[ChangedListener[B]]
