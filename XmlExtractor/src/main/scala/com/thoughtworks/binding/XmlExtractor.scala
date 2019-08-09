@@ -153,7 +153,7 @@ trait XmlExtractor {
 
   protected final val ProcInstr = procInstr.extract
 
-  private def pcdata: PartialFunction[Tree, String] = {
+  private def pcData: PartialFunction[Tree, String] = {
     case q"""
       new _root_.scala.xml.PCData(
         ${Literal(Constant(data: String))},
