@@ -156,7 +156,7 @@ trait XmlExtractor {
   private def pcData: PartialFunction[Tree, String] = {
     case q"""
       new _root_.scala.xml.PCData(
-        ${Literal(Constant(data: String))},
+        ${Literal(Constant(data: String))}
       )
     """ =>
       data
