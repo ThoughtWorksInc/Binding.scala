@@ -132,7 +132,16 @@ trait XmlExtractor {
     case EmptyAttribute() => ""
   }
 
+  @deprecated("Use [[TextAttributes]] instead", "11.9.0")
   protected final val TextAttribute = textAttribute.extract
+
+  private def textAttributes: PartialFunction[Tree, Seq[Tree]] = {
+    case text @ (Text(_) | EntityRef(_))                     => Seq(text)
+    case EmptyAttribute()                                    => Nil
+    case NodeBuffer(texts @ ((Text(_) | EntityRef(_)) +: _)) => texts
+  }
+
+  protected final val TextAttributes = textAttributes.extract
 
   private def comment: PartialFunction[Tree, String] = {
     case q"""new _root_.scala.xml.Comment(${Literal(Constant(commentText: String))})""" =>
