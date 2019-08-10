@@ -87,13 +87,13 @@ trait XmlExtractor {
                    )
                  }
                """) =>
-      (QName(prefixOption, localPart), attributes.map {
+      (QName(prefixOption, localPart), attributes.view.reverse.map {
         case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
           UnprefixedName(key) -> value
         case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(
               Constant(key: String))}, $value, $$md)""" =>
           PrefixedName(pre, key) -> value
-      }, minimizeEmpty, nodeBufferStar(child))
+      }.toList, minimizeEmpty, nodeBufferStar(child))
     case Block(Nil,
                Block(
                  Nil,

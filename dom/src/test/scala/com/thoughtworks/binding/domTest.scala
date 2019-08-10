@@ -145,9 +145,9 @@ final class domTest extends FreeSpec with Matchers {
       <table title="My Tooltip" className="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{tbodyBinding.bind}</table>
     }
     tableBinding.watch()
-    assert(tableBinding.get.outerHTML == """<table class="my-table" title="My Tooltip"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
+    assert(tableBinding.get.outerHTML == """<table title="My Tooltip" class="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
     filterPattern.value = "o"
-    assert(tableBinding.get.outerHTML == """<table class="my-table" title="My Tooltip"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr></tbody></table>""")
+    assert(tableBinding.get.outerHTML == """<table title="My Tooltip" class="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr></tbody></table>""")
   }
 
   "NodeSeq" in {
@@ -199,7 +199,7 @@ final class domTest extends FreeSpec with Matchers {
     val div = document.createElement("div")
     dom.render(div, input)
     val outerHTML = div.outerHTML
-    assert(outerHTML == """<div><br class="BR" id="myBr"/></div>""")
+    assert(outerHTML == """<div><br id="myBr" class="BR"/></div>""")
   }
 
   "StyleVisibility" in {
@@ -400,7 +400,7 @@ final class domTest extends FreeSpec with Matchers {
     val div = document.createElement("div")
     dom.render(div, input)
     val outerHTML = div.outerHTML
-    assert(outerHTML == """<div><br class="BR" id="html-id"/></div>""")
+    assert(outerHTML == """<div><br id="html-id" class="BR"/></div>""")
   }
 
   "local-id in BindingSeq" in {
@@ -444,7 +444,7 @@ final class domTest extends FreeSpec with Matchers {
     val div = document.createElement("div")
     dom.render(div, tag)
 
-    assert(div.outerHTML == """<div><custom-tag custom-key="value" id="custom"><data id="123">CUSTOM-TAG</data></custom-tag></div>""")
+    assert(div.outerHTML == """<div><custom-tag id="custom" custom-key="value"><data id="123">CUSTOM-TAG</data></custom-tag></div>""")
   }
 
 }
