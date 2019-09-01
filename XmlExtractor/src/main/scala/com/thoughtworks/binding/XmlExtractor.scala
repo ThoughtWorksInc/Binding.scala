@@ -111,7 +111,81 @@ trait XmlExtractor {
       (QName(prefixOption, localPart), Nil, minimizeEmpty, nodeBufferStar(child))
   }
 
+  @deprecated("This [[Elem]] extractor does not support xmlns. Use [[Element]] instead.", "11.9.0")
   protected final val Elem = elem.extract
+
+  private def elemWithMetaData: PartialFunction[List[Tree], (QName, List[(QName, Tree)], Boolean, List[Tree])] = {
+    case q"var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null" +:
+          (attributes :+
+          q"""
+              new _root_.scala.xml.Elem(
+                ${Prefix(prefixOption)},
+                ${Literal(Constant(localPart: String))},
+                $$md, $$scope,
+                ${Literal(Constant(minimizeEmpty: Boolean))},
+                ..$child
+              )
+            """) =>
+      (QName(prefixOption, localPart), attributes.map {
+        case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
+          UnprefixedName(key) -> value
+        case q"""$$md = new _root_.scala.xml.PrefixedAttribute(${Literal(Constant(pre: String))}, ${Literal(
+              Constant(key: String))}, $value, $$md)""" =>
+          PrefixedName(pre, key) -> value
+      }, minimizeEmpty, nodeBufferStar(child))
+    case Seq(
+        q"""
+            new _root_.scala.xml.Elem(
+              ${Prefix(prefixOption)},
+              ${Literal(Constant(localPart: String))},
+              _root_.scala.xml.Null,
+              $$scope,
+              ${Literal(Constant(minimizeEmpty: Boolean))},
+              ..$child
+            )
+          """
+        ) =>
+      (QName(prefixOption, localPart), Nil, minimizeEmpty, nodeBufferStar(child))
+  }
+
+  private val ElemWithMetaData = elemWithMetaData.extract
+
+  private def element
+    : PartialFunction[Tree,
+                      (QName, List[(Option[String] /*prefix*/, Tree)], List[(QName, Tree)], Boolean, List[Tree])] = {
+    case q"""{
+        var $$tmpscope: _root_.scala.xml.NamespaceBinding = $outerScope;
+        ..$xmlnses;
+        {
+          val $$scope: _root_.scala.xml.NamespaceBinding = $$tmpscope;
+          ..${ElemWithMetaData(tagName, attributes, minimizeEmpty, children)}
+        }
+      }""" =>
+      val namespaceBindings = xmlnses.map {
+        case q"$tmpscope = new _root_.scala.xml.NamespaceBinding($prefixOrNull, $uri, $$tmpscope);" =>
+          val prefixOption = prefixOrNull match {
+            case q"null" =>
+              None
+            case Literal(Constant(prefix: String)) =>
+              Some(prefix)
+          }
+          prefixOption -> uri
+      }
+      (tagName, namespaceBindings, attributes, minimizeEmpty, children)
+    case Block(Nil, q"{..${ElemWithMetaData(tagName, attributes, minimizeEmpty, children)}}") =>
+      (tagName, Nil, attributes, minimizeEmpty, children)
+  }
+
+  protected val Element = element.extract
+
+  private def textUris: PartialFunction[Tree, Seq[Tree]] = {
+    case text @ (Text(_) | EntityRef(_))                     => Seq(text)
+    case q"null"                                             => Nil
+    case NodeBuffer(texts @ ((Text(_) | EntityRef(_)) +: _)) => texts
+    case Literal(Constant(data: String))                     => Seq(q"new _root_.scala.xml.Text($data)")
+  }
+
+  protected final val TextUris = textUris.extract
 
   private def entityRef: PartialFunction[Tree, String] = {
     case q"""new _root_.scala.xml.EntityRef(${Literal(Constant(entityName: String))})""" =>
@@ -176,7 +250,6 @@ trait XmlExtractor {
   protected final val HtmlEntityName = XmlExtractor.HtmlEntityRefMap.extract
 
   protected final val XmlEntityName = XmlExtractor.XmlEntityRefMap.extract
-
 
   protected object EmptyAttribute {
     def unapply(tree: Tree) = {
