@@ -1,6 +1,6 @@
 lazy val secret = {
   for (gist <- sys.env.get("SECRET_GIST")) yield {
-    val secret = project.settings(publishArtifact := false).in {
+    val secret = project.settings(publish / skip := true).in {
       val secretDirectory = file(sourcecode.File()).getParentFile / "secret"
       IO.delete(secretDirectory)
       org.eclipse.jgit.api.Git
