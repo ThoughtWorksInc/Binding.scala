@@ -29,7 +29,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sbt ++$TRAVIS_SCALA_VERSION "sonatypeOpen \"Travis Job $TRAVIS_JOB_NAME $TRAVIS_JOB_NUMBER ($TRAVIS_JOB_WEB_URL)\"" publishSigned sonatypeRelease
+    script: sbt ++$TRAVIS_SCALA_VERSION "set every Seq(sonatypeSessionName := \"Travis Job $TRAVIS_JOB_NAME $TRAVIS_JOB_NUMBER ($TRAVIS_JOB_WEB_URL)\", publishTo := sonatypePublishToBundle.value)" publishSigned sonatypeBundleRelease
     skip_cleanup: true
     on:
       all_branches: true
