@@ -4,7 +4,7 @@ addSbtPlugin("com.thoughtworks.sbt-scala-js-map" % "sbt-scala-js-map" % "4.0.0")
 
 addSbtPlugin("com.thoughtworks.sbt-best-practice" % "sbt-best-practice" % "7.0.1+28-0b91b5bf")
 
-addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.6")
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.7")
 
 addSbtPlugin("com.dwijnand" % "sbt-dynver" % "3.3.0+16-0f6d7799")
 
