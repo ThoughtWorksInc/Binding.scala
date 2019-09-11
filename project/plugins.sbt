@@ -1,8 +1,6 @@
 addSbtPlugin("com.thoughtworks.sbt-best-practice" % "sbt-best-practice" % "7.1.1")
 
-libraryDependencies += "org.apache.httpcomponents" % "httpclient" % "4.5.9"
-
-addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.6")
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.7")
 
 addSbtPlugin("com.dwijnand" % "sbt-dynver" % "4.0.0")
 
