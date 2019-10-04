@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
+ */
 
 package com.thoughtworks.binding
 
@@ -79,8 +79,8 @@ final class domTest extends FreeSpec with Matchers {
   }
 
   "ForYield" in {
-    val v0 = Vars("original text 0","original text 1")
-    @dom val monadicDiv: Binding[Div] = <div> <span> { for (s <- v0) yield <b>{s}</b> } </span> </div>
+    val v0 = Vars("original text 0", "original text 1")
+    @dom val monadicDiv: Binding[Div] = <div> <span> {for (s <- v0) yield <b>{s}</b>} </span> </div>
     monadicDiv.watch()
     val div = monadicDiv.get
 
@@ -88,7 +88,9 @@ final class domTest extends FreeSpec with Matchers {
 
     v0.value.prepend("prepended")
     assert(div eq monadicDiv.get)
-    assert(monadicDiv.get.outerHTML == "<div> <span> <b>prepended</b><b>original text 0</b><b>original text 1</b> </span> </div>")
+    assert(
+      monadicDiv.get.outerHTML == "<div> <span> <b>prepended</b><b>original text 0</b><b>original text 1</b> </span> </div>"
+    )
 
     v0.value.remove(1)
     assert(div eq monadicDiv.get)
@@ -142,12 +144,18 @@ final class domTest extends FreeSpec with Matchers {
 
     @dom
     val tableBinding = {
-      <table title="My Tooltip" className="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{tbodyBinding.bind}</table>
+      <table title="My Tooltip" className="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead>{
+        tbodyBinding.bind
+      }</table>
     }
     tableBinding.watch()
-    assert(tableBinding.get.outerHTML == """<table title="My Tooltip" class="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>""")
+    assert(
+      tableBinding.get.outerHTML == """<table title="My Tooltip" class="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr><tr><td>Jeff</td><td>Lauren</td><td>13</td></tr></tbody></table>"""
+    )
     filterPattern.value = "o"
-    assert(tableBinding.get.outerHTML == """<table title="My Tooltip" class="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr></tbody></table>""")
+    assert(
+      tableBinding.get.outerHTML == """<table title="My Tooltip" class="my-table"><thead><tr><td>First Name</td><td>Second Name</td><td>Age</td></tr></thead><tbody><tr><td>Steve</td><td>Jobs</td><td>10</td></tr><tr><td>Tim</td><td>Cook</td><td>12</td></tr></tbody></table>"""
+    )
   }
 
   "NodeSeq" in {
@@ -174,17 +182,21 @@ final class domTest extends FreeSpec with Matchers {
 
   "reference by id from nested content" in {
     @dom def innerDiv = {
-      <div id="my-div"><p id="myParagraph">The tagName of current Div is { `my-div`.tagName }. The tagName of current Paragraph is { myParagraph.tagName }. </p></div>
+      <div id="my-div"><p id="myParagraph">The tagName of current Div is {`my-div`.tagName}. The tagName of current Paragraph is {
+        myParagraph.tagName
+      }. </p></div>
     }
     val div = document.createElement("div")
     dom.render(div, innerDiv)
     val outerHTML = div.outerHTML
-    assert(outerHTML == """<div><div id="my-div"><p id="myParagraph">The tagName of current Div is DIV. The tagName of current Paragraph is P. </p></div></div>""")
+    assert(
+      outerHTML == """<div><div id="my-div"><p id="myParagraph">The tagName of current Div is DIV. The tagName of current Paragraph is P. </p></div></div>"""
+    )
   }
 
   "reference by id from content" in {
     @dom def innerDiv = {
-        <p id="currentElement">The tagName of current element is { currentElement.tagName }.</p>
+      <p id="currentElement">The tagName of current element is {currentElement.tagName}.</p>
     }
     val div = document.createElement("div")
     dom.render(div, innerDiv)
@@ -194,7 +206,7 @@ final class domTest extends FreeSpec with Matchers {
 
   "reference by id from attributes" in {
     @dom def input = {
-        <br id="myBr" class={myBr.tagName}/>
+      <br id="myBr" class={myBr.tagName}/>
     }
     val div = document.createElement("div")
     dom.render(div, input)
@@ -283,7 +295,8 @@ final class domTest extends FreeSpec with Matchers {
 
   "id in BindingSeq" in {
     val v = Var("Initial value")
-    @dom val input = <input id="foo" onclick={ _: Event => v.value = s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><div> <hr class="h"/> <div><label id="bar">Label Text</label></div></div>
+    @dom val input =
+      <input id="foo" onclick={_: Event => v.value = s"${foo.tagName} and ${bar.innerHTML}"} value={v.bind}/><div> <hr class="h"/> <div><label id="bar">Label Text</label></div></div>
     val div = document.createElement("div")
     dom.render(div, input)
     assert(v.value == "Initial value")
@@ -296,7 +309,7 @@ final class domTest extends FreeSpec with Matchers {
   "id in Binding" in {
     val v = Var("Initial value")
     @dom val input = {
-      <input id="foo" onclick={ _: Event => v.value = s"${foo.tagName}"}/>
+      <input id="foo" onclick={_: Event => v.value = s"${foo.tagName}"}/>
       foo.value = v.bind
       foo
     }
@@ -326,7 +339,7 @@ final class domTest extends FreeSpec with Matchers {
 
   "Option" in {
     val warning = Var(true)
-    @dom val text = if(warning.bind) Some(<b>warning</b>) else None
+    @dom val text = if (warning.bind) Some(<b>warning</b>) else None
 
     @dom val div = <div>{text.bind}</div>
     div.watch()
@@ -362,20 +375,23 @@ final class domTest extends FreeSpec with Matchers {
     assert(hr.get.outerHTML == """<hr id="createdId"/>""")
   }
 
-
   "reference by local-id from nested content" in {
     @dom def innerDiv = {
-      <div id="html-my-id" local-id="my-div"><p local-id="myParagraph" id="htmlMyParagraph">The tagName of current Div is { `my-div`.tagName }. The tagName of current Paragraph is { myParagraph.tagName }. </p></div>
+      <div id="html-my-id" local-id="my-div"><p local-id="myParagraph" id="htmlMyParagraph">The tagName of current Div is {
+        `my-div`.tagName
+      }. The tagName of current Paragraph is {myParagraph.tagName}. </p></div>
     }
     val div = document.createElement("div")
     dom.render(div, innerDiv)
     val outerHTML = div.outerHTML
-    assert(outerHTML == """<div><div id="html-my-id"><p id="htmlMyParagraph">The tagName of current Div is DIV. The tagName of current Paragraph is P. </p></div></div>""")
+    assert(
+      outerHTML == """<div><div id="html-my-id"><p id="htmlMyParagraph">The tagName of current Div is DIV. The tagName of current Paragraph is P. </p></div></div>"""
+    )
   }
 
   "reference by local-id from content" in {
     @dom def innerDiv = {
-      <p local-id="currentElement">The tagName of current element is { currentElement.tagName }.</p>
+      <p local-id="currentElement">The tagName of current element is {currentElement.tagName}.</p>
     }
     val div = document.createElement("div")
     dom.render(div, innerDiv)
@@ -395,7 +411,7 @@ final class domTest extends FreeSpec with Matchers {
 
   "local-id takes precedence over the id attribute" in {
     @dom def input = {
-        <br id="html-id" local-id="myBr" class={myBr.tagName}/>
+      <br id="html-id" local-id="myBr" class={myBr.tagName}/>
     }
     val div = document.createElement("div")
     dom.render(div, input)
@@ -405,7 +421,8 @@ final class domTest extends FreeSpec with Matchers {
 
   "local-id in BindingSeq" in {
     val v = Var("Initial value")
-    @dom val input = <input local-id="foo" onclick={ _: Event => v.value = s"${foo.tagName} and ${bar.innerHTML}"} value={ v.bind }/><div> <hr class="h"/> <div><label local-id="bar">Label Text</label></div></div>
+    @dom val input =
+      <input local-id="foo" onclick={_: Event => v.value = s"${foo.tagName} and ${bar.innerHTML}"} value={v.bind}/><div> <hr class="h"/> <div><label local-id="bar">Label Text</label></div></div>
     val div = document.createElement("div")
     dom.render(div, input)
     assert(v.value == "Initial value")
@@ -418,7 +435,7 @@ final class domTest extends FreeSpec with Matchers {
   "local-id in Binding" in {
     val v = Var("Initial value")
     @dom val input = {
-      <input local-id="foo" onclick={ _: Event => v.value = s"${foo.tagName}"}/>
+      <input local-id="foo" onclick={_: Event => v.value = s"${foo.tagName}"}/>
       foo.value = v.bind
       foo
     }
@@ -432,7 +449,7 @@ final class domTest extends FreeSpec with Matchers {
   }
 
   "dashed-local-id should compile" in {
-    @dom def div = <div local-id="dashed-id" class={ s"${`dashed-id`.tagName}-1" }></div>
+    @dom def div = <div local-id="dashed-id" class={s"${`dashed-id`.tagName}-1"}></div>
     div.watch()
     assert(div.get.className == "DIV-1")
   }
@@ -444,8 +461,9 @@ final class domTest extends FreeSpec with Matchers {
     val div = document.createElement("div")
     dom.render(div, tag)
 
-    assert(div.outerHTML == """<div><custom-tag id="custom" custom-key="value"><data id="123">CUSTOM-TAG</data></custom-tag></div>""")
+    assert(
+      div.outerHTML == """<div><custom-tag id="custom" custom-key="value"><data id="123">CUSTOM-TAG</data></custom-tag></div>"""
+    )
   }
 
 }
-
