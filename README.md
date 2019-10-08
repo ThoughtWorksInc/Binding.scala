@@ -448,7 +448,7 @@ The Scala compiler will not report errors now.
  * [scala-adapters-images](https://github.com/pme123/scala-adapters-images): A demo project that uses [scala-adapters](https://pme123.github.io/scala-adapters/) and [play-akka-telegrambot4s](https://github.com/pme123/play-akka-telegrambot4s).
  * [jmh-view](https://github.com/tom91136/jmh-view): An embeddable JMH report viewer, which is used to to create [the report for the benchmarks of Scala parsers](https://tom91136.github.io/scala-parser-benchmarks/report.html).
  * [RL-Playground](https://github.com/basimkhajwal/RL-Playground): A web-based interactive reinforcement learning demonstration for games.
- * [Word Cloud Generator](https://github.com/emanresusername/word-cloud-generator): A browser extension to generate word cloud visualizations of web pages, text files, or other arbitary text inputs.
+ * [Word Cloud Generator](https://github.com/emanresusername/word-cloud-generator): A browser extension to generate word cloud visualizations of web pages, text files, or other arbitrary text inputs.
 
 
 (Feel free to add your project here)
