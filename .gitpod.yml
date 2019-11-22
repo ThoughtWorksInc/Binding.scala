@@ -1,4 +1,4 @@
-image: instructure/scala-sbt:1.2
+image: igeolise/scalajs-test-runner:latest
 vscode:
   extensions:
     - scala-lang.scala@0.3.8:wQBBM+lKILHBqOqlqW60xA==
