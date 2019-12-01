@@ -8,7 +8,7 @@ description := "Reactive web framework for Scala.js."
 
 libraryDependencies += "com.thoughtworks.extractor" %% "extractor" % "2.1.2"
 
-libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.7"
+libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.7.0"
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.7"
 
@@ -19,7 +19,7 @@ libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value 
 libraryDependencies ++= {
   CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, scalaMajor)) if scalaMajor >= 11 =>
-      Seq("org.scala-lang.modules" %%% "scala-xml" % "1.1.0")
+      Seq("org.scala-lang.modules" %%% "scala-xml" % "1.2.0")
     case _ =>
       Nil
   }

@@ -41,6 +41,8 @@ import scala.collection.mutable.Buffer
 import scalaz.{Monad, MonadPlus}
 
 import scala.language.experimental.macros
+import scala.collection.compat._
+import scala.collection.Seq
 
 /**
   * @groupname typeClasses Type class instance
@@ -722,7 +724,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private def refreshCache() = {
         cacheData = (for {
           a <- upstream.value
-        } yield f(a))(collection.breakOut)
+        } yield f(a)).to(Vector)
       }
 
       @inline
@@ -737,7 +739,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         override def patched(upstreamEvent: PatchedEvent[A]): Unit = {
           val mappedNewChildren: Cache = (for {
             child <- upstreamEvent.that
-          } yield f(child))(collection.breakOut)
+          } yield f(child)).to(Vector)
           val flatNewChildren = new FlatProxy(mappedNewChildren)
           val flattenFrom = flatIndex(cacheData, 0, upstreamEvent.from)
           val flattenReplaced = flatIndex(cacheData, upstreamEvent.from, upstreamEvent.from + upstreamEvent.replaced)
@@ -804,7 +806,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private def refreshCache() = {
         cacheData = (for {
           a <- upstream.value
-        } yield f(a))(collection.breakOut)
+        } yield f(a)).to(Vector)
       }
 
       protected def mount(): Unit = {
@@ -825,7 +827,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       def patched(upstreamEvent: PatchedEvent[A]): Unit = {
         val mappedNewChildren: Cache = (for {
           child <- upstreamEvent.that
-        } yield f(child))(collection.breakOut)
+        } yield f(child)).to(Vector)
         val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
         for (newChild <- mappedNewChildren) {
           newChild.watch()
@@ -845,7 +847,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private def refreshCache() = {
         cacheData = (for {
           a <- upstream.value
-        } yield f(a))(collection.breakOut)
+        } yield f(a)).to(Vector)
       }
 
       override def value: Seq[B] = {
@@ -859,7 +861,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         override def patched(upstreamEvent: PatchedEvent[A]): Unit = {
           val mappedNewChildren: Cache = (for {
             child <- upstreamEvent.that
-          } yield f(child))(collection.breakOut)
+          } yield f(child)).to(Vector)
           val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
           for (newChild <- mappedNewChildren) {
             newChild.addChangedListener(childListener)

@@ -22,4 +22,10 @@ libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value 
 
 libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.8" % Test
 
-libraryDependencies += "com.thoughtworks.q" %% "q" % "1.0.3"
+libraryDependencies += "com.thoughtworks.q" %% "q" % "1.0.3+100-8f516431"
+
+libraryDependencies += "org.openjfx" % "javafx-fxml" % "11" % Provided
+
+libraryDependencies += "org.openjfx" % "javafx-swing" % "11" % Provided
+
+libraryDependencies += "org.openjfx" % "javafx-graphics" % "11" % Provided

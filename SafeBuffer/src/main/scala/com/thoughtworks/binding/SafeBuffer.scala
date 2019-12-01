@@ -1,6 +1,6 @@
 package com.thoughtworks.binding
 
-import com.thoughtworks.enableMembersIf
+import com.thoughtworks.{enableIf, enableMembersIf}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -102,12 +102,14 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
     }
   }
 
+  @enableIf(!scala.util.Properties.versionNumberString.startsWith("2.13."))
   @inline
   override def +=(x: A): this.type = {
     data += x
     this
   }
 
+  @enableIf(!scala.util.Properties.versionNumberString.startsWith("2.13."))
   @inline
   override def -=(x: A): this.type = {
     state match {
@@ -128,6 +130,7 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
         "Not allowed to invoke methods other than `+=` and `-=` when `foreach` is running.")
   }
 
+  @enableIf(!scala.util.Properties.versionNumberString.startsWith("2.13."))
   def +=:(elem: A): this.type = {
     checkIdle()
     data.+=:(elem)
@@ -144,7 +147,46 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
     data.clear()
   }
 
-  def insertAll(n: Int, elems: Traversable[A]): Unit = {
+  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
+  def insert(idx: Int, elem: A): Unit = {
+    checkIdle()
+    data.insert(idx, elem)
+  }
+
+  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
+  def insertAll(idx: Int, elems: scala.collection.IterableOnce[A]): Unit = {
+    checkIdle()
+    data.insertAll(idx, elems)
+  }
+
+  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
+  def patchInPlace(from: Int, patch: scala.collection.IterableOnce[A], replaced: Int): this.type = {
+    checkIdle()
+    data.patchInPlace(from, patch, replaced)
+    this
+  }
+
+  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
+  def prepend(elem: A): this.type = {
+    checkIdle()
+    data.prepend(elem)
+    this
+  }
+
+  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
+  def remove(idx: Int, count: Int): Unit = {
+    checkIdle()
+    data.remove(idx, count)
+  }
+
+  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
+  def addOne(elem: A): this.type = {
+    checkIdle()
+    data.addOne(elem)
+    this
+  }
+
+  def insertAll(n: Int, elems: Iterable[A]): Unit = {
     checkIdle()
     data.insertAll(n, elems)
   }
