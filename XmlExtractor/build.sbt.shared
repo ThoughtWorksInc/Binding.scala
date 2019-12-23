@@ -8,4 +8,4 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided
 
-libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4"
+libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.9"
