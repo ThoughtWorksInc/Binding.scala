@@ -6,4 +6,4 @@ libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value 
 
 libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.7" % Test
 
-libraryDependencies += "com.thoughtworks.q" %% "q" % "1.0.3"
+libraryDependencies += "com.thoughtworks.q" %% "q" % "1.0.4"
