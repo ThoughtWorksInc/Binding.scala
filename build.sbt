@@ -38,17 +38,6 @@ lazy val fxmlJVM = fxml.jvm
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
-developers in ThisBuild := List(
-  Developer(
-    "Atry",
-    "杨博 (Yang Bo)",
-    "pop.atry@gmail.com",
-    url("https://github.com/Atry")
-  )
-)
-
-name in ThisBuild := "Binding.scala"
-
 publish / skip := true
 
 enablePlugins(ScalaUnidocPlugin)
@@ -60,5 +49,3 @@ ScalaUnidoc / unidoc / unidocProjectFilter := {
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
 
 scalacOptions += "-Xexperimental"
-
-startYear in ThisBuild := Some(2015)
