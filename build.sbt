@@ -23,5 +23,3 @@ ScalaUnidoc / unidoc / unidocProjectFilter := {
 }
 
 scalacOptions += "-Ymacro-annotations"
-
-scalacOptions += "-Xexperimental"

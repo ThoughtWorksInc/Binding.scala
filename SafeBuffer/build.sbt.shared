@@ -1,13 +1,6 @@
-organization := "com.thoughtworks.binding"
-
-name := "SafeBuffer"
-
 libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.7"
 
 libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.8" % Test
-
-// Enable SAM type
-scalacOptions += "-Xexperimental"
 
 scalacOptions ++= {
   import Ordering.Implicits._

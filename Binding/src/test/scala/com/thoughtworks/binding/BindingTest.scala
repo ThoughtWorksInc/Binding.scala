@@ -28,11 +28,12 @@ import Binding._
 import BindingSeq.removePatchedListener
 import BindingSeq.addPatchedListener
 import scala.collection.mutable.ArrayBuffer
-import org.scalatest._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
 import scalaz._
 
-final class BindingTest extends FreeSpec with Matchers {
+final class BindingTest extends AnyFreeSpec with Matchers {
 
   final class BufferListener extends ArrayBuffer[Any] {
     val listener = new ChangedListener[Any] with PatchedListener[Any] {
@@ -164,7 +165,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.replaced == 6)
         assert(event.getSource == mapped)
     }
-    source.value.append(2, 3, 4)
+    source.value ++= Seq(2, 3, 4)
     assert(sourceEvents.length == 2)
     assert(mappedEvents.length == 2)
     sourceEvents(1) match {
@@ -276,7 +277,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.replaced == 6)
         assert(event.getSource == mapped)
     }
-    source.value.append(2, 3, 4)
+    source.value ++= Seq(2, 3, 4)
     assert(mappedEvents.length == 2)
     assert(sourceEvents.length == 2)
     sourceEvents(1) match {
@@ -386,7 +387,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.replaced == 6)
         assert(event.getSource == mapped)
     }
-    source.value.append(2, 3, 4)
+    source.value ++= Seq(2, 3, 4)
     assert(mappedEvents.length == 2)
     assert(sourceEvents.length == 2)
     sourceEvents(1) match {
@@ -485,7 +486,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.replaced == 3)
         assert(event.getSource == mapped)
     }
-    source.value.append(2, 3, 4)
+    source.value ++= Seq(2, 3, 4)
     assert(mappedEvents.length == 2)
     assert(sourceEvents.length == 2)
     sourceEvents(1) match {
@@ -656,7 +657,6 @@ final class BindingTest extends FreeSpec with Matchers {
     val aPlusOneTimesBPlusOn = Binding.BindingInstances.apply2(aPlusOne, bPlusOne) { (aValue, bValue) =>
       aValue * bValue
     }
-    Binding.BindingInstances.ap _
     aPlusOneTimesBPlusOn.watch()
     aPlusOneTimesBPlusOn.get should be((100 + 1) * (200 + 1))
     aFlushCount should be(1)
@@ -758,7 +758,7 @@ unmount 1
 """)
     logs.clear()
 
-    vars.value.prepend(Var(1000), Var(2000))
+    vars.value.prependAll(Seq(Var(1000), Var(2000)))
     logs.toString should be("""creating mount point 1000
 creating mount point 2000
 set 1000

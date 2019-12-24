@@ -63,9 +63,6 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
   private var state: State = Idle
 
   @inline
-  override def nonEmpty = !isEmpty
-
-  @inline
   override def isEmpty = data.forall(_ == Hole)
 
   override def foreach[U](f: A => U): Unit = {
@@ -102,37 +99,13 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
     }
   }
 
-  @enableIf(!scala.util.Properties.versionNumberString.startsWith("2.13."))
-  @inline
-  override def +=(x: A): this.type = {
-    data += x
-    this
-  }
-
-  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
   def addOne(x: A): this.type = {
     data += x
     this
   }
 
-  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
   @inline
   override def subtractOne(x: A): this.type = {
-    state match {
-      case Idle =>
-        data -= x
-      case CleanForeach =>
-        data(data.indexOf(x)) = Hole
-        state = DirtyForeach
-      case DirtyForeach =>
-        data(data.indexOf(x)) = Hole
-    }
-    this
-  }
-
-  @enableIf(!scala.util.Properties.versionNumberString.startsWith("2.13."))
-  @inline
-  override def -=(x: A): this.type = {
     state match {
       case Idle =>
         data -= x
@@ -151,13 +124,6 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
         "Not allowed to invoke methods other than `+=` and `-=` when `foreach` is running.")
   }
 
-  @enableIf(!scala.util.Properties.versionNumberString.startsWith("2.13."))
-  def +=:(elem: A): this.type = {
-    checkIdle()
-    data.+=:(elem)
-    this
-  }
-
   def apply(n: Int): A = {
     checkIdle()
     data(n).asInstanceOf[A]
@@ -168,33 +134,28 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
     data.clear()
   }
 
-  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
   def insert(idx: Int, elem: A): Unit = {
     checkIdle()
     data.insert(idx, elem)
   }
 
-  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
   def insertAll(idx: Int, elems: scala.collection.IterableOnce[A]): Unit = {
     checkIdle()
     data.insertAll(idx, elems)
   }
 
-  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
   def patchInPlace(from: Int, patch: scala.collection.IterableOnce[A], replaced: Int): this.type = {
     checkIdle()
     data.patchInPlace(from, patch, replaced)
     this
   }
 
-  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
   def prepend(elem: A): this.type = {
     checkIdle()
     data.prepend(elem)
     this
   }
 
-  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
   def remove(idx: Int, count: Int): Unit = {
     checkIdle()
     data.remove(idx, count)

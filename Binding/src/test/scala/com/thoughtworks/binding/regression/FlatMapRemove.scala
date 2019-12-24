@@ -2,14 +2,15 @@ package com.thoughtworks.binding.regression
 
 import com.thoughtworks.binding.Binding._
 import com.thoughtworks.binding._
-import org.scalatest._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.collection.mutable.ArrayBuffer
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-final class FlatMapRemove extends FreeSpec with Matchers {
+final class FlatMapRemove extends AnyFreeSpec with Matchers {
   "removed source of a flatMap" in {
 
     val data = Vars.empty[Either[String, String]]

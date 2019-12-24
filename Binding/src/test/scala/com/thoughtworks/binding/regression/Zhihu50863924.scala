@@ -26,12 +26,13 @@ package com.thoughtworks.binding.regression
 
 import com.thoughtworks.binding.Binding
 import com.thoughtworks.binding.Binding.Var
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-final class Zhihu50863924 extends FreeSpec with Matchers {
+final class Zhihu50863924 extends AnyFreeSpec with Matchers {
 
   "Newly created Binding expression should not re-render immediately" in {
 
