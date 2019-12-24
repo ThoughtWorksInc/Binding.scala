@@ -30,3 +30,5 @@ project/plugins/project/
 # Files created for deployment
 local.sbt
 secret/
+.metals/
+.bloop/
