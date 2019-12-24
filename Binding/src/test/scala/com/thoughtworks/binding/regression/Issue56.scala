@@ -28,7 +28,7 @@ final class Issue56 extends FreeSpec with Matchers {
     result.watch()
     dataSource.value = 300
     isEnabled.value = true
-    result.value should be(301)
+    result.get should be(301)
   }
 
 }

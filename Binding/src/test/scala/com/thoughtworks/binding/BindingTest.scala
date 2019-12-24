@@ -53,9 +53,9 @@ final class BindingTest extends FreeSpec with Matchers {
     }
     hello.watch()
 
-    assert(hello.value == "Hello, World!")
+    assert(hello.get == "Hello, World!")
     target.value = "Each"
-    assert(hello.value == "Hello, Each!")
+    assert(hello.get == "Hello, Each!")
   }
 
   "TripleBinding" in {
@@ -64,10 +64,10 @@ final class BindingTest extends FreeSpec with Matchers {
       input.bind + input.bind + input.bind
     }
     output.watch()
-    assert(output.value == 0)
+    assert(output.get == 0)
     for (i <- 0 until 10) {
       input.value = i
-      assert(output.value == i * 3)
+      assert(output.get == i * 3)
     }
   }
 
@@ -89,7 +89,7 @@ final class BindingTest extends FreeSpec with Matchers {
 
     var resultChanged = 0
 
-    assert(expr1.value == 0)
+    assert(expr1.get == 0)
 
     addChangedListener(expr1, new ChangedListener[Any] {
       override def changed(event: ChangedEvent[Any]): Unit = {
@@ -98,12 +98,12 @@ final class BindingTest extends FreeSpec with Matchers {
     })
 
     assert(resultChanged == 0)
-    assert(expr1.value == 32100)
+    assert(expr1.get == 32100)
 
     expr3.value = 4000
 
     assert(resultChanged == 1)
-    assert(expr1.value == 34100)
+    assert(expr1.get == 34100)
 
   }
 
@@ -122,10 +122,10 @@ final class BindingTest extends FreeSpec with Matchers {
         resultChanged += 1
       }
     })
-    assert(result.value == 0.5)
+    assert(result.get == 0.5)
     assert(resultChanged == 0)
     source.value = 4.0
-    assert(result.value == 0.25)
+    assert(result.get == 0.25)
     assert(resultChanged == 1)
   }
 
@@ -171,7 +171,7 @@ final class BindingTest extends FreeSpec with Matchers {
       case event: PatchedEvent[_] =>
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that == Seq(2, 3, 4))
+        assert(event.that sameElements Seq(2, 3, 4))
         assert(event.getSource == source)
     }
     mappedEvents(1) match {
@@ -180,7 +180,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.from == 0)
         assert(event.replaced == 0)
         assert(
-          event.that == Seq("ForYield 0/2",
+          event.that sameElements Seq("ForYield 0/2",
                             "ForYield 1/2",
                             "ForYield 0/3",
                             "ForYield 1/3",
@@ -198,7 +198,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == source)
         assert(event.from == 3)
         assert(event.replaced == 0)
-        assert(event.that == Seq(0))
+        assert(event.that sameElements Seq(0))
     }
     source.value += 3
     assert(sourceEvents.length == 4)
@@ -208,17 +208,17 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == source)
         assert(event.from == 4)
         assert(event.replaced == 0)
-        assert(event.that == Seq(3))
+        assert(event.that sameElements Seq(3))
     }
     mappedEvents(2) match {
       case event: PatchedEvent[_] =>
         assert(event.getSource == mapped)
         assert(event.from == 9)
         assert(event.replaced == 0)
-        assert(event.that == Seq("ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
+        assert(event.that sameElements Seq("ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
     }
     assert(
-      mapped.value == Seq(
+      mapped.get sameElements Seq(
         "ForYield 0/2",
         "ForYield 1/2",
         "ForYield 0/3",
@@ -234,7 +234,7 @@ final class BindingTest extends FreeSpec with Matchers {
       ))
     prefix.value = "3"
     assert(sourceEvents.length == 4)
-    assert(mapped.value == Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4"))
+    assert(mapped.get sameElements Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4"))
 
     removePatchedListener(mapped, mappedEvents.listener)
     removePatchedListener(source, sourceEvents.listener)
@@ -283,7 +283,7 @@ final class BindingTest extends FreeSpec with Matchers {
       case event: PatchedEvent[_] =>
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that == Seq(2, 3, 4))
+        assert(event.that sameElements Seq(2, 3, 4))
         assert(event.getSource == source)
     }
     mappedEvents(1) match {
@@ -292,7 +292,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.from == 0)
         assert(event.replaced == 0)
         assert(
-          event.that == Seq("ForYield 0/2",
+          event.that sameElements Seq("ForYield 0/2",
                             "ForYield 1/2",
                             "ForYield 0/3",
                             "ForYield 1/3",
@@ -310,7 +310,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == source)
         assert(event.from == 3)
         assert(event.replaced == 0)
-        assert(event.that == Seq(0))
+        assert(event.that sameElements Seq(0))
     }
     source.value += 3
     assert(sourceEvents.length == 4)
@@ -320,14 +320,14 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == source)
         assert(event.from == 4)
         assert(event.replaced == 0)
-        assert(event.that == Seq(3))
+        assert(event.that sameElements Seq(3))
     }
     mappedEvents(2) match {
       case event: PatchedEvent[_] =>
         assert(event.getSource == mapped)
         assert(event.from == 9)
         assert(event.replaced == 0)
-        assert(event.that == Seq("ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
+        assert(event.that sameElements Seq("ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
     }
     prefix.value = "p"
     assert(sourceEvents.length == 4)
@@ -339,7 +339,7 @@ final class BindingTest extends FreeSpec with Matchers {
         case event: PatchedEvent[_] =>
           assert(event.getSource == mapped)
           assert(event.replaced == 1)
-          assert(event.that == Seq(expected(event.from)))
+          assert(event.that sameElements Seq(expected(event.from)))
       }
     }
 
@@ -393,7 +393,7 @@ final class BindingTest extends FreeSpec with Matchers {
       case event: PatchedEvent[_] =>
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that == Seq(2, 3, 4))
+        assert(event.that sameElements Seq(2, 3, 4))
         assert(event.getSource == source)
     }
     mappedEvents(1) match {
@@ -401,7 +401,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == mapped)
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that == Seq("2", "2", "3", "3", "3", "4", "4", "4", "4"))
+        assert(event.that sameElements Seq("2", "2", "3", "3", "3", "4", "4", "4", "4"))
     }
     source.value += 0
     assert(sourceEvents.length == 3)
@@ -411,7 +411,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == source)
         assert(event.from == 3)
         assert(event.replaced == 0)
-        assert(event.that == Seq(0))
+        assert(event.that sameElements Seq(0))
     }
     source.value += 3
     assert(sourceEvents.length == 4)
@@ -421,14 +421,14 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == source)
         assert(event.from == 4)
         assert(event.replaced == 0)
-        assert(event.that == Seq(3))
+        assert(event.that sameElements Seq(3))
     }
     mappedEvents(2) match {
       case event: PatchedEvent[_] =>
         assert(event.getSource == mapped)
         assert(event.from == 9)
         assert(event.replaced == 0)
-        assert(event.that == Seq("3", "3", "3"))
+        assert(event.that sameElements Seq("3", "3", "3"))
     }
     prefix.value = "p"
     assert(sourceEvents.length == 4)
@@ -439,7 +439,7 @@ final class BindingTest extends FreeSpec with Matchers {
         case event: PatchedEvent[_] =>
           assert(event.getSource == mapped)
           assert(event.replaced == 1)
-          assert(event.that == Seq(expected(event.from)))
+          assert(event.that sameElements Seq(expected(event.from)))
       }
     }
 
@@ -492,7 +492,7 @@ final class BindingTest extends FreeSpec with Matchers {
       case event: PatchedEvent[_] =>
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that == Seq(2, 3, 4))
+        assert(event.that sameElements Seq(2, 3, 4))
         assert(event.getSource == source)
     }
     mappedEvents(1) match {
@@ -500,7 +500,7 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == mapped)
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that == Seq("2", "3", "4"))
+        assert(event.that sameElements Seq("2", "3", "4"))
     }
     source.value += 20
     assert(sourceEvents.length == 3)
@@ -510,14 +510,14 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == source)
         assert(event.from == 3)
         assert(event.replaced == 0)
-        assert(event.that == Seq(20))
+        assert(event.that sameElements Seq(20))
     }
     mappedEvents(2) match {
       case event: PatchedEvent[_] =>
         assert(event.getSource == mapped)
         assert(event.from == 3)
         assert(event.replaced == 0)
-        assert(event.that == Seq("20"))
+        assert(event.that sameElements Seq("20"))
     }
     300 +=: source.value
     assert(mappedEvents.length == 4)
@@ -527,14 +527,14 @@ final class BindingTest extends FreeSpec with Matchers {
         assert(event.getSource == source)
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that == Seq(300))
+        assert(event.that sameElements Seq(300))
     }
     mappedEvents(3) match {
       case event: PatchedEvent[_] =>
         assert(event.getSource == mapped)
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that == Seq("300"))
+        assert(event.that sameElements Seq("300"))
     }
     prefix.value = "p"
     assert(sourceEvents.length == 4)
@@ -545,7 +545,7 @@ final class BindingTest extends FreeSpec with Matchers {
         case event: PatchedEvent[_] =>
           assert(event.getSource == mapped)
           assert(event.replaced == 1)
-          assert(event.that == Seq(expected(event.from)))
+          assert(event.that sameElements Seq(expected(event.from)))
       }
     }
 
@@ -595,7 +595,7 @@ final class BindingTest extends FreeSpec with Matchers {
       val myVars = Vars(1, 2, 100, 3)
       val filtered = myVars.withFilter(_ < 10).map(x => x)
       filtered.watch()
-      assert(filtered.value == Seq(1, 2, 3))
+      assert(filtered.get sameElements Seq(1, 2, 3))
     }
   }
 
@@ -603,7 +603,7 @@ final class BindingTest extends FreeSpec with Matchers {
     val myVars = Vars(1, 2, 3)
     myVars.watch()
     myVars.value ++= Seq(4, 5)
-    assert(myVars.value == Seq(1, 2, 3, 4, 5))
+    assert(myVars.value sameElements Seq(1, 2, 3, 4, 5))
   }
 
   "ScalaRxLeakExample" in {
@@ -620,21 +620,21 @@ final class BindingTest extends FreeSpec with Matchers {
     c.watch()
 
     var result: (Int, Int) = null
-    assert((3, 1) == ((c.value, count)))
+    assert((3, 1) == ((c.get, count)))
 
     a.value = 4
-    assert((6, 2) == ((c.value, count)))
+    assert((6, 2) == ((c.get, count)))
 
     b.value = 3
-    assert((7, 3) == ((c.value, count)))
+    assert((7, 3) == ((c.get, count)))
 
     (0 to 100).foreach { i =>
       a.value = i
     }
-    assert((103, 104) == ((c.value, count)))
+    assert((103, 104) == ((c.get, count)))
 
     b.value = 4
-    assert((104, 105) == ((c.value, count)))
+    assert((104, 105) == ((c.get, count)))
   }
 
   "multi to one dependencies" in {
@@ -658,15 +658,15 @@ final class BindingTest extends FreeSpec with Matchers {
     }
     Binding.BindingInstances.ap _
     aPlusOneTimesBPlusOn.watch()
-    aPlusOneTimesBPlusOn.value should be((100 + 1) * (200 + 1))
+    aPlusOneTimesBPlusOn.get should be((100 + 1) * (200 + 1))
     aFlushCount should be(1)
     bFlushCount should be(1)
     a.value = 500
-    aPlusOneTimesBPlusOn.value should be((500 + 1) * (200 + 1))
+    aPlusOneTimesBPlusOn.get should be((500 + 1) * (200 + 1))
     aFlushCount should be(2)
     bFlushCount should be(2)
     b.value = 600
-    aPlusOneTimesBPlusOn.value should be((500 + 1) * (600 + 1))
+    aPlusOneTimesBPlusOn.get should be((500 + 1) * (600 + 1))
     aFlushCount should be(2)
     bFlushCount should be(3)
 
@@ -680,7 +680,7 @@ final class BindingTest extends FreeSpec with Matchers {
         if myVar < 10
       } yield myVar
       filtered.watch()
-      assert(filtered.value == Seq(1, 2, 3))
+      assert(filtered.get sameElements Seq(1, 2, 3))
     }
     domMethod()
   }
@@ -688,7 +688,7 @@ final class BindingTest extends FreeSpec with Matchers {
   "flatMap" in {
     val flatMapped = Constants(Constants(1, 2), Constants(), Constants(3)).flatMap(identity)
     flatMapped.watch()
-    flatMapped.value should be(Seq(1, 2, 3))
+    assert(flatMapped.get sameElements Seq(1, 2, 3))
   }
 
   "foreach" in {

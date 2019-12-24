@@ -1,3 +1,5 @@
+dist: trusty
+
 sudo: false
 
 addons:
@@ -8,10 +10,7 @@ addons:
 language: scala
 
 scala:
-  - 2.10.7
-  - 2.11.12
-  - 2.12.8
-  - 2.13.0
+  - 2.13.1
 
 jdk:
   - oraclejdk8
@@ -34,7 +33,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sbt ++$TRAVIS_SCALA_VERSION "sonatypeOpen \"Travis Job $TRAVIS_JOB_NAME $TRAVIS_JOB_NUMBER ($TRAVIS_JOB_WEB_URL)\"" publishSigned sonatypeRelease
+    script: sbt ++$TRAVIS_SCALA_VERSION "set every Seq(sonatypeSessionName := \"Travis Job $TRAVIS_JOB_NAME $TRAVIS_JOB_NUMBER ($TRAVIS_JOB_WEB_URL)\", publishTo := sonatypePublishToBundle.value)" publishSigned sonatypeBundleRelease
     skip_cleanup: true
     on:
       all_branches: true

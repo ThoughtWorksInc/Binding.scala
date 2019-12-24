@@ -109,6 +109,27 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
     this
   }
 
+  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
+  def addOne(x: A): this.type = {
+    data += x
+    this
+  }
+
+  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
+  @inline
+  override def subtractOne(x: A): this.type = {
+    state match {
+      case Idle =>
+        data -= x
+      case CleanForeach =>
+        data(data.indexOf(x)) = Hole
+        state = DirtyForeach
+      case DirtyForeach =>
+        data(data.indexOf(x)) = Hole
+    }
+    this
+  }
+
   @enableIf(!scala.util.Properties.versionNumberString.startsWith("2.13."))
   @inline
   override def -=(x: A): this.type = {
@@ -177,13 +198,6 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
   def remove(idx: Int, count: Int): Unit = {
     checkIdle()
     data.remove(idx, count)
-  }
-
-  @enableIf(scala.util.Properties.versionNumberString.startsWith("2.13."))
-  def addOne(elem: A): this.type = {
-    checkIdle()
-    data.addOne(elem)
-    this
   }
 
   def insertAll(n: Int, elems: Iterable[A]): Unit = {
