@@ -2,9 +2,10 @@ package com.thoughtworks.binding.regression
 
 import com.thoughtworks.binding.Binding
 import com.thoughtworks.binding.Binding.{Var, Vars}
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
-final class Issue188 extends FreeSpec with Matchers {
+final class Issue188 extends AnyFreeSpec with Matchers {
   "non-regression test for https://github.com/ThoughtWorksInc/Binding.scala/issues/188" in {
 
     val objectCache: Var[Int] = Var(1)

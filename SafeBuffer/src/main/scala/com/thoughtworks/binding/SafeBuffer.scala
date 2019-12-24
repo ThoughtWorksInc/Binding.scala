@@ -1,6 +1,6 @@
 package com.thoughtworks.binding
 
-import com.thoughtworks.enableMembersIf
+import com.thoughtworks.{enableIf, enableMembersIf}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -10,6 +10,14 @@ private[binding] object SafeBuffer {
   @enableMembersIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   private[SafeBuffer] object Jvm {
     def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
+
+    // Used for Scala 2.13
+    @inline
+    implicit final class ReduceToSizeOps[A] @inline()(buffer: collection.mutable.ArrayBuffer[A]) {
+      @inline def reduceToSize(newSize: Int) = {
+        buffer.remove(newSize, buffer.size - newSize)
+      }
+    }
   }
 
   @enableMembersIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
@@ -55,9 +63,6 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
   private var state: State = Idle
 
   @inline
-  override def nonEmpty = !isEmpty
-
-  @inline
   override def isEmpty = data.forall(_ == Hole)
 
   override def foreach[U](f: A => U): Unit = {
@@ -94,14 +99,13 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
     }
   }
 
-  @inline
-  override def +=(x: A): this.type = {
+  def addOne(x: A): this.type = {
     data += x
     this
   }
 
   @inline
-  override def -=(x: A): this.type = {
+  override def subtractOne(x: A): this.type = {
     state match {
       case Idle =>
         data -= x
@@ -120,12 +124,6 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
         "Not allowed to invoke methods other than `+=` and `-=` when `foreach` is running.")
   }
 
-  def +=:(elem: A): this.type = {
-    checkIdle()
-    data.+=:(elem)
-    this
-  }
-
   def apply(n: Int): A = {
     checkIdle()
     data(n).asInstanceOf[A]
@@ -136,7 +134,34 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
     data.clear()
   }
 
-  def insertAll(n: Int, elems: Traversable[A]): Unit = {
+  def insert(idx: Int, elem: A): Unit = {
+    checkIdle()
+    data.insert(idx, elem)
+  }
+
+  def insertAll(idx: Int, elems: scala.collection.IterableOnce[A]): Unit = {
+    checkIdle()
+    data.insertAll(idx, elems)
+  }
+
+  def patchInPlace(from: Int, patch: scala.collection.IterableOnce[A], replaced: Int): this.type = {
+    checkIdle()
+    data.patchInPlace(from, patch, replaced)
+    this
+  }
+
+  def prepend(elem: A): this.type = {
+    checkIdle()
+    data.prepend(elem)
+    this
+  }
+
+  def remove(idx: Int, count: Int): Unit = {
+    checkIdle()
+    data.remove(idx, count)
+  }
+
+  def insertAll(n: Int, elems: Iterable[A]): Unit = {
     checkIdle()
     data.insertAll(n, elems)
   }
