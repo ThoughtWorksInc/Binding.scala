@@ -1,40 +1,22 @@
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+
 parallelExecution in Global := false
 
-lazy val SafeBuffer = crossProject.crossType(CrossType.Pure)
+lazy val SafeBuffer = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).build
 
-lazy val Binding = crossProject.crossType(CrossType.Pure).dependsOn(SafeBuffer)
+lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).dependsOn(SafeBuffer)
 
-lazy val FutureBinding = crossProject.crossType(CrossType.Pure).dependsOn(Binding)
+lazy val FutureBinding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).dependsOn(Binding)
 
-lazy val dom = project.dependsOn(BindingJS).dependsOn(XmlExtractorJS)
+lazy val dom = project.dependsOn(Binding.js).dependsOn(XmlExtractor.js)
 
-lazy val Route = project.dependsOn(BindingJS)
+lazy val Route = project.dependsOn(Binding.js)
 
-lazy val JsPromiseBinding = project.dependsOn(BindingJS)
+lazy val JsPromiseBinding = project.dependsOn(Binding.js)
 
-lazy val SafeBufferJS = SafeBuffer.js
+lazy val XmlExtractor = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).build
 
-lazy val SafeBufferJVM = SafeBuffer.jvm
-
-lazy val BindingJS = Binding.js
-
-lazy val BindingJVM = Binding.jvm
-
-lazy val FutureBindingJS = FutureBinding.js
-
-lazy val FutureBindingJVM = FutureBinding.jvm
-
-lazy val XmlExtractor = crossProject.crossType(CrossType.Pure)
-
-lazy val XmlExtractorJS = XmlExtractor.js
-
-lazy val XmlExtractorJVM = XmlExtractor.jvm
-
-lazy val fxml = crossProject.crossType(CrossType.Pure).dependsOn(Binding, XmlExtractor)
-
-lazy val fxmlJS = fxml.js
-
-lazy val fxmlJVM = fxml.jvm
+lazy val fxml = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).dependsOn(Binding, XmlExtractor)
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
@@ -43,7 +25,7 @@ publish / skip := true
 enablePlugins(ScalaUnidocPlugin)
 
 ScalaUnidoc / unidoc / unidocProjectFilter := {
-  inAnyProject -- inProjects(SafeBufferJVM, XmlExtractorJVM, BindingJVM, FutureBindingJVM, fxmlJS)
+  inAnyProject -- inProjects(SafeBuffer.jvm, XmlExtractor.jvm, Binding.jvm, FutureBinding.jvm, fxml.js)
 }
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
