@@ -1,16 +1,10 @@
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+
 parallelExecution in Global := false
 
-lazy val SafeBuffer = crossProject.crossType(CrossType.Pure)
+lazy val SafeBuffer = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).build
 
-lazy val Binding = crossProject.crossType(CrossType.Pure).dependsOn(SafeBuffer)
-
-lazy val SafeBufferJS = SafeBuffer.js
-
-lazy val SafeBufferJVM = SafeBuffer.jvm
-
-lazy val BindingJS = Binding.js
-
-lazy val BindingJVM = Binding.jvm
+lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).dependsOn(SafeBuffer)
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
@@ -19,7 +13,7 @@ publish / skip := true
 enablePlugins(ScalaUnidocPlugin)
 
 ScalaUnidoc / unidoc / unidocProjectFilter := {
-  inAnyProject -- inProjects(SafeBufferJVM, BindingJVM)
+  inAnyProject -- inProjects(SafeBuffer.jvm, Binding.jvm)
 }
 
 scalacOptions += "-Ymacro-annotations"
