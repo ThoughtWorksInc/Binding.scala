@@ -641,15 +641,13 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     @inline
     override protected def addPatchedListener(listener: PatchedListener[Nothing]): Unit = {}
 
-    type ValueSeq[+A] = List[A]
+    type All[+A] = List[A]
 
     @inline
     override protected def value = Nil
   }
 
   private[Binding] abstract class ValueProxy[B] extends SeqView[B] with HasCache[Binding[B]] {
-
-    type ValueSeqOps[+A] = SeqView[A]
 
     protected def underlying = cacheData
 
@@ -760,7 +758,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         } yield f(a))
       }
 
-      type ValueSeq[+A] = SeqView[A]
+      type All[+A] = SeqView[A]
 
       @inline
       override protected def value = new FlatProxy(cacheData)
@@ -885,7 +883,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         } yield f(a))
       }
 
-      type ValueSeq[+A] = SeqView[A]
+      type All[+A] = SeqView[A]
 
       override protected def value: SeqView[B] = {
         val cacheData0 = cacheData
@@ -996,24 +994,24 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   trait BindingSeq[+A] {
 
     /** Returns a new [[Binding]] expression of all elements in this [[BindingSeq]]. */
-    final def all: Binding[ValueSeq[A]] = new Binding[ValueSeq[A]] { asBinding =>
+    final def all: Binding[All[A]] = new Binding[All[A]] { asBinding =>
 
       private val patchedListener = new PatchedListener[A] {
         @inline
         def patched(upstreamEvent: PatchedEvent[A]): Unit = {
-          val event = new ChangedEvent[ValueSeq[A]](asBinding, asBinding.value)
+          val event = new ChangedEvent[All[A]](asBinding, asBinding.value)
           for (listener <- publisher) {
             listener.changed(event)
           }
         }
       }
-      private val publisher = new SafeBuffer[ChangedListener[ValueSeq[A]]]
+      private val publisher = new SafeBuffer[ChangedListener[All[A]]]
 
       @inline
-      override protected def value: ValueSeq[A] = BindingSeq.this.value
+      override protected def value: All[A] = BindingSeq.this.value
 
       @inline
-      override protected def removeChangedListener(listener: ChangedListener[ValueSeq[A]]): Unit = {
+      override protected def removeChangedListener(listener: ChangedListener[All[A]]): Unit = {
         publisher.-=(listener)
         if (publisher.isEmpty) {
           BindingSeq.this.removePatchedListener(patchedListener)
@@ -1021,7 +1019,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      override protected def addChangedListener(listener: ChangedListener[ValueSeq[A]]): Unit = {
+      override protected def addChangedListener(listener: ChangedListener[All[A]]): Unit = {
         if (publisher.isEmpty) {
           BindingSeq.this.addPatchedListener(patchedListener)
         }
@@ -1053,16 +1051,17 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       removePatchedListener(Binding.DummyPatchedListener)
     }
 
-    type ValueSeq[+A] <: SeqOpsIterable[A]
+    /** The value type of [[all]] */
+    type All[+A] <: SeqOpsIterable[A]
 
     /** Returns the current value of this [[BindingSeq]]. */
-    protected def value: ValueSeq[A]
+    protected def value: All[A]
 
     /** Returns the current value of this [[BindingSeq]].
       *
       * @note This method is used for internal testing purpose only.
       */
-    private[binding] def get: ValueSeq[A] = value
+    private[binding] def get: All[A] = value
 
     protected def removePatchedListener(listener: PatchedListener[A]): Unit
 
@@ -1219,7 +1218,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     * @group expressions
     */
   final class Constants[+A] private (underlying: ConstantsData[A]) extends BindingSeq[A] {
-    type ValueSeq[+A] = collection.Seq[A]
+    type All[+A] = collection.Seq[A]
 
     @inline
     override def value: collection.Seq[A] = underlying
@@ -1274,7 +1273,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private[binding] val publisher = new SafeBuffer[PatchedListener[A]]
 
-    type ValueSeq[+A] = Buffer[_ <: A]
+    type All[+A] = Buffer[_ <: A]
 
     /**
       * Returns a [[scala.collection.mutable.Buffer]] that allow you change the content of this [[Vars]].
@@ -1431,7 +1430,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     override def length: Constant[Int] = Constant(1)
 
-    type ValueSeq[+A] = IndexedSeq[A]
+    type All[+A] = IndexedSeq[A]
 
     @inline
     override protected def value = SingleSeq(upstream.value)
