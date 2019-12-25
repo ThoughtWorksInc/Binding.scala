@@ -28,20 +28,20 @@ import java.util.EventObject
 
 import com.thoughtworks.sde.core.MonadicFactory._
 import com.thoughtworks.enableMembersIf
-import com.thoughtworks.Extractor._
 import com.thoughtworks.sde.core.MonadicFactory
-import macrocompat.bundle
 
 import scala.annotation.meta.companionMethod
 import scala.annotation.tailrec
 import scala.language.implicitConversions
 import scala.language.higherKinds
-import scala.collection.{GenSeq, SeqView, mutable}
+import scala.collection.SeqView
 import scala.collection.mutable.Buffer
-import scala.collection.TraversableView
+import scala.collection.View
 import scalaz.{Monad, MonadPlus}
 
 import scala.language.experimental.macros
+import scala.language.existentials
+import scala.collection.SeqOps
 
 /**
   * @groupname typeClasses Type class instance
@@ -51,6 +51,10 @@ import scala.language.experimental.macros
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
+
+  private[binding] type SeqOpsIterable[+A] = Iterable[A] with SeqOps[A, CC, CC[A]] forSome {
+    type CC[+A] <: Iterable[A]
+  }
 
   private[binding] def addChangedListener[A](binding: Binding[A], listener: ChangedListener[A]) = {
     binding.addChangedListener(listener)
@@ -70,7 +74,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     @inline
     def toConstantsData[A](seq: Seq[A]) = seq
 
-    def toCacheData[A](seq: collection.GenTraversableOnce[A]) = seq.toVector
+    def toCacheData[A](seq: collection.Iterable[A]) = Vector.from(seq)
 
     def emptyCacheData[A]: HasCache[A]#Cache = Vector.empty
 
@@ -102,8 +106,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         result
       }
 
-      private[Binding] final def appendCache(elements: TraversableOnce[A]): GenSeq[A] = {
-        val seq = elements.toSeq
+      private[Binding] final def removeCache(idx: Int, count: Int): Unit = {
+        cacheData = cacheData.patch(idx, Nil, count)
+      }
+
+      private[Binding] final def appendCache(elements: IterableOnce[A]): Seq[A] = {
+        val seq = Seq.from(elements)
         cacheData = cacheData ++ seq
         seq
       }
@@ -116,8 +124,14 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         cacheData = elem +: cacheData
       }
 
-      private[Binding] final def insertCache(n: Int, elems: Traversable[A]): GenSeq[A] = {
-        val seq = elems.toSeq
+      private[Binding] final def insertCache(n: Int, elems: IterableOnce[A]): Seq[A] = {
+        val seq = Seq.from(elems)
+        cacheData = cacheData.patch(n, seq, 0)
+        seq
+      }
+
+      private[Binding] final def insertOneCache(n: Int, elem: A): Seq[A] = {
+        val seq = Seq(elem)
         cacheData = cacheData.patch(n, seq, 0)
         seq
       }
@@ -126,14 +140,14 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         cacheData.iterator
       }
 
-      private[Binding] final def spliceCache(from: Int, mappedNewChildren: Cache, replaced: Int): TraversableOnce[A] = {
+      private[Binding] final def spliceCache(from: Int, mappedNewChildren: IterableOnce[A], replaced: Int) = {
         val oldCache = cacheData
         if (from == 0) {
-          cacheData = mappedNewChildren ++ oldCache.drop(replaced)
+          cacheData = mappedNewChildren ++: oldCache.drop(replaced)
         } else {
           cacheData = oldCache.patch(from, mappedNewChildren, replaced)
         }
-        oldCache.view(from, from + replaced)
+        oldCache.view.slice(from, from + replaced)
       }
 
       private[Binding] final def indexOfCache[B >: A](a: B): Int = {
@@ -156,7 +170,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     @inline
-    def toCacheData[A](seq: collection.GenTraversableOnce[A]) = {
+    def toCacheData[A](seq: collection.Iterable[A]) = {
       import scalajs.js.JSConverters._
       seq.toJSArray
     }
@@ -191,9 +205,13 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         cacheData.remove(n)
       }
 
+      private[Binding] final def removeCache(idx: Int, count: Int): Unit = {
+        cacheData.remove(idx, count)
+      }
+
       @inline
-      private[Binding] final def appendCache(elements: TraversableOnce[A]): GenSeq[A] = {
-        val seq = elements.toSeq
+      private[Binding] final def appendCache(elements: IterableOnce[A]): Seq[A] = {
+        val seq = Seq.from(elements)
         cacheData ++= seq
         seq
       }
@@ -209,8 +227,14 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      private[Binding] final def insertCache(n: Int, elems: Traversable[A]): GenSeq[A] = {
-        val seq = elems.toSeq
+      private[Binding] final def insertOneCache(n: Int, elem: A): Seq[A] = {
+        cacheData.insert(n, elem)
+        Seq(elem)
+      }
+
+      @inline
+      private[Binding] final def insertCache(n: Int, elems: IterableOnce[A]): Seq[A] = {
+        val seq = Seq.from(elems)
         cacheData.insertAll(n, elems)
         seq
       }
@@ -221,12 +245,17 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      private[Binding] final def spliceCache(from: Int, mappedNewChildren: Cache, replaced: Int): TraversableOnce[A] = {
-        cacheData.splice(from, replaced, mappedNewChildren: _*)
+      private[Binding] final def spliceCache(from: Int, mappedNewChildren: Cache, replaced: Int) = {
+        cacheData.splice(from, replaced, scalajs.runtime.toScalaVarArgs(mappedNewChildren): _*)
       }
 
       @inline
-      private[Binding] final def indexOfCache[B >: A](a: B): Int = {
+      private[Binding] final def spliceCache(from: Int, mappedNewChildren: IterableOnce[A], replaced: Int) = {
+        cacheData.splice(from, replaced, Seq.from(mappedNewChildren): _*)
+      }
+
+      @inline
+      private[Binding] final def indexOfCache(a: A): Int = {
         cacheData.indexOf(a)
       }
 
@@ -237,24 +266,18 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   import Js._
   import Jvm._
 
-  final class ChangedEvent[+Value] @deprecated("`source` must be a [[Binding]]", "11.6.0")(source: AnyRef,
-                                                                                           val newValue: Value)
-      extends EventObject(source) {
-    def this(source: Binding[Value], newValue: Value) = this(source: AnyRef, newValue)
+  final class ChangedEvent[+Value](source: Binding[Value], val newValue: Value) extends EventObject(source) {
     override def getSource = super.getSource.asInstanceOf[Binding[Value]]
     override def toString = raw"""ChangedEvent[source=$source newValue=$newValue]"""
 
   }
 
-  final class PatchedEvent[+Element] @deprecated("`source` must be a [[BindingSeq]]", "11.6.0")(
-      source: AnyRef,
+  final class PatchedEvent[+Element](
+      source: BindingSeq[Element],
       val from: Int,
-      val that: GenSeq[Element],
-      val replaced: Int)
-      extends EventObject(source) {
-    @inline
-    def this(source: BindingSeq[Element], from: Int, that: GenSeq[Element], replaced: Int) =
-      this(source: AnyRef, from, that, replaced)
+      val that: SeqOpsIterable[Element],
+      val replaced: Int
+  ) extends EventObject(source) {
     override def getSource = super.getSource.asInstanceOf[BindingSeq[Element]]
     override def toString = raw"""PatchedEvent[source=$source from=$from that=$that replaced=$replaced]"""
   }
@@ -273,10 +296,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     * @group expressions
     */
   final case class Constant[+A](override val value: A) extends Binding[A] {
-
-    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
-    @inline
-    override def get = value
 
     @inline
     override protected def removeChangedListener(listener: ChangedListener[A]): Unit = {
@@ -318,28 +337,19 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     @inline
     override def value = cache
 
-    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
-    @inline
-    override def get: A = value
-
     /**
       * Changes the current value of this [[Var]], and reevaluates any expressions that depends on this [[Var]].
       *
       * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block.
       */
     def value_=(newValue: A): Unit = {
-      if (cache.isInstanceOf[Mutable] || cache.isInstanceOf[TraversableView[_, _]] || cache != newValue) {
+      if (cache.isInstanceOf[View[_]] || cache != newValue) {
         cache = newValue
         val event = new ChangedEvent(this, newValue)
         for (listener <- publisher) {
           listener.changed(event)
         }
       }
-    }
-
-    @deprecated(message = "Use [[value_=]] instead.", since = "11.0.0")
-    def :=(newValue: A): Unit = {
-      value_=(newValue)
     }
 
     @inline
@@ -353,11 +363,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-
- /**
-   * @group expressions
-   */
- final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
+  /**
+    * @group expressions
+    */
+  final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
 
     private val publisher = new SafeBuffer[ChangedListener[B]]
 
@@ -393,7 +402,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       val oldCache = cache
       val newCache = f(upstreamEvent.newValue)
       cache = newCache
-      if (oldCache.isInstanceOf[Mutable] || oldCache.isInstanceOf[TraversableView[_, _]] ||oldCache != newCache) {
+      if (oldCache.isInstanceOf[View[_]] || oldCache != newCache) {
         val event = new ChangedEvent(Map.this, newCache)
         for (listener <- publisher) {
           listener.changed(event)
@@ -405,13 +414,15 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   private val ReentryDetector = new Binding[Nothing] {
     protected def throwException(): Nothing =
       throw new IllegalStateException(
-        "Must not change an upstream value in a data binding expression that depends on the same upstream value!")
+        "Must not change an upstream value in a data binding expression that depends on the same upstream value!"
+      )
     def value: Nothing = throwException()
 
     protected def removeChangedListener(listener: ChangedListener[Nothing]): Unit = throwException()
 
     protected def addChangedListener(listener: ChangedListener[Nothing]): Unit = throwException()
   }
+
   /**
     * @group expressions
     */
@@ -427,7 +438,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         val newCache = f(upstreamEvent.newValue)
         cache = newCache
         newCache.addChangedListener(FlatMap.this)
-        if (oldCache.isInstanceOf[Mutable] || oldCache.isInstanceOf[TraversableView[_, _]] ||oldCache.value != newCache.value) {
+        if (oldCache.isInstanceOf[View[_]] || oldCache.value != newCache.value) {
           val event = new ChangedEvent(FlatMap.this, newCache.value)
           for (listener <- publisher) {
             listener.changed(event)
@@ -532,12 +543,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  @bundle
   private[Binding] class Macros(val c: scala.reflect.macros.blackbox.Context) {
 
     import c.universe._
 
-    def functionOrFunctionLiteral: PartialFunction[Tree, (List[ValDef], Tree)] = {
+    lazy val functionOrFunctionLiteral: PartialFunction[Tree, (List[ValDef], Tree)] = {
       case Function(vparams, body) =>
         (vparams, body)
       case f =>
@@ -546,8 +556,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     final def foreach(f: Tree): Tree = {
-      val apply @ Apply(TypeApply(Select(self, TermName("foreach")), List(u)),
-                        List(f @ functionOrFunctionLiteral.extract(vparams, body))) =
+      val apply @ Apply(
+        TypeApply(Select(self, TermName("foreach")), List(u)),
+        List(f @ functionOrFunctionLiteral(vparams, body))
+      ) =
         c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[$u]($body)"""
@@ -561,8 +573,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     final def map(f: Tree): Tree = {
-      val apply @ Apply(TypeApply(Select(self, TermName("map")), List(b)),
-                        List(f @ functionOrFunctionLiteral.extract(vparams, body))) =
+      val apply @ Apply(
+        TypeApply(Select(self, TermName("map")), List(b)),
+        List(f @ functionOrFunctionLiteral(vparams, body))
+      ) =
         c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[$b]($body)"""
@@ -571,8 +585,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     final def flatMap(f: Tree): Tree = {
-      val apply @ Apply(TypeApply(Select(self, TermName("flatMap")), List(b)),
-                        List(f @ functionOrFunctionLiteral.extract(vparams, body))) =
+      val apply @ Apply(
+        TypeApply(Select(self, TermName("flatMap")), List(b)),
+        List(f @ functionOrFunctionLiteral(vparams, body))
+      ) =
         c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.com.thoughtworks.binding.Binding.BindingSeq[$b]]($body)"""
@@ -581,8 +597,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     final def withFilter(condition: Tree): Tree = {
-      val apply @ Apply(Select(self, TermName("withFilter")),
-                        List(f @ functionOrFunctionLiteral.extract(vparams, body))) = c.macroApplication
+      val apply @ Apply(Select(self, TermName("withFilter")), List(f @ functionOrFunctionLiteral(vparams, body))) =
+        c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Boolean]($body)"""
       val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
@@ -599,7 +615,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  private[binding] case class SingleSeq[+A](element: A) extends collection.immutable.IndexedSeq[A] {
+  private[binding] case class SingleSeq[+A](element: A) extends IndexedSeq[A] {
 
     @inline
     override final def length: Int = 1
@@ -625,11 +641,16 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     @inline
     override protected def addPatchedListener(listener: PatchedListener[Nothing]): Unit = {}
 
+    type ValueSeq[+A] = List[A]
+
     @inline
     override protected def value = Nil
   }
 
-  private[Binding] abstract class ValueProxy[B] extends SeqView[B, HasCache[Binding[B]]#Cache] with HasCache[Binding[B]] {
+  private[Binding] abstract class ValueProxy[B] extends SeqView[B] with HasCache[Binding[B]] {
+
+    type ValueSeqOps[+A] = SeqView[A]
+
     protected def underlying = cacheData
 
     @inline
@@ -655,7 +676,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     */
   object BindingSeq {
 
-    private[binding] final class FlatProxy[B](protected val underlying: Seq[BindingSeq[B]]) extends SeqView[B, Seq[BindingSeq[B]]] {
+    private[binding] final class FlatProxy[B](protected val underlying: collection.Seq[BindingSeq[B]])
+        extends SeqView[B] {
 
       @inline
       override def length: Int = {
@@ -711,9 +733,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         set(Seq.empty)
       }
 
-      protected def set(children: Seq[Element]): Unit
+      protected def set(children: Iterable[Element]): Unit
 
-      protected def splice(from: Int, that: GenSeq[Element], replaced: Int): Unit
+      protected def splice(from: Int, that: Iterable[Element], replaced: Int): Unit
 
       private val upstreamListener = new PatchedListener[Element] {
 
@@ -734,22 +756,24 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
       private def refreshCache() = {
         cacheData = toCacheData(for {
-          a <- upstream.value/*.view*/
+          a <- upstream.value /*.view*/
         } yield f(a))
       }
+
+      type ValueSeq[+A] = SeqView[A]
 
       @inline
       override protected def value = new FlatProxy(cacheData)
 
       @inline
       private def flatIndex(oldCache: Cache, upstreamBegin: Int, upstreamEnd: Int): Int = {
-        oldCache.view(upstreamBegin, upstreamEnd).map(_.value.length).sum
+        oldCache.view.slice(upstreamBegin, upstreamEnd).map(_.value.length).sum
       }
 
       private val upstreamListener = new PatchedListener[A] {
         override def patched(upstreamEvent: PatchedEvent[A]): Unit = {
           val mappedNewChildren: Cache = toCacheData(for {
-            child <- upstreamEvent.that/*.view*/
+            child <- upstreamEvent.that /*.view*/
           } yield f(child))
           val flatNewChildren = new FlatProxy(mappedNewChildren)
           val flattenFrom = flatIndex(cacheData, 0, upstreamEvent.from)
@@ -816,7 +840,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
       private def refreshCache() = {
         cacheData = toCacheData(for {
-          a <- upstream.value/*.view*/
+          a <- upstream.value /*.view*/
         } yield f(a))
       }
 
@@ -837,7 +861,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
       def patched(upstreamEvent: PatchedEvent[A]): Unit = {
         val mappedNewChildren: Cache = toCacheData(for {
-          child <- upstreamEvent.that/*.view*/
+          child <- upstreamEvent.that /*.view*/
         } yield f(child))
         val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
         for (newChild <- mappedNewChildren) {
@@ -857,11 +881,13 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
       private def refreshCache() = {
         cacheData = toCacheData(for {
-          a <- upstream.value/*.view*/
+          a <- upstream.value /*.view*/
         } yield f(a))
       }
 
-      override protected def value: Seq[B] = {
+      type ValueSeq[+A] = SeqView[A]
+
+      override protected def value: SeqView[B] = {
         val cacheData0 = cacheData
         new ValueProxy[B] {
           var cacheData = cacheData0
@@ -871,7 +897,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       private val upstreamListener = new PatchedListener[A] {
         override def patched(upstreamEvent: PatchedEvent[A]): Unit = {
           val mappedNewChildren: Cache = toCacheData(for {
-            child <- upstreamEvent.that/*.view*/
+            child <- upstreamEvent.that /*.view*/
           } yield f(child))
           val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
           for (newChild <- mappedNewChildren) {
@@ -880,10 +906,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
           for (oldChild <- oldChildren) {
             oldChild.removeChangedListener(childListener)
           }
+          val proxy = new ValueProxy[B] {
+            var cacheData = mappedNewChildren
+          }
           val event =
-            new PatchedEvent(MapBinding.this, upstreamEvent.from, new ValueProxy[B] {
-              var cacheData = mappedNewChildren
-            }, upstreamEvent.replaced)
+            new PatchedEvent[B](MapBinding.this, upstreamEvent.from, proxy, upstreamEvent.replaced)
           for (listener <- publisher) {
             listener.patched(event)
           }
@@ -959,40 +986,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     }
 
-    @(deprecated @companionMethod)("Use [[BindingSeq.all]] instead", "11.0.0")
-    implicit final class AsBinding[Element](upstream: BindingSeq[Element]) extends Binding[Seq[Element]] {
-
-      private val patchedListener = new PatchedListener[Element] {
-        @inline
-        def patched(upstreamEvent: PatchedEvent[Element]): Unit = {
-          val event = new ChangedEvent[Seq[Element]](AsBinding.this, upstream.value)
-          for (listener <- publisher) {
-            listener.changed(event)
-          }
-        }
-      }
-      private val publisher = new SafeBuffer[ChangedListener[Seq[Element]]]
-
-      @inline
-      override protected def value: Seq[Element] = upstream.value
-
-      @inline
-      override protected def removeChangedListener(listener: ChangedListener[Seq[Element]]): Unit = {
-        publisher.-=(listener)
-        if (publisher.isEmpty) {
-          upstream.removePatchedListener(patchedListener)
-        }
-      }
-
-      @inline
-      override protected def addChangedListener(listener: ChangedListener[Seq[Element]]): Unit = {
-        if (publisher.isEmpty) {
-          upstream.addPatchedListener(patchedListener)
-        }
-        publisher.+=(listener)
-      }
-    }
-
   }
 
   /**
@@ -1003,7 +996,38 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   trait BindingSeq[+A] {
 
     /** Returns a new [[Binding]] expression of all elements in this [[BindingSeq]]. */
-    final def all: Binding[Seq[A]] = new BindingSeq.AsBinding(this)
+    final def all: Binding[ValueSeq[A]] = new Binding[ValueSeq[A]] { asBinding =>
+
+      private val patchedListener = new PatchedListener[A] {
+        @inline
+        def patched(upstreamEvent: PatchedEvent[A]): Unit = {
+          val event = new ChangedEvent[ValueSeq[A]](asBinding, asBinding.value)
+          for (listener <- publisher) {
+            listener.changed(event)
+          }
+        }
+      }
+      private val publisher = new SafeBuffer[ChangedListener[ValueSeq[A]]]
+
+      @inline
+      override protected def value: ValueSeq[A] = BindingSeq.this.value
+
+      @inline
+      override protected def removeChangedListener(listener: ChangedListener[ValueSeq[A]]): Unit = {
+        publisher.-=(listener)
+        if (publisher.isEmpty) {
+          BindingSeq.this.removePatchedListener(patchedListener)
+        }
+      }
+
+      @inline
+      override protected def addChangedListener(listener: ChangedListener[ValueSeq[A]]): Unit = {
+        if (publisher.isEmpty) {
+          BindingSeq.this.addPatchedListener(patchedListener)
+        }
+        publisher.+=(listener)
+      }
+    }
 
     /**
       * Enables automatic recalculation.
@@ -1029,14 +1053,16 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       removePatchedListener(Binding.DummyPatchedListener)
     }
 
+    type ValueSeq[+A] <: SeqOpsIterable[A]
+
     /** Returns the current value of this [[BindingSeq]]. */
-    protected def value: Seq[A]
+    protected def value: ValueSeq[A]
 
     /** Returns the current value of this [[BindingSeq]].
       *
       * @note This method is used for internal testing purpose only.
       */
-    private[binding] def get: Seq[A] = value
+    private[binding] def get: ValueSeq[A] = value
 
     protected def removePatchedListener(listener: PatchedListener[A]): Unit
 
@@ -1193,13 +1219,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     * @group expressions
     */
   final class Constants[+A] private (underlying: ConstantsData[A]) extends BindingSeq[A] {
+    type ValueSeq[+A] = collection.Seq[A]
 
     @inline
-    override def value: Seq[A] = underlying
-
-    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
-    @inline
-    override def get = value
+    override def value: collection.Seq[A] = underlying
 
     @inline
     override protected def removePatchedListener(listener: PatchedListener[A]): Unit = {}
@@ -1251,6 +1274,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private[binding] val publisher = new SafeBuffer[PatchedListener[A]]
 
+    type ValueSeq[+A] = Buffer[_ <: A]
+
     /**
       * Returns a [[scala.collection.mutable.Buffer]] that allow you change the content of this [[Vars]].
       *
@@ -1262,11 +1287,17 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     @inline
     override def value: Buffer[A] = new Proxy
 
-    @deprecated(message = "Use [[value]] instead", since = "11.0.0")
-    @inline
-    override def get = value
-
     private[binding] final class Proxy extends Buffer[A] {
+
+      @inline
+      override def patchInPlace(from: Int, patch: IterableOnce[A], replaced: Int): this.type = {
+        val result = spliceCache(from, patch, replaced)
+        for (listener <- publisher) {
+          listener.patched(new PatchedEvent(Vars.this, from, result, replaced))
+        }
+        this
+      }
+
       @inline
       override def apply(n: Int): A = {
         getCache(n)
@@ -1284,7 +1315,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       override def clear(): Unit = {
         val oldLength = cacheLength
         clearCache()
-        val event = new PatchedEvent(Vars.this, 0, Nil, oldLength)
+        val event = new PatchedEvent[A](Vars.this, 0, List.empty[A], oldLength)
         for (listener <- publisher) {
           listener.patched(event)
         }
@@ -1298,7 +1329,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       @inline
       override def remove(n: Int): A = {
         val result = removeCache(n)
-        val event = new PatchedEvent(Vars.this, n, Nil, 1)
+        val event = new PatchedEvent[A](Vars.this, n, List.empty[A], 1)
         for (listener <- publisher) {
           listener.patched(event)
         }
@@ -1306,7 +1337,16 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      override def ++=(elements: TraversableOnce[A]): this.type = {
+      override def remove(idx: Int, count: Int): Unit = {
+        removeCache(idx, count)
+        val event = new PatchedEvent[A](Vars.this, idx, List.empty[A], count)
+        for (listener <- publisher) {
+          listener.patched(event)
+        }
+      }
+
+      @inline
+      override def addAll(elements: IterableOnce[A]): this.type = {
         val oldLength = cacheLength
         val seq = appendCache(elements)
         for (listener <- publisher) {
@@ -1316,7 +1356,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      override def +=:(elem: A): this.type = {
+      override def prepend(elem: A): this.type = {
         prependCache(elem)
         for (listener <- publisher) {
           listener.patched(new PatchedEvent(Vars.this, 0, SingleSeq(elem), 0))
@@ -1325,7 +1365,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      override def +=(elem: A): this.type = {
+      override def addOne(elem: A): this.type = {
         val oldLength = cacheLength
         appendCache(elem)
         for (listener <- publisher) {
@@ -1335,11 +1375,18 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
 
       @inline
-      override def insertAll(n: Int, elems: Traversable[A]): Unit = {
+      override def insert(idx: Int, elem: A): Unit = {
+        val seq = insertOneCache(idx, elem)
+        for (listener <- publisher) {
+          listener.patched(new PatchedEvent(Vars.this, idx, seq, 0))
+        }
+
+      }
+
+      @inline
+      override def insertAll(n: Int, elems: IterableOnce[A]): Unit = {
         val seq = insertCache(n, elems)
-        for {
-          listener <- publisher
-        } {
+        for (listener <- publisher) {
           listener.patched(new PatchedEvent(Vars.this, n, seq, 0))
         }
       }
@@ -1383,6 +1430,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
 
     override def length: Constant[Int] = Constant(1)
+
+    type ValueSeq[+A] = IndexedSeq[A]
 
     @inline
     override protected def value = SingleSeq(upstream.value)
@@ -1511,9 +1560,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 trait Binding[+A] {
-
-  @deprecated(message = "Use [[Binding#bind bind]] instead", since = "7.0.0")
-  final def each: A = macro Binding.Macros.bind
 
   /**
     * Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].

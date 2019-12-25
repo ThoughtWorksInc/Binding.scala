@@ -1,10 +1,4 @@
-organization := "com.thoughtworks.binding"
-
-name := "Binding"
-
 description := "Reactive data-binding for Scala. This artifact is available for both Scala.js and JVM."
-
-libraryDependencies += "com.thoughtworks.extractor" %%% "extractor" % "2.1.2"
 
 libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.7"
 
@@ -14,11 +8,6 @@ libraryDependencies += "org.scalatest" %%% "scalatest" % "3.1.0" % Test
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-// Enable SAM type
-scalacOptions += "-Xexperimental"
-
-libraryDependencies += "org.typelevel" %% "macro-compat" % "1.1.1"
-
 libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+scalacOptions += "-Ymacro-annotations"
