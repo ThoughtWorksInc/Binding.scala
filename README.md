@@ -70,11 +70,15 @@ See http://www.scala-js.org/tutorial/basic/ for information about how to setup s
 
 ### Step 1: Add Binding.scala dependencies into your `build.sbt`:
 
+This repository contains the HTML templating library `dom` for Scala 2.10, 2.11, 2.12:
+
 ``` scala
 libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
+
+For Scala 2.13, use [html.scala](https://github.com/GlasslabGames/html.scala) instead.
 
 ### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
 
@@ -476,9 +480,9 @@ libraryDependencies += "com.thoughtworks.binding" %%% "binding" % "latest.releas
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
-### HTML DOM integration (dom.scala)
+### HTML DOM integration for Scala 2.10 - 2.12 (dom.scala)
 
-This module is only available for Scala.js. You could add it in your `build.sbt`.
+This module is only available for Scala.js, and the Scala version must between 2.10 and 2.12. You could add it in your `build.sbt`.
 
 ``` scala
 // For Scala.js projects
@@ -487,8 +491,36 @@ libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 ```
 
+### HTML DOM integration for Scala 2.12 - 2.13 (html.scala)
 
-### FXML integration (fxml.scala)
+This is the new HTML templating library based on [Name Based XML Literals](https://docs.scala-lang.org/sips/name-based-xml.html), the module is only available for Scala.js, and the Scala version must between 2.12 and 2.13. You could add it in your `build.sbt`.
+
+```
+// Enable macro annotations by setting scalac flags for Scala 2.13
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Seq("-Ymacro-annotations")
+  } else {
+    Nil
+  }
+}
+// Enable macro annotations by adding compiler plugins for Scala 2.12
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Nil
+  } else {
+    Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}
+libraryDependencies += "org.lrng.binding" %%% "html" % "latest.release"
+```
+
+See [html.scala](https://github.com/GlasslabGames/html.scala) for more information.
+
+
+### FXML integration for Scala 2.10 - 2.12 (fxml.scala)
 
 This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
 
@@ -541,4 +573,5 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs)
 * [Binding.scala Questions on Stack Overflow](https://stackoverflow.com/questions/tagged/binding.scala)
+* [html.scala](https://github.com/GlasslabGames/html.scala)
 * [本README的中文版](https://github.com/ThoughtWorksInc/Binding.scala/blob/10.0.x/README-zh.md)
