@@ -11,7 +11,7 @@ scala:
   - 2.12.8
 
 jdk:
-  - openjdk8
+  - openjdk11
 
 before_cache:
   - find $HOME/.sbt -name '*.lock' -delete
