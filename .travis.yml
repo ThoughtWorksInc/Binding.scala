@@ -18,9 +18,9 @@ before_cache:
 
 cache:
   directories:
+    - $HOME/.cache/coursier
     - $HOME/.ivy2/cache
-    - $HOME/.sbt/boot/
-    - $HOME/.coursier/
+    - $HOME/.sbt
 
 before_script:
 
