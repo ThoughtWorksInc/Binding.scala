@@ -1,5 +1,5 @@
 libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "1.1.7"
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.1.1" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.1.2" % Test
 
 scalacOptions += "-Ymacro-annotations"
