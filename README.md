@@ -9,17 +9,15 @@
 [![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/binding_2.12.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
 [![Latest version](https://index.scala-lang.org/thoughtworksinc/Binding.scala/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala)
 
-**Binding.scala** is a data-binding framework for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
+**Binding.scala** is a data-binding library for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
-Binding.scala can be used as a **reactive templating language** in both web and [desktop](https://github.com/ThoughtWorksInc/Binding.scala/wiki/FXML) GUI development.
-It enables you use native XHTML and FXML literal syntax to create reactive DOM nodes and JavaFX components,
-which are able to automatically change whenever the data source changes.
+Binding.scala can be used as the basis of UI frameworks, however latest Binding.scala 12.x does not contain any build-in UI frameworks any more. For creating reactive HTML UI, you may want to check out [html.scala](https://github.com/GlasslabGames/html.scala), which is an UI framework based on Binding.scala, and it is also the successor of previously built-in [dom](https://javadoc.io/page/com.thoughtworks.binding/dom_sjs0.6_2.12/latest/com/thoughtworks/binding/dom.html) library.
 
 See [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/) or [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs) as examples for common tasks when working with Binding.scala.
 
 ## Comparison to other reactive web frameworks
 
-Binding.scala has more features and less concepts than other reactive web frameworks like [ReactJS](https://facebook.github.io/react/).
+Binding.scala and html.scala has more features and less concepts than other reactive web frameworks like [ReactJS](https://facebook.github.io/react/).
 
 <table>
   <thead>
@@ -68,17 +66,31 @@ We will build an Binding.scala web page during the following steps.
 
 See http://www.scala-js.org/tutorial/basic/ for information about how to setup such a project.
 
-### Step 1: Add Binding.scala dependencies into your `build.sbt`:
-
-This repository contains the HTML templating library `dom` for Scala 2.10, 2.11, 2.12:
+### Step 1: Add html.scala dependencies into your `build.sbt`:
 
 ``` scala
-libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
+// Enable macro annotations by setting scalac flags for Scala 2.13
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Seq("-Ymacro-annotations")
+  } else {
+    Nil
+  }
+}
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+// Enable macro annotations by adding compiler plugins for Scala 2.12
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Nil
+  } else {
+    Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}
+
+libraryDependencies += "org.lrng.binding" %%% "html" % "latest.release"
 ```
-
-For Scala 2.13, use [html.scala](https://github.com/GlasslabGames/html.scala) instead.
 
 ### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
 
@@ -99,10 +111,10 @@ hence a `Vars` can be seen as a binding expression of a sequence as well.
 If another comprehension expression depends on a `Vars`,
 the value of the expression changes whenever value of the `Vars` changes.
 
-### Step 3: Create a `@dom` method that contains data-binding expressions
+### Step 3: Create a `@html` method that contains data-binding expressions
 
 ``` scala
-@dom
+@html
 def table: Binding[Table] = {
   <table border="1" cellPadding="5">
     <thead>
@@ -129,22 +141,17 @@ def table: Binding[Table] = {
 }
 ```
 
-A `@dom` method represents a data-binding expression.
-
-The return type is always wrapped in a `com.thoughtworks.binding.Binding` trait.
-For example `@dom def x: Binding[Int] = 1`,  `@dom def message: Binding[String] = "content"`
-
-A `@dom` method supports HTML literal.
+A `@html` method represents an reactive XHTML template, which supports HTML literal.
 Unlike normal XML literal in a normal Scala method,
 the types of HTML literal are specific subtypes of `org.scalajs.dom.raw.Node` or `com.thoughtworks.binding.BindingSeq[org.scalajs.dom.raw.Node]`,
 instead of `scala.xml.Node` or `scala.xml.NodeSeq`.
-So we could have `@dom def node: Binding[org.scalajs.dom.raw.HTMLBRElement] = <br/>`
-and `@dom def node: Binding[BindingSeq[org.scalajs.dom.raw.HTMLBRElement]] = <br/><br/>`.
+So we could have `@html def node: Binding[org.scalajs.dom.raw.HTMLBRElement] = <br/>`
+and `@html def node: Binding[BindingSeq[org.scalajs.dom.raw.HTMLBRElement]] = <br/><br/>`.
 
-A `@dom` method is composed with other data-binding expressions in two ways:
+A `@html` method is composed with other data-binding expressions in two ways:
 
- 1. You could use `bind` method in a `@dom` method to get value of another `Binding`.
- 2. You could use `for` / `yield` expression in a `@dom` method to map a `BindingSeq` to another.
+ 1. You could use `bind` method in a `@html` method to get value of another `Binding`.
+ 2. You could use `for` / `yield` expression in a `@html` method to map a `BindingSeq` to another.
 
 You can nest `Node` or `BindingSeq[Node]` in other HTML element literals via `{ ... }` interpolation syntax.
 
@@ -153,7 +160,7 @@ You can nest `Node` or `BindingSeq[Node]` in other HTML element literals via `{ 
 ``` scala
 @JSExport
 def main(): Unit = {
-  dom.render(document.body, table)
+  html.render(document.body, table)
 }
 ```
 
@@ -178,8 +185,8 @@ Now you will see a table that just contains a header, because `data` is empty at
 ### Step 6: Add some `<button>` to fill `data` for the table
 
 ``` scala
-@dom
-def table: Binding[BindingSeq[Node]] = {
+@html
+def table: BindingSeq[Node] = {
   <div>
     <button
       onclick={ event: Event =>
@@ -231,8 +238,6 @@ so it decides to append a new `<tr>` corresponding to the newly appended Contact
 And when you click the "Modify the name", the `name` field on `contact` changes,
 then, Binding.scala decides to change the content of the corresponding `tr` to new value of `name` field.
 
-See https://github.com/ThoughtWorksInc/Binding.scala-sample for the complete example.
-
 
 ## Design
 
@@ -256,10 +261,10 @@ Instead, it describes the process to create a virtual DOM.
 As a result, the `render` function does not provide any information about the purpose of the `state` changing,
 although a data-binding framework should need the information.
 
-Unlike ReactJS, a Binding.scala `@dom` method is NOT a regular function.
+Unlike ReactJS, a Binding.scala `@html` method is NOT a regular function.
 It is a template that describes the relationship between data source and the DOM.
 When part of the data source changes, Binding.scala knows about the exact corresponding partial DOM affected by the change,
-thus only re-evaluating that part of the `@dom` method to reflect the change in the DOM.
+thus only re-evaluating that part of the `@html` method to reflect the change in the DOM.
 
 With the help of the ability of precise data-binding provided by Binding.scala,
 you can get rid of concepts for hinting ReactJS's guessing algorithm,
@@ -271,13 +276,13 @@ The smallest composable unit in ReactJS is a component.
 It is fair to say that a React component is lighter than an AngularJS controller,
 while Binding.scala is better than that.
 
-The smallest composable unit in Binding.scala is a `@dom` method.
-Every `@dom` method is able to compose other `@dom` methods via `.bind`.
+The smallest composable unit in Binding.scala is a `@html` method.
+Every `@html` method is able to compose other `@html` methods via `.bind`.
 
 ``` scala
 case class Contact(name: Var[String], email: Var[String])
 
-@dom
+@html
 def bindingButton(contact: Contact): Binding[Button] = {
   <button
     onclick={ event: Event =>
@@ -288,7 +293,7 @@ def bindingButton(contact: Contact): Binding[Button] = {
   </button>
 }
 
-@dom
+@html
 def bindingTr(contact: Contact): Binding[TableRow] = {
   <tr>
     <td>{ contact.name.bind }</td>
@@ -297,7 +302,7 @@ def bindingTr(contact: Contact): Binding[TableRow] = {
   </tr>
 }
 
-@dom
+@html
 def bindingTable(contacts: BindingSeq[Contact]): Binding[Table] = {
   <table>
     <tbody>
@@ -345,16 +350,16 @@ Note that `dom.render` or `Binding.watch` manages listeners on all upstream expr
 not only the direct listeners of the root expression.
 
 In brief, Binding.scala separates functionality in two kinds:
- * User-defined `@dom` methods, which produce pure functional expressions with no side-effects.
+ * User-defined `@html` methods, which produce pure functional expressions with no side-effects.
  * Calls to `dom.render` or `Binding.watch`, which manage all side-effects automatically.
 
 ### HTML literal and statically type checking
 
-As you see, you can embed HTML literals in `@dom` methods in Scala source files.
+As you see, you can embed HTML literals in `@html` methods in Scala source files.
 You can also embed Scala expressions in braces in content or attribute values of the HTML literal.
 
 ``` scala
-@dom
+@html
 def notificationBox(message: String): Binding[Div] = {
   <div class="notification" title={ s"Tooltip: $message" }>
     {
@@ -368,12 +373,12 @@ Despite the similar syntax of HTML literal between Binding.scala and ReactJS,
 Binding.scala creates real DOM instead of ReactJS's virtual DOM.
 
 In the above example, `<div>...</div>` creates a DOM element with the type of `org.scalajs.dom.html.Div`.
-Then, the magic `@dom` lets the method wrap the result as a `Binding`.
+Then, the magic `@html` lets the method wrap the result as a `Binding`.
 
 You can even assign the `Div` to a local variable and invoke native DOM methods on the variable:
 
 ``` scala
-@dom
+@html
 def notificationBox(message: String): Binding[Div] = {
   val result: Div = <div class="notification" title={ s"Tooltip: $message" }>
     {
@@ -398,7 +403,7 @@ They are type-checked by Scala compiler as well.
 For example, given the following `typo` method:
 
 ``` scala
-@dom
+@html
 def typo = {
   val myDiv = <div typoProperty="xx">content</div>
   myDiv.typoMethod()
@@ -417,7 +422,7 @@ typo.scala:24: value typoMethod is not a member of org.scalajs.dom.html.Div
               ^
 ```
 
-With the help of the static type system, `@dom` methods can be much more robust than ReactJS components.
+With the help of the static type system, `@html` methods can be much more robust than ReactJS components.
 
 You can find a complete list of supported properties and methods on [scaladoc of scalajs-dom](http://www.scala-js.org/api/scalajs-dom/0.8/org/scalajs/dom/raw/HTMLElement.html) or [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement)
 
@@ -426,7 +431,7 @@ You can find a complete list of supported properties and methods on [scaladoc of
 If you want to suppress the static type checking of attributes, add a `data:` prefix to the attribute:
 
 ``` scala
-@dom def myCustomDiv = {
+@html def myCustomDiv = {
   val myDiv = <div data:customAttributeName="attributeValue"></div>
   assert(myDiv.getAttribute("customAttributeName") == "attributeValue")
   myDiv
@@ -476,17 +481,6 @@ libraryDependencies += "com.thoughtworks.binding" %% "binding" % "latest.release
 libraryDependencies += "com.thoughtworks.binding" %%% "binding" % "latest.release"
 ```
 
-### HTML DOM integration for Scala 2.10 - 2.12 (dom.scala)
-
-This module is only available for Scala.js, and the Scala version must between 2.10 and 2.12. You could add it in your `build.sbt`.
-
-``` scala
-// For Scala.js projects (Scala 2.10 - 2.12)
-libraryDependencies += "com.thoughtworks.binding" %%% "dom" % "latest.release"
-
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
-```
-
 ### HTML DOM integration for Scala 2.12 - 2.13 (html.scala)
 
 This is the new HTML templating library based on [Name Based XML Literals](https://docs.scala-lang.org/sips/name-based-xml.html), the module is only available for Scala.js, and the Scala version must between 2.12 and 2.13. You could add it in your `build.sbt`.
@@ -518,25 +512,6 @@ libraryDependencies += "org.lrng.binding" %%% "html" % "latest.release"
 
 See [html.scala](https://github.com/GlasslabGames/html.scala) for more information.
 
-
-### FXML integration for Scala 2.10 - 2.12 (fxml.scala)
-
-This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
-
-``` scala
-// For JVM projects
-libraryDependencies += "com.thoughtworks.binding" %% "fxml" % "latest.release"
-
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
-```
-
-``` scala
-// For Scala.js projects, or JS/JVM cross projects
-libraryDependencies += "com.thoughtworks.binding" %%% "fxml" % "latest.release"
-
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
-```
-
 ### Remote data-binding for `scala.concurrent.Future` (FutureBinding.scala)
 
 This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
@@ -551,6 +526,8 @@ libraryDependencies += "com.thoughtworks.binding" %% "futurebinding" % "latest.r
 libraryDependencies += "com.thoughtworks.binding" %%% "futurebinding" % "latest.release"
 ```
 
+See [FutureBinding](https://github.com/Atry/FutureBinding.scala) for more information.
+
 ### Remote data-binding for ECMAScript 2015's `Promise` (JsPromiseBinding.scala)
 
 This module is only available for Scala.js. You could add it in your `build.sbt`.
@@ -560,8 +537,11 @@ This module is only available for Scala.js. You could add it in your `build.sbt`
 libraryDependencies += "com.thoughtworks.binding" %%% "jspromisebinding" % "latest.release"
 ```
 
+See [FutureBinding](https://github.com/Atry/JsPromiseBinding.scala) for more information.
+
 ## Links
 
+* [html.scala](https://github.com/GlasslabGames/html.scala)
 * [The API documentation](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs)
