@@ -462,7 +462,7 @@ The Scala compiler will not report errors now.
 
 (Feel free to add your project here)
 
-## Downloads
+## Modules
 
 Binding.scala has an extremely tiny code base.
 The source files are split into few libraries, one file per library.
@@ -481,7 +481,7 @@ libraryDependencies += "com.thoughtworks.binding" %% "binding" % "latest.release
 libraryDependencies += "com.thoughtworks.binding" %%% "binding" % "latest.release"
 ```
 
-### HTML DOM integration for Scala 2.12 - 2.13 (html.scala)
+### HTML DOM integration (html.scala)
 
 This is the new HTML templating library based on [Name Based XML Literals](https://docs.scala-lang.org/sips/name-based-xml.html), the module is only available for Scala.js, and the Scala version must between 2.12 and 2.13. You could add it in your `build.sbt`.
 
@@ -538,6 +538,12 @@ libraryDependencies += "com.thoughtworks.binding" %%% "jspromisebinding" % "late
 ```
 
 See [FutureBinding](https://github.com/Atry/JsPromiseBinding.scala) for more information.
+
+## Requirements
+
+Due to collection API changes, Binding.scala 12.x only works on Scala 2.13, targeting JVM, Scala.js 0.6 and Scala.js 1.x.
+
+For Scala 2.10, 2.11 and 2.12 on JVM or Scala.js 0.6, use [Binding.scala 11.x](https://github.com/ThoughtWorksInc/Binding.scala/tree/11.9.x) instead.
 
 ## Links
 
