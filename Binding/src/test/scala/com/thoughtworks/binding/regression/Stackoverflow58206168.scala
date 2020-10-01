@@ -8,7 +8,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
 final class Stackoverflow58206168 extends AnyFreeSpec with Matchers {
-  // See https://stackoverflow.com/questions//binding-scala-vars-bind-seems-to-not-work-correctly
+  // See https://stackoverflow.com/questions/58206168/binding-scala-vars-bind-seems-to-not-work-correctly
   "Binding.scala: Vars.bind seems to not work correctly" in {
     val events = mutable.Buffer.empty[List[Int]]
     val test: Vars[Int] = Vars(1, 2, 3, 4)
