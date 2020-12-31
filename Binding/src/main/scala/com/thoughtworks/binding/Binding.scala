@@ -1273,7 +1273,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     private[binding] val publisher = new SafeBuffer[PatchedListener[A]]
 
-    type All[+A] = Buffer[_ <: A]
+    type All[+A] = Buffer[_ <: A] with SeqOpsIterable[A]
 
     /**
       * Returns a [[scala.collection.mutable.Buffer]] that allow you change the content of this [[Vars]].
