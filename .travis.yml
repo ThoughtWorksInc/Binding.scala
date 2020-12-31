@@ -12,14 +12,15 @@ jdk:
   - openjdk11
 
 before_cache:
-  - find $HOME/.sbt -name '*.lock' -delete
-  - find $HOME/.ivy2 -name 'ivydata-*.properties' -delete
+  - rm -fv $HOME/.ivy2/.sbt.ivy.lock
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+  - find $HOME/.sbt        -name "*.lock"               -print -delete
 
 cache:
   directories:
+    - $HOME/.cache/coursier
     - $HOME/.ivy2/cache
-    - $HOME/.sbt/boot/
-    - $HOME/.coursier/
+    - $HOME/.sbt
 
 before_script:
 
@@ -28,7 +29,8 @@ before_deploy:
 deploy:
   - provider: script
     script: sbt $SBT_ARGS ++$TRAVIS_SCALA_VERSION "set every Seq(sonatypeSessionName := \"Travis Job $TRAVIS_JOB_NAME $TRAVIS_JOB_NUMBER ($TRAVIS_JOB_WEB_URL)\", publishTo := sonatypePublishToBundle.value)" publishSigned sonatypeBundleRelease
-    skip_cleanup: true
+    cleanup: false
+    edge: true
     on:
       all_branches: true
       condition: $GITHUB_PERSONAL_ACCESS_TOKEN
