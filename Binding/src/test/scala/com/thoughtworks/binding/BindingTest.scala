@@ -24,14 +24,16 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.Buffer
+
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
+import scalaz._
+
 import Binding._
 import BindingSeq.removePatchedListener
 import BindingSeq.addPatchedListener
-import scala.collection.mutable.ArrayBuffer
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.should.Matchers
-
-import scalaz._
 
 final class BindingTest extends AnyFreeSpec with Matchers {
 
@@ -773,4 +775,35 @@ mount 2000
     mounting.unwatch()
 
   }
+
+  "vars.all.bind" in {
+    val vars: Vars[String] = Vars[String]("one", "two", "three")
+    val bufferBinding = Binding {
+      val seq = vars.all.bind
+      seq
+    }
+    bufferBinding.watch()
+    assert(bufferBinding.get == Buffer("one", "two", "three"))
+  }
+
+  "constants.all.bind" in {
+    val constants: Constants[String] = Constants[String]("one", "two", "three")
+    val seqBinding = Binding {
+      val seq = constants.all.bind
+      seq
+    }
+    seqBinding.watch()
+    assert(seqBinding.get == Seq("one", "two", "three"))
+  }
+
+  "bindingSeq.all.bind" in {
+    val bindingSeq: BindingSeq[String] = Constants[String]("one", "two", "three")
+    val seqOpsIterableBinding = Binding {
+      val seq = bindingSeq.all.bind
+      seq
+    }
+    seqOpsIterableBinding.watch()
+    assert(seqOpsIterableBinding.get == Seq("one", "two", "three"))
+  }
+
 }
