@@ -1,6 +1,5 @@
 package com.thoughtworks.binding
 package regression
-import org.scalatest.{FreeSpec, Matchers}
 import Binding._
 import scala.collection.mutable
 import Binding.BindingInstances.functorSyntax._
