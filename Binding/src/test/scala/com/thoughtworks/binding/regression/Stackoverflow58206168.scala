@@ -12,9 +12,11 @@ final class Stackoverflow58206168 extends AnyFreeSpec with Matchers {
     val events = mutable.Buffer.empty[List[Int]]
     val test: Vars[Int] = Vars(1, 2, 3, 4)
 
-    test.all.map {
-      events += _.toList
-    }.watch()
+    test.all
+      .map {
+        events += _.toList
+      }
+      .watch()
 
     test.value.append(1111)
     assert(events == mutable.Buffer(List(1, 2, 3, 4), List(1, 2, 3, 4, 1111)))

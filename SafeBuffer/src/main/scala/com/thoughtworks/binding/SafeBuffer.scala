@@ -13,7 +13,7 @@ private[binding] object SafeBuffer {
 
     // Used for Scala 2.13
     @inline
-    implicit final class ReduceToSizeOps[A] @inline()(buffer: collection.mutable.ArrayBuffer[A]) {
+    implicit final class ReduceToSizeOps[A] @inline() (buffer: collection.mutable.ArrayBuffer[A]) {
       @inline def reduceToSize(newSize: Int) = {
         buffer.remove(newSize, buffer.size - newSize)
       }
@@ -27,7 +27,7 @@ private[binding] object SafeBuffer {
     def newBuffer[A] = new scalajs.js.Array[A]
 
     @inline
-    implicit final class ReduceToSizeOps[A] @inline()(array: scalajs.js.Array[A]) {
+    implicit final class ReduceToSizeOps[A] @inline() (array: scalajs.js.Array[A]) {
       @inline def reduceToSize(newSize: Int) = array.length = newSize
     }
 
@@ -45,11 +45,12 @@ private[binding] object SafeBuffer {
 
 }
 
-/** Similar to [[scala.collection.mutable.ArrayBuffer]],
-  * except that this [[SafeBuffer]] allows adding or removing elements via [[+=]] and [[-=]]
-  * inside a [[foreach]] block.
+/** Similar to [[scala.collection.mutable.ArrayBuffer]], except that this [[SafeBuffer]] allows adding or removing
+  * elements via [[+=]] and [[-=]] inside a [[foreach]] block.
   *
-  * @note A [[java.lang.IllegalStateException]] will be thrown when invoking methods other than [[+=]] and [[-=]] in a [[foreach]] block.
+  * @note
+  *   A [[java.lang.IllegalStateException]] will be thrown when invoking methods other than [[+=]] and [[-=]] in a
+  *   [[foreach]] block.
   */
 final class SafeBuffer[A] extends mutable.Buffer[A] {
 
@@ -121,7 +122,8 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
   private def checkIdle() = {
     if (Idle != state)
       throw new IllegalStateException(
-        "Not allowed to invoke methods other than `+=` and `-=` when `foreach` is running.")
+        "Not allowed to invoke methods other than `+=` and `-=` when `foreach` is running."
+      )
   }
 
   def apply(n: Int): A = {
