@@ -43,12 +43,16 @@ import scala.language.experimental.macros
 import scala.language.existentials
 import scala.collection.SeqOps
 
-/**
-  * @groupname typeClasses Type class instance
-  * @groupname implicits Implicits Conversions
-  * @groupname expressions Binding Expressions
-  * @groupdesc expressions AST nodes of binding expressions
-  * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
+/** @groupname typeClasses
+  *   Type class instance
+  * @groupname implicits
+  *   Implicits Conversions
+  * @groupname expressions
+  *   Binding Expressions
+  * @groupdesc expressions
+  *   AST nodes of binding expressions
+  * @author
+  *   杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
@@ -290,8 +294,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     def patched(event: PatchedEvent[Element]): Unit
   }
 
-  /**
-    * A data binding expression that never changes.
+  /** A data binding expression that never changes.
     *
     * @group expressions
     */
@@ -308,16 +311,14 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  /**
-    * @group expressions
+  /** @group expressions
     */
   object Var {
     @inline
     def apply[A](initialValue: A) = new Var(initialValue)
   }
 
-  /**
-    * Source variable of data binding expression.
+  /** Source variable of data binding expression.
     *
     * You can manually change the value:
     *
@@ -337,10 +338,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     @inline
     override def value = cache
 
-    /**
-      * Changes the current value of this [[Var]], and reevaluates any expressions that depends on this [[Var]].
+    /** Changes the current value of this [[Var]], and reevaluates any expressions that depends on this [[Var]].
       *
-      * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block.
+      * @note
+      *   This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block.
       */
     def value_=(newValue: A): Unit = {
       if (cache.isInstanceOf[View[_]] || cache != newValue) {
@@ -363,8 +364,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  /**
-    * @group expressions
+  /** @group expressions
     */
   final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
 
@@ -423,8 +423,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     protected def addChangedListener(listener: ChangedListener[Nothing]): Unit = throwException()
   }
 
-  /**
-    * @group expressions
+  /** @group expressions
     */
   final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Binding[B] with ChangedListener[B] {
 
@@ -493,8 +492,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * Monad instances for [[Binding]].
+  /** Monad instances for [[Binding]].
     *
     * @group typeClasses
     */
@@ -667,8 +665,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     }
   }
 
-  /**
-    * The companion of a data binding expression of a sequence
+  /** The companion of a data binding expression of a sequence
     *
     * @group expressions
     */
@@ -986,8 +983,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * Data binding expression of a sequence
+  /** Data binding expression of a sequence
     *
     * @group expressions
     */
@@ -995,7 +991,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     /** Returns a new [[Binding]] expression of all elements in this [[BindingSeq]]. */
     final def all: Binding[All[A]] = new Binding[All[A]] { asBinding =>
-
       private val patchedListener = new PatchedListener[A] {
         @inline
         def patched(upstreamEvent: PatchedEvent[A]): Unit = {
@@ -1027,24 +1022,23 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       }
     }
 
-    /**
-      * Enables automatic recalculation.
+    /** Enables automatic recalculation.
       *
-      * You may invoke this method more than once.
-      * Then, when you want to disable automatic recalculation,
-      * you must invoke [[unwatch]] same times as the number of calls to this method.
+      * You may invoke this method more than once. Then, when you want to disable automatic recalculation, you must
+      * invoke [[unwatch]] same times as the number of calls to this method.
       *
-      * @note This method is recursive, which means that the dependencies of this [[BindingSeq]] will be watched as well.
+      * @note
+      *   This method is recursive, which means that the dependencies of this [[BindingSeq]] will be watched as well.
       */
     @inline
     final def watch(): Unit = {
       addPatchedListener(Binding.DummyPatchedListener)
     }
 
-    /**
-      * Disables automatic recalculation.
+    /** Disables automatic recalculation.
       *
-      * @note This method is recursive, which means that the dependencies of this [[BindingSeq]] will be unwatched as well.
+      * @note
+      *   This method is recursive, which means that the dependencies of this [[BindingSeq]] will be unwatched as well.
       */
     @inline
     final def unwatch(): Unit = {
@@ -1059,7 +1053,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     /** Returns the current value of this [[BindingSeq]].
       *
-      * @note This method is used for internal testing purpose only.
+      * @note
+      *   This method is used for internal testing purpose only.
       */
     private[binding] def get: All[A] = value
 
@@ -1075,89 +1070,85 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     def foreach[U](f: A => U): Unit = macro Macros.foreach
 
-    /**
-      * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+    /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
       *
-      * @param f The mapper function, which may contain magic [[Binding#bind bind]] calls.
+      * @param f
+      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
       */
     def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
-    /**
-      * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+    /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
       *
-      * @param f The mapper function, which may contain magic [[Binding#bind bind]] calls.
+      * @param f
+      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
       */
     def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
-    /**
-      * The underlying implementation of [[foreach]].
+    /** The underlying implementation of [[foreach]].
       *
-      * @note Don't use this method in user code.
+      * @note
+      *   Don't use this method in user code.
       */
     @inline
     def foreachBinding[U](f: A => Binding[U]): Binding[Unit] = {
       new BindingSeq.ForeachBinding[A](this, f)
     }
 
-    /**
-      * The underlying implementation of [[map]].
+    /** The underlying implementation of [[map]].
       *
-      * @note Don't use this method in user code.
+      * @note
+      *   Don't use this method in user code.
       */
     @inline
     final def mapBinding[B](f: A => Binding[B]): BindingSeq[B] = new BindingSeq.MapBinding[A, B](this, f)
 
-    /**
-      * The underlying implementation of [[flatMap]].
+    /** The underlying implementation of [[flatMap]].
       *
-      * @note Don't use this method in user code.
+      * @note
+      *   Don't use this method in user code.
       */
     @inline
     final def flatMapBinding[B](f: A => Binding[BindingSeq[B]]): BindingSeq[B] = {
       new BindingSeq.FlatMap[BindingSeq[B], B](new BindingSeq.MapBinding[A, BindingSeq[B]](this, f), locally)
     }
 
-    /**
-      * Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+    /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
       *
-      * @param f The mapper function, which may contain magic [[Binding#bind bind]] calls.
+      * @param f
+      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
       */
     def withFilter(condition: A => Boolean): BindingSeq[A]#WithFilter = macro Macros.withFilter
 
-    /**
-      * The underlying implementation of [[withFilter]].
+    /** The underlying implementation of [[withFilter]].
       *
-      * @note Don't use this method in user code.
+      * @note
+      *   Don't use this method in user code.
       */
     @inline
     final def withFilterBinding(condition: A => Binding[Boolean]): BindingSeq[A]#WithFilter = {
       new WithFilter(condition)
     }
 
-    /**
-      * A helper to build complicated comprehension expressions for [[BindingSeq]]
+    /** A helper to build complicated comprehension expressions for [[BindingSeq]]
       */
     final class WithFilter(condition: A => Binding[Boolean]) {
 
-      /**
-        * Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+      /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
         */
       def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
-      /**
-        * Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+      /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
         */
       def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
-      /**
-        * Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+      /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
         */
       def withFilter(condition: A => Boolean): WithFilter = macro Macros.withFilter
 
-      /**
-        * Underlying implementation of [[withFilter.
+      /** Underlying implementation of [[withFilter.
         *
-        * @note Don't use this method in user code.
+        * @note
+        *   Don't use this method in user code.
         */
       @inline
       def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
@@ -1172,10 +1163,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         })
       }
 
-      /**
-        * Underlying implementation of [[map]].
+      /** Underlying implementation of [[map]].
         *
-        * @note Don't use this method in user code.
+        * @note
+        *   Don't use this method in user code.
         */
       @inline
       def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
@@ -1190,10 +1181,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
         }
       }
 
-      /**
-        * Underlying implementation of [[flatMap]].
+      /** Underlying implementation of [[flatMap]].
         *
-        * @note Don't use this method in user code.
+        * @note
+        *   Don't use this method in user code.
         */
       @inline
       def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
@@ -1212,8 +1203,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * An data binding expression of sequence that never changes.
+  /** An data binding expression of sequence that never changes.
     *
     * @group expressions
     */
@@ -1231,8 +1221,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * @group expressions
+  /** @group expressions
     */
   object Constants {
 
@@ -1249,8 +1238,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * @group expressions
+  /** @group expressions
     */
   object Vars {
 
@@ -1262,8 +1250,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * Source sequence of data binding expression.
+  /** Source sequence of data binding expression.
     *
     * @group expressions
     */
@@ -1275,13 +1262,13 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     type All[+A] = Buffer[_ <: A] with SeqOpsIterable[A]
 
-    /**
-      * Returns a [[scala.collection.mutable.Buffer]] that allow you change the content of this [[Vars]].
+    /** Returns a [[scala.collection.mutable.Buffer]] that allow you change the content of this [[Vars]].
       *
-      * Whenever you change the returned data,
-      * other binding expressions that depend on this [[Vars]] will be automatically changed.
+      * Whenever you change the returned data, other binding expressions that depend on this [[Vars]] will be
+      * automatically changed.
       *
-      * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
+      * @note
+      *   This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
       */
     @inline
     override def value: Buffer[A] = new Proxy
@@ -1408,8 +1395,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * A [[BindingSeq]] that contains only one element
+  /** A [[BindingSeq]] that contains only one element
     *
     * @group expressions
     */
@@ -1453,8 +1439,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * A mechanism that mounts the result of a data binding expression into DOM or other system.
+  /** A mechanism that mounts the result of a data binding expression into DOM or other system.
     *
     * @group expressions
     */
@@ -1487,18 +1472,16 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /**
-    * A mechanism that mounts the result of a data binding expression of a sequence into DOM or other system.
+  /** A mechanism that mounts the result of a data binding expression of a sequence into DOM or other system.
     *
     * @group expressions
     */
   abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element]) extends BindingSeq.MultiMountPoint(upstream)
 
-  /**
-    * A mechanism that mounts the result of a data binding expression of a single value into DOM or other system.
+  /** A mechanism that mounts the result of a data binding expression of a single value into DOM or other system.
     *
-    * Use this class only if you must override [[mount]] or [[unmount]].
-    * If you only want to override [[set]], you can use `Binding[Unit] { onUpstreamChange(upstream.bind) }` instead.
+    * Use this class only if you must override [[mount]] or [[unmount]]. If you only want to override [[set]], you can
+    * use `Binding[Unit] { onUpstreamChange(upstream.bind) }` instead.
     *
     * @group expressions
     */
@@ -1536,49 +1519,48 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
 }
 
-/**
-  * A data binding expression that represents a value that automatically recalculates when its dependencies change.
+/** A data binding expression that represents a value that automatically recalculates when its dependencies change.
   *
+  * @example
+  *   You may create a data binding expression via `Binding { ??? }` block or `@dom` annotation.
   *
-  * @example You may create a data binding expression via `Binding { ??? }` block or `@dom` annotation.
+  * {{{
+  *           val bindingInt: Binding[Int] = Binding { 100 }
+  * }}}
   *
-  *          {{{
-  *          val bindingInt: Binding[Int] = Binding { 100 }
-  *          }}}
+  * {{{
+  *           @dom val bindingBr: Binding[HTMLBRElement] = <br/>
+  * }}}
   *
-  *          {{{
-  *          @dom val bindingBr: Binding[HTMLBRElement] = <br/>
-  *          }}}
+  * A data binding expression may depend on other binding expressions via [[bind]] method:
   *
-  *          A data binding expression may depend on other binding expressions via [[bind]] method:
+  * {{{
+  *           val bindingString: Binding[String] = Binding { bindingInt.bind.toString }
+  * }}}
   *
-  *          {{{
-  *          val bindingString: Binding[String] = Binding { bindingInt.bind.toString }
-  *          }}}
-  *
-  * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
+  * @author
+  *   杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 trait Binding[+A] {
 
-  /**
-    * Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].
+  /** Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].
     *
-    * Each time the value changes, in the current `@dom` method,
-    * all code after the current `bind` expression will be re-evaluated if the current `@dom` method is [[#watch watch]]ing.
-    * However, code in current `@dom` method and before the current `bind` expression will not be re-evaluated.
-    * The above rule is not applied to DOM nodes created by XHTML literal.
-    * A `bind` expression under a DOM node does not affect siblings and parents of that node.
+    * Each time the value changes, in the current `@dom` method, all code after the current `bind` expression will be
+    * re-evaluated if the current `@dom` method is [[#watch watch]]ing. However, code in current `@dom` method and
+    * before the current `bind` expression will not be re-evaluated. The above rule is not applied to DOM nodes created
+    * by XHTML literal. A `bind` expression under a DOM node does not affect siblings and parents of that node.
     *
-    * @note This method must be invoked inside a `@dom` method body or a `Binding { ... }` block..
+    * @note
+    *   This method must be invoked inside a `@dom` method body or a `Binding { ... }` block..
     */
   final def bind: A = macro Binding.Macros.bind
 
   private[binding] def get: A = value
 
-  /**
-    * Returns the current value of this [[Binding]]
+  /** Returns the current value of this [[Binding]]
     *
-    * @note This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
+    * @note
+    *   This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
     */
   protected def value: A
 
@@ -1586,24 +1568,23 @@ trait Binding[+A] {
 
   protected def addChangedListener(listener: Binding.ChangedListener[A]): Unit
 
-  /**
-    * Enable automatic recalculation.
+  /** Enable automatic recalculation.
     *
-    * You may invoke this method more than once.
-    * Then, when you want to disable automatic recalculation,
-    * you must invoke [[#unwatch unwatch]] same times as the number of calls to this method.
+    * You may invoke this method more than once. Then, when you want to disable automatic recalculation, you must invoke
+    * [[#unwatch unwatch]] same times as the number of calls to this method.
     *
-    * @note This method is recursive, which means that the dependencies of this [[Binding]] will be watched as well.
+    * @note
+    *   This method is recursive, which means that the dependencies of this [[Binding]] will be watched as well.
     */
   @inline
   final def watch(): Unit = {
     addChangedListener(Binding.DummyChangedListener)
   }
 
-  /**
-    * Disable automatic recalculation.
+  /** Disable automatic recalculation.
     *
-    * @note This method is recursive, which means that the dependencies of this [[Binding]] will be unwatched as well.
+    * @note
+    *   This method is recursive, which means that the dependencies of this [[Binding]] will be unwatched as well.
     */
   @inline
   final def unwatch(): Unit = {
