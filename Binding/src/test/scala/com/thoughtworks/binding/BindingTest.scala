@@ -94,11 +94,14 @@ final class BindingTest extends AnyFreeSpec with Matchers {
 
     assert(expr1.get == 0)
 
-    addChangedListener(expr1, new ChangedListener[Any] {
-      override def changed(event: ChangedEvent[Any]): Unit = {
-        resultChanged += 1
+    addChangedListener(
+      expr1,
+      new ChangedListener[Any] {
+        override def changed(event: ChangedEvent[Any]): Unit = {
+          resultChanged += 1
+        }
       }
-    })
+    )
 
     assert(resultChanged == 0)
     assert(expr1.get == 32100)
@@ -120,11 +123,14 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     }
     var resultChanged = 0
 
-    addChangedListener(result, new ChangedListener[Any] {
-      override def changed(event: ChangedEvent[Any]): Unit = {
-        resultChanged += 1
+    addChangedListener(
+      result,
+      new ChangedListener[Any] {
+        override def changed(event: ChangedEvent[Any]): Unit = {
+          resultChanged += 1
+        }
       }
-    })
+    )
     assert(result.get == 0.5)
     assert(resultChanged == 0)
     source.value = 4.0
@@ -183,15 +189,18 @@ final class BindingTest extends AnyFreeSpec with Matchers {
         assert(event.from == 0)
         assert(event.replaced == 0)
         assert(
-          event.that sameElements Seq("ForYield 0/2",
-                            "ForYield 1/2",
-                            "ForYield 0/3",
-                            "ForYield 1/3",
-                            "ForYield 2/3",
-                            "ForYield 0/4",
-                            "ForYield 1/4",
-                            "ForYield 2/4",
-                            "ForYield 3/4"))
+          event.that sameElements Seq(
+            "ForYield 0/2",
+            "ForYield 1/2",
+            "ForYield 0/3",
+            "ForYield 1/3",
+            "ForYield 2/3",
+            "ForYield 0/4",
+            "ForYield 1/4",
+            "ForYield 2/4",
+            "ForYield 3/4"
+          )
+        )
     }
     source.value += 0
     assert(sourceEvents.length == 3)
@@ -234,7 +243,8 @@ final class BindingTest extends AnyFreeSpec with Matchers {
         "ForYield 0/3",
         "ForYield 1/3",
         "ForYield 2/3"
-      ))
+      )
+    )
     prefix.value = "3"
     assert(sourceEvents.length == 4)
     assert(mapped.get sameElements Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4"))
@@ -295,15 +305,18 @@ final class BindingTest extends AnyFreeSpec with Matchers {
         assert(event.from == 0)
         assert(event.replaced == 0)
         assert(
-          event.that sameElements Seq("ForYield 0/2",
-                            "ForYield 1/2",
-                            "ForYield 0/3",
-                            "ForYield 1/3",
-                            "ForYield 2/3",
-                            "ForYield 0/4",
-                            "ForYield 1/4",
-                            "ForYield 2/4",
-                            "ForYield 3/4"))
+          event.that sameElements Seq(
+            "ForYield 0/2",
+            "ForYield 1/2",
+            "ForYield 0/3",
+            "ForYield 1/3",
+            "ForYield 2/3",
+            "ForYield 0/4",
+            "ForYield 1/4",
+            "ForYield 2/4",
+            "ForYield 3/4"
+          )
+        )
     }
     source.value += 0
     assert(sourceEvents.length == 3)
@@ -355,13 +368,19 @@ final class BindingTest extends AnyFreeSpec with Matchers {
   "FlatMappedVarBuffer" in {
     val prefix = new Var("")
     val source = Vars(1, 2, 3)
-    val mapped = new BindingSeq.FlatMap(source, { sourceElement: Int =>
-      new BindingSeq.MapBinding(Constants((0 until sourceElement): _*), { i: Int =>
-        Binding {
-          raw"""${prefix.bind}$sourceElement"""
-        }
-      })
-    })
+    val mapped = new BindingSeq.FlatMap(
+      source,
+      { sourceElement: Int =>
+        new BindingSeq.MapBinding(
+          Constants((0 until sourceElement): _*),
+          { i: Int =>
+            Binding {
+              raw"""${prefix.bind}$sourceElement"""
+            }
+          }
+        )
+      }
+    )
     val mappedEvents = new BufferListener
     val sourceEvents = new BufferListener
     addPatchedListener(mapped, mappedEvents.listener)
@@ -456,11 +475,14 @@ final class BindingTest extends AnyFreeSpec with Matchers {
   "MappedVarBuffer" in {
     val prefix = new Var("")
     val source = Vars(1, 2, 3)
-    val mapped = new BindingSeq.MapBinding(source, { a: Int =>
-      Binding {
-        raw"""${prefix.bind}${a}"""
+    val mapped = new BindingSeq.MapBinding(
+      source,
+      { a: Int =>
+        Binding {
+          raw"""${prefix.bind}${a}"""
+        }
       }
-    })
+    )
     val mappedEvents = new BufferListener
     val sourceEvents = new BufferListener
     addPatchedListener(mapped, mappedEvents.listener)

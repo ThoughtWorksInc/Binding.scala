@@ -6,7 +6,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
 /** Test for https://github.com/ThoughtWorksInc/Binding.scala/issues/56
-  * @author 杨博 (Yang Bo)
+  * @author
+  *   杨博 (Yang Bo)
   */
 final class Issue56 extends AnyFreeSpec with Matchers {
 
