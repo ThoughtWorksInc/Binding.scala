@@ -32,7 +32,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: | 
-          ~/.ivy2/cache
-          ~/.sbt
+          ~/.ivy2/cache/
+          ~/.sbt/
           ~/.coursier/
-        key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt') }}
+        key: |
+          ${{ runner.os }}-${{matrix.scala}}-${{ hashFiles('**/*.sbt') }}
+          ${{ runner.os }}-${{matrix.scala}}-
