@@ -11,6 +11,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        scala:
+        - 2.13.4
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -19,7 +24,7 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Run tests
-      run: sbt test
+      run: sbt ++${{ matrix.scala }} test
     - name: Cache SBT
       uses: actions/cache@v2
       with:
