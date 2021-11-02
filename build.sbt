@@ -23,8 +23,8 @@ sys.env.get("GITHUB_REPOSITORY") match {
     Seq.empty
   case Some(slug) =>
     Seq(
-      homepage := Some(new URL("https", "github.com", raw"""/$slug""")),
-      scmInfo :=
+      ThisBuild / homepage := Some(new URL("https", "github.com", raw"""/$slug""")),
+      ThisBuild / scmInfo :=
         Some(
           ScmInfo(
             new URL("https", "github.com", raw"""/$slug"""),
