@@ -5,7 +5,7 @@
 
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![StackOverflow](https://img.shields.io/stackexchange/stackoverflow/t/binding.scala.svg?maxAge=604800&label=StackOverflow+questions)](https://stackoverflow.com/questions/tagged/binding.scala?sort=votes)
-[![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
+[![Scala CI](https://github.com/ThoughtWorksInc/Binding.scala/actions/workflows/scala.yml/badge.svg)](https://github.com/ThoughtWorksInc/Binding.scala/actions/workflows/scala.yml)
 [![Scaladoc](https://javadoc.io/badge/com.thoughtworks.binding/binding_2.13.svg?label=scaladoc)](https://javadoc.io/page/com.thoughtworks.binding/binding_2.13/latest/com/thoughtworks/binding/index.html)
 [![Latest version](https://index.scala-lang.org/thoughtworksinc/Binding.scala/latest.svg)](https://index.scala-lang.org/thoughtworksinc/binding.scala)
 
