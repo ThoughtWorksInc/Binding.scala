@@ -3,4 +3,5 @@ local.sbt
 secret/
 .metals/
 .bloop/
-project/metals.sbt
+metals.sbt
+.bsp/sbt.json
