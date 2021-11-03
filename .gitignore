@@ -4,3 +4,4 @@ secret/
 .metals/
 .bloop/
 metals.sbt
+.bsp/sbt.json
