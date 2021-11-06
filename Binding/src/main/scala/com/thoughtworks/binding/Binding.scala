@@ -56,6 +56,11 @@ import scala.collection.SeqOps
   */
 object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
+  sealed trait Watchable[+A] {
+    def watch(): Unit
+    def unwatch(): Unit
+  }
+
   private[binding] type SeqOpsIterable[+A] = Iterable[A] with SeqOps[A, CC, CC[A]] forSome {
     type CC[+A] <: Iterable[A]
   }
@@ -987,7 +992,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  trait BindingSeq[+A] {
+  trait BindingSeq[+A] extends Watchable[A] {
 
     /** Returns a new [[Binding]] expression of all elements in this [[BindingSeq]]. */
     final def all: Binding[All[A]] = new Binding[All[A]] { asBinding =>
@@ -1541,7 +1546,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   * @author
   *   杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-trait Binding[+A] {
+trait Binding[+A] extends Binding.Watchable[A] {
 
   /** Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].
     *
