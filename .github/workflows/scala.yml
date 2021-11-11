@@ -14,8 +14,8 @@ jobs:
         scala:
         - 2.13.4
         sbt-args:
-        - --addPluginSbtFile=project/plugins.sbt.scala-js.0.6
-        - ''
+        - -XX:MaxRAMPercentage=90.0 --addPluginSbtFile=project/plugins.sbt.scala-js.0.6
+        - -XX:MaxRAMPercentage=90.0
 
     steps:
     - uses: actions/checkout@v2
