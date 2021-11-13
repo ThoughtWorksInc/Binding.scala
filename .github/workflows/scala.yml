@@ -28,6 +28,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: | 
+          ~/.ivy2/local/
           ~/.ivy2/cache/
           ~/.sbt/
           ~/.coursier/
