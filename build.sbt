@@ -17,20 +17,3 @@ ScalaUnidoc / unidoc / unidocProjectFilter := {
 }
 
 scalacOptions += "-Ymacro-annotations"
-
-sys.env.get("GITHUB_REPOSITORY") match {
-  case None =>
-    Seq.empty
-  case Some(slug) =>
-    Seq(
-      ThisBuild / homepage := Some(new URL("https", "github.com", raw"""/$slug""")),
-      ThisBuild / scmInfo :=
-        Some(
-          ScmInfo(
-            new URL("https", "github.com", raw"""/$slug"""),
-            raw"""https://github.com/$slug.git""",
-            Some(raw"""git@github.com:$slug.git""")
-          )
-        )
-    )
-}
