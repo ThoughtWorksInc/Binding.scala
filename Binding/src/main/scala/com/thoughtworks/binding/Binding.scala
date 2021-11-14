@@ -81,7 +81,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     type ConstantsData[+A] = Seq[A]
 
     @inline
-    def toConstantsData[A](seq: Seq[A]) = seq
+    def toConstantsData[A](seq: IterableOnce[A]) = Seq.from(seq)
 
     def toCacheData[A](seq: collection.Iterable[A]) = Vector.from(seq)
 
@@ -173,7 +173,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     type ConstantsData[+A] = scalajs.js.Array[_ <: A]
 
     @inline
-    def toConstantsData[A](seq: Seq[A]) = {
+    def toConstantsData[A](seq: IterableOnce[A]) = {
       import scalajs.js.JSConverters._
       seq.toJSArray
     }
