@@ -1598,7 +1598,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /** [[http://reactivex.io/ ReactiveX]] operators. */
+  /** [[http://reactivex.io/ ReactiveX]] operators for [[Observable]]s.
+    *
+    * @note [[Rx]] operators are incomplete. Feel free to create a Pull Request if you need a certain operator.
+    */
   object Rx { this: Binding.type =>
 
     /** A [[Binding]] that can be terminated.
@@ -1606,13 +1609,80 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * Once the value turned into a [[scala.None]], this [[Observable]] would be considered as terminated, and any
       * future changes of this [[Observable]] will be ignored by any [[Rx]] operators derived from this [[Observable]],
       * even if this [[Observable]] turns into a [[scala.Some]] value again.
+      * 
+      * @note
+      *   Even though an [[Observable]] is technically a [[Binding]], an [[Observable]] created from a [[Rx]] operator
+      *   does not actually indicates data-binding.
+      *
+      *   For example, given an [[Observable]] created from [[Rx.concat]],
+      *   {{{
+      *   import com.thoughtworks.binding.Binding._
+      *   val sourceObservable0 = Var[Option[String]](Some("0"))
+      *   val sourceObservable1 = Var[Option[String]](Some("1"))
+      *   val sourceObservables = List(sourceObservable0, sourceObservable1)
+      *   val derivedObservable = Rx.concat(sourceObservables)
+      *   derivedObservable.watch()
+      *   }}}
+      *
+      *   when a source value gets changed,
+      * 
+      *   {{{
+      *   val originalDerivedObservableValue = derivedObservable.get
+      *   sourceObservable0.value = None
+      *   }}}
+      * 
+      *   and the source value is changed back to the original value,
+      * 
+      *   {{{
+      *   sourceObservable0.value = Some("0")
+      *   }}}
+      *   
+      *   then the value of the derived observable might not be the original value.
+      * 
+      *   {{{
+      *   derivedObservable.get shouldNot be(originalDerivedObservableValue)
+      *   }}}
+      * 
+      *   In contrast, if the `concat` operator is implemented by ordinary [[Binding.bind]] macros, the derived Binding
+      *   is indeed a data-binding, i.e. it always perform the same calculation for the same values of source
+      *   [[Binding]]s.
+      * 
+      *   {{{
+      *   import com.thoughtworks.binding.Binding._
+      *   val sourceBinding0 = Var[Option[String]](Some("0"))
+      *   val sourceBinding1 = Var[Option[String]](Some("1"))
+      *   val sourceBindings = List(sourceBinding0, sourceBinding1)
+      *   def concatBinding(
+      *       sourceBindings: collection.LinearSeq[Rx.Observable[String]]
+      *   ): Rx.Observable[String] = {
+      *     sourceBindings match {
+      *       case head +: tail =>
+      *         Binding {
+      *           head.bind match {
+      *             case None =>
+      *               concatBinding(tail).bind
+      *             case someValue =>
+      *               someValue
+      *           }
+      *         }
+      *       case _ =>
+      *         Constant(None)
+      *     }
+      *   }
+      *   val derivedBinding = concatBinding(sourceBindings)
+      *   derivedBinding.watch()
+      *   val originalDerivedBindingValue = derivedBinding.get
+      *   sourceBinding0.value = None
+      *   sourceBinding0.value = Some("0")
+      *   derivedBinding.get should be(originalDerivedBindingValue)
+      *   }}}
       */
     type Observable[A] = Binding[Option[A]]
 
     /** Emit the emissions from two or more [[Observable]]s without interleaving them.
       *
       * @example
-      *   Give a sequence of [[Observable]]s,
+      *   Given a sequence of [[Observable]]s,
       * {{{
       * import com.thoughtworks.binding.Binding._, BindingInstances.monadSyntax._
       * val observable0 = Var[Option[String]](None)
