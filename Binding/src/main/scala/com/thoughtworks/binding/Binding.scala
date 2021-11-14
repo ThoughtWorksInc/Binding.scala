@@ -328,6 +328,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     * You can manually change the value:
     *
     * {{{
+    * import com.thoughtworks.binding.Binding.Var
     * val bindingVar = Var("initial value")
     * bindingVar.value = "changed value"
     * }}}
@@ -1527,14 +1528,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 /** A data binding expression that represents a value that automatically recalculates when its dependencies change.
   *
   * @example
-  *   You may create a data binding expression via `Binding { ??? }` block or `@dom` annotation.
+  *   You may create a data binding expression via `Binding { ??? }` block annotation.
   *
   * {{{
   *           val bindingInt: Binding[Int] = Binding { 100 }
-  * }}}
-  *
-  * {{{
-  *           @dom val bindingBr: Binding[HTMLBRElement] = <br/>
   * }}}
   *
   * A data binding expression may depend on other binding expressions via [[bind]] method:
