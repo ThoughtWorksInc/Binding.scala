@@ -1523,6 +1523,204 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override def changed(event: ChangedEvent[Any]): Unit = {}
   }
 
+  private class RxConcat[A](var observables: LazyList[Rx.Observable[A]])
+      extends Rx.Observable[A]
+      with ChangedListener[Option[A]] {
+    private var pending = false
+    def changed(upstreamEvent: ChangedEvent[Option[A]]): Unit = {
+      if (pending) {
+        throw new IllegalStateException(
+          "Must not trigger a changed event when the listener is just added to a Binding"
+        )
+      }
+      val newValue = upstreamEvent.newValue match {
+        case None =>
+          observables match {
+            case head #:: tail =>
+              if (head != upstreamEvent.getSource) {
+                throw new IllegalStateException(
+                  "This ChangedListener should have been removed from the terminated observable."
+                )
+              }
+              head.removeChangedListener(this)
+              observables = tail
+              nextLivingValue()
+            case _ =>
+              throw new IllegalStateException(
+                "This ChangedListener should not be triggered when all observables have been terminated."
+              )
+          }
+        case someValue =>
+          someValue
+      }
+      val event = new ChangedEvent(RxConcat.this, newValue)
+      for (listener <- publisher) {
+        listener.changed(event)
+      }
+    }
+
+    @tailrec
+    private def nextLivingValue(): Option[A] = {
+      observables match {
+        case head #:: tail =>
+          pending = true
+          head.addChangedListener(this)
+          pending = false
+          head.value match {
+            case None =>
+              head.removeChangedListener(this)
+              observables = tail
+              nextLivingValue()
+            case someValue =>
+              someValue
+          }
+        case _ =>
+          None
+      }
+    }
+
+    private val publisher = new SafeBuffer[ChangedListener[Option[A]]]
+    protected def value: Option[A] = observables.headOption.flatMap(_.value)
+    protected def addChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+      if (publisher.isEmpty) {
+        nextLivingValue()
+      }
+      publisher += listener
+    }
+    protected def removeChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+      publisher -= listener
+      observables match {
+        case head #:: _ if publisher.isEmpty =>
+          head.removeChangedListener(this)
+        case _ =>
+      }
+    }
+
+  }
+
+  /** [[http://reactivex.io/ ReactiveX]] operators. */
+  object Rx { this: Binding.type =>
+
+    /** A [[Binding]] that can be terminated.
+      *
+      * Once the value turned into a [[scala.None]], this [[Observable]] would be considered as terminated, and any
+      * future changes of this [[Observable]] will be ignored by any [[Rx]] operators derived from this [[Observable]],
+      * even if this [[Observable]] turns into a [[scala.Some]] value again.
+      */
+    type Observable[A] = Binding[Option[A]]
+
+    /** Emit the emissions from two or more [[Observable]]s without interleaving them.
+      *
+      * @example
+      *   Give a sequence of [[Observable]]s,
+      * {{{
+      * import com.thoughtworks.binding.Binding._, BindingInstances.monadSyntax._
+      * val observable0 = Var[Option[String]](None)
+      * val observable1 = Var[Option[String]](Some("1"))
+      * val observable2 = Var[Option[String]](Some("2"))
+      * val observable3 = Var[Option[String]](None)
+      * val observable4 = Var[Option[String]](None)
+      *
+      * val observable7 = Var[Option[String]](Some("7"))
+      *
+      * val observable8 = Binding { observable7.bind.map { v => s"8-$v-derived" } }
+      * val observable5 = Binding { observable7.bind.map { v => s"5-$v-derived" } }
+      *
+      * val observable6 = Var[Option[String]](None)
+      * val observable9 = Var[Option[String]](Some("9"))
+      * val observables = Seq(
+      *   observable0,
+      *   observable1,
+      *   observable2,
+      *   observable3,
+      *   observable4,
+      *   observable5,
+      *   observable6,
+      *   observable7,
+      *   observable8,
+      *   observable9,
+      * )
+      * }}}
+      *
+      * when concatenate them together,
+      *
+      * {{{
+      * val concatenated = Rx.concat(observables).map(identity)
+      * concatenated.watch()
+      * }}}
+      *
+      * the concatenated value should be the first [[scala.Some]] value in the sequence of observables;
+      *
+      * {{{
+      * concatenated.get should be(Some("1"))
+      * }}}
+      *
+      * when the current observable becomes `None`,
+      * {{{
+      * observable1.value = None
+      * }}}
+      *
+      * the concatenated value should be the next [[scala.Some]] value in the sequence of observables,
+      *
+      * {{{
+      * concatenated.get should be(Some("2"))
+      * }}}
+      *
+      * even when the next [[scala.Some]] value is derived from another [[Binding]];
+      *
+      * {{{
+      * observable2.value = None
+      * concatenated.get should be(Some("5-7-derived"))
+      * }}}
+      *
+      * when the value of the upstream [[Binding]] is changed to another [[scala.Some]] value,
+      *
+      * {{{
+      * observable7.value = Some("7-running")
+      * }}}
+      *
+      * the concatenated value should be changed accordingly;
+      * {{{
+      * concatenated.get should be(Some("5-7-running-derived"))
+      * }}}
+      *
+      * when multiple observables become [[scala.None]] at once,
+      *
+      * {{{
+      * observable7.value = None
+      * }}}
+      *
+      * they all should be skipped when calculate the concatenated value;
+      * {{{
+      * concatenated.get should be(Some("9"))
+      * }}}
+      *
+      * when the last observable in the sequence becomes [[scala.None]],
+      * {{{
+      * observable9.value = None
+      * }}}
+      *
+      * the concatenated value should become [[scala.None]] permanently,
+      *
+      * {{{
+      * concatenated.get should be(None)
+      * }}}
+      *
+      * even when some observables in the sequence become [[scala.Some]] again.
+      *
+      * {{{
+      * observable9.value = Some("9-after-termination")
+      * concatenated.get should be(None)
+      * observable7.value = Some("7-after-termination")
+      * concatenated.get should be(None)
+      * }}}
+      */
+    def concat[A](observables: IterableOnce[Observable[A]]): Observable[A] = {
+      new RxConcat(LazyList.from(observables))
+    }
+
+  }
+
 }
 
 /** A data binding expression that represents a value that automatically recalculates when its dependencies change.
