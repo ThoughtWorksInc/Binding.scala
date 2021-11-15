@@ -1213,7 +1213,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  final class Constants[+A] private (underlying: ConstantsData[A]) extends BindingSeq[A] {
+  final class Constants[+A] private[Binding] (underlying: ConstantsData[A]) extends BindingSeq[A] {
     type All[+A] = collection.Seq[A]
 
     @inline
@@ -1523,6 +1523,51 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override def changed(event: ChangedEvent[Any]): Unit = {}
   }
 
+  private class RxMerge[A](upstream: BindingSeq[A]) extends Rx.Observable[A] with PatchedListener[A] {
+
+    private var cache: Option[A] = None
+
+    override def patched(upstreamEvent: PatchedEvent[A]): Unit = {
+      upstreamEvent.that.headOption match {
+        case None =>
+          if (cache != None && upstream.get.isEmpty) {
+            cache = None
+            val event = new ChangedEvent[Option[A]](this, None)
+            for (listener <- publisher) {
+              listener.changed(event)
+            }
+          }
+        case someNew =>
+          if (cache != someNew) {
+            cache = someNew
+            val event = new ChangedEvent[Option[A]](this, someNew)
+            for (listener <- publisher) {
+              listener.changed(event)
+            }
+          }
+      }
+
+    }
+
+    private val publisher = new SafeBuffer[ChangedListener[Option[A]]]
+    protected def value: Option[A] = cache
+    protected def addChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+      if (publisher.isEmpty) {
+        BindingSeq.addPatchedListener(upstream, this)
+        cache = upstream.get.headOption
+      }
+      publisher += listener
+    }
+
+    protected def removeChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+      publisher -= listener
+      if (publisher.isEmpty) {
+        BindingSeq.removePatchedListener(upstream, this)
+      }
+    }
+
+  }
+
   private class RxConcat[A](var observables: LazyList[Rx.Observable[A]])
       extends Rx.Observable[A]
       with ChangedListener[Option[A]] {
@@ -1787,6 +1832,132 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       */
     def concat[A](observables: IterableOnce[Observable[A]]): Observable[A] = {
       new RxConcat(LazyList.from(observables))
+    }
+
+    def merge[A](bindingSeq: BindingSeq[A]): Observable[A] = {
+      new RxMerge(bindingSeq)
+    }
+
+    /** Combine multiple [[Observable]]s into one by merging their emissions.
+      * 
+      * @example
+      *   Given a sequence of [[Observable]]s,
+      * {{{
+      * import com.thoughtworks.binding.Binding._, BindingInstances.monadSyntax._
+      * val observable0 = Var[Option[String]](None)
+      * val observable1 = Var[Option[String]](Some("1"))
+      * val observable2 = Var[Option[String]](Some("2"))
+      * val observable3 = Var[Option[String]](None)
+      * val observable4 = Var[Option[String]](None)
+      *
+      * val observable7 = Var[Option[String]](Some("7"))
+      *
+      * val observable8 = Binding { observable7.bind.map { v => s"8-$v-derived" } }
+      * val observable5 = Binding { observable7.bind.map { v => s"5-$v-derived" } }
+      *
+      * val observable6 = Var[Option[String]](None)
+      * val observable9 = Var[Option[String]](Some("9"))
+      * val observables = Seq(
+      *   observable0,
+      *   observable1,
+      *   observable2,
+      *   observable3,
+      *   observable4,
+      *   observable5,
+      *   observable6,
+      *   observable7,
+      *   observable8,
+      *   observable9,
+      * )
+      * }}}
+      *
+      * when merge them together,
+      *
+      * {{{
+      * val merged = Rx.merge(observables).map(identity)
+      * merged.watch()
+      * }}}
+      *
+      * the merged value should be the first [[scala.Some]] value in the sequence of observables;
+      *
+      * {{{
+      * merged.get should be(Some("1"))
+      * }}}
+      * 
+      * when the some but not all of the observable becomes `None`,
+      *
+      * {{{
+      * observable1.value = None
+      * }}}
+      *
+      * the merged value should be unchanged,
+      *
+      * {{{
+      * merged.get should be(Some("1"))
+      * }}}
+      * 
+      * when any of the observable becomes `Some` value,
+      * 
+      * {{{
+      * observable2.value = Some("2-changed")
+      * }}}
+      * 
+      * the merged value should be the new value,
+      *
+      * {{{
+      * merged.get should be(Some("2-changed"))
+      * }}}
+      *
+      * even when a previous `None` observable becomes `Some` value,,
+      * 
+      * {{{
+      * observable3.value = Some("3-previous-None")
+      * }}}
+      *
+      * the merged value should be the new value of the previous `None` observable,
+      *
+      * {{{
+      * merged.get should be(Some("3-previous-None"))
+      * }}}
+      * 
+      * when multiple observables are changed at once,
+      * 
+      * {{{
+      * observable7.value = Some("7-changed")
+      * }}}
+      * 
+      * the merged value should be the value of the last derived observable
+      * 
+      * {{{
+      * merged.get should be(Some("8-7-changed-derived"))
+      * }}}
+      * 
+      * when all the observables become `None`,
+      *
+      * {{{
+      * observable1.value = None
+      * merged.get should be(Some("8-7-changed-derived"))
+      * observable2.value = None
+      * merged.get should be(Some("8-7-changed-derived"))
+      * observable3.value = None
+      * merged.get should be(Some("8-7-changed-derived"))
+      * observable6.value = None
+      * merged.get should be(Some("8-7-changed-derived"))
+      * observable7.value = None
+      * merged.get should be(Some("8-7-changed-derived"))
+      * observable9.value = None
+      * merged.get should be(None)
+      * }}} 
+      * 
+      */
+    def merge[A](observables: IterableOnce[Observable[A]]): Observable[A] = {
+      new RxMerge(
+        new Constants(toConstantsData(observables)).flatMapBinding (
+          BindingInstances.map(_) { option =>
+            new Constants(toConstantsData(option))
+          }
+        )
+      )
     }
 
   }
