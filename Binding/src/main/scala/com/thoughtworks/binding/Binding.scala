@@ -1834,6 +1834,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       new RxConcat(LazyList.from(observables))
     }
 
+    def repeat[A](source: => Observable[A]): Observable[A] = {
+      new RxConcat(LazyList.continually(source))
+    }
+
     def merge[A](bindingSeq: BindingSeq[A]): Observable[A] = {
       new RxMerge(bindingSeq)
     }
