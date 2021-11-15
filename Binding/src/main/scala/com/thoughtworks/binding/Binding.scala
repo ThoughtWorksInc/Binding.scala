@@ -1602,7 +1602,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @note [[Rx]] operators are incomplete. Feel free to create a Pull Request if you need a certain operator.
     */
-  object Rx { this: Binding.type =>
+  object Rx {
 
     /** A [[Binding]] that can be terminated.
       *
