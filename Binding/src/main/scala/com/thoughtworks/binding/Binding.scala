@@ -779,11 +779,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
           val flatNewChildren = new FlatProxy(mappedNewChildren)
           val flattenFrom = flatIndex(cacheData, 0, upstreamEvent.from)
           val flattenReplaced = flatIndex(cacheData, upstreamEvent.from, upstreamEvent.from + upstreamEvent.replaced)
-          val oldChilden = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
+          val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
           for (newChild <- mappedNewChildren) {
             newChild.addPatchedListener(childListener)
           }
-          for (oldChild <- oldChilden) {
+          for (oldChild <- oldChildren) {
             oldChild.removePatchedListener(childListener)
           }
           if (upstreamEvent.replaced != 0 || flatNewChildren.nonEmpty) {
