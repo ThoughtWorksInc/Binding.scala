@@ -1523,6 +1523,47 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override def changed(event: ChangedEvent[Any]): Unit = {}
   }
 
+  private class RxDefer[A](upstream: => Rx.Observable[A]) extends Rx.Observable[A] with ChangedListener[Option[A]]{
+
+    def changed(upstream: ChangedEvent[Option[A]]): Unit = {
+      val event = new ChangedEvent(this, upstream.newValue)
+      for (listener <- publisher) {
+        listener.changed(event)
+      }
+    }
+
+    private var upstreamCache: Rx.Observable[A] = _
+
+    private val publisher = new SafeBuffer[ChangedListener[Option[A]]]
+
+    override protected def value: Option[A] = {
+      if (publisher.isEmpty) {
+        None
+      } else {
+        upstreamCache.value
+      }
+    }
+
+    override protected def removeChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+      publisher -= listener
+      if (publisher.isEmpty) {
+        val upstreamLocal = upstreamCache
+        upstreamCache = null
+        upstreamLocal.removeChangedListener(this)
+      }
+    }
+
+    override protected def addChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+      if (publisher.isEmpty) {
+        val upstreamLocal = upstream
+        upstreamLocal.addChangedListener(this)
+        upstreamCache = upstreamLocal
+      }
+      publisher += listener
+    }
+
+  }
+
   private class RxMerge[A](upstream: BindingSeq[A]) extends Rx.Observable[A] with PatchedListener[A] {
 
     private var cache: Option[A] = None
@@ -1840,6 +1881,61 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     def merge[A](bindingSeq: BindingSeq[A]): Observable[A] = {
       new RxMerge(bindingSeq)
+    }
+
+    /** do not create the Observable until the observer subscribes
+      * 
+      * @note
+      *   This [[defer]] is slightly different from other implementation the
+      *   [[http://reactivex.io/documentation/operators/defer.html ReactiveX Defer]] operator, because this [[defer]]
+      *   shares the same upstream [[Observable]] instance for all subscribes.
+      * 
+      * @example
+      *   Circular referenced [[Observable]]s can be created with the help of [[defer]]
+      *   {{{
+      *   import Binding._
+      *   val source = Var("init")
+      *   lazy val observable1: Rx.Observable[String] = 
+      *     Binding[Option[String]] {
+      *       source.bind match {
+      *         case "init" =>
+      *           None
+      *         case v =>
+      *           observable2.bind.map(_ + "_" + v)
+      *       }
+      *     }
+      *
+      *   lazy val observable2: Rx.Observable[String] = Rx.defer(
+      *     Binding[Option[String]] {
+      *       Some(observable1.getClass.getSimpleName)
+      *     }
+      *   )
+      *   }}}
+      *   
+      *   Initially, `observable1` did not subscribe `observable2` because `source` is `init`,
+      *   {{{
+      *   observable1.watch()
+      *   }}}
+      *   therefore observable2 should be `None`,
+      *   {{{
+      *   observable1.get should be (None)
+      *   observable2.get should be (None)
+      *   }}}
+      *   when `source` changed,
+      *   {{{
+      *   source.value = "changed"
+      *   }}}
+      *   `observable1` should subscribe `observable2`,
+      *   and there should be `Some` values.
+      *   {{{
+      *   observable1.get should be (Some("FlatMap_changed"))
+      *   observable2.get should be (Some("FlatMap"))
+      *   }}}
+      *   Even though circular referenced [[Observable]]s can be created in this way, their calculation must not be
+      *   mutually dependent.
+      */
+    def defer[A](upstream: => Observable[A]): Observable[A] = {
+      new RxDefer(upstream)
     }
 
     /** Combine multiple [[Observable]]s into one by merging their emissions.
