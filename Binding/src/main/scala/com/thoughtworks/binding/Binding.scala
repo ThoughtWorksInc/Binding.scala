@@ -42,6 +42,7 @@ import scalaz.{Monad, MonadPlus}
 import scala.language.experimental.macros
 import scala.language.existentials
 import scala.collection.SeqOps
+import scala.collection.mutable.ArrayBuffer
 
 /** @groupname typeClasses
   *   Type class instance
@@ -1728,8 +1729,9 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
-  /** [[http://reactivex.io/ ReactiveX]] operators for [[Observable]]s.
+  /** Reactive operators for [[Observable]]s.
     *
+    * @see [[http://reactivex.io/ ReactiveX]]
     * @note [[Rx]] operators are incomplete. Feel free to create a Pull Request if you need a certain operator.
     */
   object Rx {
@@ -1810,6 +1812,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     type Observable[A] = Binding[Option[A]]
 
     /** Emit the emissions from two or more [[Observable]]s without interleaving them.
+      *
+      * @see [[http://reactivex.io/documentation/operators/concat.html ReactiveX - Concat operator]]
       *
       * @example
       *   Given a sequence of [[Observable]]s,
@@ -1919,16 +1923,24 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       new RxConcat(LazyList.from(observables))
     }
 
+    /**
+      * @see [[http://reactivex.io/documentation/operators/repeat.html ReactiveX - Repeat operator]]
+      */
     def repeat[A](source: => Observable[A]): Observable[A] = {
       new RxConcat(LazyList.continually(source))
     }
 
+    /**
+      * @see [[http://reactivex.io/documentation/operators/merge.html ReactiveX - Merge operator]]
+      */
     def merge[A](bindingSeq: BindingSeq[A]): Observable[A] = {
       new RxMerge(bindingSeq)
     }
 
     /** do not create the Observable until the observer subscribes
-      * 
+      *
+      * @see [[http://reactivex.io/documentation/operators/defer.html ReactiveX - Defer operator]]
+      *
       * @note
       *   This [[defer]] is slightly different from other implementation the
       *   [[http://reactivex.io/documentation/operators/defer.html ReactiveX Defer]] operator, because this [[defer]]
@@ -1984,6 +1996,8 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     /** Combine multiple [[Observable]]s into one by merging their emissions.
       * 
+      * @see [[http://reactivex.io/documentation/operators/merge.html ReactiveX - Merge operator]]
+      *
       * @example
       *   Given a sequence of [[Observable]]s,
       * {{{
