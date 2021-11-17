@@ -1609,6 +1609,50 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   }
 
+  private final class RxToBindingSeq[A](observable: Rx.Observable[A])
+      extends BindingSeq[A]
+      with ChangedListener[Option[A]]
+      with HasCache[A] {
+
+    override def changed(upstreamEvent: ChangedEvent[Option[A]]): Unit = {
+      val oldLength = cacheLength
+      val event = upstreamEvent.newValue match {
+        case Some(newValue) =>
+          appendCache(newValue)
+          new PatchedEvent(this, oldLength, Seq(newValue), 0)
+        case None =>
+          clearCache()
+          new PatchedEvent(this, 0, Nil, oldLength)
+      }
+      for (listener <- publisher) {
+        listener.patched(event)
+      }
+    }
+
+    private val publisher = new SafeBuffer[PatchedListener[A]]
+    type All[+A] = SeqOpsIterable[A]
+
+    private[Binding] var cacheData: Cache = emptyCacheData
+
+    override protected def value: All[A] = cacheData
+
+    override protected def removePatchedListener(listener: PatchedListener[A]): Unit = {
+      publisher -= listener
+      if (publisher.isEmpty){
+        observable.removeChangedListener(this)
+      }
+    }
+
+    override protected def addPatchedListener(listener: PatchedListener[A]): Unit = {
+      if (publisher.isEmpty) {
+        observable.value.foreach(appendCache)
+        observable.addChangedListener(this)
+      }
+      publisher += listener
+    }
+
+  }
+
   private class RxConcat[A](var observables: LazyList[Rx.Observable[A]])
       extends Rx.Observable[A]
       with ChangedListener[Option[A]] {
@@ -2058,6 +2102,64 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
           }
         )
       )
+    }
+
+    /** convert an Observable into a [[BindingSeq]].
+      *
+      * @see [[http://reactivex.io/documentation/operators/to.html ReactiveX - To operator]]
+      * 
+      * @example
+      *   Given a source observable,
+      *   {{{
+      *   import com.thoughtworks.binding.Binding._
+      *   val observable = Var[Option[String]](Some("1"))
+      *   }}}
+      * 
+      *   when converting it into a [[BindingSeq]],
+      * 
+      *   {{{
+      *   val bindingSeq = Rx.toBindingSeq(observable)
+      *   }}}
+      * 
+      *   and flat-mapping to the result,
+      *   {{{
+      *   val result = new BindingSeq.FlatMap(
+      *     bindingSeq,
+      *     { value: String => Constants("the value is", value) }
+      *   ).all
+      *   result.watch()
+      *   }}}
+      *   
+      *   then result should have the values corresponding to the source observable,
+      *   {{{
+      *   result.get.toSeq should contain theSameElementsInOrderAs Seq("the value is", "1")
+      *   }}}
+      * 
+      *   when the source observable changes,
+      *   {{{
+      *   observable.value = Some("2")
+      *   }}}
+      * 
+      *   then the corresponding new value should be appended to the result,
+      *   {{{
+      *   result.get.toSeq should contain theSameElementsInOrderAs Seq(
+      *     "the value is", "1",
+      *     "the value is", "2"
+      *   )
+      *   }}}
+      * 
+      *   when the source observable terminates,
+      *   {{{
+      *   observable.value = None
+      *   }}}
+      *
+      *   then the result should be empty
+      *   {{{
+      *   result.get.toSeq should be(empty)
+      *   }}}
+      */
+    def toBindingSeq[A](observable: Observable[A]): BindingSeq[A] = {
+      new RxToBindingSeq(observable)
     }
 
   }
