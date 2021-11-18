@@ -15,41 +15,61 @@ import scalaz.\/-
 import scalaz.Monoid
 import scalaz.ICons
 import scalaz.INil
+import scalaz.Isomorphism.IsoFunctor
+import scalaz.Isomorphism.IsoFunctorTemplate
+import scalaz.MonadPlus
+import scalaz.IsomorphismMonadPlus
+import scalaz.Functor
 
-type ObservableT[F[_], A] = StreamT[F, A]
-type Observable[A] = ObservableT[Future, A]
-type ConcatT[F[_], A] = ObservableT[F, A]
-type Concat[A] = ConcatT[Future, A]
-opaque type MergeT[F[_], A] >: ObservableT[F, A] <: ObservableT[F, A] = ObservableT[F, A]
-type Merge[A] = MergeT[Future, A]
+type Observable[A] = StreamT[Future, A]
 
-private def terminatingChooseSteps[F[_], B](
-    chooseB: F[(Step[B, StreamT[F, B]], IList[F[Step[B, StreamT[F, B]]]])]
-)(using F: Nondeterminism[F]): F[Step[B, StreamT[F, B]]] =
-  F.bind(chooseB) {
-    case (Skip(next), fStepBs) =>
-      terminatingChooseSteps(F.chooseAny(next().step, fStepBs))
-    case (Yield(b, next), fStepBs) =>
-      F.pure(Yield(b, () => StreamT(terminatingChooseSteps(F.chooseAny(next().step, fStepBs)))))
-    case (Done(), ICons(fStepBHead, fStepBTail)) =>
-      terminatingChooseSteps(F.chooseAny(fStepBHead, fStepBTail))
-    case (Done(), INil()) =>
-      F.pure(Done())
-  }
+object Observable:
+  private def terminatingChooseSteps[F[_], B](
+      chooseB: F[(Step[B, StreamT[F, B]], IList[F[Step[B, StreamT[F, B]]]])]
+  )(using F: Nondeterminism[F]): F[Step[B, StreamT[F, B]]] =
+    F.bind(chooseB) {
+      case (Skip(next), fStepBs) =>
+        terminatingChooseSteps(F.chooseAny(next().step, fStepBs))
+      case (Yield(b, next), fStepBs) =>
+        F.pure(Yield(b, () => StreamT(terminatingChooseSteps(F.chooseAny(next().step, fStepBs)))))
+      case (Done(), ICons(fStepBHead, fStepBTail)) =>
+        terminatingChooseSteps(F.chooseAny(fStepBHead, fStepBTail))
+      case (Done(), INil()) =>
+        F.pure(Done())
+    }
 
-private def terminatingSteps[F[_], B](
-    fStepBHead: F[Step[B, StreamT[F, B]]],
-    fStepBTail: IList[F[Step[B, StreamT[F, B]]]]
-)(using F: Nondeterminism[F]): F[Step[B, StreamT[F, B]]] =
-  terminatingChooseSteps(F.chooseAny(fStepBHead, fStepBTail))
+  private def terminatingSteps[F[_], B](
+      fStepBHead: F[Step[B, StreamT[F, B]]],
+      fStepBTail: IList[F[Step[B, StreamT[F, B]]]]
+  )(using F: Nondeterminism[F]): F[Step[B, StreamT[F, B]]] =
+    terminatingChooseSteps(F.chooseAny(fStepBHead, fStepBTail))
 
-object MergeT:
-  given [F[_]](using F: Nondeterminism[F]): Monad[[A] =>> MergeT[F, A]] with
-    import F.nondeterminismSyntax._
-    def point[A](a: => A): MergeT[F, A] =
-      StreamT.StreamTMonadPlus(F).point(a)
+  private def distinctUntilChangedFromLatestValue[F[_], A](fa: StreamT[F, A], latest: A)(using
+      F: Functor[F]
+  ): StreamT[F, A] =
+    StreamT(F.map(fa.step) {
+      case Skip(next) =>
+        Skip(distinctUntilChangedFromLatestValue(next(), latest))
+      case Done() =>
+        Done()
+      case Yield(`latest`, next) =>
+        Skip(distinctUntilChangedFromLatestValue(next(), latest))
+      case Yield(a, next) =>
+        Yield(a, distinctUntilChangedFromLatestValue(next(), a))
+    })
 
-    def bind[A, B](fa: MergeT[F, A])(f: A => MergeT[F, B]): MergeT[F, B] =
+  extension [F[_], A](fa: StreamT[F, A])
+    def distinctUntilChanged(using F: Functor[F]): StreamT[F, A] =
+      StreamT(F.map(fa.step) {
+        case Skip(next) =>
+          Skip(next().distinctUntilChanged)
+        case Done() =>
+          Done()
+        case Yield(a, next) =>
+          Yield(a, distinctUntilChangedFromLatestValue(next(), a))
+      })
+
+    def mergeFlatMap[B](f: A => StreamT[F, B])(using F: Nondeterminism[F]): StreamT[F, B] =
       def livingSteps(
           fStepA: F[Step[A, StreamT[F, A]]],
           fStepBHead: F[Step[B, StreamT[F, B]]],
@@ -81,7 +101,7 @@ object MergeT:
           }
         chooseSteps(fStepA, F.chooseAny(fStepBHead, fStepBTail))
       def initSteps(fStepA: F[Step[A, StreamT[F, A]]]): F[Step[B, StreamT[F, B]]] =
-        fStepA.flatMap {
+        F.bind(fStepA) {
           case Yield(a, next) =>
             livingSteps(next().step, f(a).step, IList.empty)
           case Skip(next) =>
@@ -90,3 +110,26 @@ object MergeT:
             F.pure(Done())
         }
       StreamT(initSteps(fa.step))
+
+opaque type MergeT[F[_], A] >: StreamT[F, A] <: StreamT[F, A] = StreamT[F, A]
+
+opaque type DistinctUntilChangedT[F[_], A] <: StreamT[F, A] = StreamT[F, A]
+
+object DistinctUntilChangedT:
+  given [F[_]](using F: Functor[F]): IsomorphismMonadPlus[[A] =>> DistinctUntilChangedT[F, A], [A] =>> StreamT[F, A]]
+    with
+    def G = summon
+    def iso = new IsoFunctorTemplate[[A] =>> DistinctUntilChangedT[F, A], [A] =>> StreamT[F, A]] {
+      def to[A](distinct: DistinctUntilChangedT[F, A]) = distinct
+      def from[A](stream: StreamT[F, A]) = Observable.distinctUntilChanged(stream)
+    }
+
+object MergeT:
+  given [F[_]](using F: Nondeterminism[F]): Monad[[A] =>> MergeT[F, A]] with
+    import F.nondeterminismSyntax._
+    def point[A](a: => A): MergeT[F, A] =
+      StreamT.StreamTMonadPlus(F).point(a)
+    def bind[A, B](fa: MergeT[F, A])(f: A => MergeT[F, B]): MergeT[F, B] = {
+      // import
+      Observable.mergeFlatMap(fa)(f)
+    }
