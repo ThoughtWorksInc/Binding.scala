@@ -1,0 +1,1 @@
+dependsOn(ProjectRef(uri("https://github.com/atry/scalaz.git"), "coreJS"))
