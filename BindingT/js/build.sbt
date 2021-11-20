@@ -1,1 +1,1 @@
-../build.sbt.shared
+../shared/build.sbt
