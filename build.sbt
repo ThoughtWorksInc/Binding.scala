@@ -14,3 +14,4 @@ ScalaUnidoc / unidoc / unidocProjectFilter := {
   inAnyProject -- inProjects(Binding.jvm, BindingT.jvm, BindingSeqT.jvm)
 }
 
+Global / scalaVersion := "3.1.0"
