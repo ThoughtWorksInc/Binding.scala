@@ -1,1 +1,1 @@
-scalacOptions ++= Seq("-rewrite", "-indent")
+dependsOn(ProjectRef(uri("https://github.com/atry/scalaz.git"), "coreJVM"))

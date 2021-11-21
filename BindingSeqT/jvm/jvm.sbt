@@ -1,1 +1,1 @@
-dependsOn(ProjectRef(uri("https://github.com/atry/scalaz.git"), "coreJS"))
+dependsOn(ProjectRef(uri("https://github.com/atry/scalaz.git"), "coreJVM"))
