@@ -1524,7 +1524,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     override def changed(event: ChangedEvent[Any]): Unit = {}
   }
 
-  private class RxDefer[A](upstream: => Rx.Observable[A]) extends Rx.Observable[A] with ChangedListener[Option[A]]{
+  private class RxDefer[A](upstream: => Rx.Observable[A]) extends Rx.Observable[A] with ChangedListener[Option[A]] {
 
     def changed(upstream: ChangedEvent[Option[A]]): Unit = {
       val event = new ChangedEvent(this, upstream.newValue)
@@ -1639,7 +1639,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     override protected def removePatchedListener(listener: PatchedListener[A]): Unit = {
       publisher -= listener
-      if (publisher.isEmpty){
+      if (publisher.isEmpty) {
         observable.removeChangedListener(this)
       }
     }
@@ -1731,8 +1731,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
   /** Reactive operators for [[Observable]]s.
     *
-    * @see [[http://reactivex.io/ ReactiveX]]
-    * @note [[Rx]] operators are incomplete. Feel free to create a Pull Request if you need a certain operator.
+    * @see
+    *   [[http://reactivex.io/ ReactiveX]]
+    * @note
+    *   [[Rx]] operators are incomplete. Feel free to create a Pull Request if you need a certain operator.
     */
   object Rx {
 
@@ -1741,45 +1743,44 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * Once the value turned into a [[scala.None]], this [[Observable]] would be considered as terminated, and any
       * future changes of this [[Observable]] will be ignored by any [[Rx]] operators derived from this [[Observable]],
       * even if this [[Observable]] turns into a [[scala.Some]] value again.
-      * 
+      *
       * @note
       *   Even though an [[Observable]] is technically a [[Binding]], an [[Observable]] created from a [[Rx]] operator
       *   does not actually indicates data-binding.
       *
-      *   For example, given an [[Observable]] created from [[Rx.concat]],
-      *   {{{
+      * For example, given an [[Observable]] created from [[Rx.concat]],
+      * {{{
       *   import com.thoughtworks.binding.Binding._
       *   val sourceObservable0 = Var[Option[String]](Some("0"))
       *   val sourceObservable1 = Var[Option[String]](Some("1"))
       *   val sourceObservables = List(sourceObservable0, sourceObservable1)
       *   val derivedObservable = Rx.concat(sourceObservables)
       *   derivedObservable.watch()
-      *   }}}
+      * }}}
       *
-      *   when a source value gets changed,
-      * 
-      *   {{{
+      * when a source value gets changed,
+      *
+      * {{{
       *   val originalDerivedObservableValue = derivedObservable.get
       *   sourceObservable0.value = None
-      *   }}}
-      * 
-      *   and the source value is changed back to the original value,
-      * 
-      *   {{{
+      * }}}
+      *
+      * and the source value is changed back to the original value,
+      *
+      * {{{
       *   sourceObservable0.value = Some("0")
-      *   }}}
-      *   
-      *   then the value of the derived observable might not be the original value.
-      * 
-      *   {{{
+      * }}}
+      *
+      * then the value of the derived observable might not be the original value.
+      *
+      * {{{
       *   derivedObservable.get shouldNot be(originalDerivedObservableValue)
-      *   }}}
-      * 
-      *   In contrast, if the `concat` operator is implemented by ordinary [[Binding.bind]] macros, the derived Binding
-      *   is indeed a data-binding, i.e. it always perform the same calculation for the same values of source
-      *   [[Binding]]s.
-      * 
-      *   {{{
+      * }}}
+      *
+      * In contrast, if the `concat` operator is implemented by ordinary [[Binding.bind]] macros, the derived Binding is
+      * indeed a data-binding, i.e. it always perform the same calculation for the same values of source [[Binding]]s.
+      *
+      * {{{
       *   import com.thoughtworks.binding.Binding._
       *   val sourceBinding0 = Var[Option[String]](Some("0"))
       *   val sourceBinding1 = Var[Option[String]](Some("1"))
@@ -1807,13 +1808,14 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *   sourceBinding0.value = None
       *   sourceBinding0.value = Some("0")
       *   derivedBinding.get should be(originalDerivedBindingValue)
-      *   }}}
+      * }}}
       */
     type Observable[A] = Binding[Option[A]]
 
     /** Emit the emissions from two or more [[Observable]]s without interleaving them.
       *
-      * @see [[http://reactivex.io/documentation/operators/concat.html ReactiveX - Concat operator]]
+      * @see
+      *   [[http://reactivex.io/documentation/operators/concat.html ReactiveX - Concat operator]]
       *
       * @example
       *   Given a sequence of [[Observable]]s,
@@ -1923,15 +1925,15 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       new RxConcat(LazyList.from(observables))
     }
 
-    /**
-      * @see [[http://reactivex.io/documentation/operators/repeat.html ReactiveX - Repeat operator]]
+    /** @see
+      *   [[http://reactivex.io/documentation/operators/repeat.html ReactiveX - Repeat operator]]
       */
     def repeat[A](source: => Observable[A]): Observable[A] = {
       new RxConcat(LazyList.continually(source))
     }
 
-    /**
-      * @see [[http://reactivex.io/documentation/operators/merge.html ReactiveX - Merge operator]]
+    /** @see
+      *   [[http://reactivex.io/documentation/operators/merge.html ReactiveX - Merge operator]]
       */
     def merge[A](bindingSeq: BindingSeq[A]): Observable[A] = {
       new RxMerge(bindingSeq)
@@ -1939,19 +1941,20 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     /** do not create the Observable until the observer subscribes
       *
-      * @see [[http://reactivex.io/documentation/operators/defer.html ReactiveX - Defer operator]]
+      * @see
+      *   [[http://reactivex.io/documentation/operators/defer.html ReactiveX - Defer operator]]
       *
       * @note
       *   This [[defer]] is slightly different from other implementation the
       *   [[http://reactivex.io/documentation/operators/defer.html ReactiveX Defer]] operator, because this [[defer]]
       *   shares the same upstream [[Observable]] instance for all subscribes.
-      * 
+      *
       * @example
       *   Circular referenced [[Observable]]s can be created with the help of [[defer]]
-      *   {{{
+      * {{{
       *   import Binding._
       *   val source = Var("init")
-      *   lazy val observable1: Rx.Observable[String] = 
+      *   lazy val observable1: Rx.Observable[String] =
       *     Binding[Option[String]] {
       *       source.bind match {
       *         case "init" =>
@@ -1966,37 +1969,37 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *       Some(observable1.getClass.getSimpleName)
       *     }
       *   )
-      *   }}}
-      *   
-      *   Initially, `observable1` did not subscribe `observable2` because `source` is `init`,
-      *   {{{
+      * }}}
+      *
+      * Initially, `observable1` did not subscribe `observable2` because `source` is `init`,
+      * {{{
       *   observable1.watch()
-      *   }}}
-      *   therefore observable2 should be `None`,
-      *   {{{
+      * }}}
+      * therefore observable2 should be `None`,
+      * {{{
       *   observable1.get should be (None)
       *   observable2.get should be (None)
-      *   }}}
-      *   when `source` changed,
-      *   {{{
+      * }}}
+      * when `source` changed,
+      * {{{
       *   source.value = "changed"
-      *   }}}
-      *   `observable1` should subscribe `observable2`,
-      *   and there should be `Some` values.
-      *   {{{
+      * }}}
+      * `observable1` should subscribe `observable2`, and there should be `Some` values.
+      * {{{
       *   observable1.get should be (Some("FlatMap_changed"))
       *   observable2.get should be (Some("FlatMap"))
-      *   }}}
-      *   Even though circular referenced [[Observable]]s can be created in this way, their calculation must not be
-      *   mutually dependent.
+      * }}}
+      * Even though circular referenced [[Observable]]s can be created in this way, their calculation must not be
+      * mutually dependent.
       */
     def defer[A](upstream: => Observable[A]): Observable[A] = {
       new RxDefer(upstream)
     }
 
     /** Combine multiple [[Observable]]s into one by merging their emissions.
-      * 
-      * @see [[http://reactivex.io/documentation/operators/merge.html ReactiveX - Merge operator]]
+      *
+      * @see
+      *   [[http://reactivex.io/documentation/operators/merge.html ReactiveX - Merge operator]]
       *
       * @example
       *   Given a sequence of [[Observable]]s,
@@ -2041,7 +2044,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * {{{
       * merged.get should be(Some("1"))
       * }}}
-      * 
+      *
       * when the some but not all of the observable becomes `None`,
       *
       * {{{
@@ -2053,13 +2056,13 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * {{{
       * merged.get should be(Some("1"))
       * }}}
-      * 
+      *
       * when any of the observable becomes `Some` value,
-      * 
+      *
       * {{{
       * observable2.value = Some("2-changed")
       * }}}
-      * 
+      *
       * the merged value should be the new value,
       *
       * {{{
@@ -2067,7 +2070,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * }}}
       *
       * even when a previous `None` observable becomes `Some` value,,
-      * 
+      *
       * {{{
       * observable3.value = Some("3-previous-None")
       * }}}
@@ -2077,19 +2080,19 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * {{{
       * merged.get should be(Some("3-previous-None"))
       * }}}
-      * 
+      *
       * when multiple observables are changed at once,
-      * 
+      *
       * {{{
       * observable7.value = Some("7-changed")
       * }}}
-      * 
+      *
       * the merged value should be the value of the last derived observable
-      * 
+      *
       * {{{
       * merged.get should be(Some("8-7-changed-derived"))
       * }}}
-      * 
+      *
       * when all the observables become `None`,
       *
       * {{{
@@ -2105,12 +2108,11 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       * merged.get should be(Some("8-7-changed-derived"))
       * observable9.value = None
       * merged.get should be(None)
-      * }}} 
-      * 
+      * }}}
       */
     def merge[A](observables: IterableOnce[Observable[A]]): Observable[A] = {
       new RxMerge(
-        new Constants(toConstantsData(observables)).flatMapBinding (
+        new Constants(toConstantsData(observables)).flatMapBinding(
           BindingInstances.map(_) { option =>
             new Constants(toConstantsData(option))
           }
@@ -2120,57 +2122,58 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     /** convert an Observable into a [[BindingSeq]].
       *
-      * @see [[http://reactivex.io/documentation/operators/to.html ReactiveX - To operator]]
-      * 
+      * @see
+      *   [[http://reactivex.io/documentation/operators/to.html ReactiveX - To operator]]
+      *
       * @example
       *   Given a source observable,
-      *   {{{
+      * {{{
       *   import com.thoughtworks.binding.Binding._
       *   val observable = Var[Option[String]](Some("1"))
-      *   }}}
-      * 
-      *   when converting it into a [[BindingSeq]],
-      * 
-      *   {{{
+      * }}}
+      *
+      * when converting it into a [[BindingSeq]],
+      *
+      * {{{
       *   val bindingSeq = Rx.toBindingSeq(observable)
-      *   }}}
-      * 
-      *   and flat-mapping to the result,
-      *   {{{
+      * }}}
+      *
+      * and flat-mapping to the result,
+      * {{{
       *   val result = new BindingSeq.FlatMap(
       *     bindingSeq,
       *     { value: String => Constants("the value is", value) }
       *   ).all
       *   result.watch()
-      *   }}}
-      *   
-      *   then result should have the values corresponding to the source observable,
-      *   {{{
+      * }}}
+      *
+      * then result should have the values corresponding to the source observable,
+      * {{{
       *   result.get.toSeq should contain theSameElementsInOrderAs Seq("the value is", "1")
-      *   }}}
-      * 
-      *   when the source observable changes,
-      *   {{{
+      * }}}
+      *
+      * when the source observable changes,
+      * {{{
       *   observable.value = Some("2")
-      *   }}}
-      * 
-      *   then the corresponding new value should be appended to the result,
-      *   {{{
+      * }}}
+      *
+      * then the corresponding new value should be appended to the result,
+      * {{{
       *   result.get.toSeq should contain theSameElementsInOrderAs Seq(
       *     "the value is", "1",
       *     "the value is", "2"
       *   )
-      *   }}}
-      * 
-      *   when the source observable terminates,
-      *   {{{
-      *   observable.value = None
-      *   }}}
+      * }}}
       *
-      *   then the result should be empty
-      *   {{{
+      * when the source observable terminates,
+      * {{{
+      *   observable.value = None
+      * }}}
+      *
+      * then the result should be empty
+      * {{{
       *   result.get.toSeq should be(empty)
-      *   }}}
+      * }}}
       */
     def toBindingSeq[A](observable: Observable[A]): BindingSeq[A] = {
       new RxToBindingSeq(observable)
