@@ -24,7 +24,7 @@ import scala.concurrent.Future
 object Binding:
   opaque type BindingT[M[_], A] <: StreamT[M, A] = StreamT[M, A]
   object BindingT:
-    given [M[_]](using M: Nondeterminism[M]): Monad[[A] =>> BindingT[M, A]] with
+    given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
       def point[A](a: => A) = StreamT.StreamTMonadPlus.point(a)
       def bind[A, B](fa: BindingT[M, A])(f: A => BindingT[M, B]): BindingT[M, B] =
         given Equal[B] = Equal.equalA[B]
@@ -46,9 +46,9 @@ object Binding:
         private[BindingSeqT] def withOffset(offset: Int) = copy(index = index + offset)
         private[BindingSeqT] def sizeIncremental = newItems.size - deleteCount
 
-    given [M[_]](using M: Nondeterminism[M]): Monad[[a] =>> BindingSeqT[M, a]] with
+    given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]] with
       def point[A](a: => A): BindingSeqT[M, A] =
-        Applicative[[a] =>> StreamT[M, a]].point(Patch.Splice[A](0, 0, List(a)))
+        Applicative[[X] =>> StreamT[M, X]].point(Patch.Splice[A](0, 0, List(a)))
       def bind[A, B](fa: BindingSeqT[M, A])(f: A => BindingSeqT[M, B]): BindingSeqT[M, B] =
         val toStepB = { (a: A) =>
           f(a).step
