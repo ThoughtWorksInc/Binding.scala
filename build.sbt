@@ -1,17 +1,7 @@
-lazy val BindingT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build
-
-lazy val BindingSeqT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build
-
-lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(BindingT, BindingSeqT)
+lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
 
 ThisBuild / organization := "com.thoughtworks.binding"
 
 publish / skip := true
-
-enablePlugins(ScalaUnidocPlugin)
-
-ScalaUnidoc / unidoc / unidocProjectFilter := {
-  inAnyProject -- inProjects(Binding.jvm, BindingT.jvm, BindingSeqT.jvm)
-}
 
 Global / scalaVersion := "3.1.0"

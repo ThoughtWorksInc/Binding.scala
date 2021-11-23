@@ -1,26 +1,33 @@
 package com.thoughtworks.binding
 
-import scalaz.StreamT
-import scala.concurrent.Future
-import scalaz.Monad
-import scalaz.Nondeterminism
-import scalaz.Applicative
-import scalaz.StreamT.Skip
-import scalaz.StreamT.Done
-import scalaz.StreamT.Yield
-import scalaz.StreamT.Step
-import scalaz.IList
 import scalaz.-\/
-import scalaz.\/-
-import scalaz.Monoid
+import scalaz.Applicative
+import scalaz.Equal
+import scalaz.FingerTree
+import scalaz.Functor
 import scalaz.ICons
+import scalaz.IList
 import scalaz.INil
 import scalaz.Isomorphism.IsoFunctor
 import scalaz.Isomorphism.IsoFunctorTemplate
-import scalaz.MonadPlus
 import scalaz.IsomorphismMonadPlus
-import scalaz.Functor
-import scalaz.Equal
+import scalaz.Monad
+import scalaz.MonadPlus
+import scalaz.Monoid
+import scalaz.Nondeterminism
+import scalaz.StreamT
+import scalaz.StreamT.Done
+import scalaz.StreamT.Skip
+import scalaz.StreamT.Step
+import scalaz.StreamT.Yield
+import scalaz.\/-
+
+import scala.concurrent.Future
+
+// Copied from https://github.com/scalaz/scalaz/pull/2234
+extension [V,A](tree: FingerTree[V, A])
+  private def measureMonoid(implicit V: Monoid[V]): V =
+    tree.fold(V.zero, (v, _) => v, (v, _, _, _) => v)
 
 // Copied from https://github.com/scalaz/scalaz/pull/2231
 /** The [[flatMapLatest]] operator behaves much like the [[mergeMap]] except that whenever a new item is emitted by the
@@ -65,15 +72,3 @@ extension [M[_], A](fa: StreamT[M, A])
     }
     StreamT(flatMapLatestInitStep(fa.step))
   }
-
-opaque type BindingT[M[_], A] <: StreamT[M, A] = StreamT[M, A]
-
-object BindingT:
-  given [M[_]](using M: Nondeterminism[M]): Monad[[A] =>> BindingT[M, A]] with
-    def point[A](a: => A) = StreamT.StreamTMonadPlus.point(a)
-    def bind[A, B](fa: BindingT[M, A])(f: A => BindingT[M, B]): BindingT[M, B] =
-      given Equal[B] = Equal.equalA[B]
-      fa.flatMapLatest(f).distinctUntilChanged
-    override def map[A, B](fa: BindingT[M, A])(f: A => B): BindingT[M, B] =
-      given Equal[B] = Equal.equalA[B]
-      fa.map(f).distinctUntilChanged
