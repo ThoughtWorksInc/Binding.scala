@@ -50,6 +50,20 @@ object Binding:
     given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]] with
       def point[A](a: => A): BindingSeqT[M, A] =
         Applicative[[X] =>> StreamT[M, X]].point(Patch.Splice[A](0, 0, List(a)))
+
+      /** Returns a new data-binding sequence by applying a function to all elements of this sequence and using the
+        * elements of the resulting collections.
+        *
+        * Whenever `fa` or one of the subsequence changes, the result sequence changes accordingly. The time complexity
+        * to update the result sequence, when `fa` changes, is `O(log(n) + c)`, where `n` is the size of `fa`, and `c`
+        * is number of elements in `fa`, mapped to mutable subsequences by `f`, of which the indices in `fa` are
+        * changing. For example, if the size of `fa` is 10 and 4 elements of them mapped to mutable subsequences, when
+        * an element is prepended to `fa`, `c` is 4. However when an element is appended to `fa`, `c` is zero, because
+        * no element's index in `fa is changed.
+        *
+        * The time complexity to update the result sequence, when one of the subsequence changes, is `O(log(n))`, where
+        * `n` is the size of `fa`.
+        */
       def bind[A, B](fa: BindingSeqT[M, A])(f: A => BindingSeqT[M, B]): BindingSeqT[M, B] =
         val toStepB = { (a: A) =>
           f(a).step
@@ -190,6 +204,10 @@ object Binding:
                   })
         val Some(mergedEventQueue) = mergeEventQueue(Some(fa.step), FingerTree.empty)
         StreamT(mergedEventQueue)
+
+  /** The data binding expression of a sequence, essentially an asynchronous stream of patches describing how the
+    * sequence is changing.
+    */
   type BindingSeq[A] = BindingSeqT[Future, A]
 
 type Binding[A] = Binding.BindingT[Future, A]
