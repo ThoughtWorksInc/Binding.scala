@@ -7,6 +7,7 @@ import scalaz.Equal
 import scalaz.FingerTree
 import scalaz.Free
 import scalaz.IList
+import scalaz.Memo
 import scalaz.Monad
 import scalaz.MonadPlus
 import scalaz.Monoid
@@ -59,7 +60,7 @@ object Binding:
             numberOfSlices: Int,
             numberOfElements: Int,
             // TODO: Create an opaque type implementation for DList for better performance
-            sliceEventBuilder: (numberOfPreviousSlices: Int) => DList[M[SliceEvent]]
+            sliceEventBuilder: Option[(numberOfPreviousSlices: Int) => M[SliceEvent]]
         )
         sealed trait Slice:
           def size: Int
@@ -67,20 +68,30 @@ object Binding:
         final case class InactiveSlice(size: Int) extends Slice
         val emptyEventBuilder = { (numberOfPreviousSlices: Int) => DList.mkDList[M[SliceEvent]](Free.pure) }
         given Monoid[Measure] with
-          def zero = Measure(0, 0, emptyEventBuilder)
+          def zero = Measure(0, 0, None)
           def append(f1: Measure, f2: => Measure) =
+            val numberOfSlices1 = f1.numberOfSlices
             Measure(
               f1.numberOfSlices + f2.numberOfSlices,
               f1.numberOfElements + f2.numberOfElements,
               (f1.sliceEventBuilder, f2.sliceEventBuilder) match
-                case (`emptyEventBuilder`, `emptyEventBuilder`) =>
-                  // Optimization the event builder where both subtrees are inactive
-                  emptyEventBuilder
-                case (builder1, builder2) =>
-                  val numberOfSlices1 = f1.numberOfSlices
-                  locally { numberOfPreviousSlices =>
-                    builder1(numberOfPreviousSlices) ++ builder2(numberOfPreviousSlices + numberOfSlices1)
-                  }
+                case (None, None) =>
+                  None
+                case (None, Some(builder2)) =>
+                  Some(Memo.immutableHashMapMemo { (numberOfPreviousSlices: Int) =>
+                    builder2(numberOfPreviousSlices + numberOfSlices1)
+                  })
+                case (someBuilder1: Some[_], None) =>
+                  someBuilder1
+                case (Some(builder1), Some(builder2)) =>
+                  Some(Memo.immutableHashMapMemo { (numberOfPreviousSlices: Int) =>
+                    M.map(
+                      M.choose(builder1(numberOfPreviousSlices), builder2(numberOfPreviousSlices + numberOfSlices1))
+                    ) {
+                      case -\/((sliceEvent1, _)) => sliceEvent1
+                      case \/-((_, sliceEvent2)) => sliceEvent2
+                    }
+                  })
             )
         given Reducer[Slice, Measure] = UnitReducer { (slice: Slice) =>
           Measure(
@@ -88,12 +99,11 @@ object Binding:
             slice.size,
             slice match {
               case InactiveSlice(_) =>
-                emptyEventBuilder
-              case ActiveSlice(_, eventQueue) => { (numberOfPreviousSlices: Int) =>
-                DList.mkDList { rest =>
-                  Free.pure((M.map(eventQueue)(SliceEvent(_, numberOfPreviousSlices)) :: rest))
-                }
-              }
+                None
+              case ActiveSlice(_, eventQueue) =>
+                Some(Memo.immutableHashMapMemo { (numberOfPreviousSlices: Int) =>
+                  M.map(eventQueue)(SliceEvent(_, numberOfPreviousSlices))
+                })
             }
           )
         }
@@ -156,7 +166,7 @@ object Binding:
                   case None =>
                     Done()
           val chooseSliceEventOption = sliceTree.measure.toOption.flatMap { measure =>
-            M.chooseAny(measure.sliceEventBuilder(0).toIList)
+            measure.sliceEventBuilder.map(_(0))
           }
           upstreamEventQueueOption match
             case None =>
@@ -164,9 +174,7 @@ object Binding:
                 case None =>
                   None
                 case Some(chooseEvent) =>
-                  Some(M.map(chooseEvent) { case (sliceEvent, _) =>
-                    handleSliceEvent(sliceEvent)
-                  })
+                  Some(M.map(chooseEvent)(handleSliceEvent))
             case Some(upstreamEventQueue) =>
               chooseSliceEventOption match
                 case None =>
@@ -175,7 +183,7 @@ object Binding:
                   })
                 case Some(chooseEvent) =>
                   Some(M.map(M.choose(upstreamEventQueue, chooseEvent)) {
-                    case \/-((_, (sliceEvent, _))) =>
+                    case \/-((_, sliceEvent)) =>
                       handleSliceEvent(sliceEvent)
                     case -\/((upstreamEvent, _)) =>
                       handleUpstreamEvent(upstreamEvent)
