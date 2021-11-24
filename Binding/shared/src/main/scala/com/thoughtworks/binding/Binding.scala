@@ -23,31 +23,35 @@ import scalaz.\/-
 import scala.concurrent.Future
 
 object Binding:
-  opaque type BindingT[M[_], A] <: StreamT[M, A] = StreamT[M, A]
+  opaque type BindingT[M[_], +A] <: StreamT[M, _ <: A] = StreamT[M, _ <: A]
   object BindingT:
     def apply[M[_]: Applicative, A](a: A): BindingT[M, A] = a :: StreamT.empty
     given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
       def point[A](a: => A) = BindingT(a)
       def bind[A, B](upstream: BindingT[M, A])(f: A => BindingT[M, B]): BindingT[M, B] =
-        given Equal[B] = Equal.equalA[B]
-        upstream.flatMapLatest(f).distinctUntilChanged
+        given [B]: Equal[B] = Equal.equalA[B]
+        // We could avoid the `asInstanceOf` by wrapping `f(_)` like this:
+        //   upstream.flatMapLatest(f(_)).distinctUntilChanged
+        // but it will create an unnecessary function object.
+        // Use `asInstanceOf` anyway
+        upstream.flatMapLatest(f.asInstanceOf[A => StreamT[M, B]]).distinctUntilChanged
       override def map[A, B](upstream: BindingT[M, A])(f: A => B): BindingT[M, B] =
         given Equal[B] = Equal.equalA[B]
         upstream.map(f).distinctUntilChanged
 
-  opaque type BindingSeqT[M[_], A] <: StreamT[M, BindingSeqT.Patch[A]] = StreamT[M, BindingSeqT.Patch[A]]
+  opaque type BindingSeqT[M[_], +A] = StreamT[M, BindingSeqT.Patch[_ <: A]]
   object BindingSeqT:
 
     def apply[M[_]: Applicative, A](elements: A*): BindingSeqT[M, A] =
       Patch.Splice[A](0, 0, elements) :: StreamT.empty
-    sealed trait Patch[A]:
+    sealed trait Patch[+A]:
       private[BindingSeqT] def withOffset(offset: Int): Patch[A]
       private[BindingSeqT] def sizeIncremental: Int
 
     object Patch:
       // TODO: Support move items
       // final case class Move[A](oldIndex: Int, offset: Int, moveCount: Int) extends Patch[A]
-      final case class Splice[A](index: Int, deleteCount: Int, newItems: Iterable[A]) extends Patch[A]:
+      final case class Splice[+A](index: Int, deleteCount: Int, newItems: Iterable[A]) extends Patch[A]:
         private[BindingSeqT] def withOffset(offset: Int) = copy(index = index + offset)
         private[BindingSeqT] def sizeIncremental = newItems.size - deleteCount
 
@@ -69,7 +73,7 @@ object Binding:
         val toStepB = { (a: A) =>
           f(a).step
         }
-        type EventStep[A] = StreamT.Step[Patch[A], BindingSeqT[M, A]]
+        type EventStep[B] = StreamT.Step[Patch[_ <: B], scalaz.StreamT[M, Patch[_ <: B]]]
         final case class SliceEvent(eventStep: EventStep[B], sliceIndex: Int)
         final case class Measure(
             numberOfSlices: Int,
@@ -129,7 +133,16 @@ object Binding:
         ): Option[M[EventStep[B]]] =
           def handleUpstreamEvent(upstreamEvent: EventStep[A]): EventStep[B] =
             upstreamEvent match
-              case Yield(Patch.Splice(patchIndex, numberOfSlicesDeleted, newItems), s) =>
+              case Yield(
+                    Patch.Splice(
+                      patchIndex,
+                      numberOfSlicesDeleted,
+                      newItems
+                    )
+                    // Work around https://github.com/lampepfl/dotty/issues/13998
+                    : Patch[A],
+                    s
+                  ) =>
                 // TODO: Avoid unnecessary FingerTree operations to optimize the performance
                 val (left, notLeft) = sliceTree.split(_.numberOfSlices < patchIndex)
                 val (deleted, right) = notLeft.split(_.numberOfSlices < numberOfSlicesDeleted)
@@ -216,10 +229,10 @@ object Binding:
   /** The data binding expression of a sequence, essentially an asynchronous stream of patches describing how the
     * sequence is changing.
     */
-  type BindingSeq[A] = BindingSeqT[Future, A]
+  type BindingSeq[+A] = BindingSeqT[Future, A]
   object BindingSeq:
     export BindingSeqT._
 
   export BindingT._
 
-type Binding[A] = Binding.BindingT[Future, A]
+type Binding[+A] = Binding.BindingT[Future, A]
