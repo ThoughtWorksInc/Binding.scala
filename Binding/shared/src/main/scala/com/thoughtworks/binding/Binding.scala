@@ -27,12 +27,12 @@ object Binding:
   object BindingT:
     given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
       def point[A](a: => A) = StreamT.StreamTMonadPlus.point(a)
-      def bind[A, B](fa: BindingT[M, A])(f: A => BindingT[M, B]): BindingT[M, B] =
+      def bind[A, B](upstream: BindingT[M, A])(f: A => BindingT[M, B]): BindingT[M, B] =
         given Equal[B] = Equal.equalA[B]
-        fa.flatMapLatest(f).distinctUntilChanged
-      override def map[A, B](fa: BindingT[M, A])(f: A => B): BindingT[M, B] =
+        upstream.flatMapLatest(f).distinctUntilChanged
+      override def map[A, B](upstream: BindingT[M, A])(f: A => B): BindingT[M, B] =
         given Equal[B] = Equal.equalA[B]
-        fa.map(f).distinctUntilChanged
+        upstream.map(f).distinctUntilChanged
 
   opaque type BindingSeqT[M[_], A] <: StreamT[M, BindingSeqT.Patch[A]] = StreamT[M, BindingSeqT.Patch[A]]
   object BindingSeqT:
@@ -47,24 +47,21 @@ object Binding:
         private[BindingSeqT] def withOffset(offset: Int) = copy(index = index + offset)
         private[BindingSeqT] def sizeIncremental = newItems.size - deleteCount
 
-    given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]] with
-      def point[A](a: => A): BindingSeqT[M, A] =
-        Applicative[[X] =>> StreamT[M, X]].point(Patch.Splice[A](0, 0, List(a)))
-
+    extension [M[_], A](upstream: BindingSeqT[M, A])
       /** Returns a new data-binding sequence by applying a function to all elements of this sequence and using the
         * elements of the resulting collections.
         *
-        * Whenever `fa` or one of the subsequence changes, the result sequence changes accordingly. The time complexity
-        * to update the result sequence, when `fa` changes, is `O(log(n) + c)`, where `n` is the size of `fa`, and `c`
-        * is number of elements in `fa`, mapped to mutable subsequences by `f`, of which the indices in `fa` are
-        * changing. For example, if the size of `fa` is 10 and 4 elements of them mapped to mutable subsequences, when
-        * an element is prepended to `fa`, `c` is 4. However when an element is appended to `fa`, `c` is zero, because
-        * no element's index in `fa is changed.
+        * Whenever `upstream` or one of the subsequence changes, the result sequence changes accordingly. The time
+        * complexity to update the result sequence, when `upstream` changes, is `O(log(n) + c)`, where `n` is the size
+        * of `upstream`, and `c` is number of elements in `upstream`, mapped to mutable subsequences by `f`, of which
+        * the indices in `upstream` are changing. For example, if the size of `upstream` is 10 and 4 elements of them
+        * mapped to mutable subsequences, when an element is prepended to `upstream`, `c` is 4. However when an element
+        * is appended to `upstream`, `c` is zero, because no element's index in `upstream is changed.
         *
         * The time complexity to update the result sequence, when one of the subsequence changes, is `O(log(n))`, where
-        * `n` is the size of `fa`.
+        * `n` is the size of `upstream`.
         */
-      def bind[A, B](fa: BindingSeqT[M, A])(f: A => BindingSeqT[M, B]): BindingSeqT[M, B] =
+      def flatMap[B](f: A => BindingSeqT[M, B])(using M: Nondeterminism[M]): BindingSeqT[M, B] =
         val toStepB = { (a: A) =>
           f(a).step
         }
@@ -202,8 +199,15 @@ object Binding:
                     case -\/((upstreamEvent, _)) =>
                       handleUpstreamEvent(upstreamEvent)
                   })
-        val Some(mergedEventQueue) = mergeEventQueue(Some(fa.step), FingerTree.empty)
+        val Some(mergedEventQueue) = mergeEventQueue(Some(upstream.step), FingerTree.empty)
         StreamT(mergedEventQueue)
+
+    given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]] with
+      def point[A](a: => A): BindingSeqT[M, A] =
+        Applicative[[X] =>> StreamT[M, X]].point(Patch.Splice[A](0, 0, List(a)))
+
+      def bind[A, B](upstream: BindingSeqT[M, A])(f: A => BindingSeqT[M, B]): BindingSeqT[M, B] =
+        upstream.flatMap(f)
 
   /** The data binding expression of a sequence, essentially an asynchronous stream of patches describing how the
     * sequence is changing.
