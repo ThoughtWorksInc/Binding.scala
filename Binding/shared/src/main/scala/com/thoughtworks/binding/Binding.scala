@@ -25,8 +25,9 @@ import scala.concurrent.Future
 object Binding:
   opaque type BindingT[M[_], A] <: StreamT[M, A] = StreamT[M, A]
   object BindingT:
+    def apply[M[_]: Applicative, A](a: A): BindingT[M, A] = a :: StreamT.empty
     given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
-      def point[A](a: => A) = StreamT.StreamTMonadPlus.point(a)
+      def point[A](a: => A) = BindingT(a)
       def bind[A, B](upstream: BindingT[M, A])(f: A => BindingT[M, B]): BindingT[M, B] =
         given Equal[B] = Equal.equalA[B]
         upstream.flatMapLatest(f).distinctUntilChanged
@@ -36,6 +37,9 @@ object Binding:
 
   opaque type BindingSeqT[M[_], A] <: StreamT[M, BindingSeqT.Patch[A]] = StreamT[M, BindingSeqT.Patch[A]]
   object BindingSeqT:
+
+    def apply[M[_]: Applicative, A](elements: A*): BindingSeqT[M, A] =
+      Patch.Splice[A](0, 0, elements) :: StreamT.empty
     sealed trait Patch[A]:
       private[BindingSeqT] def withOffset(offset: Int): Patch[A]
       private[BindingSeqT] def sizeIncremental: Int
@@ -204,7 +208,7 @@ object Binding:
 
     given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]] with
       def point[A](a: => A): BindingSeqT[M, A] =
-        Applicative[[X] =>> StreamT[M, X]].point(Patch.Splice[A](0, 0, List(a)))
+        BindingSeqT(a)
 
       def bind[A, B](upstream: BindingSeqT[M, A])(f: A => BindingSeqT[M, B]): BindingSeqT[M, B] =
         upstream.flatMap(f)
@@ -213,5 +217,9 @@ object Binding:
     * sequence is changing.
     */
   type BindingSeq[A] = BindingSeqT[Future, A]
+  object BindingSeq:
+    export BindingSeqT._
+
+  export BindingT._
 
 type Binding[A] = Binding.BindingT[Future, A]
