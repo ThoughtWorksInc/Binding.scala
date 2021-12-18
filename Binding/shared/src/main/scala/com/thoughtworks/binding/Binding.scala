@@ -23,7 +23,11 @@ import scalaz.\/-
 import scala.concurrent.Future
 
 object Binding:
-  opaque type BindingT[M[_], +A] <: StreamT[M, _ <: A] = StreamT[M, _ <: A]
+  opaque type BindingT[M[_], +A] = StreamT[
+    M,
+    // Ideally StreamT should be covariant. Mark it as `@unchecked` as a workaround.
+    A @uncheckedVariance
+  ]
   object BindingT:
     def apply[M[_]: Applicative, A](a: A): BindingT[M, A] = a :: StreamT.empty
     given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
@@ -39,7 +43,7 @@ object Binding:
         given Equal[B] = Equal.equalA[B]
         upstream.map(f).distinctUntilChanged
 
-  opaque type BindingSeqT[M[_], +A] = StreamT[M, BindingSeqT.Patch[_ <: A]]
+  opaque type BindingSeqT[M[_], +A] = BindingT[M, BindingSeqT.Patch[A]]
   object BindingSeqT:
 
     def apply[M[_]: Applicative, A](elements: A*): BindingSeqT[M, A] =
@@ -73,7 +77,8 @@ object Binding:
         val toStepB = { (a: A) =>
           f(a).step
         }
-        type EventStep[B] = StreamT.Step[Patch[_ <: B], scalaz.StreamT[M, Patch[_ <: B]]]
+        type EventStep[B] =
+          StreamT.Step[Patch[B], scalaz.StreamT[M, Patch[B]]]
         final case class SliceEvent(eventStep: EventStep[B], sliceIndex: Int)
         final case class Measure(
             numberOfSlices: Int,
