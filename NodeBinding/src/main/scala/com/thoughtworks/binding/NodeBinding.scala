@@ -92,18 +92,16 @@ object NodeBinding:
       })
     mapEvents(patchStream)
 
-  given [A](using
+  given [Element](using
       Applicative[Binding.Awaitable]
-  ): BindableSeq.Aux[NodeBinding[A], A] =
-    new BindableSeq[NodeBinding[A]]:
-      type Value = A
-      def toBindingSeq(nodeBinding: NodeBinding[A]): Binding.BindingSeq[A] =
-        BindingSeqT(
-          BindingT(
-            BindingSeqT.Patch.Splice[A](
-              0,
-              0,
-              collection.View.Single(nodeBinding.value)
-            ) :: BindingT.apply.flip(nodeBinding.eventLoop)
-          )
-        )
+  ): BindableSeq[NodeBinding[Element], Element] = BindableSeq { nodeBinding =>
+    BindingSeqT(
+      BindingT(
+        BindingSeqT.Patch.Splice[Element](
+          0,
+          0,
+          collection.View.Single(nodeBinding.value)
+        ) :: BindingT.apply.flip(nodeBinding.eventLoop)
+      )
+    )
+  }

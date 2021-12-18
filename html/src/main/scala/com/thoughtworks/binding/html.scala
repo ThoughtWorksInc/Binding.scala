@@ -516,16 +516,16 @@ private[binding] object Macros:
                 case '[from] =>
                   Implicits.search(
                     TypeRepr
-                      .of[BindableSeq.Lt[from, org.scalajs.dom.Node]]
+                      .of[BindableSeq[from, org.scalajs.dom.Node]]
                   ) match
                     case success: ImplicitSearchSuccess =>
                       '{
                         ${
                           success.tree
                             .asExprOf[
-                              BindableSeq.Lt[from, org.scalajs.dom.Node]
+                              BindableSeq[from, org.scalajs.dom.Node]
                             ]
-                        }.toBindingSeq(${
+                        }.apply(${
                           transformedTerm.asExprOf[from]
                         })
                       }
