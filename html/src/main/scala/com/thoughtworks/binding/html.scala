@@ -235,6 +235,7 @@ private[binding] object Macros:
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[Any] =
+    import scala.quoted.quotes.reflect.*
     node match
       case element: Element =>
         transformElement(element)
@@ -243,7 +244,8 @@ private[binding] object Macros:
       case text: Text =>
         transformText(text)
       case _ =>
-        ???
+        report.error("Unsupported node: " + node.toString)
+        '{ ??? }
   def mountProperty[E <: org.scalajs.dom.Element, K, V](using Quotes)(
       element: Element,
       elementExpr: Expr[E],
