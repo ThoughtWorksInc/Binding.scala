@@ -116,7 +116,7 @@ private[binding] object Macros:
         super.startElement(element, staticAttributes, augs)
         fCurrentNode.setUserData(
           AttributeArgumentsUserDataKey,
-          for (i, arg) <- dynamicAttributeIndices.view
+          for (i, arg) <- dynamicAttributeIndices
           yield
             if attrs.getValue(i) != "" then
               report.error(
@@ -388,9 +388,11 @@ private[binding] object Macros:
 
     val transformedAttributeEventLoops =
       element.getUserData(AttributeArgumentsUserDataKey) match
-        case attributeBindings: Map[_, _] =>
+        case null =>
+          Nil
+        case attributeBindings =>
           for
-            (qName: QName, anyAttributeValueExpr: Expr[_]) <- attributeBindings
+            (qName: QName, anyAttributeValueExpr: Expr[_]) <- attributeBindings.asInstanceOf[Iterable[_]]
           yield anyAttributeValueExpr.asTerm.tpe.asType match
             case '[attributeType] =>
               val attributeValueExpr =
