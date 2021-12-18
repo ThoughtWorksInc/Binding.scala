@@ -40,6 +40,8 @@ import org.w3c.dom.NodeList
 import org.w3c.dom.Comment
 import scala.quoted.Varargs
 import com.thoughtworks.dsl.reset
+import org.w3c.dom.Attr
+import scala.util.chaining.given
 
 private[binding] object Macros:
   val Placeholder = "\"\""
@@ -237,19 +239,52 @@ private[binding] object Macros:
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[NodeBinding[org.scalajs.dom.Element]] =
-    element.getNamespaceURI match {
-      case null =>
-        '{
-          org.scalajs.dom.document.createElement(${
-            Expr(element.getLocalName)
-          })
-        }
-      case namespaceUri =>
-        '{
-          org.scalajs.dom.document.createElementNS(
-            ${ Expr(namespaceUri) },
-            ${ Expr(element.getLocalName) }
-          )
+    val emptyElementExpr: Expr[org.scalajs.dom.Element] =
+      element.getNamespaceURI match {
+        case null =>
+          htmldefinitions.HtmlDefinitions.findTypeByTagName(
+            element.getLocalName
+          ) match
+            case '[elementType] =>
+              '{
+                org.scalajs.dom.document
+                  .createElement(${
+                    Expr(element.getLocalName)
+                  })
+                  .asInstanceOf[elementType & org.scalajs.dom.Element]
+              }
+        case namespaceUri =>
+          '{
+            org.scalajs.dom.document.createElementNS(
+              ${ Expr(namespaceUri) },
+              ${ Expr(element.getLocalName) }
+            )
+          }
+      }
+    val attributes = element.getAttributes
+    val elementExpr = (0 until attributes.getLength).foldLeft(emptyElementExpr) {
+      (elementExpr, i) =>
+        val attr = attributes.item(i).asInstanceOf[Attr]
+        attr.getNamespaceURI match {
+          case null =>
+            '{
+              $elementExpr.tap {
+                _.setAttribute(
+                  ${ Expr(attr.getLocalName) },
+                  ${ Expr(attr.getValue) }
+                )
+              }
+            }
+          case namespaceUri =>
+            '{
+              $elementExpr.tap {
+                _.setAttributeNS(
+                  ${ Expr(namespaceUri) },
+                  ${ Expr(attr.getLocalName) },
+                  ${ Expr(attr.getValue) }
+                )
+              }
+            }
         }
     }
 
