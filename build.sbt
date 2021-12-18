@@ -8,6 +8,7 @@ lazy val BindableSeq = crossProject(JSPlatform, JVMPlatform).crossType(CrossType
 
 lazy val NodeBinding = project.dependsOn(BindableSeq.js)
 
+lazy val htmldefinitions = project
 
 lazy val html = project.dependsOn(htmldefinitions, NodeBinding)
 

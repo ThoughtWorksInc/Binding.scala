@@ -13,3 +13,11 @@ addSbtPlugin("com.dwijnand" % "sbt-dynver" % "4.1.1")
 addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.1.2")
 
 addSbtPlugin("com.thoughtworks.example" % "sbt-example" % "9.0.0")
+
+libraryDependencies += "net.sourceforge.htmlunit" % "htmlunit" % "2.46.0"
+
+libraryDependencies += "io.circe" %% "circe-generic" % "0.12.3"
+
+libraryDependencies += "com.softwaremill.sttp" %% "circe" % "1.7.2"
+
+libraryDependencies += "org.scalameta" %% "scalameta" % "4.4.31"
