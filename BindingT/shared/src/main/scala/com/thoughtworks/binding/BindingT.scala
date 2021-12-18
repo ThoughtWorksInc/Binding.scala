@@ -19,12 +19,12 @@ import scalaz.StreamT.Skip
 import scalaz.StreamT.Yield
 import scalaz.UnitReducer
 import scalaz.\/-
-
 import scala.concurrent.Future
 import scala.collection.IndexedSeqView
 import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 import scalaz.Functor
+import com.thoughtworks.dsl.Dsl
 
 // Ideally StreamT should be covariant. Mark it as `@unchecked` as a workaround.
 opaque type BindingT[M[_], +A] >: StreamT[M, A @uncheckedVariance] <: StreamT[
@@ -109,3 +109,5 @@ object BindingT:
     ): BindingT[M, B] =
       given Equal[B] = Equal.equalA[B]
       upstream.map(f).distinctUntilChanged
+
+  given [M[_], A](using Applicative[M]): Dsl.Lift[A, BindingT[M, A]] = pure(_)
