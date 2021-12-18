@@ -24,6 +24,7 @@ import scala.concurrent.Future
 import scala.collection.IndexedSeqView
 import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
+import com.thoughtworks.dsl.Dsl
 
 opaque type BindingSeqT[M[_], +A] = BindingT[M, BindingSeqT.Patch[A]]
 object BindingSeqT:
@@ -262,9 +263,14 @@ object BindingSeqT:
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]]
     with
     def point[A](a: => A): BindingSeqT[M, A] =
-      BindingT(Patch.Splice[A](0, 0, collection.View.Single(a)) :: StreamT.empty)
+      fromIterable(collection.View.Single(a))
 
     def bind[A, B](upstream: BindingSeqT[M, A])(
         f: A => BindingSeqT[M, B]
     ): BindingSeqT[M, B] =
       upstream.flatMap(f)
+
+  given [M[_], A](using
+      M: Applicative[M]
+  ): Dsl.Lift.OneStep[Iterable[A], BindingSeqT[M, A]] =
+    fromIterable(_)
