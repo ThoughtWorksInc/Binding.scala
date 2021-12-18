@@ -21,6 +21,9 @@ import scalaz.UnitReducer
 import scalaz.\/-
 
 import scala.concurrent.Future
+import scala.collection.IndexedSeqView
+import scalaz.StreamT.Step
+import scala.annotation.unchecked.uncheckedVariance
 
 object Binding:
   opaque type BindingT[M[_], +A] = StreamT[
@@ -29,7 +32,51 @@ object Binding:
     A @uncheckedVariance
   ]
   object BindingT:
-    def apply[M[_]: Applicative, A](a: A): BindingT[M, A] = a :: StreamT.empty
+
+    def fromStreamT[M[_], A]: StreamT[
+      M,
+      // Ideally StreamT should be covariant. Mark it as `@unchecked` as a workaround.
+      A @uncheckedVariance
+    ]
+      =:= BindingT[M, A] =
+      summon
+
+    extension [M[_], A](binding: BindingT[M, A])
+      def mergeWith(that: BindingT[M, A])(using
+          Nondeterminism[M]
+      ): BindingT[M, A] =
+        (binding: StreamT[M, A]).mergeWith(that: StreamT[M, A])
+    def mergeView[M[_], A](streams: IndexedSeqView[BindingT[M, A]])(using
+        Nondeterminism[M]
+    ): BindingT[M, A] =
+      streams.size match {
+        case 0 =>
+          StreamT.empty
+        case 1 =>
+          streams.head
+        case size =>
+          val middle = size / 2
+          mergeView(streams.slice(0, middle))
+            .mergeWith(mergeView(streams.slice(middle, size)))
+      }
+
+    def mergeAll[M[_], A](
+        streams: Iterable[BindingT[M, A]]
+    )(using Nondeterminism[M]): BindingT[M, A] =
+      mergeView(streams match {
+        case indexedSeqView: IndexedSeqView[
+              BindingT[M, A] @unchecked
+            ] =>
+          indexedSeqView
+        case indexedSeqOps: IndexedSeqView.SomeIndexedSeqOps[
+              BindingT[M, A] @unchecked
+            ] =>
+          IndexedSeqView.Id(indexedSeqOps)
+        case _ =>
+          streams.toIndexedSeq.view
+      })
+
+    def apply[M[_]: Applicative, A](a: A): BindingT[M, A] = a :: StreamT.empty[M, A]
     given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
       def point[A](a: => A) = BindingT(a)
       def bind[A, B](upstream: BindingT[M, A])(
@@ -51,6 +98,16 @@ object Binding:
 
   opaque type BindingSeqT[M[_], +A] = BindingT[M, BindingSeqT.Patch[A]]
   object BindingSeqT:
+
+    extension [M[_], A](bindingSeq: BindingSeqT[M, A])
+      def mergeWithEventLoop(eventLoop: BindingT[M, Nothing])(using
+          Nondeterminism[M]
+      ): BindingSeqT[M, A] =
+        bindingSeq.mergeWith(eventLoop)
+
+    def fromBindingT[M[_], A]
+        : BindingT[M, BindingSeqT.Patch[A]] =:= BindingSeqT[M, A] =
+      summon
 
     def apply[M[_]: Applicative, A](elements: A*): BindingSeqT[M, A] =
       Patch.Splice[A](0, 0, elements) :: StreamT.empty
