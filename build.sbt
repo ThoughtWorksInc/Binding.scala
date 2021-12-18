@@ -6,9 +6,10 @@ lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Ful
 
 lazy val BindableSeq = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(Binding)
 
-lazy val NodeBinding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(BindableSeq)
+lazy val NodeBinding = project.dependsOn(BindableSeq.js)
 
-lazy val html = project.dependsOn(NodeBinding.js)
+
+lazy val html = project.dependsOn(htmldefinitions, NodeBinding)
 
 ThisBuild / organization := "com.thoughtworks.binding"
 
