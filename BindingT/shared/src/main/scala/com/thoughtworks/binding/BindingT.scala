@@ -89,8 +89,10 @@ object BindingT:
         streams.toIndexedSeq.view
     })
 
+  def pure[M[_], A](a: A)(using Applicative[M]) = a :: StreamT.empty[M, A]
+
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
-    def point[A](a: => A) = a :: StreamT.empty[M, A]
+    def point[A](a: => A) = BindingT.pure(a)
     def bind[A, B](upstream: BindingT[M, A])(
         f: A => BindingT[M, B]
     ): BindingT[M, B] =

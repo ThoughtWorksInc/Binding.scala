@@ -39,9 +39,9 @@ object Binding:
 
   opaque type Constant[+A] <: Binding[A] = Binding[A]
   object Constant:
-    def apply[A](a: A)(using Applicative[Awaitable]): Binding[A] = BindingT(
-      a :: StreamT.empty
-    )
+    def apply[A](a: A)(using Applicative[Awaitable]): Binding[A] =
+      BindingT.pure(a)
+
   opaque type Constants[+A] <: BindingSeq[A] = BindingSeq[A]
   object Constants:
     def apply[A](elements: A*)(using Applicative[Awaitable]): Constants[A] =
