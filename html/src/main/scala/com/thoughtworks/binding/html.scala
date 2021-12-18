@@ -42,6 +42,7 @@ import scala.quoted.Varargs
 import com.thoughtworks.dsl.reset
 import org.w3c.dom.Attr
 import scala.util.chaining.given
+import com.thoughtworks.binding.htmldefinitions.HtmlDefinitions
 
 private[binding] object Macros:
   val Placeholder = "\"\""
@@ -239,6 +240,9 @@ private[binding] object Macros:
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[NodeBinding[org.scalajs.dom.Element]] =
+    import scala.quoted.quotes.reflect.asTerm
+    import scala.quoted.quotes.reflect.report
+    import scala.quoted.quotes.reflect.TypeRepr
     val emptyElementExpr: Expr[org.scalajs.dom.Element] =
       element.getNamespaceURI match {
         case null =>
@@ -262,31 +266,43 @@ private[binding] object Macros:
           }
       }
     val attributes = element.getAttributes
-    val elementExpr = (0 until attributes.getLength).foldLeft(emptyElementExpr) {
-      (elementExpr, i) =>
-        val attr = attributes.item(i).asInstanceOf[Attr]
-        attr.getNamespaceURI match {
-          case null =>
-            '{
-              $elementExpr.tap {
-                _.setAttribute(
-                  ${ Expr(attr.getLocalName) },
-                  ${ Expr(attr.getValue) }
-                )
+    val elementExpr =
+      (0 until attributes.getLength).foldLeft(emptyElementExpr) {
+        (elementExpr, i) =>
+          val attr = attributes.item(i).asInstanceOf[Attr]
+          attr.getNamespaceURI match {
+            case null =>
+              elementExpr.asTerm.tpe.asType match {
+                case '[elementType]
+                    if !HtmlDefinitions.isValidAttribute[elementType](
+                      attr.getValue
+                    ) =>
+                  report.warning(
+                    s"${attr.getValue} is not a valid attribute for ${TypeRepr.of[elementType].show}"
+                  )
+
               }
-            }
-          case namespaceUri =>
-            '{
-              $elementExpr.tap {
-                _.setAttributeNS(
-                  ${ Expr(namespaceUri) },
-                  ${ Expr(attr.getLocalName) },
-                  ${ Expr(attr.getValue) }
-                )
+
+              '{
+                $elementExpr.tap {
+                  _.setAttribute(
+                    ${ Expr(attr.getLocalName) },
+                    ${ Expr(attr.getValue) }
+                  )
+                }
               }
-            }
-        }
-    }
+            case namespaceUri =>
+              '{
+                $elementExpr.tap {
+                  _.setAttributeNS(
+                    ${ Expr(namespaceUri) },
+                    ${ Expr(attr.getLocalName) },
+                    ${ Expr(attr.getValue) }
+                  )
+                }
+              }
+          }
+      }
 
     val transformedChildNodes = transformNodeList(element.getChildNodes)
     val transformedAttributeEventLoops =
