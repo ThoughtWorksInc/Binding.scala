@@ -45,7 +45,6 @@ object Binding:
   opaque type Constants[+A] <: BindingSeq[A] = BindingSeq[A]
   object Constants:
     def apply[A](elements: A*)(using Applicative[Awaitable]): Constants[A] =
-      BindingSeqT(
-        BindingT(BindingSeqT.Patch.Splice[A](0, 0, elements) :: StreamT.empty)
-      )
+      BindingSeqT.fromIterable(elements)
+
 type Binding[+A] = BindingT[Binding.Awaitable, A]

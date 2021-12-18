@@ -254,6 +254,11 @@ object BindingSeqT:
         mergeEventQueue(Some(upstream.step), FingerTree.empty)
       StreamT(mergedEventQueue)
 
+  def fromIterable[M[_], A](iterable: Iterable[A])(using
+      Applicative[M]
+  ): BindingSeqT[M, A] =
+    BindingT(Patch.Splice[A](0, 0, iterable) :: StreamT.empty)
+
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]]
     with
     def point[A](a: => A): BindingSeqT[M, A] =
