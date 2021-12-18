@@ -234,7 +234,7 @@ object HtmlDefinitions {
         Type.of[HTMLUnknownElement]
     }
   }
-  def isValidAttribute[E <: HTMLElement](attributeName: String)(implicit elementType: Type[E], quotes: Quotes): Boolean = {
+  def isValidAttribute[E](attributeName: String)(implicit elementType: Type[E], quotes: Quotes): Boolean = {
     import quotes.reflect.TypeRepr
     (attributeName: @scala.annotation.switch) match {
       case "srcdoc" =>
