@@ -14,3 +14,9 @@ object BindableSeq:
   given [Element](using
       Applicative[Binding.Awaitable]
   ): BindableSeq[Element, Element] = Binding.Constants(_)
+
+  given [Keyword, Element, Value](using
+      Dsl.IsKeyword[Keyword, Value],
+      Dsl.Run[Keyword, BindingSeq[Element], Value]
+  ): BindableSeq[Keyword, Element] =
+    summon[Dsl.Run[Keyword, BindingSeq[Element], Value]]
