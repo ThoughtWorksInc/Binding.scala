@@ -1,4 +1,5 @@
 package com.thoughtworks.binding
+import scala.quoted.Type
 import scala.quoted.Expr
 import scala.quoted.Quotes
 import java.io.Reader
@@ -26,6 +27,19 @@ import net.sourceforge.htmlunit.cyberneko.HTMLAugmentations
 import org.apache.xml.serialize.XMLSerializer
 import org.w3c.dom.ls.LSSerializer
 import org.w3c.dom.ls.DOMImplementationLS
+import Binding.BindingSeq
+import org.w3c.dom.Node
+import scala.collection.View
+import scala.scalajs.js.`import`
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
+import org.w3c.dom.Element
+import scalaz.Nondeterminism
+import scalaz.Monad
+import org.w3c.dom.NodeList
+import org.w3c.dom.Comment
+import scala.quoted.Varargs
+import com.thoughtworks.dsl.reset
 
 private[binding] object Macros:
   val Placeholder = "\"\""
@@ -37,8 +51,9 @@ private[binding] object Macros:
     HTMLEventInfo.SynthesizedItem();
   def parseHtmlParts(using Quotes)(
       parts: IndexedSeq[String],
-      argTerms: IndexedSeq[scala.quoted.quotes.reflect.Term]
+      argExprs: Seq[Expr[Any]]
   ) =
+    import scala.quoted.quotes.reflect.asTerm
     import scala.quoted.quotes.reflect.report
     val html = parts.mkString(Placeholder)
     val partOffsets = parts.view
@@ -75,7 +90,7 @@ private[binding] object Macros:
               val beginIndex = beginSearchResult.insertionPoint
               val endIndex = endSearchResult.insertionPoint
               if beginIndex % 2 == 1 && endIndex == beginIndex + 1 then
-                Some(i -> (beginIndex / 2))
+                Some(i -> argExprs(beginIndex / 2))
               else None
             })
             .toMap
@@ -92,23 +107,22 @@ private[binding] object Macros:
               attrs.getType(i),
               attrs.getValue(i)
             )
-        // attrs.getAugmentations(0).getItem(AUGMENTATIONS).asInstanceOf[HTMLEventInfo]
         super.startElement(element, staticAttributes, augs)
         fCurrentNode.setUserData(
           AttributeArgumentsUserDataKey,
-          for (i, argIndex) <- dynamicAttributeIndices.view
+          for (i, arg) <- dynamicAttributeIndices.view
           yield
             if attrs.getValue(i) != "" then
               report.error(
                 "String interpolation must be the whole attribute value, not a part of the attribute value.",
-                argTerms(argIndex).pos
+                arg.asTerm.pos
               )
             QName(
               attrs.getPrefix(i),
               attrs.getLocalName(i),
               attrs.getQName(i),
               attrs.getURI(i)
-            ) -> argIndex
+            ) -> arg
           ,
           null
         )
@@ -169,7 +183,11 @@ private[binding] object Macros:
             assert(index % 2 == 1)
             if (endIndex > index) {
               val comment = document.createComment(ElementArgumentUserDataKey)
-              comment.setUserData(ElementArgumentUserDataKey, index / 2, null)
+              comment.setUserData(
+                ElementArgumentUserDataKey,
+                argExprs(index / 2),
+                null
+              )
               fCurrentNode.appendChild(comment)
               partLoop(index + 1)
             }
@@ -204,7 +222,110 @@ private[binding] object Macros:
     parser.parse(InputSource(StringReader(html)), fragment)
     fragment
 
-  def html(stringContext: Expr[StringContext], args: Expr[Any])(using
+  def transformNode(node: Node)(using
+      Expr[Nondeterminism[Binding.Awaitable]],
+      Quotes
+  ): Expr[Any] =
+    node match
+      case element: Element =>
+        transformElement(element)
+      case comment: Comment =>
+        transformComment(comment)
+      case _ =>
+        ???
+  def transformElement(element: Element)(using
+      Expr[Nondeterminism[Binding.Awaitable]],
+      Quotes
+  ): Expr[NodeBinding[org.scalajs.dom.Element]] =
+    element.getNamespaceURI match {
+      case null =>
+        '{
+          org.scalajs.dom.document.createElement(${
+            Expr(element.getLocalName)
+          })
+        }
+      case namespaceUri =>
+        '{
+          org.scalajs.dom.document.createElementNS(
+            ${ Expr(namespaceUri) },
+            ${ Expr(element.getLocalName) }
+          )
+        }
+    }
+
+    val transformedChildNodes = transformNodeList(element.getChildNodes)
+    val transformedAttributeEventLoops =
+      element.getUserData(AttributeArgumentsUserDataKey) match
+        case attributeBindings: Map[_, _] =>
+          for (qName: QName, expr: Expr[_]) <- attributeBindings
+          yield ???
+
+    ???
+  def transformComment(comment: Comment)(using
+      Expr[Nondeterminism[Binding.Awaitable]],
+      Quotes
+  ): Expr[Any] =
+    import scala.quoted.quotes.reflect.asTerm
+    comment.getUserData(ElementArgumentUserDataKey) match
+      case null =>
+        '{ org.scalajs.dom.document.createComment(${ Expr(comment.getData) }) }
+      case expr: Expr[Any] =>
+        expr.asTerm.tpe.asType match
+          case '[t] =>
+            '{ reset.reify[t](${ expr.asExprOf[t] }) }
+
+  def transformNodeList(nodeList: NodeList)(using
+      Expr[Nondeterminism[Binding.Awaitable]],
+      Quotes
+  ): Expr[BindingSeq[org.scalajs.dom.Node]] =
+    import scala.quoted.quotes.reflect.report
+    import scala.quoted.quotes.reflect.asTerm
+    import scala.quoted.quotes.reflect.TypeRepr
+    import scala.quoted.quotes.reflect.Implicits
+    import scala.quoted.quotes.reflect.ImplicitSearchFailure
+    import scala.quoted.quotes.reflect.ImplicitSearchSuccess
+    '{
+      given Nondeterminism[Binding.Awaitable] = $summon
+      Monad[BindingSeq].join(Binding.Constants(${
+        Expr.ofSeq(
+          (
+            for i <- 0 until nodeList.getLength
+            yield
+              val child = nodeList.item(i)
+              val transformedTerm = transformNode(child).asTerm
+              transformedTerm.tpe.asType match
+                case '[from] =>
+                  Implicits.search(
+                    TypeRepr
+                      .of[BindableSeq.Lt[from, org.scalajs.dom.Node]]
+                  ) match
+                    case success: ImplicitSearchSuccess =>
+                      '{
+                        ${
+                          success.tree
+                            .asExprOf[
+                              BindableSeq.Lt[from, org.scalajs.dom.Node]
+                            ]
+                        }.toBindingSeq(${
+                          transformedTerm.asExprOf[from]
+                        })
+                      }
+                    case failure: ImplicitSearchFailure =>
+                      report.error(
+                        s"Require a HTML DOM expression, got ${TypeRepr.of[from].show}",
+                        transformedTerm.pos
+                      )
+                      '{ ??? : BindingSeq[org.scalajs.dom.Node] }
+          ).toSeq
+        )
+      }: _*))
+    }
+
+  def html(
+      stringContext: Expr[StringContext],
+      args: Expr[Seq[Any]]
+  )(using
+      Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[org.scalajs.dom.Element] =
     import scala.quoted.quotes.reflect.Printer
@@ -212,16 +333,13 @@ private[binding] object Macros:
     import scala.quoted.quotes.reflect.asTerm
     import scala.quoted.quotes.reflect.TypeRepr
     import scala.quoted.quotes.reflect.Typed
-    import scala.quoted.quotes.reflect.Literal
-    import scala.quoted.quotes.reflect.Repeated
-    val Typed(Repeated(argTermList, _), _) = args.asTerm.underlyingArgument
-    val argTerms = argTermList.toIndexedSeq
+    val Varargs(argExprs) = args
 
     val '{ StringContext($partsExpr: _*) } = stringContext
     val Expr(partList) = partsExpr
     val parts = partList.toIndexedSeq
 
-    val fragment = parseHtmlParts(parts, argTerms)
+    val fragment = parseHtmlParts(parts, argExprs)
     report.info(
       "arg:" + fragment.getFirstChild.getChildNodes
         .item(1)
@@ -237,6 +355,10 @@ private[binding] object Macros:
     '{ ??? }
 
 extension (inline stringContext: StringContext)
-  transparent inline def html(inline args: Any*): org.scalajs.dom.Element = ${
-    Macros.html('stringContext, 'args)
+  transparent inline def html(
+      inline args: Any*
+  )(using
+      nondeterminism: Nondeterminism[Binding.Awaitable]
+  ): org.scalajs.dom.Element = ${
+    Macros.html('stringContext, 'args)(using 'nondeterminism)
   }
