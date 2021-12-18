@@ -34,6 +34,7 @@ import scala.scalajs.js.`import`
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import org.w3c.dom.Element
+import org.w3c.dom.Text
 import scalaz.Nondeterminism
 import scalaz.Monad
 import org.w3c.dom.NodeList
@@ -103,13 +104,10 @@ private[binding] object Macros:
         val staticAttributes = XMLAttributesImpl()
         for i <- 0 until attrs.getLength do
           if !dynamicAttributeIndices.contains(i) then
+            val qName = QName()
+            attrs.getName(i, /* out */ qName)
             staticAttributes.addAttribute(
-              QName(
-                attrs.getPrefix(i),
-                attrs.getLocalName(i),
-                attrs.getQName(i),
-                attrs.getURI(i)
-              ),
+              qName,
               attrs.getType(i),
               attrs.getValue(i)
             )
@@ -123,12 +121,9 @@ private[binding] object Macros:
                 "String interpolation must be the whole attribute value, not a part of the attribute value.",
                 arg.asTerm.pos
               )
-            QName(
-              attrs.getPrefix(i),
-              attrs.getLocalName(i),
-              attrs.getQName(i),
-              attrs.getURI(i)
-            ) -> arg
+            val qName = QName()
+            attrs.getName(i, /* out */ qName)
+            qName -> arg
           ,
           null
         )
@@ -358,16 +353,16 @@ private[binding] object Macros:
         attr.getNamespaceURI match {
           case null =>
             if !HtmlDefinitions.isValidAttribute[E](
-                attr.getValue
+                attr.getName
               )
             then
               report.warning(
-                s"${attr.getValue} is not a valid attribute for ${TypeRepr.of[E].show}"
+                s"${attr.getName} is not a valid attribute for <${element.getTagName}>"
               )
 
             '{
               $elementExpr.setAttribute(
-                ${ Expr(attr.getLocalName) },
+                ${ Expr(attr.getName) },
                 ${ Expr(attr.getValue) }
               )
             }
@@ -397,16 +392,14 @@ private[binding] object Macros:
             case '[attributeType] =>
               val attributeValueExpr =
                 anyAttributeValueExpr.asExprOf[attributeType]
-              val anyReifiedExpr = '{
-                reset.reify($attributeValueExpr)
-              }
+              val anyReifiedExpr = reset.Macros.reify(attributeValueExpr)
               anyReifiedExpr.asTerm.tpe.asType match
                 case '[keywordType] =>
                   val reifiedExpr = anyReifiedExpr.asExprOf[keywordType]
                   qName.uri match
                     case null =>
                       val propertySymbol =
-                        TypeRepr.of[E].typeSymbol.fieldMember(qName.localpart)
+                        TypeRepr.of[E].classSymbol.get.fieldMember(qName.localpart)
                       if propertySymbol.isValDef &&
                         propertySymbol.flags.is(Flags.Mutable)
                       then
@@ -418,6 +411,9 @@ private[binding] object Macros:
                           reifiedExpr
                         )
                       else
+                        report.warning(
+                          s"${qName.rawname} is not a valid property for <${element.getTagName}>"
+                        )
                         mountAttribute(
                           element,
                           elementExpr,
@@ -462,13 +458,13 @@ private[binding] object Macros:
     element.getNamespaceURI match
       case null =>
         htmldefinitions.HtmlDefinitions.findTypeByTagName(
-          element.getLocalName
+          element.getTagName.toLowerCase
         ) match
           case '[elementType] =>
             '{
               val htmlElement = org.scalajs.dom.document
                 .createElement(${
-                  Expr(element.getLocalName)
+                  Expr(element.getTagName)
                 })
                 .asInstanceOf[elementType & org.scalajs.dom.Element]
               ${ mountElementAttributesAndChildNodes(element, 'htmlElement) }
@@ -486,14 +482,14 @@ private[binding] object Macros:
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[Any] =
-    import scala.quoted.quotes.reflect.asTerm
+    import scala.quoted.quotes.reflect.*
     comment.getUserData(ElementArgumentUserDataKey) match
       case null =>
         '{ org.scalajs.dom.document.createComment(${ Expr(comment.getData) }) }
       case expr: Expr[Any] =>
         expr.asTerm.tpe.asType match
           case '[t] =>
-            '{ reset.reify[t](${ expr.asExprOf[t] }) }
+            reset.Macros.reify(expr.asExprOf[t])
 
   def transformNodeList(nodeList: NodeList)(using
       Expr[Nondeterminism[Binding.Awaitable]],
@@ -516,6 +512,7 @@ private[binding] object Macros:
               val transformedTerm = transformNode(child).asTerm
               transformedTerm.tpe.asType match
                 case '[from] =>
+                  // TODO: Use summonInline instead?
                   Implicits.search(
                     TypeRepr
                       .of[BindableSeq[from, org.scalajs.dom.Node]]
@@ -533,7 +530,7 @@ private[binding] object Macros:
                       }
                     case failure: ImplicitSearchFailure =>
                       report.error(
-                        s"Require a HTML DOM expression, got ${TypeRepr.of[from].show}",
+                        s"Require a HTML DOM expression, got ${TypeRepr.of[from].show}\n${failure.explanation}",
                         transformedTerm.pos
                       )
                       '{ ??? : BindingSeq[org.scalajs.dom.Node] }
@@ -548,7 +545,7 @@ private[binding] object Macros:
   )(using
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
-  ): Expr[org.scalajs.dom.Element] =
+  ): Expr[Any] =
     import scala.quoted.quotes.reflect.Printer
     import scala.quoted.quotes.reflect.report
     import scala.quoted.quotes.reflect.asTerm
@@ -556,11 +553,9 @@ private[binding] object Macros:
     import scala.quoted.quotes.reflect.Flags
     import scala.quoted.quotes.reflect.Typed
     val Varargs(argExprs) = args
-
     val '{ StringContext($partsExpr: _*) } = stringContext
     val Expr(partList) = partsExpr
     val parts = partList.toIndexedSeq
-
     val fragment = parseHtmlParts(parts, argExprs)
     // report.info(
     //   "arg:" + fragment.getFirstChild.getChildNodes
@@ -574,13 +569,15 @@ private[binding] object Macros:
     //     .createLSSerializer()
     //     .writeToString(fragment)
     // )
-    '{ ??? }
+    val rootNodes = fragment.getChildNodes
+    if rootNodes.getLength == 1 then transformNode(rootNodes.item(0))
+    else transformNodeList(rootNodes)
 
 extension (inline stringContext: StringContext)
   transparent inline def html(
       inline args: Any*
   )(using
       nondeterminism: Nondeterminism[Binding.Awaitable]
-  ): org.scalajs.dom.Element = ${
+  ): Any = ${
     Macros.html('stringContext, 'args)(using 'nondeterminism)
   }
