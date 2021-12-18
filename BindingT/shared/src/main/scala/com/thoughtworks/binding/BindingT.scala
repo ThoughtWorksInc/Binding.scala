@@ -24,6 +24,7 @@ import scala.concurrent.Future
 import scala.collection.IndexedSeqView
 import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
+import scalaz.Functor
 
 // Ideally StreamT should be covariant. Mark it as `@unchecked` as a workaround.
 opaque type BindingT[M[_], +A] >: StreamT[M, A @uncheckedVariance] <: StreamT[
@@ -39,6 +40,21 @@ object BindingT:
     summon
 
   extension [M[_], A](binding: BindingT[M, A])
+    // Polyfill of https://github.com/scalaz/scalaz/pull/2249
+    def collect[B](
+        pf: PartialFunction[A, B]
+    )(using M: Functor[M]): BindingT[M, B] =
+      StreamT(M.map(binding.step) {
+        case Yield(pf(b), s) =>
+          Yield(b, () => s().collect(pf))
+        case Yield(_, s) =>
+          Skip(() => s().collect(pf))
+        case Skip(s) =>
+          Skip(() => s().collect(pf))
+        case Done() =>
+          Done()
+      })
+
     def mergeWith(that: BindingT[M, A])(using
         Nondeterminism[M]
     ): BindingT[M, A] =
