@@ -45,6 +45,7 @@ import scala.util.chaining.given
 import com.thoughtworks.binding.htmldefinitions.HtmlDefinitions
 import org.w3c.dom.NamedNodeMap
 import com.thoughtworks.dsl.Dsl
+import org.w3c.dom.Text
 
 private[binding] object Macros:
   val Placeholder = "\"\""
@@ -226,7 +227,10 @@ private[binding] object Macros:
 
     parser.parse(InputSource(StringReader(html)), fragment)
     fragment
-
+  def transformText(text: Text)(using Quotes) =
+    '{
+      org.scalajs.dom.document.createTextNode(${ Expr(text.getWholeText) })
+    }
   def transformNode(node: Node)(using
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
@@ -236,6 +240,8 @@ private[binding] object Macros:
         transformElement(element)
       case comment: Comment =>
         transformComment(comment)
+      case text: Text =>
+        transformText(text)
       case _ =>
         ???
   def mountProperty[E <: org.scalajs.dom.Element, K, V](using Quotes)(
