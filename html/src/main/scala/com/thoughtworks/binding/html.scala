@@ -43,6 +43,8 @@ import com.thoughtworks.dsl.reset
 import org.w3c.dom.Attr
 import scala.util.chaining.given
 import com.thoughtworks.binding.htmldefinitions.HtmlDefinitions
+import org.w3c.dom.NamedNodeMap
+import com.thoughtworks.dsl.Dsl
 
 private[binding] object Macros:
   val Placeholder = "\"\""
@@ -236,82 +238,240 @@ private[binding] object Macros:
         transformComment(comment)
       case _ =>
         ???
+  def mountProperty[E <: org.scalajs.dom.Element, K, V](using Quotes)(
+      element: Element,
+      elementExpr: Expr[E],
+      propertySymbol: scala.quoted.quotes.reflect.Symbol,
+      attributeValueExpr: Expr[V],
+      reifiedExpr: Expr[K]
+  )(using
+      Expr[Nondeterminism[Binding.Awaitable]],
+      Type[E],
+      Type[K],
+      Type[V]
+  ): Expr[Binding[Nothing]] =
+    import scala.quoted.quotes.reflect.*
+    TypeRepr.of[E].memberType(propertySymbol).asType match
+      case '[propertyType] =>
+        type DslType =
+          Dsl.Run[K, Binding[propertyType], V]
+        Implicits.search(TypeRepr.of[DslType]) match
+          case success: ImplicitSearchSuccess =>
+            '{
+              given Nondeterminism[Binding.Awaitable] =
+                $summon
+              ${ success.tree.asExprOf[DslType] }
+                .apply($reifiedExpr)
+                .collect(Function.unlift { propertyValue =>
+                  ${
+                    Assign(
+                      Select(
+                        elementExpr.asTerm,
+                        propertySymbol
+                      ),
+                      '{ propertyValue }.asTerm
+                    ).asExpr
+                  }
+                  None
+                })
+            }
+          case failure: ImplicitSearchFailure =>
+            report.error(
+              s"Unable to produce a bindable ${Type
+                .show[propertyType]} for the property ${propertySymbol.name} \n${failure.explanation}",
+              attributeValueExpr.asTerm.pos
+            )
+            '{ ??? }
+
+  def mountAttribute[E <: org.scalajs.dom.Element, K, V](
+      element: Element,
+      elementExpr: Expr[E],
+      qName: QName,
+      attributeValueExpr: Expr[V],
+      reifiedExpr: Expr[K]
+  )(using
+      Expr[Nondeterminism[Binding.Awaitable]],
+      Type[E],
+      Type[K],
+      Type[V],
+      Quotes
+  ): Expr[Binding[Nothing]] =
+    import scala.quoted.quotes.reflect.*
+    type DslType =
+      Dsl.Run[K, Binding[String], V]
+    Implicits.search(TypeRepr.of[DslType]) match
+      case success: ImplicitSearchSuccess =>
+        '{
+          given Nondeterminism[Binding.Awaitable] = $summon
+          ${ success.tree.asExprOf[DslType] }
+            .apply($reifiedExpr)
+            .collect(Function.unlift { stringAttributeValue =>
+              ${
+                qName.uri match
+                  case null =>
+                    '{
+                      $elementExpr.setAttribute(
+                        ${ Expr(qName.localpart) },
+                        stringAttributeValue
+                      )
+                    }
+                  case uri =>
+                    '{
+                      $elementExpr.setAttributeNS(
+                        ${ Expr(uri) },
+                        ${ Expr(qName.localpart) },
+                        stringAttributeValue
+                      )
+                    }
+              }
+              None
+            })
+        }
+      case failure: ImplicitSearchFailure =>
+        report.error(
+          s"Cannot produce a bindable string for the attribute ${qName.toString} \n${failure.explanation}",
+          attributeValueExpr.asTerm.pos
+        )
+        '{ ??? }
+
+  def mountElementAttributesAndChildNodes[E <: org.scalajs.dom.Element](
+      element: Element,
+      elementExpr: Expr[E]
+  )(using
+      Expr[Nondeterminism[Binding.Awaitable]],
+      Type[E],
+      Quotes
+  ): Expr[NodeBinding[org.scalajs.dom.Element]] =
+    import scala.quoted.quotes.reflect.*
+    val attributes = element.getAttributes
+    val setStaticAttributeExprs =
+      for i <- (0 until attributes.getLength).view yield
+        val attr = attributes.item(i).asInstanceOf[Attr]
+        attr.getNamespaceURI match {
+          case null =>
+            if !HtmlDefinitions.isValidAttribute[E](
+                attr.getValue
+              )
+            then
+              report.warning(
+                s"${attr.getValue} is not a valid attribute for ${TypeRepr.of[E].show}"
+              )
+
+            '{
+              $elementExpr.setAttribute(
+                ${ Expr(attr.getLocalName) },
+                ${ Expr(attr.getValue) }
+              )
+            }
+          case namespaceUri =>
+            '{
+              $elementExpr.setAttributeNS(
+                ${ Expr(namespaceUri) },
+                ${ Expr(attr.getLocalName) },
+                ${ Expr(attr.getValue) }
+              )
+            }
+        }
+    val transformedChildNodes = transformNodeList(element.getChildNodes)
+    val childNodesEventLoop = '{
+      given Nondeterminism[Binding.Awaitable] = $summon
+      NodeBinding.mountChildNodes($elementExpr, $transformedChildNodes)
+    }
+
+    val transformedAttributeEventLoops =
+      element.getUserData(AttributeArgumentsUserDataKey) match
+        case attributeBindings: Map[_, _] =>
+          for
+            (qName: QName, anyAttributeValueExpr: Expr[_]) <- attributeBindings
+          yield anyAttributeValueExpr.asTerm.tpe.asType match
+            case '[attributeType] =>
+              val attributeValueExpr =
+                anyAttributeValueExpr.asExprOf[attributeType]
+              val anyReifiedExpr = '{
+                reset.reify($attributeValueExpr)
+              }
+              anyReifiedExpr.asTerm.tpe.asType match
+                case '[keywordType] =>
+                  val reifiedExpr = anyReifiedExpr.asExprOf[keywordType]
+                  qName.uri match
+                    case null =>
+                      val propertySymbol =
+                        TypeRepr.of[E].typeSymbol.fieldMember(qName.localpart)
+                      if propertySymbol.isValDef &&
+                        propertySymbol.flags.is(Flags.Mutable)
+                      then
+                        mountProperty(
+                          element,
+                          elementExpr,
+                          propertySymbol,
+                          attributeValueExpr,
+                          reifiedExpr
+                        )
+                      else
+                        mountAttribute(
+                          element,
+                          elementExpr,
+                          qName,
+                          attributeValueExpr,
+                          reifiedExpr
+                        )
+                    case uri =>
+                      mountAttribute(
+                        element,
+                        elementExpr,
+                        qName,
+                        attributeValueExpr,
+                        reifiedExpr
+                      )
+    Expr.block(
+      List.from(setStaticAttributeExprs),
+      '{
+        given Nondeterminism[Binding.Awaitable] = $summon
+        NodeBinding(
+          $elementExpr,
+          BindingT.mergeAll(
+            ${
+              Expr.ofSeq(
+                Seq.from(
+                  View.Appended(
+                    transformedAttributeEventLoops,
+                    childNodesEventLoop
+                  )
+                )
+              )
+            }
+          )
+        )
+      }
+    )
+
   def transformElement(element: Element)(using
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[NodeBinding[org.scalajs.dom.Element]] =
-    import scala.quoted.quotes.reflect.asTerm
-    import scala.quoted.quotes.reflect.report
-    import scala.quoted.quotes.reflect.TypeRepr
-    val emptyElementExpr: Expr[org.scalajs.dom.Element] =
-      element.getNamespaceURI match {
-        case null =>
-          htmldefinitions.HtmlDefinitions.findTypeByTagName(
-            element.getLocalName
-          ) match
-            case '[elementType] =>
-              '{
-                org.scalajs.dom.document
-                  .createElement(${
-                    Expr(element.getLocalName)
-                  })
-                  .asInstanceOf[elementType & org.scalajs.dom.Element]
-              }
-        case namespaceUri =>
-          '{
-            org.scalajs.dom.document.createElementNS(
-              ${ Expr(namespaceUri) },
-              ${ Expr(element.getLocalName) }
-            )
-          }
-      }
-    val attributes = element.getAttributes
-    val elementExpr =
-      (0 until attributes.getLength).foldLeft(emptyElementExpr) {
-        (elementExpr, i) =>
-          val attr = attributes.item(i).asInstanceOf[Attr]
-          attr.getNamespaceURI match {
-            case null =>
-              elementExpr.asTerm.tpe.asType match {
-                case '[elementType]
-                    if !HtmlDefinitions.isValidAttribute[elementType](
-                      attr.getValue
-                    ) =>
-                  report.warning(
-                    s"${attr.getValue} is not a valid attribute for ${TypeRepr.of[elementType].show}"
-                  )
+    element.getNamespaceURI match
+      case null =>
+        htmldefinitions.HtmlDefinitions.findTypeByTagName(
+          element.getLocalName
+        ) match
+          case '[elementType] =>
+            '{
+              val htmlElement = org.scalajs.dom.document
+                .createElement(${
+                  Expr(element.getLocalName)
+                })
+                .asInstanceOf[elementType & org.scalajs.dom.Element]
+              ${ mountElementAttributesAndChildNodes(element, 'htmlElement) }
+            }
+      case namespaceUri =>
+        '{
+          val elementInNamespace = org.scalajs.dom.document.createElementNS(
+            ${ Expr(namespaceUri) },
+            ${ Expr(element.getLocalName) }
+          )
+          ${ mountElementAttributesAndChildNodes(element, 'elementInNamespace) }
+        }
 
-              }
-
-              '{
-                $elementExpr.tap {
-                  _.setAttribute(
-                    ${ Expr(attr.getLocalName) },
-                    ${ Expr(attr.getValue) }
-                  )
-                }
-              }
-            case namespaceUri =>
-              '{
-                $elementExpr.tap {
-                  _.setAttributeNS(
-                    ${ Expr(namespaceUri) },
-                    ${ Expr(attr.getLocalName) },
-                    ${ Expr(attr.getValue) }
-                  )
-                }
-              }
-          }
-      }
-
-    val transformedChildNodes = transformNodeList(element.getChildNodes)
-    val transformedAttributeEventLoops =
-      element.getUserData(AttributeArgumentsUserDataKey) match
-        case attributeBindings: Map[_, _] =>
-          for (qName: QName, expr: Expr[_]) <- attributeBindings
-          yield ???
-
-    ???
   def transformComment(comment: Comment)(using
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
@@ -383,6 +543,7 @@ private[binding] object Macros:
     import scala.quoted.quotes.reflect.report
     import scala.quoted.quotes.reflect.asTerm
     import scala.quoted.quotes.reflect.TypeRepr
+    import scala.quoted.quotes.reflect.Flags
     import scala.quoted.quotes.reflect.Typed
     val Varargs(argExprs) = args
 
@@ -391,18 +552,18 @@ private[binding] object Macros:
     val parts = partList.toIndexedSeq
 
     val fragment = parseHtmlParts(parts, argExprs)
-    report.info(
-      "arg:" + fragment.getFirstChild.getChildNodes
-        .item(1)
-        .getUserData(ElementArgumentUserDataKey)
-    )
-    report.warning(
-      fragment.getOwnerDocument.getImplementation
-        .getFeature("LS", "3.0")
-        .asInstanceOf[DOMImplementationLS]
-        .createLSSerializer()
-        .writeToString(fragment)
-    )
+    // report.info(
+    //   "arg:" + fragment.getFirstChild.getChildNodes
+    //     .item(1)
+    //     .getUserData(ElementArgumentUserDataKey)
+    // )
+    // report.warning(
+    //   fragment.getOwnerDocument.getImplementation
+    //     .getFeature("LS", "3.0")
+    //     .asInstanceOf[DOMImplementationLS]
+    //     .createLSSerializer()
+    //     .writeToString(fragment)
+    // )
     '{ ??? }
 
 extension (inline stringContext: StringContext)
