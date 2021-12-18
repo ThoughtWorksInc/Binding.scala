@@ -35,12 +35,7 @@ opaque type BindingT[M[_], +A] >: StreamT[M, A @uncheckedVariance] <: StreamT[
 ]
 object BindingT:
 
-  def fromStreamT[M[_], A]: StreamT[
-    M,
-    // Ideally StreamT should be covariant. Mark it as `@unchecked` as a workaround.
-    A @uncheckedVariance
-  ]
-    =:= BindingT[M, A] =
+  def apply[M[_], A]: StreamT[M, A] =:= BindingT[M, A] =
     summon
 
   extension [M[_], A](binding: BindingT[M, A])
@@ -78,10 +73,8 @@ object BindingT:
         streams.toIndexedSeq.view
     })
 
-  def apply[M[_]: Applicative, A](a: A): BindingT[M, A] =
-    a :: StreamT.empty[M, A]
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
-    def point[A](a: => A) = BindingT(a)
+    def point[A](a: => A) = a :: StreamT.empty[M, A]
     def bind[A, B](upstream: BindingT[M, A])(
         f: A => BindingT[M, B]
     ): BindingT[M, B] =

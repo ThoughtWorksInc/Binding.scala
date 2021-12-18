@@ -34,12 +34,9 @@ object BindingSeqT:
     ): BindingSeqT[M, A] =
       bindingSeq.mergeWith(eventLoop)
 
-  def fromBindingT[M[_], A]
-      : BindingT[M, BindingSeqT.Patch[A]] =:= BindingSeqT[M, A] =
+  def apply[M[_], A]: BindingT[M, BindingSeqT.Patch[A]] =:= BindingSeqT[M, A] =
     summon
 
-  def apply[M[_]: Applicative, A](elements: A*): BindingSeqT[M, A] =
-    BindingT.fromStreamT(Patch.Splice[A](0, 0, elements) :: StreamT.empty)
   sealed trait Patch[+A]:
     private[BindingSeqT] def withOffset(offset: Int): Patch[A]
     private[BindingSeqT] def sizeIncremental: Int
@@ -260,7 +257,7 @@ object BindingSeqT:
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]]
     with
     def point[A](a: => A): BindingSeqT[M, A] =
-      BindingSeqT(a)
+      BindingT(Patch.Splice[A](0, 0, collection.View.Single(a)) :: StreamT.empty)
 
     def bind[A, B](upstream: BindingSeqT[M, A])(
         f: A => BindingSeqT[M, B]
