@@ -1,12 +1,14 @@
 package com.thoughtworks.binding
 
+import com.thoughtworks.dsl.Dsl
+import Binding.BindingSeq
 import scalaz.Applicative
 
 opaque type BindableSeq[-From, +Element] <: From => Binding.BindingSeq[
   Element
 ] = From => Binding.BindingSeq[Element]
 
-object BindableSeq:
+object BindableSeq extends JSBindableSeq:
 
   def apply[From, Element]
       : (From => Binding.BindingSeq[Element]) =:= BindableSeq[From, Element] =
