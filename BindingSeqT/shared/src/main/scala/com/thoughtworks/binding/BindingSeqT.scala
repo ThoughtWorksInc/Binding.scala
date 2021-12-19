@@ -50,6 +50,55 @@ object BindingSeqT:
 
   extension [M[_], A](upstream: BindingSeqT[M, A])
 
+    /** Return a [[BindingT]], whose each element is a [[scalaz.FingerTree]]
+      * representing the snapshot of the sequence at that time.
+      *
+      * @note
+      *   The measurement of the [[scalaz.FingerTree]] is the size.
+      * @example
+      *   Given a [[BindingSeqT]] created from an iterable,
+      * {{{
+      * import scala.concurrent.Future
+      * import scalaz.std.scalaFuture.given
+      * val bindingSeq = BindingSeqT.fromIterable[Future, String](Seq("foo", "bar", "baz"))
+      * }}}
+      * when taking [[snapshots]],
+      * {{{
+      * val snapshots = bindingSeq.snapshots
+      * }}}
+      * then it should contains an empty value and an initial value
+      * {{{
+      * import com.thoughtworks.dsl.keywords.Await
+      * import com.thoughtworks.dsl.reset.*
+      * `*`[Future] {
+      *   val snapshotLazyList = !Await(snapshots.toLazyList)
+      *   inside(snapshotLazyList) {
+      *     case LazyList(empty, initial) =>
+      *       empty.toList should be(Nil)
+      *       initial.toList should be(List("foo", "bar", "baz"))
+      *   }
+      * }
+      * }}}
+      */
+    def snapshots(using Applicative[M]): BindingT[M, FingerTree[Int, A]] =
+      import scalaz.std.anyVal.intInstance
+      given scalaz.Reducer[A, Int] = UnitReducer(x => 1)
+      upstream.scanLeft(FingerTree.empty) { (fingerTree, patch) =>
+        patch match
+          case Patch.Splice(
+                index,
+                deletedCount,
+                newItems
+              ) =>
+            val (left, notLeft) =
+              fingerTree.split(_ < index)
+            val (deleted, right) =
+              notLeft.split(_ < deletedCount)
+            newItems.foldLeft(left) { (tree, a) =>
+              tree :+ a
+            } <++> right
+      }
+
     def mergeWithEventLoop(eventLoop: BindingT[M, Nothing])(using
         Nondeterminism[M]
     ): BindingSeqT[M, A] =
