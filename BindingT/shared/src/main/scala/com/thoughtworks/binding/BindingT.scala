@@ -59,35 +59,27 @@ object BindingT:
         Nondeterminism[M]
     ): BindingT[M, A] =
       (binding: StreamT[M, A]).mergeWith(that: StreamT[M, A])
-  def mergeView[M[_], A](streams: IndexedSeqView[BindingT[M, A]])(using
-      Nondeterminism[M]
-  ): BindingT[M, A] =
-    streams.size match {
-      case 0 =>
-        StreamT.empty
-      case 1 =>
-        streams.head
-      case size =>
-        val middle = size / 2
-        mergeView(streams.slice(0, middle))
-          .mergeWith(mergeView(streams.slice(middle, size)))
-    }
 
   def mergeAll[M[_], A](
       streams: Iterable[BindingT[M, A]]
   )(using Nondeterminism[M]): BindingT[M, A] =
-    mergeView(streams match {
-      case indexedSeqView: IndexedSeqView[
-            BindingT[M, A] @unchecked
-          ] =>
-        indexedSeqView
+    if streams.isEmpty then
+      StreamT.empty
+    val indexedSeqOps = streams match {
       case indexedSeqOps: IndexedSeqView.SomeIndexedSeqOps[
             BindingT[M, A] @unchecked
           ] =>
-        IndexedSeqView.Id(indexedSeqOps)
+        indexedSeqOps
       case _ =>
-        streams.toIndexedSeq.view
-    })
+        streams.toIndexedSeq
+    }
+    def mergeView(begin: Int, end: Int): BindingT[M, A] =
+      if begin + 1 == end then
+        indexedSeqOps(begin)
+      else
+        val middle = (begin + end) / 2
+        mergeView(begin, middle).mergeWith(mergeView(middle, end))
+    mergeView(0, indexedSeqOps.length)
 
   def pure[M[_], A](a: A)(using Applicative[M]) = a :: StreamT.empty[M, A]
 
