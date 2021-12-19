@@ -29,12 +29,6 @@ import com.thoughtworks.dsl.Dsl
 opaque type BindingSeqT[M[_], +A] = BindingT[M, BindingSeqT.Patch[A]]
 object BindingSeqT:
 
-  extension [M[_], A](bindingSeq: BindingSeqT[M, A])
-    def mergeWithEventLoop(eventLoop: BindingT[M, Nothing])(using
-        Nondeterminism[M]
-    ): BindingSeqT[M, A] =
-      bindingSeq.mergeWith(eventLoop)
-
   def apply[M[_], A]: BindingT[M, BindingSeqT.Patch[A]] =:= BindingSeqT[M, A] =
     summon
 
@@ -55,6 +49,12 @@ object BindingSeqT:
       private[BindingSeqT] def sizeIncremental = newItems.size - deleteCount
 
   extension [M[_], A](upstream: BindingSeqT[M, A])
+
+    def mergeWithEventLoop(eventLoop: BindingT[M, Nothing])(using
+        Nondeterminism[M]
+    ): BindingSeqT[M, A] =
+      upstream.mergeWith(eventLoop)
+
     /** Returns a new data-binding sequence by applying a function to all
       * elements of this sequence and using the elements of the resulting
       * collections.
