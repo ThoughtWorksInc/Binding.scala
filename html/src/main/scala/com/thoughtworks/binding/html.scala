@@ -510,9 +510,10 @@ private[binding] object Macros:
           ${ mountElementAttributesAndChildNodes(element, 'elementInNamespace) }
         }
 
-  def transformComment(comment: Comment)(using argExprs: IndexedSeq[Expr[Any]])(using
+  def transformComment(comment: Comment)(using argExprs: IndexedSeq[Expr[Any]])(
+      using
       Expr[Nondeterminism[Binding.Awaitable]],
-      Quotes,
+      Quotes
   ): Expr[Any] =
     import scala.quoted.quotes.reflect.*
     comment.getUserData(ElementArgumentUserDataKey) match
@@ -630,7 +631,8 @@ private[binding] object Macros:
     //     .writeToString(fragment)
     // )
     val rootNodes = fragment.getChildNodes
-    if rootNodes.getLength == 1 then transformNode(rootNodes.item(0))(using argExprs.toIndexedSeq)
+    if rootNodes.getLength == 1 then
+      transformNode(rootNodes.item(0))(using argExprs.toIndexedSeq)
     else transformNodeList(rootNodes)(using argExprs.toIndexedSeq)
 
 extension (inline stringContext: StringContext)
