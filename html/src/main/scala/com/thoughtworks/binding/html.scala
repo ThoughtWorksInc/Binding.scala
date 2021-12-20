@@ -49,6 +49,7 @@ import com.thoughtworks.dsl.Dsl
 import org.w3c.dom.Text
 import org.w3c.dom.CDATASection
 import org.w3c.dom.ProcessingInstruction
+import scala.collection.IndexedSeqView
 
 private[binding] object Macros:
   val Placeholder = "\"\""
@@ -99,7 +100,7 @@ private[binding] object Macros:
               val beginIndex = beginSearchResult.insertionPoint
               val endIndex = endSearchResult.insertionPoint
               if beginIndex % 2 == 1 && endIndex == beginIndex + 1 then
-                Some(i -> argExprs(beginIndex / 2))
+                Some(i -> (beginIndex / 2))
               else None
             })
             .toMap
@@ -121,7 +122,7 @@ private[binding] object Macros:
             if attrs.getValue(i) != "" then
               report.error(
                 "String interpolation must be the whole attribute value, not a part of the attribute value.",
-                arg.asTerm.pos
+                argExprs(arg).asTerm.pos
               )
             val qName = QName()
             attrs.getName(i, /* out */ qName)
@@ -185,10 +186,10 @@ private[binding] object Macros:
           def argLoop(index: Int): Unit =
             assert(index % 2 == 1)
             if (endIndex > index) {
-              val comment = document.createComment(ElementArgumentUserDataKey)
+              val comment = document.createComment("")
               comment.setUserData(
                 ElementArgumentUserDataKey,
-                argExprs(index / 2),
+                index / 2,
                 null
               )
               fCurrentNode.appendChild(comment)
@@ -248,7 +249,7 @@ private[binding] object Macros:
     '{
       org.scalajs.dom.document.createTextNode(${ Expr(text.getWholeText) })
     }
-  def transformNode(node: Node)(using
+  def transformNode(node: Node)(using IndexedSeq[Expr[Any]])(using
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[Any] =
@@ -366,7 +367,7 @@ private[binding] object Macros:
   def mountElementAttributesAndChildNodes[E <: org.scalajs.dom.Element](
       element: Element,
       elementExpr: Expr[E]
-  )(using
+  )(using argExprs: IndexedSeq[Expr[Any]])(using
       Expr[Nondeterminism[Binding.Awaitable]],
       Type[E],
       Quotes
@@ -413,7 +414,7 @@ private[binding] object Macros:
           Nil
         case attributeBindings =>
           for
-            (qName: QName, anyAttributeValueExpr: Expr[_]) <- attributeBindings
+            (qName: QName, argExprs(anyAttributeValueExpr)) <- attributeBindings
               .asInstanceOf[Iterable[_]]
           yield anyAttributeValueExpr.asTerm.tpe.asType match
             case '[attributeType] =>
@@ -482,7 +483,7 @@ private[binding] object Macros:
       }
     )
 
-  def transformElement(element: Element)(using
+  def transformElement(element: Element)(using IndexedSeq[Expr[Any]])(using
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[NodeBinding[org.scalajs.dom.Element]] =
@@ -509,20 +510,20 @@ private[binding] object Macros:
           ${ mountElementAttributesAndChildNodes(element, 'elementInNamespace) }
         }
 
-  def transformComment(comment: Comment)(using
+  def transformComment(comment: Comment)(using argExprs: IndexedSeq[Expr[Any]])(using
       Expr[Nondeterminism[Binding.Awaitable]],
-      Quotes
+      Quotes,
   ): Expr[Any] =
     import scala.quoted.quotes.reflect.*
     comment.getUserData(ElementArgumentUserDataKey) match
       case null =>
         '{ org.scalajs.dom.document.createComment(${ Expr(comment.getData) }) }
-      case expr: Expr[Any] =>
+      case argExprs(expr) =>
         expr.asTerm.tpe.asType match
           case '[t] =>
             reset.Macros.reify(expr.asExprOf[t])
 
-  def transformNodeList(nodeList: NodeList)(using
+  def transformNodeList(nodeList: NodeList)(using IndexedSeq[Expr[Any]])(using
       Expr[Nondeterminism[Binding.Awaitable]],
       Quotes
   ): Expr[BindingSeq[org.scalajs.dom.Node]] =
@@ -601,8 +602,8 @@ private[binding] object Macros:
     //     .writeToString(fragment)
     // )
     val rootNodes = fragment.getChildNodes
-    if rootNodes.getLength == 1 then transformNode(rootNodes.item(0))
-    else transformNodeList(rootNodes)
+    if rootNodes.getLength == 1 then transformNode(rootNodes.item(0))(using argExprs.toIndexedSeq)
+    else transformNodeList(rootNodes)(using argExprs.toIndexedSeq)
 
 extension (inline stringContext: StringContext)
   transparent inline def html(
