@@ -47,6 +47,8 @@ import com.thoughtworks.binding.htmldefinitions.HtmlDefinitions
 import org.w3c.dom.NamedNodeMap
 import com.thoughtworks.dsl.Dsl
 import org.w3c.dom.Text
+import org.w3c.dom.CDATASection
+import org.w3c.dom.ProcessingInstruction
 
 private[binding] object Macros:
   val Placeholder = "\"\""
@@ -222,6 +224,26 @@ private[binding] object Macros:
 
     parser.parse(InputSource(StringReader(html)), fragment)
     fragment
+
+  def transformCDATASection(cdataSection: CDATASection)(using Quotes) =
+    '{
+      org.scalajs.dom.document.createCDATASection(${
+        Expr(cdataSection.getWholeText)
+      })
+    }
+  def transformProcessingInstruction(
+      processingInstruction: ProcessingInstruction
+  )(using Quotes) =
+    '{
+      org.scalajs.dom.document.createProcessingInstruction(
+        ${
+          Expr(processingInstruction.getTarget),
+        },
+        ${
+          Expr(processingInstruction.getData),
+        }
+      )
+    }
   def transformText(text: Text)(using Quotes) =
     '{
       org.scalajs.dom.document.createTextNode(${ Expr(text.getWholeText) })
@@ -236,8 +258,12 @@ private[binding] object Macros:
         transformElement(element)
       case comment: Comment =>
         transformComment(comment)
+      case cdataSection: CDATASection =>
+        transformCDATASection(cdataSection)
       case text: Text =>
         transformText(text)
+      case processingInstruction: ProcessingInstruction =>
+        transformProcessingInstruction(processingInstruction)
       case _ =>
         report.error("Unsupported node: " + node.toString)
         '{ ??? }
@@ -387,7 +413,8 @@ private[binding] object Macros:
           Nil
         case attributeBindings =>
           for
-            (qName: QName, anyAttributeValueExpr: Expr[_]) <- attributeBindings.asInstanceOf[Iterable[_]]
+            (qName: QName, anyAttributeValueExpr: Expr[_]) <- attributeBindings
+              .asInstanceOf[Iterable[_]]
           yield anyAttributeValueExpr.asTerm.tpe.asType match
             case '[attributeType] =>
               val attributeValueExpr =
@@ -399,7 +426,11 @@ private[binding] object Macros:
                   qName.uri match
                     case null =>
                       val propertySymbol =
-                        TypeRepr.of[E].classSymbol.get.fieldMember(qName.localpart)
+                        TypeRepr
+                          .of[E]
+                          .classSymbol
+                          .get
+                          .fieldMember(qName.localpart)
                       if propertySymbol.isValDef &&
                         propertySymbol.flags.is(Flags.Mutable)
                       then
