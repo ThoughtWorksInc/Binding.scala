@@ -1,12 +1,12 @@
 lazy val StreamTPolyfill = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
 
-lazy val CovariantStreamT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(StreamTPolyfill)
+lazy val `domains-CovariantStreamT` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(StreamTPolyfill)
 
-lazy val PatchStreamT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(CovariantStreamT)
+lazy val `domains-PatchStreamT` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`domains-CovariantStreamT`)
 
 lazy val DefaultFuture = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
 
-lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(CovariantStreamT, PatchStreamT, DefaultFuture)
+lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`domains-CovariantStreamT`, `domains-PatchStreamT`, DefaultFuture)
 
 lazy val BindableSeq = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(Binding)
 

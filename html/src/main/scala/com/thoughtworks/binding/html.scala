@@ -43,6 +43,7 @@ import scala.quoted.Varargs
 import com.thoughtworks.dsl.reset
 import org.w3c.dom.Attr
 import scala.util.chaining.given
+import com.thoughtworks.binding.domains.CovariantStreamT
 import com.thoughtworks.binding.htmldefinitions.HtmlDefinitions
 import org.w3c.dom.NamedNodeMap
 import com.thoughtworks.dsl.Dsl

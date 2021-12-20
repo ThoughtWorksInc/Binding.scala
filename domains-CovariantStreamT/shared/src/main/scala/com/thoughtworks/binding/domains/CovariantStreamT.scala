@@ -1,4 +1,5 @@
 package com.thoughtworks.binding
+package domains
 
 import scalaz.-\/
 import scalaz.Applicative
