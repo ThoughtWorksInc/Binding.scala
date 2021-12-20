@@ -27,7 +27,7 @@ import scala.annotation.unchecked.uncheckedVariance
 import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.binding.StreamTPolyfill.*
 
-opaque type BindingSeqT[M[_], +A] = BindingT[M, BindingSeqT.Patch[A]]
+opaque type BindingSeqT[M[_], +A] = CovariantStreamT[M, BindingSeqT.Patch[A]]
 object BindingSeqT:
 
   // Copied from https://github.com/scalaz/scalaz/pull/2234
@@ -35,7 +35,7 @@ object BindingSeqT:
     private def measureMonoid(implicit V: Monoid[V]): V =
       tree.fold(V.zero, (v, _) => v, (v, _, _, _) => v)
 
-  def apply[M[_], A]: BindingT[M, BindingSeqT.Patch[A]] =:= BindingSeqT[M, A] =
+  def apply[M[_], A]: CovariantStreamT[M, BindingSeqT.Patch[A]] =:= BindingSeqT[M, A] =
     summon
 
   sealed trait Patch[+A]:
@@ -56,7 +56,7 @@ object BindingSeqT:
 
   extension [M[_], A](upstream: BindingSeqT[M, A])
 
-    /** Return a [[BindingT]], whose each element is a [[scalaz.FingerTree]]
+    /** Return a [[CovariantStreamT]], whose each element is a [[scalaz.FingerTree]]
       * representing the snapshot of the sequence at that time.
       *
       * @note
@@ -86,7 +86,7 @@ object BindingSeqT:
       * }
       * }}}
       */
-    def snapshots(using Applicative[M]): BindingT[M, FingerTree[Int, A]] =
+    def snapshots(using Applicative[M]): CovariantStreamT[M, FingerTree[Int, A]] =
       import scalaz.std.anyVal.intInstance
       given scalaz.Reducer[A, Int] = UnitReducer(x => 1)
       upstream.scanLeft(FingerTree.empty) { (fingerTree, patch) =>
@@ -105,7 +105,7 @@ object BindingSeqT:
             } <++> right
       }
 
-    def mergeWithEventLoop(eventLoop: BindingT[M, Nothing])(using
+    def mergeWithEventLoop(eventLoop: CovariantStreamT[M, Nothing])(using
         Nondeterminism[M]
     ): BindingSeqT[M, A] =
       upstream.mergeWith(eventLoop)
@@ -342,7 +342,7 @@ object BindingSeqT:
   def fromIterable[M[_], A](iterable: Iterable[A])(using
       Applicative[M]
   ): BindingSeqT[M, A] =
-    BindingT(Patch.Splice[A](0, 0, iterable) :: StreamT.empty)
+    CovariantStreamT(Patch.Splice[A](0, 0, iterable) :: StreamT.empty)
 
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]]
     with

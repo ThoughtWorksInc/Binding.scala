@@ -37,7 +37,7 @@ object NodeBinding:
   def mount[A](a: A, events: Binding[A => Unit])(using
       N: Functor[Binding.Awaitable]
   ): Binding[Nothing] =
-    val stream = BindingT.apply.flip(events)
+    val stream = CovariantStreamT.apply.flip(events)
     def mapEvents(
         stream: StreamT[Binding.Awaitable, A => Unit]
     ): StreamT[Binding.Awaitable, Nothing] =
@@ -56,7 +56,7 @@ object NodeBinding:
       parent: Node,
       childNodes: Binding.BindingSeq[Node]
   )(using N: Functor[Binding.Awaitable]): Binding[Nothing] =
-    val patchStream = BindingT.apply.flip(BindingSeqT.apply.flip(childNodes))
+    val patchStream = CovariantStreamT.apply.flip(BindingSeqT.apply.flip(childNodes))
     def mapEvents(
         patchStream: StreamT[Binding.Awaitable, Patch[Node]]
     ): StreamT[Binding.Awaitable, Nothing] =
@@ -96,12 +96,12 @@ object NodeBinding:
       Applicative[Binding.Awaitable]
   ): BindableSeq[NodeBinding[Element], Element] = BindableSeq { nodeBinding =>
     BindingSeqT(
-      BindingT(
+      CovariantStreamT(
         BindingSeqT.Patch.Splice[Element](
           0,
           0,
           collection.View.Single(nodeBinding.value)
-        ) :: BindingT.apply.flip(nodeBinding.eventLoop)
+        ) :: CovariantStreamT.apply.flip(nodeBinding.eventLoop)
       )
     )
   }

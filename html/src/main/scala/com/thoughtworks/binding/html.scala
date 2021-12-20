@@ -467,7 +467,7 @@ private[binding] object Macros:
         given Nondeterminism[Binding.Awaitable] = $summon
         NodeBinding(
           $elementExpr,
-          BindingT.mergeAll(
+          CovariantStreamT.mergeAll(
             ${
               Expr.ofSeq(
                 Seq.from(

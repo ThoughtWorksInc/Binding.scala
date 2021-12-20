@@ -35,16 +35,16 @@ object Binding:
   object BindingSeq:
     export BindingSeqT._
 
-  export BindingT._
+  export CovariantStreamT._
 
   opaque type Constant[+A] <: Binding[A] = Binding[A]
   object Constant:
     def apply[A](a: A)(using Applicative[Awaitable]): Binding[A] =
-      BindingT.pure(a)
+      CovariantStreamT.pure(a)
 
   opaque type Constants[+A] <: BindingSeq[A] = BindingSeq[A]
   object Constants:
     def apply[A](elements: A*)(using Applicative[Awaitable]): Constants[A] =
       BindingSeqT.fromIterable(elements)
 
-type Binding[+A] = BindingT[Binding.Awaitable, A]
+type Binding[+A] = CovariantStreamT[Binding.Awaitable, A]

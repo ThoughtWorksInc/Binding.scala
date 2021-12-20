@@ -28,23 +28,23 @@ import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.binding.StreamTPolyfill.*
 
 // Ideally StreamT should be covariant. Mark it as `@unchecked` as a workaround.
-opaque type BindingT[M[_], +A] >: StreamT[M, A @uncheckedVariance] <: StreamT[
+opaque type CovariantStreamT[M[_], +A] >: StreamT[M, A @uncheckedVariance] <: StreamT[
   M,
   A @uncheckedVariance
 ] = StreamT[
   M,
   A @uncheckedVariance
 ]
-object BindingT:
+object CovariantStreamT:
 
-  def apply[M[_], A]: StreamT[M, A] =:= BindingT[M, A] =
+  def apply[M[_], A]: StreamT[M, A] =:= CovariantStreamT[M, A] =
     summon
 
-  extension [M[_], A](binding: BindingT[M, A])
+  extension [M[_], A](binding: CovariantStreamT[M, A])
     // Polyfill of https://github.com/scalaz/scalaz/pull/2249
     def collect[B](
         pf: PartialFunction[A, B]
-    )(using M: Functor[M]): BindingT[M, B] =
+    )(using M: Functor[M]): CovariantStreamT[M, B] =
       StreamT(M.map(binding.step) {
         case Yield(pf(b), s) =>
           Yield(b, () => s().collect(pf))
@@ -56,24 +56,24 @@ object BindingT:
           Done()
       })
 
-    def mergeWith(that: BindingT[M, A])(using
+    def mergeWith(that: CovariantStreamT[M, A])(using
         Nondeterminism[M]
-    ): BindingT[M, A] =
+    ): CovariantStreamT[M, A] =
       (binding: StreamT[M, A]).mergeWith(that: StreamT[M, A])
 
   def mergeAll[M[_], A](
-      streams: Iterable[BindingT[M, A]]
-  )(using Nondeterminism[M]): BindingT[M, A] =
+      streams: Iterable[CovariantStreamT[M, A]]
+  )(using Nondeterminism[M]): CovariantStreamT[M, A] =
     if streams.isEmpty then StreamT.empty
     val indexedSeqOps = streams match {
       case indexedSeqOps: IndexedSeqView.SomeIndexedSeqOps[
-            BindingT[M, A] @unchecked
+            CovariantStreamT[M, A] @unchecked
           ] =>
         indexedSeqOps
       case _ =>
         streams.toIndexedSeq
     }
-    def mergeView(begin: Int, end: Int): BindingT[M, A] =
+    def mergeView(begin: Int, end: Int): CovariantStreamT[M, A] =
       if begin + 1 == end then indexedSeqOps(begin)
       else
         val middle = (begin + end) / 2
@@ -82,17 +82,17 @@ object BindingT:
 
   def pure[M[_], A](a: A)(using Applicative[M]) = a :: StreamT.empty[M, A]
 
-  given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingT[M, X]] with
-    def point[A](a: => A) = BindingT.pure(a)
-    def bind[A, B](upstream: BindingT[M, A])(
-        f: A => BindingT[M, B]
-    ): BindingT[M, B] =
+  given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> CovariantStreamT[M, X]] with
+    def point[A](a: => A) = CovariantStreamT.pure(a)
+    def bind[A, B](upstream: CovariantStreamT[M, A])(
+        f: A => CovariantStreamT[M, B]
+    ): CovariantStreamT[M, B] =
       given [B]: Equal[B] = Equal.equalA[B]
       upstream.flatMapLatest(f).distinctUntilChanged
-    override def map[A, B](upstream: BindingT[M, A])(
+    override def map[A, B](upstream: CovariantStreamT[M, A])(
         f: A => B
-    ): BindingT[M, B] =
+    ): CovariantStreamT[M, B] =
       given Equal[B] = Equal.equalA[B]
       upstream.map(f).distinctUntilChanged
 
-  given [M[_], A](using Applicative[M]): Dsl.Lift[A, BindingT[M, A]] = pure(_)
+  given [M[_], A](using Applicative[M]): Dsl.Lift[A, CovariantStreamT[M, A]] = pure(_)
