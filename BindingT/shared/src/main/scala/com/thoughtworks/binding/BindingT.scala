@@ -64,8 +64,7 @@ object BindingT:
   def mergeAll[M[_], A](
       streams: Iterable[BindingT[M, A]]
   )(using Nondeterminism[M]): BindingT[M, A] =
-    if streams.isEmpty then
-      StreamT.empty
+    if streams.isEmpty then StreamT.empty
     val indexedSeqOps = streams match {
       case indexedSeqOps: IndexedSeqView.SomeIndexedSeqOps[
             BindingT[M, A] @unchecked
@@ -75,8 +74,7 @@ object BindingT:
         streams.toIndexedSeq
     }
     def mergeView(begin: Int, end: Int): BindingT[M, A] =
-      if begin + 1 == end then
-        indexedSeqOps(begin)
+      if begin + 1 == end then indexedSeqOps(begin)
       else
         val middle = (begin + end) / 2
         mergeView(begin, middle).mergeWith(mergeView(middle, end))
@@ -90,13 +88,7 @@ object BindingT:
         f: A => BindingT[M, B]
     ): BindingT[M, B] =
       given [B]: Equal[B] = Equal.equalA[B]
-      // We could avoid the `asInstanceOf` by wrapping `f(_)` like this:
-      //   upstream.flatMapLatest(f(_)).distinctUntilChanged
-      // but it will create an unnecessary function object.
-      // Use `asInstanceOf` anyway
-      upstream
-        .flatMapLatest(f.asInstanceOf[A => StreamT[M, B]])
-        .distinctUntilChanged
+      upstream.flatMapLatest(f).distinctUntilChanged
     override def map[A, B](upstream: BindingT[M, A])(
         f: A => B
     ): BindingT[M, B] =
