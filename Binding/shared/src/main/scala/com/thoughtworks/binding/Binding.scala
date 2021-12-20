@@ -31,9 +31,9 @@ object Binding:
   /** The data binding expression of a sequence, essentially an asynchronous
     * stream of patches describing how the sequence is changing.
     */
-  type BindingSeq[+A] = BindingSeqT[Awaitable, A]
+  type BindingSeq[+A] = PatchStreamT[Awaitable, A]
   object BindingSeq:
-    export BindingSeqT._
+    export PatchStreamT._
 
   export CovariantStreamT._
 
@@ -45,6 +45,6 @@ object Binding:
   opaque type Constants[+A] <: BindingSeq[A] = BindingSeq[A]
   object Constants:
     def apply[A](elements: A*)(using Applicative[Awaitable]): Constants[A] =
-      BindingSeqT.fromIterable(elements)
+      PatchStreamT.fromIterable(elements)
 
 type Binding[+A] = CovariantStreamT[Binding.Awaitable, A]

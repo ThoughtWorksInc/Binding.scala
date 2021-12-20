@@ -27,20 +27,20 @@ import scala.annotation.unchecked.uncheckedVariance
 import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.binding.StreamTPolyfill.*
 
-opaque type BindingSeqT[M[_], +A] = CovariantStreamT[M, BindingSeqT.Patch[A]]
-object BindingSeqT:
+opaque type PatchStreamT[M[_], +A] = CovariantStreamT[M, PatchStreamT.Patch[A]]
+object PatchStreamT:
 
   // Copied from https://github.com/scalaz/scalaz/pull/2234
   extension [V,A](tree: FingerTree[V, A])
     private def measureMonoid(implicit V: Monoid[V]): V =
       tree.fold(V.zero, (v, _) => v, (v, _, _, _) => v)
 
-  def apply[M[_], A]: CovariantStreamT[M, BindingSeqT.Patch[A]] =:= BindingSeqT[M, A] =
+  def apply[M[_], A]: CovariantStreamT[M, PatchStreamT.Patch[A]] =:= PatchStreamT[M, A] =
     summon
 
   sealed trait Patch[+A]:
-    private[BindingSeqT] def withOffset(offset: Int): Patch[A]
-    private[BindingSeqT] def sizeIncremental: Int
+    private[PatchStreamT] def withOffset(offset: Int): Patch[A]
+    private[PatchStreamT] def sizeIncremental: Int
 
   object Patch:
     // TODO: Support move items
@@ -50,11 +50,11 @@ object BindingSeqT:
         deleteCount: Int,
         newItems: Iterable[A]
     ) extends Patch[A]:
-      private[BindingSeqT] def withOffset(offset: Int) =
+      private[PatchStreamT] def withOffset(offset: Int) =
         copy(index = index + offset)
-      private[BindingSeqT] def sizeIncremental = newItems.size - deleteCount
+      private[PatchStreamT] def sizeIncremental = newItems.size - deleteCount
 
-  extension [M[_], A](upstream: BindingSeqT[M, A])
+  extension [M[_], A](upstream: PatchStreamT[M, A])
 
     /** Return a [[CovariantStreamT]], whose each element is a [[scalaz.FingerTree]]
       * representing the snapshot of the sequence at that time.
@@ -62,11 +62,11 @@ object BindingSeqT:
       * @note
       *   The measurement of the [[scalaz.FingerTree]] is the size.
       * @example
-      *   Given a [[BindingSeqT]] created from an iterable,
+      *   Given a [[PatchStreamT]] created from an iterable,
       * {{{
       * import scala.concurrent.Future
       * import scalaz.std.scalaFuture.given
-      * val bindingSeq = BindingSeqT.fromIterable[Future, String](Seq("foo", "bar", "baz"))
+      * val bindingSeq = PatchStreamT.fromIterable[Future, String](Seq("foo", "bar", "baz"))
       * }}}
       * when taking [[snapshots]],
       * {{{
@@ -107,7 +107,7 @@ object BindingSeqT:
 
     def mergeWithEventLoop(eventLoop: CovariantStreamT[M, Nothing])(using
         Nondeterminism[M]
-    ): BindingSeqT[M, A] =
+    ): PatchStreamT[M, A] =
       upstream.mergeWith(eventLoop)
 
     /** Returns a new data-binding sequence by applying a function to all
@@ -129,17 +129,17 @@ object BindingSeqT:
       * `upstream`.
       *
       * @example
-      *   Given a source [[BindingSeqT]] from an iterable,
+      *   Given a source [[PatchStreamT]] from an iterable,
       * {{{
       * import scala.concurrent.Future
       * import scalaz.std.scalaFuture.given
-      * val bindingSeq = BindingSeqT.fromIterable[Future, String](Seq("foo", "bar"))
+      * val bindingSeq = PatchStreamT.fromIterable[Future, String](Seq("foo", "bar"))
       * }}}
       *
-      * when flat-mapping it to more [[BindingSeqT]],
+      * when flat-mapping it to more [[PatchStreamT]],
       * {{{
       * val flatten = bindingSeq.flatMap { s =>
-      *   BindingSeqT.fromIterable(s)
+      *   PatchStreamT.fromIterable(s)
       * }
       * }}}
       * then it should returns a [[StreamT]] including each intermediate states
@@ -159,9 +159,9 @@ object BindingSeqT:
       * }
       * }}}
       */
-    def flatMap[B](f: A => BindingSeqT[M, B])(using
+    def flatMap[B](f: A => PatchStreamT[M, B])(using
         M: Nondeterminism[M]
-    ): BindingSeqT[M, B] =
+    ): PatchStreamT[M, B] =
       val toStepB = { (a: A) =>
         f(a).step
       }
@@ -341,20 +341,20 @@ object BindingSeqT:
 
   def fromIterable[M[_], A](iterable: Iterable[A])(using
       Applicative[M]
-  ): BindingSeqT[M, A] =
+  ): PatchStreamT[M, A] =
     CovariantStreamT(Patch.Splice[A](0, 0, iterable) :: StreamT.empty)
 
-  given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> BindingSeqT[M, X]]
+  given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> PatchStreamT[M, X]]
     with
-    def point[A](a: => A): BindingSeqT[M, A] =
+    def point[A](a: => A): PatchStreamT[M, A] =
       fromIterable(collection.View.Single(a))
 
-    def bind[A, B](upstream: BindingSeqT[M, A])(
-        f: A => BindingSeqT[M, B]
-    ): BindingSeqT[M, B] =
+    def bind[A, B](upstream: PatchStreamT[M, A])(
+        f: A => PatchStreamT[M, B]
+    ): PatchStreamT[M, B] =
       upstream.flatMap(f)
 
   given [M[_], A](using
       M: Applicative[M]
-  ): Dsl.Lift.OneStep[Iterable[A], BindingSeqT[M, A]] =
+  ): Dsl.Lift.OneStep[Iterable[A], PatchStreamT[M, A]] =
     fromIterable(_)

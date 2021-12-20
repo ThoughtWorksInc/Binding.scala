@@ -27,7 +27,7 @@ import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 import scala.util.Success
 import org.scalajs.dom.Node
-import BindingSeqT.Patch
+import PatchStreamT.Patch
 import scala.annotation.tailrec
 import org.scalajs.dom.Element
 
@@ -56,7 +56,7 @@ object NodeBinding:
       parent: Node,
       childNodes: Binding.BindingSeq[Node]
   )(using N: Functor[Binding.Awaitable]): Binding[Nothing] =
-    val patchStream = CovariantStreamT.apply.flip(BindingSeqT.apply.flip(childNodes))
+    val patchStream = CovariantStreamT.apply.flip(PatchStreamT.apply.flip(childNodes))
     def mapEvents(
         patchStream: StreamT[Binding.Awaitable, Patch[Node]]
     ): StreamT[Binding.Awaitable, Nothing] =
@@ -95,9 +95,9 @@ object NodeBinding:
   given [Element](using
       Applicative[Binding.Awaitable]
   ): BindableSeq[NodeBinding[Element], Element] = BindableSeq { nodeBinding =>
-    BindingSeqT(
+    PatchStreamT(
       CovariantStreamT(
-        BindingSeqT.Patch.Splice[Element](
+        PatchStreamT.Patch.Splice[Element](
           0,
           0,
           collection.View.Single(nodeBinding.value)
