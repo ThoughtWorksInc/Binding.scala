@@ -14,7 +14,7 @@ object BindableSeq extends JSBindableSeq:
       : (From => Binding.BindingSeq[Element]) =:= BindableSeq[From, Element] =
     summon
   given [Element](using
-      Applicative[Binding.Awaitable]
+      Applicative[DefaultFuture]
   ): BindableSeq[Element, Element] = Binding.Constants(_)
 
   given [Keyword, Element, Value](using

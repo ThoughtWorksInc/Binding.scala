@@ -35,12 +35,12 @@ final case class NodeBinding[+A](value: A, eventLoop: Binding[Nothing])
 
 object NodeBinding:
   def mount[A](a: A, events: Binding[A => Unit])(using
-      N: Functor[Binding.Awaitable]
+      N: Functor[DefaultFuture]
   ): Binding[Nothing] =
     val stream = CovariantStreamT.apply.flip(events)
     def mapEvents(
-        stream: StreamT[Binding.Awaitable, A => Unit]
-    ): StreamT[Binding.Awaitable, Nothing] =
+        stream: StreamT[DefaultFuture, A => Unit]
+    ): StreamT[DefaultFuture, Nothing] =
       StreamT(N.map(stream.step) {
         case Yield(f, s) =>
           f(a)
@@ -55,11 +55,11 @@ object NodeBinding:
   def mountChildNodes(
       parent: Node,
       childNodes: Binding.BindingSeq[Node]
-  )(using N: Functor[Binding.Awaitable]): Binding[Nothing] =
+  )(using N: Functor[DefaultFuture]): Binding[Nothing] =
     val patchStream = CovariantStreamT.apply.flip(PatchStreamT.apply.flip(childNodes))
     def mapEvents(
-        patchStream: StreamT[Binding.Awaitable, Patch[Node]]
-    ): StreamT[Binding.Awaitable, Nothing] =
+        patchStream: StreamT[DefaultFuture, Patch[Node]]
+    ): StreamT[DefaultFuture, Nothing] =
       StreamT(N.map(patchStream.step) {
         case Yield(
               Patch.Splice(
@@ -93,7 +93,7 @@ object NodeBinding:
     mapEvents(patchStream)
 
   given [Element](using
-      Applicative[Binding.Awaitable]
+      Applicative[DefaultFuture]
   ): BindableSeq[NodeBinding[Element], Element] = BindableSeq { nodeBinding =>
     PatchStreamT(
       CovariantStreamT(

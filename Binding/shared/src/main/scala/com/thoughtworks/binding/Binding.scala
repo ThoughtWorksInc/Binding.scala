@@ -26,12 +26,11 @@ import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 
 object Binding:
-  type Awaitable[+A] = Future[A]
 
   /** The data binding expression of a sequence, essentially an asynchronous
     * stream of patches describing how the sequence is changing.
     */
-  type BindingSeq[+A] = PatchStreamT[Awaitable, A]
+  type BindingSeq[+A] = PatchStreamT[DefaultFuture, A]
   object BindingSeq:
     export PatchStreamT._
 
@@ -39,12 +38,12 @@ object Binding:
 
   opaque type Constant[+A] <: Binding[A] = Binding[A]
   object Constant:
-    def apply[A](a: A)(using Applicative[Awaitable]): Binding[A] =
+    def apply[A](a: A)(using Applicative[DefaultFuture]): Binding[A] =
       CovariantStreamT.pure(a)
 
   opaque type Constants[+A] <: BindingSeq[A] = BindingSeq[A]
   object Constants:
-    def apply[A](elements: A*)(using Applicative[Awaitable]): Constants[A] =
+    def apply[A](elements: A*)(using Applicative[DefaultFuture]): Constants[A] =
       PatchStreamT.fromIterable(elements)
 
-type Binding[+A] = CovariantStreamT[Binding.Awaitable, A]
+type Binding[+A] = CovariantStreamT[DefaultFuture, A]

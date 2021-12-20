@@ -250,7 +250,7 @@ private[binding] object Macros:
       org.scalajs.dom.document.createTextNode(${ Expr(text.getWholeText) })
     }
   def transformNode(node: Node)(using IndexedSeq[Expr[Any]])(using
-      Expr[Nondeterminism[Binding.Awaitable]],
+      Expr[Nondeterminism[DefaultFuture]],
       Quotes
   ): Expr[Any] =
     import scala.quoted.quotes.reflect.*
@@ -275,7 +275,7 @@ private[binding] object Macros:
       attributeValueExpr: Expr[V],
       reifiedExpr: Expr[K]
   )(using
-      Expr[Nondeterminism[Binding.Awaitable]],
+      Expr[Nondeterminism[DefaultFuture]],
       Type[E],
       Type[K],
       Type[V]
@@ -288,7 +288,7 @@ private[binding] object Macros:
         Implicits.search(TypeRepr.of[DslType]) match
           case success: ImplicitSearchSuccess =>
             '{
-              given Nondeterminism[Binding.Awaitable] =
+              given Nondeterminism[DefaultFuture] =
                 $summon
               ${ success.tree.asExprOf[DslType] }
                 .apply($reifiedExpr)
@@ -320,7 +320,7 @@ private[binding] object Macros:
       attributeValueExpr: Expr[V],
       reifiedExpr: Expr[K]
   )(using
-      Expr[Nondeterminism[Binding.Awaitable]],
+      Expr[Nondeterminism[DefaultFuture]],
       Type[E],
       Type[K],
       Type[V],
@@ -332,7 +332,7 @@ private[binding] object Macros:
     Implicits.search(TypeRepr.of[DslType]) match
       case success: ImplicitSearchSuccess =>
         '{
-          given Nondeterminism[Binding.Awaitable] = $summon
+          given Nondeterminism[DefaultFuture] = $summon
           ${ success.tree.asExprOf[DslType] }
             .apply($reifiedExpr)
             .collect(Function.unlift { stringAttributeValue =>
@@ -368,7 +368,7 @@ private[binding] object Macros:
       element: Element,
       elementExpr: Expr[E]
   )(using argExprs: IndexedSeq[Expr[Any]])(using
-      Expr[Nondeterminism[Binding.Awaitable]],
+      Expr[Nondeterminism[DefaultFuture]],
       Type[E],
       Quotes
   ): Expr[NodeBinding[org.scalajs.dom.Element]] =
@@ -404,7 +404,7 @@ private[binding] object Macros:
         }
     val transformedChildNodes = transformNodeList(element.getChildNodes)
     val childNodesEventLoop = '{
-      given Nondeterminism[Binding.Awaitable] = $summon
+      given Nondeterminism[DefaultFuture] = $summon
       NodeBinding.mountChildNodes($elementExpr, $transformedChildNodes)
     }
 
@@ -464,7 +464,7 @@ private[binding] object Macros:
     Expr.block(
       List.from(setStaticAttributeExprs),
       '{
-        given Nondeterminism[Binding.Awaitable] = $summon
+        given Nondeterminism[DefaultFuture] = $summon
         NodeBinding(
           $elementExpr,
           CovariantStreamT.mergeAll(
@@ -484,7 +484,7 @@ private[binding] object Macros:
     )
 
   def transformElement(element: Element)(using IndexedSeq[Expr[Any]])(using
-      Expr[Nondeterminism[Binding.Awaitable]],
+      Expr[Nondeterminism[DefaultFuture]],
       Quotes
   ): Expr[NodeBinding[org.scalajs.dom.Element]] =
     element.getNamespaceURI match
@@ -512,7 +512,7 @@ private[binding] object Macros:
 
   def transformComment(comment: Comment)(using argExprs: IndexedSeq[Expr[Any]])(
       using
-      Expr[Nondeterminism[Binding.Awaitable]],
+      Expr[Nondeterminism[DefaultFuture]],
       Quotes
   ): Expr[Any] =
     import scala.quoted.quotes.reflect.*
@@ -525,7 +525,7 @@ private[binding] object Macros:
             reset.Macros.reify(expr.asExprOf[t])
 
   def transformNodeList(nodeList: NodeList)(using IndexedSeq[Expr[Any]])(using
-      Expr[Nondeterminism[Binding.Awaitable]],
+      Expr[Nondeterminism[DefaultFuture]],
       Quotes
   ): Expr[BindingSeq[org.scalajs.dom.Node]] =
     import scala.quoted.quotes.reflect.report
@@ -535,7 +535,7 @@ private[binding] object Macros:
     import scala.quoted.quotes.reflect.ImplicitSearchFailure
     import scala.quoted.quotes.reflect.ImplicitSearchSuccess
     '{
-      given Nondeterminism[Binding.Awaitable] = $summon
+      given Nondeterminism[DefaultFuture] = $summon
       Monad[BindingSeq].join(Binding.Constants(${
         Expr.ofSeq(
           (
@@ -594,7 +594,7 @@ private[binding] object Macros:
       stringContext: Expr[StringContext],
       args: Expr[Seq[Any]]
   )(using
-      Expr[Nondeterminism[Binding.Awaitable]],
+      Expr[Nondeterminism[DefaultFuture]],
       Quotes
   ): Expr[Any] =
     import scala.quoted.quotes.reflect.Printer
@@ -639,7 +639,7 @@ extension (inline stringContext: StringContext)
   transparent inline def html(
       inline args: Any*
   )(using
-      nondeterminism: Nondeterminism[Binding.Awaitable]
+      nondeterminism: Nondeterminism[DefaultFuture]
   ): Any = ${
     Macros.html('stringContext, 'args)(using 'nondeterminism)
   }

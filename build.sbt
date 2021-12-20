@@ -4,7 +4,9 @@ lazy val CovariantStreamT = crossProject(JSPlatform, JVMPlatform).crossType(Cros
 
 lazy val PatchStreamT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(CovariantStreamT)
 
-lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(CovariantStreamT, PatchStreamT)
+lazy val DefaultFuture = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
+
+lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(CovariantStreamT, PatchStreamT, DefaultFuture)
 
 lazy val BindableSeq = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(Binding)
 

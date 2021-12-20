@@ -1,7 +1,6 @@
 package com.thoughtworks.binding
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
-import scalaz.std.scalaFuture.given
 import com.thoughtworks.dsl.keywords.Await
 import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.dsl.reset.`*`
