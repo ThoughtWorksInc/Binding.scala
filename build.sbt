@@ -1,4 +1,6 @@
-lazy val BindingT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
+lazy val StreamTPolyfill = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
+
+lazy val BindingT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(StreamTPolyfill)
 
 lazy val BindingSeqT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(BindingT)
 

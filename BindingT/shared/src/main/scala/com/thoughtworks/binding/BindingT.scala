@@ -25,6 +25,7 @@ import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 import scalaz.Functor
 import com.thoughtworks.dsl.Dsl
+import com.thoughtworks.binding.StreamTPolyfill.*
 
 // Ideally StreamT should be covariant. Mark it as `@unchecked` as a workaround.
 opaque type BindingT[M[_], +A] >: StreamT[M, A @uncheckedVariance] <: StreamT[

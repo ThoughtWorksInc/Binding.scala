@@ -25,9 +25,15 @@ import scala.collection.IndexedSeqView
 import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 import com.thoughtworks.dsl.Dsl
+import com.thoughtworks.binding.StreamTPolyfill.*
 
 opaque type BindingSeqT[M[_], +A] = BindingT[M, BindingSeqT.Patch[A]]
 object BindingSeqT:
+
+  // Copied from https://github.com/scalaz/scalaz/pull/2234
+  extension [V,A](tree: FingerTree[V, A])
+    private def measureMonoid(implicit V: Monoid[V]): V =
+      tree.fold(V.zero, (v, _) => v, (v, _, _, _) => v)
 
   def apply[M[_], A]: BindingT[M, BindingSeqT.Patch[A]] =:= BindingSeqT[M, A] =
     summon
