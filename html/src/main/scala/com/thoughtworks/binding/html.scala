@@ -50,7 +50,7 @@ import org.w3c.dom.Text
 import org.w3c.dom.CDATASection
 import org.w3c.dom.ProcessingInstruction
 import scala.collection.IndexedSeqView
-
+import scala.collection.immutable.BitSet
 private[binding] object Macros:
   val Placeholder = "\"\""
   val ElementArgumentUserDataKey = "Binding.scala element argument"
@@ -571,6 +571,24 @@ private[binding] object Macros:
       }: _*))
     }
 
+  def consumedArgumentIndices(node: Node): BitSet =
+    val nodeList = node.getChildNodes
+
+    (0 until nodeList.getLength).view
+      .flatMap(i => consumedArgumentIndices(nodeList.item(i)))
+      .to(BitSet)
+      ++ (node.getUserData(ElementArgumentUserDataKey) match
+        case null =>
+          BitSet.empty
+        case arg: Int =>
+          BitSet(arg)
+      ) ++ (node.getUserData(AttributeArgumentsUserDataKey) match
+        case null =>
+          BitSet.empty
+        case args: Map[_, Int @unchecked] =>
+          args.values.to(BitSet)
+      )
+
   def html(
       stringContext: Expr[StringContext],
       args: Expr[Seq[Any]]
@@ -589,6 +607,16 @@ private[binding] object Macros:
     val Expr(partList) = partsExpr
     val parts = partList.toIndexedSeq
     val fragment = parseHtmlParts(parts, argExprs)
+    val isConsumed = this.consumedArgumentIndices(fragment)
+    for
+      (argExpr, arg) <- argExprs.view.zipWithIndex
+      if !isConsumed(arg)
+    do
+      report.error(
+        "A variable must be either an attribute value or child nodes under an element",
+        argExpr.asTerm.pos
+      )
+
     // report.info(
     //   "arg:" + fragment.getFirstChild.getChildNodes
     //     .item(1)
