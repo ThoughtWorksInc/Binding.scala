@@ -8,7 +8,7 @@ lazy val secret = {
         .setURI("https://github.com/ThoughtWorksInc/tw-data-china-continuous-delivery-password.git")
         .setDirectory(secretDirectory)
         .setCredentialsProvider(
-          new org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider(token, "")
+          new org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider(token, "getting")
         )
         .call()
         .close()
@@ -17,3 +17,4 @@ lazy val secret = {
     secret
   }
 }.getOrElse(null)
+new null;
