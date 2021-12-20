@@ -91,9 +91,9 @@ object BindingSeqT:
                 newItems
               ) =>
             val (left, notLeft) =
-              fingerTree.split(_ < index)
+              fingerTree.split(_ > index)
             val (deleted, right) =
-              notLeft.split(_ < deletedCount)
+              notLeft.split(_ > deletedCount)
             newItems.foldLeft(left) { (tree, a) =>
               tree :+ a
             } <++> right
@@ -121,6 +121,37 @@ object BindingSeqT:
       * The time complexity to update the result sequence, when one of the
       * subsequence changes, is `O(log(n))`, where `n` is the size of
       * `upstream`.
+      *
+      * @example
+      *   Given a source [[BindingSeqT]] from an iterable,
+      * {{{
+      * import scala.concurrent.Future
+      * import scalaz.std.scalaFuture.given
+      * val bindingSeq = BindingSeqT.fromIterable[Future, String](Seq("foo", "bar"))
+      * }}}
+      *
+      * when flat-mapping it to more [[BindingSeqT]],
+      * {{{
+      * val flatten = bindingSeq.flatMap { s =>
+      *   BindingSeqT.fromIterable(s)
+      * }
+      * }}}
+      * then it should returns a [[StreamT]] including each intermediate states
+      * during flat-mapping
+      * {{{
+      * import com.thoughtworks.dsl.keywords.Await
+      * import com.thoughtworks.dsl.reset.*
+      * `*`[Future] {
+      *   val snapshotLazyList = !Await(flatten.snapshots.toLazyList)
+      *   snapshotLazyList.map(_.toList.mkString) should be(
+      *     LazyList(
+      *       "",
+      *       "foo",
+      *       "foobar",
+      *     )
+      *   )
+      * }
+      * }}}
       */
     def flatMap[B](f: A => BindingSeqT[M, B])(using
         M: Nondeterminism[M]
@@ -134,7 +165,6 @@ object BindingSeqT:
       final case class Measure(
           numberOfSlices: Int,
           numberOfElements: Int,
-          // TODO: Create an opaque type implementation for DList for better performance
           sliceEventBuilder: Option[
             (numberOfPreviousSlices: Int) => M[SliceEvent]
           ]
@@ -209,11 +239,10 @@ object BindingSeqT:
                   : Patch[A],
                   s
                 ) =>
-              // TODO: Avoid unnecessary FingerTree operations to optimize the performance
               val (left, notLeft) =
-                sliceTree.split(_.numberOfSlices < patchIndex)
+                sliceTree.split(_.numberOfSlices > patchIndex)
               val (deleted, right) =
-                notLeft.split(_.numberOfSlices < numberOfSlicesDeleted)
+                notLeft.split(_.numberOfSlices > numberOfSlicesDeleted)
               val Measure(`patchIndex`, mappedIndex, _) = left.measureMonoid
               val Measure(`numberOfSlicesDeleted`, numberOfItemsDeleted, _) =
                 deleted.measureMonoid
@@ -241,14 +270,14 @@ object BindingSeqT:
                   Done()
         def handleSliceEvent(sliceEvent: SliceEvent): EventStep[B] =
           val sliceIndex = sliceEvent.sliceIndex
-          val (left, ActiveSlice(numberOfElementsInActiveSlice, _), right) =
-            sliceTree.split1(_.numberOfSlices < sliceIndex)
+          val (left, slice, right) =
+            sliceTree.split1(_.numberOfSlices > sliceIndex)
           sliceEvent.eventStep match
             case Yield(patch, s) =>
               val newSliceTree =
                 left.add1(
                   ActiveSlice(
-                    numberOfElementsInActiveSlice + patch.sizeIncremental,
+                    slice.size + patch.sizeIncremental,
                     s().step
                   ),
                   right
@@ -263,14 +292,14 @@ object BindingSeqT:
               Yield(patchWithOffset, () => StreamT(next))
             case Skip(s) =>
               val newSliceTree = left.add1(
-                ActiveSlice(numberOfElementsInActiveSlice, s().step),
+                ActiveSlice(slice.size, s().step),
                 right
               )
               val Some(next) =
                 mergeEventQueue(upstreamEventQueueOption, newSliceTree)
               Skip(() => StreamT(next))
             case Done() =>
-              val newSliceTree = left <++> right
+              val newSliceTree = left.add1(InactiveSlice(slice.size), right) 
               mergeEventQueue(upstreamEventQueueOption, newSliceTree) match
                 case Some(next) =>
                   Skip(() => StreamT(next))
