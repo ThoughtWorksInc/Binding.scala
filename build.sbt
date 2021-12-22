@@ -1,22 +1,20 @@
-lazy val StreamTPolyfill = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
+lazy val StreamT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
 
-lazy val `domains-CovariantStreamT` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(StreamTPolyfill)
+lazy val CovariantStreamT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(StreamT)
 
-lazy val `domains-PatchStreamT` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`domains-CovariantStreamT`)
+lazy val PatchStreamT = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`CovariantStreamT`)
 
 lazy val DefaultFuture = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
 
-lazy val `keywords-Bind` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`domains-CovariantStreamT`)
+lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`CovariantStreamT`, `PatchStreamT`, DefaultFuture)
 
-lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`domains-CovariantStreamT`, `domains-PatchStreamT`, DefaultFuture)
+lazy val `keywords-Bind` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`CovariantStreamT`)
 
 lazy val `bindable-BindableSeq` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(Binding)
 
-lazy val NodeBinding = project.dependsOn(`bindable-BindableSeq`.js)
+lazy val `html-Definitions` = project
 
-lazy val htmldefinitions = project
-
-lazy val html = project.dependsOn(htmldefinitions, NodeBinding)
+lazy val `html` = project.dependsOn(`html-Definitions`, `bindable-BindableSeq`.js)
 
 ThisBuild / organization := "com.thoughtworks.binding"
 

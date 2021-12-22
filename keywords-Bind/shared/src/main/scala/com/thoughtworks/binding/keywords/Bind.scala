@@ -1,8 +1,8 @@
 package com.thoughtworks.binding
 package keywords
 import com.thoughtworks.dsl.Dsl
-import com.thoughtworks.binding.domains.CovariantStreamT
-import com.thoughtworks.binding.StreamTPolyfill.*
+import com.thoughtworks.binding.CovariantStreamT
+import com.thoughtworks.binding.StreamT.*
 import scalaz.Equal
 import scalaz.Nondeterminism
 opaque type Bind[M[_], A] <: Dsl.Keyword.Opaque =
