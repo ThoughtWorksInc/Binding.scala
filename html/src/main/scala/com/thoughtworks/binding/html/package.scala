@@ -756,3 +756,8 @@ extension (inline stringContext: StringContext)
   ): Any = ${
     Macros.html('stringContext, 'args)(using 'nondeterminism)
   }
+
+def render[A](parent: Node, childNodes: A)(using
+    bindableSeq: BindableSeq[A, Node]
+)(using Monad[DefaultFuture]): Unit =
+  NodeBinding.mountChildNodes(parent, bindableSeq(childNodes)).headOption
