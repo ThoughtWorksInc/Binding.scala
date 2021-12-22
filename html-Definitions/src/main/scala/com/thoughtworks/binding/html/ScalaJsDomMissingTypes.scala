@@ -1,6 +1,6 @@
 package com.thoughtworks.binding.html
 import org.scalajs.dom.HTMLElement
-object ScalaJsDomMissingTypes {
+private[html] object ScalaJsDomMissingTypes {
   /** @todo Remove this type alias once scala-js-dom added the definition for this type */
   type HTMLTimeElement <: HTMLElement
 
