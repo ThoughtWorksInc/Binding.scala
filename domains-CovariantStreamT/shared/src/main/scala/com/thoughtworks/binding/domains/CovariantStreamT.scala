@@ -29,7 +29,10 @@ import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.binding.StreamTPolyfill.*
 
 // Ideally StreamT should be covariant. Mark it as `@unchecked` as a workaround.
-opaque type CovariantStreamT[M[_], +A] >: StreamT[M, A @uncheckedVariance] <: StreamT[
+opaque type CovariantStreamT[M[_], +A] >: StreamT[
+  M,
+  A @uncheckedVariance
+] <: StreamT[
   M,
   A @uncheckedVariance
 ] = StreamT[
@@ -83,7 +86,9 @@ object CovariantStreamT:
 
   def pure[M[_], A](a: A)(using Applicative[M]) = a :: StreamT.empty[M, A]
 
-  given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> CovariantStreamT[M, X]] with
+  given [M[_]](using
+      M: Nondeterminism[M]
+  ): Monad[[X] =>> CovariantStreamT[M, X]] with
     def point[A](a: => A) = CovariantStreamT.pure(a)
     def bind[A, B](upstream: CovariantStreamT[M, A])(
         f: A => CovariantStreamT[M, B]
