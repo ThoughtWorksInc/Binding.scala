@@ -1,5 +1,6 @@
 package com.thoughtworks.binding
 import domains.*
+import bindable.*
 import scalaz.-\/
 import scalaz.Applicative
 import scalaz.DList

@@ -1,4 +1,6 @@
 package com.thoughtworks.binding
+package bindable
+
 
 import com.thoughtworks.dsl.Dsl
 import Binding.BindingSeq

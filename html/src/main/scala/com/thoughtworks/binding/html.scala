@@ -45,6 +45,7 @@ import org.w3c.dom.Attr
 import scala.util.chaining.given
 import com.thoughtworks.binding.domains.CovariantStreamT
 import com.thoughtworks.binding.htmldefinitions.HtmlDefinitions
+import com.thoughtworks.binding.bindable.BindableSeq
 import org.w3c.dom.NamedNodeMap
 import com.thoughtworks.dsl.Dsl
 import org.w3c.dom.Text

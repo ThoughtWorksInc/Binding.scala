@@ -10,9 +10,9 @@ lazy val `keywords-Bind` = crossProject(JSPlatform, JVMPlatform).crossType(Cross
 
 lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(`domains-CovariantStreamT`, `domains-PatchStreamT`, DefaultFuture)
 
-lazy val BindableSeq = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(Binding)
+lazy val `bindable-BindableSeq` = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(Binding)
 
-lazy val NodeBinding = project.dependsOn(BindableSeq.js)
+lazy val NodeBinding = project.dependsOn(`bindable-BindableSeq`.js)
 
 lazy val htmldefinitions = project
 
