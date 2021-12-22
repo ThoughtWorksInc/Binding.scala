@@ -96,4 +96,8 @@ object CovariantStreamT:
       given Equal[B] = Equal.equalA[B]
       upstream.map(f).distinctUntilChanged
 
-  given [M[_], A](using Applicative[M]): Dsl.Lift[A, CovariantStreamT[M, A]] = pure(_)
+  // It should be Applicative[M] once the PR get merged: https://github.com/scalaz/scalaz/pull/2251
+  given [M[_], A](using
+      M: Monad[M]
+  ): Dsl.Lift.OneStep[M[A], CovariantStreamT[M, A]] =
+    StreamT.StreamTHoist.liftM(_)
