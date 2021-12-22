@@ -19,3 +19,5 @@ lazy val `html` = project.dependsOn(`html-Definitions`, `bindable-BindableSeq`.j
 ThisBuild / organization := "com.thoughtworks.binding"
 
 publish / skip := true
+
+enablePlugins(ScalaUnidocPlugin)
