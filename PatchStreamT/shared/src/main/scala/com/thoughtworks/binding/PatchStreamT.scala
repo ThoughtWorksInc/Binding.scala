@@ -358,3 +358,10 @@ object PatchStreamT:
       M: Applicative[M]
   ): Dsl.Lift.OneStep[Iterable[A], PatchStreamT[M, A]] =
     fromIterable(_)
+
+  given [Keyword, M[_], Element, Value](using
+      streamDsl: Dsl.Searching[Keyword, CovariantStreamT[M, PatchStreamT.Patch[
+        Element
+      ]], Value]
+  ): Dsl.Derived.StackSafe[Keyword, PatchStreamT[M, Element], Value] =
+    Dsl.Derived.StackSafe(streamDsl)
