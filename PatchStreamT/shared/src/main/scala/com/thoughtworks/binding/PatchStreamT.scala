@@ -75,7 +75,7 @@ object PatchStreamT:
       * then it should contains an empty value and an initial value
       * {{{
       * import com.thoughtworks.dsl.keywords.Await
-      * import com.thoughtworks.dsl.reset.*
+      * import com.thoughtworks.dsl.macros.Reset.Default.*
       * `*`[Future] {
       *   val snapshotLazyList = !Await(snapshots.toLazyList)
       *   inside(snapshotLazyList) {
@@ -146,7 +146,7 @@ object PatchStreamT:
       * during flat-mapping
       * {{{
       * import com.thoughtworks.dsl.keywords.Await
-      * import com.thoughtworks.dsl.reset.*
+      * import com.thoughtworks.dsl.macros.Reset.Default.*
       * `*`[Future] {
       *   val snapshotLazyList = !Await(flatten.snapshots.toLazyList)
       *   snapshotLazyList.map(_.toList.mkString) should be(

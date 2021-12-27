@@ -15,7 +15,7 @@ object Bind {
 
   given [M[_], A, B](using
       Nondeterminism[M]
-  ): Dsl.Atomic[Bind[M, A], CovariantStreamT[M, B], A] = Dsl.Atomic { (keyword, handler) =>
+  ): Dsl.Original[Bind[M, A], CovariantStreamT[M, B], A] = Dsl.Original { (keyword, handler) =>
     given [B]: Equal[B] = Equal.equalA[B]
     keyword.flatMapLatest(handler).distinctUntilChanged
   }

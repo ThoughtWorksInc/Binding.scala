@@ -43,7 +43,7 @@ private[binding] object Macros:
   import org.w3c.dom.NodeList
   import org.w3c.dom.Comment
   import scala.quoted.Varargs
-  import com.thoughtworks.dsl.reset
+  import com.thoughtworks.dsl.macros.Reset
   import org.w3c.dom.Attr
   import scala.util.chaining.given
   import com.thoughtworks.binding.CovariantStreamT
@@ -426,7 +426,7 @@ private[binding] object Macros:
             case '[attributeType] =>
               val attributeValueExpr =
                 anyAttributeValueExpr.asExprOf[attributeType]
-              val anyReifiedExpr = reset.Macros.reify(attributeValueExpr)
+              val anyReifiedExpr = Reset.Macros.reify[false, false, attributeType](attributeValueExpr)
               anyReifiedExpr.asTerm.tpe.asType match
                 case '[keywordType] =>
                   val reifiedExpr = anyReifiedExpr.asExprOf[keywordType]
@@ -528,7 +528,7 @@ private[binding] object Macros:
       case argExprs(expr) =>
         expr.asTerm.tpe.asType match
           case '[t] =>
-            reset.Macros.reify(expr.asExprOf[t])
+            Reset.Macros.reify[false, false, t](expr.asExprOf[t])
 
   def transformNodeList(nodeList: NodeList)(using IndexedSeq[Expr[Any]])(using
       Expr[Nondeterminism[DefaultFuture]],
