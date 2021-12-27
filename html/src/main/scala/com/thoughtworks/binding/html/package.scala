@@ -414,7 +414,7 @@ private[binding] object Macros:
     val transformedChildNodes = transformNodeList(element.getChildNodes)
     val childNodesEventLoop = '{
       given Nondeterminism[DefaultFuture] = $summon
-      NodeBinding.mountChildNodes($elementExpr, $transformedChildNodes)
+      mountChildNodes($elementExpr, $transformedChildNodes)
     }
 
     val transformedAttributeEventLoops =
@@ -676,67 +676,68 @@ import org.scalajs.dom.Node
 import PatchStreamT.Patch
 import scala.annotation.tailrec
 import org.scalajs.dom.Element
+
+
+def mount[A](a: A, events: Binding[A => Unit])(using
+    N: Functor[DefaultFuture]
+): Binding[Nothing] =
+  val stream = CovariantStreamT.apply.flip(events)
+  def mapEvents(
+      stream: StreamT[DefaultFuture, A => Unit]
+  ): StreamT[DefaultFuture, Nothing] =
+    StreamT(N.map(stream.step) {
+      case Yield(f, s) =>
+        f(a)
+        Skip(() => mapEvents(s()))
+      case Skip(s) =>
+        Skip(() => mapEvents(s()))
+      case Done() =>
+        Done()
+    })
+  mapEvents(stream)
+
+def mountChildNodes(
+    parent: Node,
+    childNodes: Binding.BindingSeq[Node]
+)(using N: Functor[DefaultFuture]): Binding[Nothing] =
+  val patchStream = CovariantStreamT.apply.flip(PatchStreamT.apply.flip(childNodes))
+  def mapEvents(
+      patchStream: StreamT[DefaultFuture, Patch[Node]]
+  ): StreamT[DefaultFuture, Nothing] =
+    StreamT(N.map(patchStream.step) {
+      case Yield(
+            Patch.Splice(
+              index,
+              deleteCount,
+              newItems
+            ),
+            s
+          ) =>
+        val childNodes = parent.childNodes
+        if (index < childNodes.length) then
+          val refChild = parent.childNodes(index)
+          for child <- newItems do parent.insertBefore(child, refChild)
+          @tailrec
+          def delete(remaining: Int, refChild: Node): Unit =
+            if remaining > 0 then
+              val nextSibling = refChild.nextSibling
+              parent.removeChild(refChild)
+              delete(remaining - 1, nextSibling)
+          delete(deleteCount, refChild)
+        else if (index == childNodes.length && deleteCount == 0)
+          for child <- newItems do parent.appendChild(child)
+        else
+          throw new IllegalStateException
+        Skip(() => mapEvents(s()))
+      case Skip(s) =>
+        Skip(() => mapEvents(s()))
+      case Done() =>
+        Done()
+    })
+  mapEvents(patchStream)
 final case class NodeBinding[+A](value: A, eventLoop: Binding[Nothing])
 
 object NodeBinding:
-
-  def mount[A](a: A, events: Binding[A => Unit])(using
-      N: Functor[DefaultFuture]
-  ): Binding[Nothing] =
-    val stream = CovariantStreamT.apply.flip(events)
-    def mapEvents(
-        stream: StreamT[DefaultFuture, A => Unit]
-    ): StreamT[DefaultFuture, Nothing] =
-      StreamT(N.map(stream.step) {
-        case Yield(f, s) =>
-          f(a)
-          Skip(() => mapEvents(s()))
-        case Skip(s) =>
-          Skip(() => mapEvents(s()))
-        case Done() =>
-          Done()
-      })
-    mapEvents(stream)
-
-  def mountChildNodes(
-      parent: Node,
-      childNodes: Binding.BindingSeq[Node]
-  )(using N: Functor[DefaultFuture]): Binding[Nothing] =
-    val patchStream = CovariantStreamT.apply.flip(PatchStreamT.apply.flip(childNodes))
-    def mapEvents(
-        patchStream: StreamT[DefaultFuture, Patch[Node]]
-    ): StreamT[DefaultFuture, Nothing] =
-      StreamT(N.map(patchStream.step) {
-        case Yield(
-              Patch.Splice(
-                index,
-                deleteCount,
-                newItems
-              ),
-              s
-            ) =>
-          val childNodes = parent.childNodes
-          if (index < childNodes.length) then
-            val refChild = parent.childNodes(index)
-            for child <- newItems do parent.insertBefore(child, refChild)
-            @tailrec
-            def delete(remaining: Int, refChild: Node): Unit =
-              if remaining > 0 then
-                val nextSibling = refChild.nextSibling
-                parent.removeChild(refChild)
-                delete(remaining - 1, nextSibling)
-            delete(deleteCount, refChild)
-          else if (index == childNodes.length && deleteCount == 0)
-            for child <- newItems do parent.appendChild(child)
-          else
-            throw new IllegalStateException
-          Skip(() => mapEvents(s()))
-        case Skip(s) =>
-          Skip(() => mapEvents(s()))
-        case Done() =>
-          Done()
-      })
-    mapEvents(patchStream)
 
   given [Element](using
       Applicative[DefaultFuture]
@@ -763,4 +764,4 @@ extension (inline stringContext: StringContext)
 def render[A](parent: Node, childNodes: A)(using
     bindableSeq: BindableSeq[A, Node]
 )(using Monad[DefaultFuture]): Unit =
-  NodeBinding.mountChildNodes(parent, bindableSeq(childNodes)).headOption
+  mountChildNodes(parent, bindableSeq(childNodes)).headOption
