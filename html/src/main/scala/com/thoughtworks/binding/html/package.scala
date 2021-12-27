@@ -673,6 +673,7 @@ import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 import scala.util.Success
 import org.scalajs.dom.Node
+import org.scalajs.dom.ParentNode
 import PatchStreamT.Patch
 import scala.annotation.tailrec
 import org.scalajs.dom.Element
@@ -697,7 +698,7 @@ def mount[A](a: A, events: Binding[A => Unit])(using
   mapEvents(stream)
 
 def mountChildNodes(
-    parent: Node,
+    parent: ParentNode & Node,
     childNodes: Binding.BindingSeq[Node]
 )(using N: Functor[DefaultFuture]): Binding[Nothing] =
   val patchStream = CovariantStreamT.apply.flip(PatchStreamT.apply.flip(childNodes))
@@ -705,6 +706,12 @@ def mountChildNodes(
       patchStream: StreamT[DefaultFuture, Patch[Node]]
   ): StreamT[DefaultFuture, Nothing] =
     StreamT(N.map(patchStream.step) {
+      case Yield(
+            Patch.ReplaceChildren(newItems),
+            s
+          ) =>
+        parent.replaceChildren(collection.immutable.ArraySeq.from(newItems): _*)
+        Skip(() => mapEvents(s()))
       case Yield(
             Patch.Splice(
               index,
@@ -784,9 +791,7 @@ object NodeBinding:
   ): BindableSeq[NodeBinding[Element], Element] = BindableSeq { nodeBinding =>
     PatchStreamT(
       CovariantStreamT(
-        PatchStreamT.Patch.Splice[Element](
-          0,
-          0,
+        PatchStreamT.Patch.ReplaceChildren[Element](
           collection.View.Single(nodeBinding.value)
         ) :: CovariantStreamT.apply.flip(nodeBinding.eventLoop)
       )
@@ -801,7 +806,7 @@ extension (inline stringContext: StringContext)
     Macros.html('stringContext, 'args)(using 'nondeterminism)
   }
 
-def render[A](parent: Node, childNodes: A)(using
+def render[A](parent: ParentNode & Node, childNodes: A)(using
     bindableSeq: BindableSeq[A, Node]
 )(using Monad[DefaultFuture]): Unit =
   mountChildNodes(parent, bindableSeq(childNodes)).headOption
