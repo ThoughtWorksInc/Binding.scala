@@ -377,7 +377,9 @@ object PatchStreamT:
       val Some(mergedEventQueue) =
         mergeEventQueue(Some(upstream.step), FingerTree.empty)
       StreamT(mergedEventQueue)
-  def fromCovariantStreamT[M[_], A](stream: CovariantStreamT[M, A])(using Functor[M]): PatchStreamT[M, A] =
+  def fromCovariantStreamT[M[_], A](
+      stream: CovariantStreamT[M, A]
+  )(using Functor[M]): PatchStreamT[M, A] =
     stream.map { a =>
       Patch.ReplaceChildren(collection.View.Single(a))
     }
@@ -408,3 +410,7 @@ object PatchStreamT:
       ]], Value]
   ): Dsl.Derived.StackSafe[Keyword, PatchStreamT[M, Element], Value] =
     Dsl.Derived.StackSafe(streamDsl)
+
+  given [M[_], A, From](using Functor[M])
+      : Dsl.Lift.OneStep[CovariantStreamT[M, A], PatchStreamT[M, A]] =
+    PatchStreamT.fromCovariantStreamT
