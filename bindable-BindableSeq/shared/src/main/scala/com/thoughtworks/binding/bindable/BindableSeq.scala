@@ -1,7 +1,6 @@
 package com.thoughtworks.binding
 package bindable
 
-
 import com.thoughtworks.dsl.Dsl
 import Binding.BindingSeq
 import scalaz.Applicative
@@ -24,3 +23,6 @@ object BindableSeq extends JSBindableSeq:
       Dsl.Run[Keyword, BindingSeq[Element], Value]
   ): BindableSeq[Keyword, Element] =
     summon[Dsl.Run[Keyword, BindingSeq[Element], Value]]
+
+  given [Element, Value]: BindableSeq[Binding.BindingSeq[Element], Element] =
+    identity
