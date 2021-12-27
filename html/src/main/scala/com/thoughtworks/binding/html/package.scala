@@ -735,9 +735,49 @@ def mountChildNodes(
         Done()
     })
   mapEvents(patchStream)
-final case class NodeBinding[+A](value: A, eventLoop: Binding[Nothing])
+
+opaque type NodeBinding[+A] <: Binding[A] = Binding[A] {
+  val step: DefaultFuture[
+    StreamT.Yield[
+      // Don't use `_ <: A` because the Scala 3 type checker could eliminate
+      // wildcard types expectedly.
+      // See https://github.com/lampepfl/dotty/issues/14152
+      A @uncheckedVariance,
+      Binding[Nothing]
+    ]
+  ] {
+    def isCompleted: true
+    def value: Some[Success[
+      StreamT.Yield[
+        // Don't use `_ <: A` because the Scala 3 type checker could eliminate
+        // wildcard types expectedly.
+        // See https://github.com/lampepfl/dotty/issues/14152
+        A @uncheckedVariance,
+        Binding[Nothing]
+      ]
+    ]]
+  }
+}
 
 object NodeBinding:
+
+  extension [A](nodeBinding: NodeBinding[A])
+    def value = nodeBinding.step.value.get.get.a
+    def eventLoop = nodeBinding.step.value.get.get.s()
+
+  def apply[A](value: A, eventLoop: Binding[Nothing]): NodeBinding[A] = {
+    val result: Binding[A] = CovariantStreamT(
+      StreamT[DefaultFuture, A](
+        Future.successful(
+          StreamT.Yield(
+            value,
+            () => CovariantStreamT.apply[DefaultFuture, A].flip(eventLoop)
+          )
+        )
+      )
+    )
+    result.asInstanceOf[NodeBinding[A]]
+  }
 
   given [Element](using
       Applicative[DefaultFuture]
