@@ -411,6 +411,8 @@ object PatchStreamT:
   ): Dsl.Derived.StackSafe[Keyword, PatchStreamT[M, Element], Value] =
     Dsl.Derived.StackSafe(streamDsl)
 
-  given [M[_], A, From](using Functor[M])
-      : Dsl.Lift.OneStep[CovariantStreamT[M, A], PatchStreamT[M, A]] =
-    PatchStreamT.fromCovariantStreamT
+  given [M[_], A, From](using
+      toStream: From <:< CovariantStreamT[M, A],
+      M: Functor[M]
+  ): Dsl.Lift.OneStep[From, PatchStreamT[M, A]] = from =>
+    PatchStreamT.fromCovariantStreamT(toStream(from))
