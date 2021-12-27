@@ -5,6 +5,7 @@ import scalaz.Applicative
 import scalaz.DList
 import scalaz.Equal
 import scalaz.FingerTree
+import scalaz.Functor
 import scalaz.Free
 import scalaz.IList
 import scalaz.Maybe
@@ -376,6 +377,10 @@ object PatchStreamT:
       val Some(mergedEventQueue) =
         mergeEventQueue(Some(upstream.step), FingerTree.empty)
       StreamT(mergedEventQueue)
+  def fromCovariantStreamT[M[_], A](stream: CovariantStreamT[M, A])(using Functor[M]): PatchStreamT[M, A] =
+    stream.map { a =>
+      Patch.ReplaceChildren(collection.View.Single(a))
+    }
 
   def fromIterable[M[_], A](iterable: Iterable[A])(using
       Applicative[M]
