@@ -474,7 +474,7 @@ private[binding] object Macros:
     Expr.block(
       List.from(setStaticAttributeExprs),
       '{
-        given Nondeterminism[DefaultFuture] = $summon
+        @inline given Nondeterminism[DefaultFuture] = $summon
         NodeBinding(
           $elementExpr,
           CovariantStreamT.mergeAll(
@@ -545,7 +545,7 @@ private[binding] object Macros:
     import scala.quoted.quotes.reflect.ImplicitSearchFailure
     import scala.quoted.quotes.reflect.ImplicitSearchSuccess
     '{
-      given Nondeterminism[DefaultFuture] = $summon
+      @inline given Nondeterminism[DefaultFuture] = $summon
       Monad[BindingSeq].join(Binding.Constants(${
         Expr.ofSeq(
           (
