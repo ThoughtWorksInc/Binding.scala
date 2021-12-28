@@ -4,6 +4,7 @@ package bindable
 import com.thoughtworks.dsl.Dsl
 import Binding.BindingSeq
 import scalaz.Applicative
+import scalaz.Functor
 
 opaque type BindableSeq[-From, +Element] <: From => Binding.BindingSeq[
   Element
@@ -26,3 +27,9 @@ object BindableSeq extends JSBindableSeq:
 
   given [Element, Value]: BindableSeq[Binding.BindingSeq[Element], Element] =
     identity
+
+  given [Element](using
+      Functor[DefaultFuture]
+  ): BindableSeq[Binding[Element], Element] = BindableSeq(
+    BindingSeq.fromCovariantStreamT
+  )
