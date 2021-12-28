@@ -57,7 +57,6 @@ private[binding] object Macros:
   import scala.collection.IndexedSeqView
   import scala.collection.immutable.BitSet
 
-
   val Placeholder = "\"\""
   val ElementArgumentUserDataKey = "Binding.scala element argument"
   val AttributeArgumentsUserDataKey =
@@ -138,8 +137,7 @@ private[binding] object Macros:
         )
 
       override def characters(text: XMLString, augs: Augmentations): Unit =
-        if augs == null then
-          super.characters(text, augs)
+        if augs == null then super.characters(text, augs)
         else
           val htmlEventInfo =
             augs.getItem(AUGMENTATIONS).asInstanceOf[HTMLEventInfo]
@@ -316,8 +314,8 @@ private[binding] object Macros:
             }
           case failure: ImplicitSearchFailure =>
             report.error(
-              s"Unable to produce a bindable ${Type
-                .show[propertyType]} for the property ${propertySymbol.name} \n${failure.explanation}",
+              s"Cannot produce a bindable expression for the property ${propertySymbol.name}. Expect ${Type
+                .show[propertyType]}, actual ${Type.show[V]}\n${failure.explanation}",
               attributeValueExpr.asTerm.pos
             )
             '{ ??? }
@@ -429,7 +427,10 @@ private[binding] object Macros:
             case '[attributeType] =>
               val attributeValueExpr =
                 anyAttributeValueExpr.asExprOf[attributeType]
-              val anyReifiedExpr = Reset.Macros.reify[false, false, attributeType](attributeValueExpr)
+              val anyReifiedExpr =
+                Reset.Macros.reify[false, false, attributeType](
+                  attributeValueExpr
+                )
               anyReifiedExpr.asTerm.tpe.asType match
                 case '[keywordType] =>
                   val reifiedExpr = anyReifiedExpr.asExprOf[keywordType]
@@ -644,7 +645,6 @@ private[binding] object Macros:
       transformNode(rootNodes.item(0))(using argExprs.toIndexedSeq)
     else transformNodeList(rootNodes)(using argExprs.toIndexedSeq)
 
-
 import bindable.*
 import scalaz.-\/
 import scalaz.Applicative
@@ -678,7 +678,6 @@ import PatchStreamT.Patch
 import scala.annotation.tailrec
 import org.scalajs.dom.Element
 
-
 def mount[A](a: A, events: Binding[A => Unit])(using
     N: Functor[DefaultFuture]
 ): Binding[Nothing] =
@@ -701,7 +700,8 @@ def mountChildNodes(
     parent: ParentNode & Node,
     childNodes: Binding.BindingSeq[Node]
 )(using N: Functor[DefaultFuture]): Binding[Nothing] =
-  val patchStream = CovariantStreamT.apply.flip(PatchStreamT.apply.flip(childNodes))
+  val patchStream =
+    CovariantStreamT.apply.flip(PatchStreamT.apply.flip(childNodes))
   def mapEvents(
       patchStream: StreamT[DefaultFuture, Patch[Node]]
   ): StreamT[DefaultFuture, Nothing] =
