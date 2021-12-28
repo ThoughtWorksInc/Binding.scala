@@ -1,5 +1,3 @@
 package com.thoughtworks.binding
 
-private[binding] trait JSBinding { this: Binding.type =>
-}
-  
+private[binding] trait JSBinding { this: Binding.type => }
