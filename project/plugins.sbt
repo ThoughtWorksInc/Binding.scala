@@ -16,7 +16,7 @@ addSbtPlugin("com.dwijnand" % "sbt-dynver" % "4.1.1")
 
 addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.1.2")
 
-addSbtPlugin("com.thoughtworks.example" % "sbt-example" % "9.0.0+15-8a7326a1")
+addSbtPlugin("com.thoughtworks.example" % "sbt-example" % "9.1.0")
 
 libraryDependencies += "net.sourceforge.htmlunit" % "htmlunit" % "2.56.0"
 
