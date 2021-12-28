@@ -41,11 +41,11 @@ generateHtmlDefinitions := {
               .getElementsByTagName("code")
               .asScala
               .view
-          } yield tagNameCode.asText -> interfaceCell
+          } yield tagNameCode.asNormalizedText -> interfaceCell
             .getElementsByTagName("code")
             .asScala
             .head
-            .asText
+            .asNormalizedText
         }.toMap
         val interfacesByAttribute = {
           for {
@@ -63,7 +63,7 @@ generateHtmlDefinitions := {
                 .view
             row <- tbody.getRows.asScala.view
             interfaceName <-
-              if (row.getCell(1).asText == "HTML elements") {
+              if (row.getCell(1).asNormalizedText == "HTML elements") {
                 Seq("HTMLElement")
               } else {
                 row
@@ -72,10 +72,10 @@ generateHtmlDefinitions := {
                   .asScala
                   .view
                   .map { code =>
-                    interfacesByTagName(code.asText)
+                    interfacesByTagName(code.asNormalizedText)
                   }
               }
-          } yield row.getCell(0).asText -> interfaceName
+          } yield row.getCell(0).asNormalizedText -> interfaceName
         }.groupBy(_._1).mapValues(_.map(_._2).distinct.toList)
         AttributeDefinition(interfacesByTagName, interfacesByAttribute)
       } finally {
