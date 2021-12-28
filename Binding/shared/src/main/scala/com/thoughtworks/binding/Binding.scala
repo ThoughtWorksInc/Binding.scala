@@ -26,7 +26,7 @@ import scala.concurrent.Future
 import scala.concurrent.Promise
 import scala.util.Success
 
-object Binding:
+object Binding extends JSBinding:
 
   /** The data binding expression of a sequence, essentially an asynchronous
     * stream of patches describing how the sequence is changing.
@@ -42,7 +42,7 @@ object Binding:
     def apply[A](a: A)(using Applicative[DefaultFuture]): Binding[A] =
       CovariantStreamT.pure(a)
 
-  private final class Pipe[A] extends (() => Binding[A]):
+  private[binding] final class Pipe[A] extends (() => Binding[A]):
     private[binding] val promise = Promise[StreamT.Yield[A, Binding[A]]]()
     def apply(): Binding[A] = read
     def read: Binding[A] = StreamT(promise.future)
@@ -61,7 +61,7 @@ object Binding:
     val p = Pipe[A]()
     (p.read, p.write)
 
-  @deprecated("Use `pipe` instead", "13.0.0")
+  @deprecated("Use `pipe` or `jsPipe` instead", "13.0.0")
   opaque type Var[A] <: Binding[A] = Binding[A] {
     val step: DefaultFuture[
       StreamT.Yield[A, Binding[A]]
@@ -74,7 +74,7 @@ object Binding:
     }
   }
 
-  @deprecated("Use `pipe` instead", "13.0.0")
+  @deprecated("Use `pipe` or `jsPipe` instead", "13.0.0")
   object Var:
     def apply[A](a: A): Var[A] =
       val binding: Binding[A] = StreamT(
