@@ -1,4 +1,5 @@
-val generateHtmlDefinitions = taskKey[File]("Generate Definitions.scala file from HTML Living Standard")
+val generateHtmlDefinitions =
+  taskKey[File]("Generate Definitions.scala file from HTML Living Standard")
 generateHtmlDefinitions := {
   import com.gargoylesoftware.htmlunit.WebClient
   import com.gargoylesoftware.htmlunit.html.{HtmlPage, HtmlTable}
