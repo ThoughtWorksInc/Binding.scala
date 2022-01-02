@@ -2,3 +2,4 @@
 -J-Xmx5G
 -J-Xss3M
 -J-XX:+UseG1GC
+-Dsbt.color=always
