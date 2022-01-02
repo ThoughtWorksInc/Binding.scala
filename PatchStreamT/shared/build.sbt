@@ -16,3 +16,5 @@ exampleSuperTypes := {
 }
 
 exampleSuperTypes += init"_root_.org.scalatest.Inside"
+
+scalacOptions += "-Ykind-projector:underscores"

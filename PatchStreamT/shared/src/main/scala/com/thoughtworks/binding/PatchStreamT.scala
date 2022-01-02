@@ -224,7 +224,7 @@ object PatchStreamT:
                   (numberOfPreviousSlices: Int) =>
                     builder2(numberOfPreviousSlices + numberOfSlices1)
                 })
-              case (someBuilder1: Some[_], None) =>
+              case (someBuilder1: Some[Int => M[SliceEvent]], None) =>
                 someBuilder1
               case (Some(builder1), Some(builder2)) =>
                 Some(Memo.immutableHashMapMemo {
@@ -327,7 +327,7 @@ object PatchStreamT:
               val Some(next) =
                 mergeEventQueue(upstreamEventQueueOption, newSliceTree)
               val patchWithOffset = patch match
-                case splice: Patch.Splice[_] =>
+                case splice: Patch.Splice[B] =>
                   left.measure match
                     case Maybe.Empty() =>
                       splice
