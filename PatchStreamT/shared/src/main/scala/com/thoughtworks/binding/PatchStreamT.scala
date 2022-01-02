@@ -41,20 +41,55 @@ object PatchStreamT:
       : CovariantStreamT[M, PatchStreamT.Patch[A]] =:= PatchStreamT[M, A] =
     summon
 
-  sealed trait Patch[+A]
+  /** A [[scalaz.FingerTree]] representing the snapshot of the sequence at a
+    * certain time.
+    * @note
+    *   The measurement of this [[scalaz.FingerTree]] is the size.
+    */
+  opaque type Snapshot[A] <: FingerTree[Int, A] = FingerTree[Int, A]
+  private[PatchStreamT] object Snapshot:
+    def empty[A]: Snapshot[A] =
+      import scalaz.std.anyVal.intInstance
+      @inline given Reducer[A, Int] = UnitReducer(x => 1)
+      FingerTree.empty
+
+  sealed trait Patch[+A]:
+    private[PatchStreamT] def newSize(oldSize: Int): Int
+    private[PatchStreamT] def applyTo[B >: A](
+        snapshot: Snapshot[B]
+    ): Snapshot[B]
 
   object Patch:
     // TODO: Support move items
     // final case class Move[A](oldIndex: Int, offset: Int, moveCount: Int) extends Patch[A]
     final case class ReplaceChildren[+A](
         newItems: Iterable[A]
-    ) extends Patch[A]
+    ) extends Patch[A]:
+      private[PatchStreamT] def newSize(oldSize: Int) = newItems.size
+      private[PatchStreamT] def applyTo[B >: A](
+          snapshot: Snapshot[B]
+      ): Snapshot[B] =
+        newItems.foldLeft(Snapshot.empty[B]) { (tree, a) =>
+          tree :+ a
+        }
 
     final case class Splice[+A](
         index: Int,
         deleteCount: Int,
         newItems: Iterable[A]
-    ) extends Patch[A]
+    ) extends Patch[A]:
+      private[PatchStreamT] def newSize(oldSize: Int) =
+        oldSize - deleteCount + newItems.size
+      private[PatchStreamT] def applyTo[B >: A](
+          snapshot: Snapshot[B]
+      ): Snapshot[B] =
+        val (left, notLeft) =
+          snapshot.split(_ > index)
+        val (deleted, right) =
+          notLeft.split(_ > deleteCount)
+        newItems.foldLeft(left) { (tree, a) =>
+          tree :+ a
+        } <++> right
 
   extension [M[_], A](upstream: PatchStreamT[M, A])
 
@@ -92,26 +127,8 @@ object PatchStreamT:
     def snapshots(using
         Applicative[M]
     ): CovariantStreamT[M, FingerTree[Int, A]] =
-      import scalaz.std.anyVal.intInstance
-      given scalaz.Reducer[A, Int] = UnitReducer(x => 1)
-      upstream.scanLeft(FingerTree.empty) { (fingerTree, patch) =>
-        patch match
-          case Patch.ReplaceChildren(newItems) =>
-            newItems.foldLeft(FingerTree.empty[Int, A]) { (tree, a) =>
-              tree :+ a
-            }
-          case Patch.Splice(
-                index,
-                deletedCount,
-                newItems
-              ) =>
-            val (left, notLeft) =
-              fingerTree.split(_ > index)
-            val (deleted, right) =
-              notLeft.split(_ > deletedCount)
-            newItems.foldLeft(left) { (tree, a) =>
-              tree :+ a
-            } <++> right
+      upstream.scanLeft(Snapshot.empty) { (s, p) =>
+        p.applyTo(s)
       }
 
     def mergeWithEventLoop(eventLoop: CovariantStreamT[M, Nothing])(using
@@ -270,7 +287,8 @@ object PatchStreamT:
                     sliceTree.split(_.numberOfSlices > patchIndex)
                   val (deleted, right) =
                     notLeft.split(_.numberOfSlices > numberOfSlicesDeleted)
-                  val SliceMeasure(`patchIndex`, mappedIndex, _) = left.measureMonoid
+                  val SliceMeasure(`patchIndex`, mappedIndex, _) =
+                    left.measureMonoid
                   val SliceMeasure(
                     `numberOfSlicesDeleted`,
                     numberOfItemsDeleted,
@@ -304,17 +322,7 @@ object PatchStreamT:
             sliceTree.split1(_.numberOfSlices > sliceIndex)
           sliceEvent.eventStep match
             case Yield(patch, s) =>
-              val newSlice = patch match
-                case Patch.Splice(_, deleteCount, newItems) =>
-                  ActiveSlice(
-                    oldSlice.size + newItems.size - deleteCount,
-                    s().step
-                  )
-                case Patch.ReplaceChildren(newItems) =>
-                  ActiveSlice(
-                    newItems.size,
-                    s().step
-                  )
+              val newSlice = ActiveSlice(patch.newSize(oldSlice.size), s().step)
               val newSliceTree = left.add1(newSlice, right)
               val Some(next) =
                 mergeEventQueue(upstreamEventQueueOption, newSliceTree)
