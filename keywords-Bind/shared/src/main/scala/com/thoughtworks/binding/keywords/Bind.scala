@@ -17,8 +17,7 @@ object Bind {
       Nondeterminism[M]
   ): Dsl.Original[Bind[M, A], CovariantStreamT[M, B], A] = Dsl.Original {
     (keyword, handler) =>
-      @inline given [B]: Equal[B] = Equal.equalA[B]
-      keyword.flatMapLatest(handler).distinctUntilChanged
+      keyword.flatMapLatest(handler)
   }
 
   given [F[_[_], _], M[_], A, B](using
@@ -27,14 +26,12 @@ object Bind {
       Monad[M]
   ): Dsl.Original[Bind[M, A], CovariantStreamT[F[M, *], B], A] = Dsl.Original {
     (keyword, handler) =>
-      @inline given [B]: Equal[B] = Equal.equalA[B]
       Bind.apply
         .flip(keyword)
         .trans(new (M ~> F[M, *]) {
           def apply[A](ma: M[A]) = MonadTrans[F].liftM(ma)
         })
         .flatMapLatest(handler)
-        .distinctUntilChanged
   }
 
   /** @note
@@ -47,14 +44,12 @@ object Bind {
       Nondeterminism[Kleisli[M, E, *]]
   ): Dsl.Original[Bind[M, A], CovariantStreamT[Kleisli[M, E, *], B], A] =
     Dsl.Original { (keyword, handler) =>
-      @inline given [B]: Equal[B] = Equal.equalA[B]
       Bind.apply
         .flip(keyword)
         .trans(new (M ~> Kleisli[M, E, *]) {
           def apply[A](ma: M[A]) = Kleisli(_ => ma)
         })
         .flatMapLatest(handler)
-        .distinctUntilChanged
     }
 
   extension [FA, M[_], A](inline fa: FA)(using
