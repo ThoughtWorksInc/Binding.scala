@@ -94,6 +94,32 @@ object Binding extends JSBinding:
   object BindingSeq:
     export PatchStreamT._
 
+    @inline private def fromReader[S, A](
+        readerStream: CovariantStreamT[DefaultFuture, S => Patch[A]],
+        state: S,
+        applyPatch: (Patch[A], S) => S
+    )(using
+        M: Functor[DefaultFuture]
+    ): BindingSeq[A] =
+      BindingSeq(StreamT[DefaultFuture, Patch[A]](
+        M.map(readerStream.step) {
+          case Yield(patchReader, s) =>
+            val patch = patchReader(state)
+            Yield(
+              patchReader(state),
+              () => BindingSeq.apply.flip(fromReader(s(), applyPatch(patch, state), applyPatch))
+            )
+          case Skip(s) => Skip(() => BindingSeq.apply.flip(fromReader(s(), state, applyPatch)))
+          case Done()  => Done()
+        }
+      ))
+
+    def fromSnapshotReader[A](
+        readerStream: CovariantStreamT[DefaultFuture, Snapshot[A] => Patch[A]],
+        initialSnapshot: Snapshot[A] = Snapshot.empty
+    )(using Functor[DefaultFuture]): BindingSeq[A] =
+      fromReader(readerStream, initialSnapshot, _.applyTo(_))
+
   export CovariantStreamT._
 
   opaque type Constant[+A] <: Binding[A] = Binding[A]

@@ -48,7 +48,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
     *   The measurement of this [[scalaz.FingerTree]] is the size.
     */
   opaque type Snapshot[A] <: FingerTree[Int, A] = FingerTree[Int, A]
-  private[PatchStreamT] object Snapshot:
+  private[binding] object Snapshot:
     def empty[A]: Snapshot[A] =
       import scalaz.std.anyVal.intInstance
       @inline given Reducer[A, Int] = UnitReducer(x => 1)
@@ -56,7 +56,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
 
   sealed trait Patch[+A]:
     private[PatchStreamT] def newSize(oldSize: Int): Int
-    private[PatchStreamT] def applyTo[B >: A](
+    private[binding] def applyTo[B >: A](
         snapshot: Snapshot[B]
     ): Snapshot[B]
 
@@ -67,7 +67,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         newItems: Iterable[A]
     ) extends Patch[A]:
       private[PatchStreamT] def newSize(oldSize: Int) = newItems.size
-      private[PatchStreamT] def applyTo[B >: A](
+      private[binding] def applyTo[B >: A](
           snapshot: Snapshot[B]
       ): Snapshot[B] =
         newItems.foldLeft(Snapshot.empty[B]) { (tree, a) =>
@@ -81,7 +81,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
     ) extends Patch[A]:
       private[PatchStreamT] def newSize(oldSize: Int) =
         oldSize - deleteCount + newItems.size
-      private[PatchStreamT] def applyTo[B >: A](
+      private[binding] def applyTo[B >: A](
           snapshot: Snapshot[B]
       ): Snapshot[B] =
         val (left, notLeft) =
@@ -612,32 +612,6 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       Applicative[M]
   ): PatchStreamT[M, A] =
     CovariantStreamT(Patch.ReplaceChildren[A](iterable) :: StreamT.empty)
-
-  @inline private def fromReader[S, M[_], A](
-      readerStream: CovariantStreamT[M, S => Patch[A]],
-      state: S,
-      applyPatch: (Patch[A], S) => S
-  )(using
-      M: Functor[M]
-  ): PatchStreamT[M, A] =
-    StreamT[M, Patch[A]](
-      M.map(readerStream.step) {
-        case Yield(patchReader, s) =>
-          val patch = patchReader(state)
-          Yield(
-            patchReader(state),
-            () => fromReader(s(), applyPatch(patch, state), applyPatch)
-          )
-        case Skip(s) => Skip(() => fromReader(s(), state, applyPatch))
-        case Done()  => Done()
-      }
-    )
-
-  def fromSnapshotReader[M[_], A](
-      readerStream: CovariantStreamT[M, Snapshot[A] => Patch[A]],
-      initialSnapshot: Snapshot[A] = Snapshot.empty
-  )(using Functor[M]): PatchStreamT[M, A] =
-    fromReader(readerStream, initialSnapshot, _.applyTo(_))
 
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> PatchStreamT[M, X]]
     with
