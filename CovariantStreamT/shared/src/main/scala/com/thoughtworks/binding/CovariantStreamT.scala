@@ -86,21 +86,6 @@ object CovariantStreamT:
 
   def pure[M[_], A](a: A)(using Applicative[M]) = a :: StreamT.empty[M, A]
 
-  given [M[_]](using
-      M: Nondeterminism[M]
-  ): Monad[[X] =>> CovariantStreamT[M, X]] with
-    def point[A](a: => A) = CovariantStreamT.pure(a)
-    def bind[A, B](upstream: CovariantStreamT[M, A])(
-        f: A => CovariantStreamT[M, B]
-    ): CovariantStreamT[M, B] =
-      given [B]: Equal[B] = Equal.equalA[B]
-      upstream.flatMapLatest(f).distinctUntilChanged
-    override def map[A, B](upstream: CovariantStreamT[M, A])(
-        f: A => B
-    ): CovariantStreamT[M, B] =
-      given Equal[B] = Equal.equalA[B]
-      upstream.map(f).distinctUntilChanged
-
   // It should be Applicative[M] once the PR get merged: https://github.com/scalaz/scalaz/pull/2251
   given [M[_], A](using
       M: Monad[M]
