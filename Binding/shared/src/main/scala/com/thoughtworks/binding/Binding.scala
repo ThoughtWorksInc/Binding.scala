@@ -1,5 +1,5 @@
 package com.thoughtworks.binding
-import com.thoughtworks.dsl.macros.Reset.Default.*
+import com.thoughtworks.dsl.macros.Reset
 import scalaz.-\/
 import scalaz.Applicative
 import scalaz.Equal
@@ -12,11 +12,10 @@ import scalaz.MonadPlus
 import scalaz.Monoid
 import scalaz.Nondeterminism
 import scalaz.Reducer
-import scalaz.StreamT
-import scalaz.StreamT.Done
-import scalaz.StreamT.Skip
-import scalaz.StreamT.Step
-import scalaz.StreamT.Yield
+import StreamT.Done
+import StreamT.Skip
+import StreamT.Step
+import StreamT.Yield
 import scalaz.UnitReducer
 import scalaz.\/-
 
@@ -27,8 +26,25 @@ import scala.concurrent.Future
 import scala.concurrent.Promise
 import scala.util.Success
 import scalaz.ReaderT
+import scalaz.Functor
 
 object Binding extends JSBinding:
+
+  inline def apply[A](
+      inline a: A
+  )(using Monad[DefaultFuture]): Binding[A] =
+    CovariantStreamT(
+      Applicative[DefaultFuture].pure(
+        Skip { () =>
+          @inline given Equal[A] = Equal.equalA[A]
+          StreamT
+            .noSkip(new Reset {
+              type ShouldResetNestedFunctions = false
+              type DontSuspend = true
+            }.*[Binding](a).distinctUntilChanged)
+        }
+      )
+    )
 
   /** The data binding expression of a sequence, essentially an asynchronous
     * stream of patches describing how the sequence is changing.
