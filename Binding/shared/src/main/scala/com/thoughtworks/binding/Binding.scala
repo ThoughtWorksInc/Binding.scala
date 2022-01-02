@@ -54,6 +54,8 @@ object Binding extends JSBinding:
     def apply[A](a: A)(using Applicative[DefaultFuture]): Binding[A] =
       CovariantStreamT.pure(a)
 
+  def empty[A](using Applicative[DefaultFuture]): Binding[A] = StreamT.empty[DefaultFuture, A]
+
   private[binding] final class Pipe[A] extends (() => Binding[A]):
     private[binding] val promise = Promise[StreamT.Yield[A, Binding[A]]]()
     def apply(): Binding[A] = read
