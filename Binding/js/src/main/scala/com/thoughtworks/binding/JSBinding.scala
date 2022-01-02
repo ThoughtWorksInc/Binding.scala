@@ -29,23 +29,23 @@ import scalajs.js
 
 private[binding] trait JSBinding { this: Binding.type =>
 
-  private def pipeJSWriteTail[A](pipe: Pipe[A])(using
+  private def jsPipeWriteTail[A](pipe: Pipe[A])(using
       ExecutionContext
   ): Binding[js.Function1[A, Unit]] =
     import pipe.*
     StreamT(promise.future.map { case StreamT.Yield(_, pipe: Pipe[A]) =>
-      StreamT.Yield(pipe.writeHead, () => pipeJSWriteTail(pipe))
+      StreamT.Yield(pipe.writeHead, () => jsPipeWriteTail(pipe))
     })
-  private def pipeJSWrite[A](pipe: Pipe[A])(using
+  private def jsPipeWrite[A](pipe: Pipe[A])(using
       ExecutionContext
   ): Binding[js.Function1[A, Unit]] =
     import pipe.*
-    writeHead _ :: pipeJSWriteTail(pipe)
+    writeHead _ :: jsPipeWriteTail(pipe)
 
   @inline def jsPipe[A](using
       ExecutionContext
   ): (Binding[A], Binding[js.Function1[A, Unit]]) =
     val p = new Pipe[A]()
-    (p.read, pipeJSWrite(p))
+    (p.read, jsPipeWrite(p))
 
 }
