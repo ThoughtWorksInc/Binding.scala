@@ -15,7 +15,6 @@ import scalaz.MonadPlus
 import scalaz.Monoid
 import scalaz.Nondeterminism
 import scalaz.Reducer
-import scalaz.StreamT
 import scalaz.StreamT.Done
 import scalaz.StreamT.Skip
 import scalaz.StreamT.Yield
@@ -94,6 +93,10 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         } <++> right
 
   extension [M[_], A](upstream: PatchStreamT[M, A])
+    def noSkip(using Monad[M]): PatchStreamT[M, A] =
+      StreamT.noSkip(upstream)
+    def memoize(using Functor[M]): PatchStreamT[M, A] =
+      CovariantStreamT.memoize(upstream)
     def mergeMap[B](mapper: A => CovariantStreamT[M, B])(using
         M: Nondeterminism[M]
     ): CovariantStreamT[M, B] =
