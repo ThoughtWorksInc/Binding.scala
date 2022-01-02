@@ -40,7 +40,7 @@ opaque type CovariantStreamT[M[_], +A] >: StreamT[
   A @uncheckedVariance
 ]
 object CovariantStreamT:
-  export com.thoughtworks.binding.StreamT.{runStreamT, scanLeft, apply}
+  export com.thoughtworks.binding.StreamT.{noSkip, memoize, runStreamT, scanLeft, apply}
 
   def apply[M[_], A]: StreamT[M, A] =:= CovariantStreamT[M, A] =
     summon
