@@ -194,11 +194,6 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         p.applyTo(s)
       }
 
-    def mergeWithEventLoop(eventLoop: CovariantStreamT[M, Nothing])(using
-        Nondeterminism[M]
-    ): PatchStreamT[M, A] =
-      upstream.mergeWith(eventLoop)
-
     /** Returns a new data-binding sequence by applying a function to all
       * elements of this sequence and using the elements of the resulting
       * collections.
