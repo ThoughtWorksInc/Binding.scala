@@ -28,6 +28,7 @@ import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.binding.StreamT.*
+import scalaz.ReaderT
 
 opaque type PatchStreamT[M[_], +A] = CovariantStreamT[M, PatchStreamT.Patch[A]]
 object PatchStreamT:
@@ -396,6 +397,21 @@ object PatchStreamT:
       Applicative[M]
   ): PatchStreamT[M, A] =
     CovariantStreamT(Patch.ReplaceChildren[A](iterable) :: StreamT.empty)
+
+  @inline private def fromReader[S, M[_], A](
+      readerStream: PatchStreamT[ReaderT[S, M, _], A],
+      state: S,
+      f: (S, Patch[A]) => S
+  )(using
+      M: Functor[M]
+  ): PatchStreamT[M, A] =
+    StreamT[M, Patch[A]](
+      M.map(readerStream.step(state)) {
+        case Yield(a, s) => Yield(a, () => fromReader(s(), f(state, a), f))
+        case Skip(s)     => Skip(() => fromReader(s(), state, f))
+        case Done()      => Done()
+      }
+    )
 
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> PatchStreamT[M, X]]
     with

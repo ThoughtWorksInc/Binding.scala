@@ -29,21 +29,6 @@ private[binding] type StreamT[M[_], A] = scalaz.StreamT[M, A]
 private[binding] object StreamT:
   export scalaz.StreamT.*
 
-  def runReaderStreamT[S, M[_], A](
-      stream: StreamT[ReaderT[S, M, *], A],
-      state: S
-  )(implicit
-      M: Functor[M],
-      R: Reducer[A, S]
-  ): StreamT[M, A] =
-    StreamT(
-      M.map(stream.step(state)) {
-        case Yield(a, s) => Yield(a, runReaderStreamT(s(), R.snoc(state, a)))
-        case Skip(s)     => Skip(() => runReaderStreamT(s(), state))
-        case Done()      => Done()
-      }
-    )
-
   extension [M[_], A](fa: StreamT[M, A])
     private def stepMap[B](f: Step[A, StreamT[M, A]] => Step[B, StreamT[M, B]])(
         implicit M: Functor[M]
