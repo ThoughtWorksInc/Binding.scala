@@ -27,6 +27,8 @@ import scala.concurrent.Promise
 import scala.util.Success
 import scalaz.ReaderT
 import scalaz.Functor
+import scala.annotation.tailrec
+import scala.util.Failure
 
 object Binding extends JSBinding:
 
@@ -35,17 +37,55 @@ object Binding extends JSBinding:
   )(using Monad[DefaultFuture]): Binding[A] =
     lazy val tail = {
       @inline given Equal[A] = Equal.equalA[A]
-      StreamT.memoize(StreamT
-        .noSkip(new Reset {
-          type ShouldResetNestedFunctions = false
-          type DontSuspend = true
-        }.*[Binding](a).distinctUntilChanged))
+      StreamT.memoize(
+        StreamT
+          .noSkip(new Reset {
+            type ShouldResetNestedFunctions = false
+            type DontSuspend = true
+          }.*[Binding](a).distinctUntilChanged)
+      )
     }
     CovariantStreamT(
       Applicative[DefaultFuture].pure(
         Skip(() => tail)
       )
-    )
+    ).dropHistory
+
+  extension [A](binding: Binding[A])
+    @tailrec
+    private def dropHistoryStrict(latest: A)(using
+        Applicative[DefaultFuture]
+    ): Binding[A] =
+      binding.step.value match
+        case None | Some(Success(Done())) | Some(Failure(_)) =>
+          latest :: binding
+        case Some(Success(Yield(a, s))) =>
+          s().dropHistoryStrict(a)
+        case Some(Success(Skip(s))) =>
+          s().dropHistoryStrict(latest)
+
+    @tailrec
+    private def dropHistoryStrict(using
+        Applicative[DefaultFuture]
+    ): Binding[A] =
+      binding.step.value match
+        case None | Some(Success(Done())) | Some(Failure(_)) =>
+          binding
+        case Some(Success(Yield(a, s))) =>
+          s().dropHistoryStrict(a)
+        case Some(Success(Skip(s))) =>
+          s().dropHistoryStrict
+
+    def dropHistory(using Applicative[DefaultFuture]): Binding[A] =
+      CovariantStreamT(
+        Applicative[DefaultFuture].point(Skip(new (() => Binding[A]) {
+          @volatile
+          private var cache: Binding[A] = binding
+          def apply(): Binding[A] =
+            cache = cache.dropHistoryStrict
+            cache
+        }))
+      )
 
   /** The data binding expression of a sequence, essentially an asynchronous
     * stream of patches describing how the sequence is changing.
