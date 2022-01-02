@@ -29,6 +29,7 @@ import scala.annotation.unchecked.uncheckedVariance
 import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.binding.StreamT.*
 import scalaz.ReaderT
+import scalaz.Semigroup
 
 opaque type PatchStreamT[M[_], +A] = CovariantStreamT[M, PatchStreamT.Patch[A]]
 object PatchStreamT extends PatchStreamT.LowPriority0:
@@ -93,6 +94,159 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         } <++> right
 
   extension [M[_], A](upstream: PatchStreamT[M, A])
+    def mergeMap[B](mapper: A => CovariantStreamT[M, B])(using
+        M: Nondeterminism[M]
+    ): CovariantStreamT[M, B] =
+      type MappedStep = StreamT.Step[B, StreamT[M, B]]
+      final case class MappedEvent(step: MappedStep, index: Int)
+      final case class MappedMeasure(
+          size: Int,
+          mappedEventBuilder: Option[
+            (index: Int) => M[MappedEvent]
+          ]
+      )
+      given Monoid[MappedMeasure] with
+        @inline def zero = MappedMeasure(0, None)
+        def append(f1: MappedMeasure, f2: => MappedMeasure) =
+          val index1 = f1.size
+          MappedMeasure(
+            f1.size + f2.size,
+            (f1.mappedEventBuilder, f2.mappedEventBuilder) match
+              case (None, None) =>
+                None
+              case (None, Some(builder2)) =>
+                Some(Memo.immutableHashMapMemo { (index: Int) =>
+                  builder2(index + index1)
+                })
+              case (someBuilder1: Some[Int => M[MappedEvent]], None) =>
+                someBuilder1
+              case (Some(builder1), Some(builder2)) =>
+                Some(Memo.immutableHashMapMemo { (index: Int) =>
+                  M.map(
+                    M.choose(
+                      builder1(index),
+                      builder2(index + index1)
+                    )
+                  ) {
+                    case -\/((sliceEvent1, _)) => sliceEvent1
+                    case \/-((_, sliceEvent2)) => sliceEvent2
+                  }
+                })
+          )
+      @inline given Reducer[Option[
+        M[StreamT.Step[B, StreamT[M, B]]]
+      ], MappedMeasure] =
+        UnitReducer { element =>
+          MappedMeasure(
+            1,
+            element.map { activeElement =>
+              Memo.immutableHashMapMemo { index =>
+                M.map(activeElement)(MappedEvent(_, index))
+              }
+            }
+          )
+        }
+      @inline def loop(
+          upstreamEventQueueOption: Option[
+            M[StreamT.Step[Patch[A], StreamT[M, Patch[A]]]]
+          ],
+          mappedTree: FingerTree[MappedMeasure, Option[
+            M[StreamT.Step[B, StreamT[M, B]]]
+          ]]
+      ): StreamT[M, B] =
+        def handleUpstreamEvent(
+            upstreamEvent: StreamT.Step[Patch[A], StreamT[M, Patch[A]]]
+        ): StreamT.Step[B, StreamT[M, B]] =
+          Skip { () =>
+            upstreamEvent match
+              case Yield(
+                    // Work around https://github.com/lampepfl/dotty/issues/13998
+                    patch: Patch[A],
+                    s
+                  ) =>
+                patch match
+                  case Patch.ReplaceChildren(newItems) =>
+                    val newTree =
+                      newItems.foldLeft(FingerTree.empty) { (tree, item) =>
+                        tree :+ Some(mapper(item).step)
+                      }
+                    loop(Some(s().step), newTree)
+                  case Patch.Splice(
+                        patchIndex,
+                        deleteCount,
+                        newItems
+                      ) =>
+                    val (left, notLeft) =
+                      mappedTree.split(_.size > patchIndex)
+                    val (deleted, right) =
+                      notLeft.split(_.size > deleteCount)
+                    val newTree = newItems.foldLeft(left) { (tree, item) =>
+                      tree :+ Some(mapper(item).step)
+                    } <++> right
+                    loop(Some(s().step), newTree)
+              case Skip(s) =>
+                loop(Some(s().step), mappedTree)
+              case Done() =>
+                loop(None, mappedTree)
+          }
+
+        end handleUpstreamEvent
+        def handleMappedEvents(
+            event: MappedEvent
+        ): StreamT.Step[B, StreamT[M, B]] =
+          val index = event.index
+          def replaceWithActiveStep(s: () => StreamT[M, B]) =
+            val (left, oldStepM, right) =
+              mappedTree.split1(_.size > index)
+            val newTree = left.add1(
+              Some(s().step),
+              right
+            )
+            loop(upstreamEventQueueOption, newTree)
+          end replaceWithActiveStep
+          event.step match
+            case Yield(b, s) =>
+              Yield(b, () => replaceWithActiveStep(s))
+            case Skip(s) =>
+              Skip(() => replaceWithActiveStep(s))
+            case Done() =>
+              Skip { () =>
+                val (left, oldStepM, right) =
+                  mappedTree.split1(_.size > index)
+                val newTree = left.add1(
+                  None,
+                  right
+                )
+                loop(upstreamEventQueueOption, newTree)
+              }
+        end handleMappedEvents
+        val mappedEventBuilderOption =
+          mappedTree.measure.toOption.flatMap(_.mappedEventBuilder)
+        upstreamEventQueueOption match
+          case None =>
+            mappedEventBuilderOption match
+              case None =>
+                StreamT.empty
+              case Some(mappedEventBuilder) =>
+                StreamT(M.map(mappedEventBuilder(0))(handleMappedEvents))
+          case Some(upstreamEventQueue) =>
+            mappedEventBuilderOption match
+              case None =>
+                StreamT(M.map(upstreamEventQueue) { upstreamEvent =>
+                  handleUpstreamEvent(upstreamEvent)
+                })
+              case Some(mappedEventBuilder) =>
+                StreamT(
+                  M.map(M.choose(upstreamEventQueue, mappedEventBuilder(0))) {
+                    case \/-((_, mappedEvent)) =>
+                      handleMappedEvents(mappedEvent)
+                    case -\/((upstreamEvent, _)) =>
+                      handleUpstreamEvent(upstreamEvent)
+                  }
+                )
+      end loop
+      loop(Some(upstream.step), FingerTree.empty)
+    end mergeMap
     private def index(currentIndex: Int)(using
         M: Applicative[M]
     ): CovariantStreamT[M, Int] =
