@@ -33,16 +33,17 @@ object Binding extends JSBinding:
   inline def apply[A](
       inline a: A
   )(using Monad[DefaultFuture]): Binding[A] =
+    lazy val tail = {
+      @inline given Equal[A] = Equal.equalA[A]
+      StreamT.memoize(StreamT
+        .noSkip(new Reset {
+          type ShouldResetNestedFunctions = false
+          type DontSuspend = true
+        }.*[Binding](a).distinctUntilChanged))
+    }
     CovariantStreamT(
       Applicative[DefaultFuture].pure(
-        Skip { () =>
-          @inline given Equal[A] = Equal.equalA[A]
-          StreamT
-            .noSkip(new Reset {
-              type ShouldResetNestedFunctions = false
-              type DontSuspend = true
-            }.*[Binding](a).distinctUntilChanged)
-        }
+        Skip(() => tail)
       )
     )
 
