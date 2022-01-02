@@ -1,4 +1,5 @@
 package com.thoughtworks.binding
+import com.thoughtworks.dsl.macros.Reset.Default.*
 import scalaz.-\/
 import scalaz.Applicative
 import scalaz.Equal
@@ -28,6 +29,7 @@ import scala.util.Success
 import scalaz.ReaderT
 
 object Binding extends JSBinding:
+  type Reader[S, +A] = CovariantStreamT[ReaderT[S, DefaultFuture, _], A]
 
   /** The data binding expression of a sequence, essentially an asynchronous
     * stream of patches describing how the sequence is changing.
@@ -35,9 +37,15 @@ object Binding extends JSBinding:
   type BindingSeq[+A] = PatchStreamT[DefaultFuture, A]
   object BindingSeq:
     export PatchStreamT._
-    type Reader[S, A] = CovariantStreamT[ReaderT[S, DefaultFuture, _], Patch[A]]
-    type SnapshotReader[A] = Reader[Snapshot[A], A]
-    type SizeReader[A] = Reader[Int, A]
+    type SnapshotReader[A] = Reader[Snapshot[A], Patch[A]]
+    object SnapshotReader:
+      inline def apply[A](inline patch: Patch[A]) =
+        *[Binding.Reader[Snapshot[A], _]](patch)
+
+    type SizeReader[A] = Reader[Int, Patch[A]]
+    object SizeReader:
+      inline def apply[A](inline patch: Patch[A]) =
+        *[Binding.Reader[Int, _]](patch)
 
   export CovariantStreamT._
 
