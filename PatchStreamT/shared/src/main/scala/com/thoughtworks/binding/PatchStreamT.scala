@@ -413,6 +413,30 @@ object PatchStreamT:
       }
     )
 
+  def fromSizeReader[M[_], A](
+      readerStream: PatchStreamT[ReaderT[Int, M, _], A],
+      initialSize: Int = 0
+  )(using
+      M: Functor[M]
+  ): PatchStreamT[M, A] =
+    fromReader(
+      readerStream,
+      initialSize,
+      (oldSize, patch) => patch.newSize(oldSize)
+    )
+
+  def fromSnapshotReader[M[_], A](
+      readerStream: PatchStreamT[ReaderT[Snapshot[A], M, _], A],
+      initialSnapshot: Snapshot[A] = Snapshot.empty
+  )(using
+      M: Functor[M]
+  ): PatchStreamT[M, A] =
+    fromReader(
+      readerStream,
+      initialSnapshot,
+      (snapshot, patch) => patch.applyTo(snapshot)
+    )
+
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> PatchStreamT[M, X]]
     with
     def point[A](a: => A): PatchStreamT[M, A] =
