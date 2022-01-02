@@ -94,31 +94,53 @@ object Binding extends JSBinding:
   object BindingSeq:
     export PatchStreamT._
 
-    @inline private def fromReader[S, A](
-        readerStream: CovariantStreamT[DefaultFuture, S => Patch[A]],
-        state: S,
-        applyPatch: (Patch[A], S) => S
-    )(using
-        M: Functor[DefaultFuture]
-    ): BindingSeq[A] =
-      BindingSeq(StreamT[DefaultFuture, Patch[A]](
-        M.map(readerStream.step) {
-          case Yield(patchReader, s) =>
-            val patch = patchReader(state)
-            Yield(
-              patchReader(state),
-              () => BindingSeq.apply.flip(fromReader(s(), applyPatch(patch, state), applyPatch))
-            )
-          case Skip(s) => Skip(() => BindingSeq.apply.flip(fromReader(s(), state, applyPatch)))
-          case Done()  => Done()
-        }
-      ))
+    type Mutation[A] = Snapshot[A] => Patch[A]
+    type MutationStream[A] = CovariantStreamT[DefaultFuture, Mutation[A]]
 
-    def fromSnapshotReader[A](
-        readerStream: CovariantStreamT[DefaultFuture, Snapshot[A] => Patch[A]],
-        initialSnapshot: Snapshot[A] = Snapshot.empty
-    )(using Functor[DefaultFuture]): BindingSeq[A] =
-      fromReader(readerStream, initialSnapshot, _.applyTo(_))
+    private def snapshotStream[A](
+        mutationStream: MutationStream[A],
+        state: Snapshot[A]
+    )(using
+        M: Monad[DefaultFuture]
+    ): StreamT[DefaultFuture, (Snapshot[A], Patch[A])] = StreamT(
+      M.bind(mutationStream.step) {
+        case Yield(mutation, s) =>
+          val patch = mutation(state)
+          val newState = patch.applyTo(state)
+          lazy val nextStep = snapshotStream(s(), newState)
+          M.point(Yield((newState, patch), () => nextStep))
+        case Skip(s) =>
+          snapshotStream(s(), state).step
+        case Done() =>
+          M.point(Done())
+      }
+    )
+    @inline def fromMutationStream[A](
+        mutationStream: MutationStream[A],
+        state: Snapshot[A] = Snapshot.empty
+    )(using
+        M: Monad[DefaultFuture]
+    ): BindingSeq[A] =
+      // Put the cache in an object for lazy initialization
+      object Cache:
+        @volatile
+        private var cache = snapshotStream(mutationStream, state)
+        def dropHistoryAndUpdateCache(): StreamT[DefaultFuture, Patch[A]] = {
+          cache = cache.dropHistoryStrict
+          cache.step.value match
+            case Some(Success(Yield(a, s))) =>
+              Patch.ReplaceChildren(a._1.toList) :: s().map(_._2)
+            case _ =>
+              cache.map(_._2)
+        }
+
+      BindingSeq(
+        CovariantStreamT(
+          Applicative[DefaultFuture].point(
+            Skip(() => Cache.dropHistoryAndUpdateCache())
+          )
+        )
+      )
 
   export CovariantStreamT._
 
