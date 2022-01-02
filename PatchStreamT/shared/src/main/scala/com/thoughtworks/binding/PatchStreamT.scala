@@ -31,7 +31,7 @@ import com.thoughtworks.binding.StreamT.*
 import scalaz.ReaderT
 
 opaque type PatchStreamT[M[_], +A] = CovariantStreamT[M, PatchStreamT.Patch[A]]
-object PatchStreamT:
+object PatchStreamT extends PatchStreamT.LowPriority0:
 
   // Copied from https://github.com/scalaz/scalaz/pull/2234
   extension [V, A](tree: FingerTree[V, A])
@@ -399,7 +399,7 @@ object PatchStreamT:
     CovariantStreamT(Patch.ReplaceChildren[A](iterable) :: StreamT.empty)
 
   @inline private def fromReader[S, M[_], A](
-      readerStream: PatchStreamT[ReaderT[S, M, _], A],
+      readerStream: CovariantStreamT[ReaderT[S, M, _], Patch[A]],
       state: S,
       applyPatch: (Patch[A], S) => S
   )(using
@@ -418,13 +418,13 @@ object PatchStreamT:
     )
 
   def fromSizeReader[M[_], A](
-      readerStream: PatchStreamT[ReaderT[Int, M, _], A],
+      readerStream: CovariantStreamT[ReaderT[Int, M, _], Patch[A]],
       initialSize: Int = 0
   )(using Functor[M]): PatchStreamT[M, A] =
     fromReader(readerStream, initialSize, _.newSize(_))
 
   def fromSnapshotReader[M[_], A](
-      readerStream: PatchStreamT[ReaderT[Snapshot[A], M, _], A],
+      readerStream: CovariantStreamT[ReaderT[Snapshot[A], M, _], Patch[A]],
       initialSnapshot: Snapshot[A] = Snapshot.empty
   )(using Functor[M]): PatchStreamT[M, A] =
     fromReader(readerStream, initialSnapshot, _.applyTo(_))
@@ -451,8 +451,9 @@ object PatchStreamT:
   ): Dsl.Derived.StackSafe[Keyword, PatchStreamT[M, Element], Value] =
     Dsl.Derived.StackSafe(streamDsl)
 
-  given [M[_], A, From](using
-      toStream: From <:< CovariantStreamT[M, A],
-      M: Functor[M]
-  ): Dsl.Lift.OneStep[From, PatchStreamT[M, A]] = from =>
-    PatchStreamT.fromCovariantStreamT(toStream(from))
+  private[PatchStreamT] trait LowPriority0:
+    given [M[_], A, From](using
+        toStream: From <:< CovariantStreamT[M, A],
+        M: Functor[M]
+    ): Dsl.Lift.OneStep[From, PatchStreamT[M, A]] = from =>
+      PatchStreamT.fromCovariantStreamT(toStream(from))

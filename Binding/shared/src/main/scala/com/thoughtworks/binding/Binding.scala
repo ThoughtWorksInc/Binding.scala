@@ -35,9 +35,9 @@ object Binding extends JSBinding:
   type BindingSeq[+A] = PatchStreamT[DefaultFuture, A]
   object BindingSeq:
     export PatchStreamT._
-    type Reader[S, A] = PatchStreamT[ReaderT[S, DefaultFuture, _], A]
-    type SnapshotReader[A] = PatchStreamT[ReaderT[Snapshot[A], DefaultFuture, _], A]
-    type SizeReader[A] = PatchStreamT[ReaderT[Int, DefaultFuture, _], A]
+    type Reader[S, A] = CovariantStreamT[ReaderT[S, DefaultFuture, _], Patch[A]]
+    type SnapshotReader[A] = Reader[Snapshot[A], A]
+    type SizeReader[A] = Reader[Int, A]
 
   export CovariantStreamT._
 
