@@ -24,6 +24,7 @@ import scala.collection.IndexedSeqView
 import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 import scalaz.Functor
+import com.thoughtworks.dsl.keywords.Suspend
 import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.binding.StreamT.*
 
@@ -39,7 +40,7 @@ opaque type CovariantStreamT[M[_], +A] >: StreamT[
   A @uncheckedVariance
 ]
 object CovariantStreamT:
-  export com.thoughtworks.binding.StreamT.*
+  export com.thoughtworks.binding.StreamT.{noSkip, memoize, runStreamT, scanLeft, apply}
 
   def apply[M[_], A]: StreamT[M, A] =:= CovariantStreamT[M, A] =
     summon
@@ -86,23 +87,24 @@ object CovariantStreamT:
 
   def pure[M[_], A](a: A)(using Applicative[M]) = a :: StreamT.empty[M, A]
 
-  given [M[_]](using
-      M: Nondeterminism[M]
-  ): Monad[[X] =>> CovariantStreamT[M, X]] with
-    def point[A](a: => A) = CovariantStreamT.pure(a)
-    def bind[A, B](upstream: CovariantStreamT[M, A])(
-        f: A => CovariantStreamT[M, B]
-    ): CovariantStreamT[M, B] =
-      given [B]: Equal[B] = Equal.equalA[B]
-      upstream.flatMapLatest(f).distinctUntilChanged
-    override def map[A, B](upstream: CovariantStreamT[M, A])(
-        f: A => B
-    ): CovariantStreamT[M, B] =
-      given Equal[B] = Equal.equalA[B]
-      upstream.map(f).distinctUntilChanged
-
   // It should be Applicative[M] once the PR get merged: https://github.com/scalaz/scalaz/pull/2251
   given [M[_], A](using
       M: Monad[M]
   ): Dsl.Lift.OneStep[M[A], CovariantStreamT[M, A]] =
     StreamT.StreamTHoist.liftM(_)
+
+  given [Keyword, Functor[_], Domain, Value](using
+      dsl: Dsl.Searching[Keyword, CovariantStreamT[Functor, Domain], Value],
+      applicative: Applicative[Functor]
+  ): Dsl.Composed[Suspend[Keyword], CovariantStreamT[Functor, Domain], Value] =
+    Dsl.Composed {
+      (
+          keyword: Suspend[Keyword],
+          handler: Value => CovariantStreamT[Functor, Domain]
+      ) =>
+        CovariantStreamT(
+          applicative.pure(
+            Skip(() => dsl(Suspend.apply.flip(keyword)(), handler))
+          )
+        )
+    }

@@ -1,0 +1,1 @@
+scalacOptions += "-Ykind-projector:underscores"
