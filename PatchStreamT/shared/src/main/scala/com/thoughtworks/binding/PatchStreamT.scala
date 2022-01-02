@@ -401,41 +401,33 @@ object PatchStreamT:
   @inline private def fromReader[S, M[_], A](
       readerStream: PatchStreamT[ReaderT[S, M, _], A],
       state: S,
-      f: (S, Patch[A]) => S
+      applyPatch: (Patch[A], S) => S
   )(using
       M: Functor[M]
   ): PatchStreamT[M, A] =
     StreamT[M, Patch[A]](
       M.map(readerStream.step(state)) {
-        case Yield(a, s) => Yield(a, () => fromReader(s(), f(state, a), f))
-        case Skip(s)     => Skip(() => fromReader(s(), state, f))
-        case Done()      => Done()
+        case Yield(patch, s) =>
+          Yield(
+            patch,
+            () => fromReader(s(), applyPatch(patch, state), applyPatch)
+          )
+        case Skip(s) => Skip(() => fromReader(s(), state, applyPatch))
+        case Done()  => Done()
       }
     )
 
   def fromSizeReader[M[_], A](
       readerStream: PatchStreamT[ReaderT[Int, M, _], A],
       initialSize: Int = 0
-  )(using
-      M: Functor[M]
-  ): PatchStreamT[M, A] =
-    fromReader(
-      readerStream,
-      initialSize,
-      (oldSize, patch) => patch.newSize(oldSize)
-    )
+  )(using Functor[M]): PatchStreamT[M, A] =
+    fromReader(readerStream, initialSize, _.newSize(_))
 
   def fromSnapshotReader[M[_], A](
       readerStream: PatchStreamT[ReaderT[Snapshot[A], M, _], A],
       initialSnapshot: Snapshot[A] = Snapshot.empty
-  )(using
-      M: Functor[M]
-  ): PatchStreamT[M, A] =
-    fromReader(
-      readerStream,
-      initialSnapshot,
-      (snapshot, patch) => patch.applyTo(snapshot)
-    )
+  )(using Functor[M]): PatchStreamT[M, A] =
+    fromReader(readerStream, initialSnapshot, _.applyTo(_))
 
   given [M[_]](using M: Nondeterminism[M]): Monad[[X] =>> PatchStreamT[M, X]]
     with
