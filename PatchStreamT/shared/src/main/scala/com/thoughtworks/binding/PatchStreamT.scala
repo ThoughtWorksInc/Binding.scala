@@ -93,6 +93,68 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         } <++> right
 
   extension [M[_], A](upstream: PatchStreamT[M, A])
+    private def index(currentIndex: Int)(using
+        M: Applicative[M]
+    ): CovariantStreamT[M, Int] =
+      CovariantStreamT(
+        M.pure(
+          Yield(
+            currentIndex,
+            () => indexTail(currentIndex)
+          )
+        )
+      )
+
+    private def indexTail(currentIndex: Int)(using
+        M: Applicative[M]
+    ): CovariantStreamT[M, Int] =
+      upstream.stepMap {
+        case Yield(patch, tail) =>
+          patch match
+            case Patch.Splice(patchIndex, deleteCount, newItems) =>
+              if currentIndex < patchIndex then
+                Skip(() => PatchStreamT(tail()).indexTail(currentIndex))
+              else if currentIndex < patchIndex + deleteCount then Done()
+              else
+                val newIndex = currentIndex - deleteCount + newItems.size
+                Yield(newIndex, () => PatchStreamT(tail()).indexTail(newIndex))
+            case Patch.ReplaceChildren(newItems) =>
+              Done()
+        case Skip(tail) =>
+          Skip(() => PatchStreamT(tail()).indexTail(currentIndex))
+        case Done() =>
+          Done()
+      }
+
+    def zipWithIndex(using
+        Applicative[M]
+    ): PatchStreamT[M, (A, CovariantStreamT[M, Int])] =
+      upstream.stepMap {
+        case Yield(patch, tail) =>
+          val mappedPatch = patch match
+            case Patch.Splice(patchIndex, deleteCount, newItems) =>
+              Patch.Splice(
+                patchIndex,
+                deleteCount,
+                collection.View.ZipWithIndex(newItems).map {
+                  case (item, relativeIndex) =>
+                    (item, tail().index(patchIndex + relativeIndex))
+                }
+              )
+            case Patch.ReplaceChildren(newItems) =>
+              Patch.ReplaceChildren(collection.View.ZipWithIndex(newItems).map {
+                case (item, relativeIndex) =>
+                  (item, tail().index(relativeIndex))
+              })
+          Yield(
+            mappedPatch,
+            () => PatchStreamT(tail()).zipWithIndex
+          )
+        case Skip(tail) =>
+          Skip(() => PatchStreamT(tail()).zipWithIndex)
+        case Done() =>
+          Done()
+      }
 
     /** Return a [[CovariantStreamT]], whose each element is a
       * [[scalaz.FingerTree]] representing the snapshot of the sequence at that

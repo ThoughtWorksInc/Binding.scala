@@ -30,7 +30,7 @@ private[binding] object StreamT:
   export scalaz.StreamT.*
 
   extension [M[_], A](fa: StreamT[M, A])
-    private def stepMap[B](f: Step[A, StreamT[M, A]] => Step[B, StreamT[M, B]])(
+    private[binding] def stepMap[B](f: Step[A, StreamT[M, A]] => Step[B, StreamT[M, B]])(
         implicit M: Functor[M]
     ): StreamT[M, B] = StreamT(M.map(fa.step)(f))
 
