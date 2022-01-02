@@ -177,7 +177,7 @@ object PatchStreamT:
       type EventStep[B] =
         StreamT.Step[Patch[B], scalaz.StreamT[M, Patch[B]]]
       final case class SliceEvent(eventStep: EventStep[B], sliceIndex: Int)
-      final case class Measure(
+      final case class SliceMeasure(
           numberOfSlices: Int,
           numberOfElements: Int,
           sliceEventBuilder: Option[
@@ -192,11 +192,11 @@ object PatchStreamT:
       val emptyEventBuilder = { (numberOfPreviousSlices: Int) =>
         DList.mkDList[M[SliceEvent]](Free.pure)
       }
-      given Monoid[Measure] with
-        def zero = Measure(0, 0, None)
-        def append(f1: Measure, f2: => Measure) =
+      given Monoid[SliceMeasure] with
+        def zero = SliceMeasure(0, 0, None)
+        def append(f1: SliceMeasure, f2: => SliceMeasure) =
           val numberOfSlices1 = f1.numberOfSlices
-          Measure(
+          SliceMeasure(
             f1.numberOfSlices + f2.numberOfSlices,
             f1.numberOfElements + f2.numberOfElements,
             (f1.sliceEventBuilder, f2.sliceEventBuilder) match
@@ -223,8 +223,8 @@ object PatchStreamT:
                     }
                 })
           )
-      given Reducer[Slice, Measure] = UnitReducer { (slice: Slice) =>
-        Measure(
+      given Reducer[Slice, SliceMeasure] = UnitReducer { (slice: Slice) =>
+        SliceMeasure(
           1,
           slice.size,
           slice match {
@@ -240,7 +240,7 @@ object PatchStreamT:
 
       def mergeEventQueue(
           upstreamEventQueueOption: Option[M[EventStep[A]]],
-          sliceTree: FingerTree[Measure, Slice]
+          sliceTree: FingerTree[SliceMeasure, Slice]
       ): Option[M[EventStep[B]]] =
         def handleUpstreamEvent(upstreamEvent: EventStep[A]): EventStep[B] =
           upstreamEvent match
@@ -270,8 +270,8 @@ object PatchStreamT:
                     sliceTree.split(_.numberOfSlices > patchIndex)
                   val (deleted, right) =
                     notLeft.split(_.numberOfSlices > numberOfSlicesDeleted)
-                  val Measure(`patchIndex`, mappedIndex, _) = left.measureMonoid
-                  val Measure(
+                  val SliceMeasure(`patchIndex`, mappedIndex, _) = left.measureMonoid
+                  val SliceMeasure(
                     `numberOfSlicesDeleted`,
                     numberOfItemsDeleted,
                     _
@@ -323,16 +323,16 @@ object PatchStreamT:
                   left.measure match
                     case Maybe.Empty() =>
                       splice
-                    case Maybe.Just(leftMeasure) =>
+                    case Maybe.Just(leftSliceMeasure) =>
                       splice.copy(index =
-                        splice.index + leftMeasure.numberOfElements
+                        splice.index + leftSliceMeasure.numberOfElements
                       )
                 case Patch.ReplaceChildren(newItems) =>
                   val offset = left.measure match
                     case Maybe.Empty() =>
                       0
-                    case Maybe.Just(leftMeasure) =>
-                      leftMeasure.numberOfElements
+                    case Maybe.Just(leftSliceMeasure) =>
+                      leftSliceMeasure.numberOfElements
                   Patch.Splice(offset, oldSlice.size, newItems)
               Yield(patchWithOffset, () => StreamT(next))
             case Skip(s) =>
