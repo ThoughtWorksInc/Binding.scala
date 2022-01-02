@@ -24,6 +24,7 @@ import scala.collection.IndexedSeqView
 import scalaz.StreamT.Step
 import scala.annotation.unchecked.uncheckedVariance
 import scalaz.Functor
+import com.thoughtworks.dsl.keywords.Suspend
 import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.binding.StreamT.*
 
@@ -91,3 +92,19 @@ object CovariantStreamT:
       M: Monad[M]
   ): Dsl.Lift.OneStep[M[A], CovariantStreamT[M, A]] =
     StreamT.StreamTHoist.liftM(_)
+
+  given [Keyword, Functor[_], Domain, Value](using
+      dsl: Dsl.Searching[Keyword, CovariantStreamT[Functor, Domain], Value],
+      applicative: Applicative[Functor]
+  ): Dsl.Composed[Suspend[Keyword], CovariantStreamT[Functor, Domain], Value] =
+    Dsl.Composed {
+      (
+          keyword: Suspend[Keyword],
+          handler: Value => CovariantStreamT[Functor, Domain]
+      ) =>
+        CovariantStreamT(
+          applicative.pure(
+            Skip(() => dsl(Suspend.apply.flip(keyword)(), handler))
+          )
+        )
+    }
