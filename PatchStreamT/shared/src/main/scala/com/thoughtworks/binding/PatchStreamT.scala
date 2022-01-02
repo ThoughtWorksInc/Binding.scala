@@ -611,17 +611,18 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
     CovariantStreamT(Patch.ReplaceChildren[A](iterable) :: StreamT.empty)
 
   @inline private def fromReader[S, M[_], A](
-      readerStream: CovariantStreamT[ReaderT[S, M, _], Patch[A]],
+      readerStream: CovariantStreamT[M, S => Patch[A]],
       state: S,
       applyPatch: (Patch[A], S) => S
   )(using
       M: Functor[M]
   ): PatchStreamT[M, A] =
     StreamT[M, Patch[A]](
-      M.map(readerStream.step(state)) {
-        case Yield(patch, s) =>
+      M.map(readerStream.step) {
+        case Yield(patchReader, s) =>
+          val patch = patchReader(state)
           Yield(
-            patch,
+            patchReader(state),
             () => fromReader(s(), applyPatch(patch, state), applyPatch)
           )
         case Skip(s) => Skip(() => fromReader(s(), state, applyPatch))
@@ -630,13 +631,13 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
     )
 
   def fromSizeReader[M[_], A](
-      readerStream: CovariantStreamT[ReaderT[Int, M, _], Patch[A]],
+      readerStream: CovariantStreamT[M, Int => Patch[A]],
       initialSize: Int = 0
   )(using Functor[M]): PatchStreamT[M, A] =
     fromReader(readerStream, initialSize, _.newSize(_))
 
   def fromSnapshotReader[M[_], A](
-      readerStream: CovariantStreamT[ReaderT[Snapshot[A], M, _], Patch[A]],
+      readerStream: CovariantStreamT[M, Snapshot[A] => Patch[A]],
       initialSnapshot: Snapshot[A] = Snapshot.empty
   )(using Functor[M]): PatchStreamT[M, A] =
     fromReader(readerStream, initialSnapshot, _.applyTo(_))
