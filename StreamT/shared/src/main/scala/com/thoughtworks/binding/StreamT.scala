@@ -140,3 +140,14 @@ private[binding] object StreamT:
       }
       StreamT(flatMapLatestInitStep(fa.step))
     }
+
+    def noSkip(implicit M: Monad[M]): StreamT[M, A] =
+      StreamT(M.bind(fa.step) {
+        case Yield(a, s) =>
+          M.point(Yield(a, s().noSkip))
+        case Skip(s) =>
+          s().noSkip.step
+        case Done() =>
+          M.point(Done())
+      })
+  end extension
