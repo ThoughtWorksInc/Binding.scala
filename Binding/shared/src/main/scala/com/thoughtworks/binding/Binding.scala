@@ -25,6 +25,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.concurrent.Promise
 import scala.util.Success
+import scalaz.ReaderT
 
 object Binding extends JSBinding:
 
@@ -34,6 +35,9 @@ object Binding extends JSBinding:
   type BindingSeq[+A] = PatchStreamT[DefaultFuture, A]
   object BindingSeq:
     export PatchStreamT._
+    type Reader[S, A] = PatchStreamT[ReaderT[S, DefaultFuture, _], A]
+    type SnapshotReader[A] = PatchStreamT[ReaderT[Snapshot[A], DefaultFuture, _], A]
+    type SizeReader[A] = PatchStreamT[ReaderT[Int, DefaultFuture, _], A]
 
   export CovariantStreamT._
 
