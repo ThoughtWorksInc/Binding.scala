@@ -633,12 +633,6 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       }
     )
 
-  def fromSizeReader[M[_], A](
-      readerStream: CovariantStreamT[M, Int => Patch[A]],
-      initialSize: Int = 0
-  )(using Functor[M]): PatchStreamT[M, A] =
-    fromReader(readerStream, initialSize, _.newSize(_))
-
   def fromSnapshotReader[M[_], A](
       readerStream: CovariantStreamT[M, Snapshot[A] => Patch[A]],
       initialSnapshot: Snapshot[A] = Snapshot.empty
