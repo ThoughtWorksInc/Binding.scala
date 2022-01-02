@@ -81,40 +81,41 @@ object Binding extends JSBinding:
     val p = Pipe[A]()
     (p.read, p.write)
 
-  @deprecated("Use `pipe` or `jsPipe` instead", "13.0.0")
+  private final class VarFunction[A](private var head: A)
+      extends (() => Binding[A]):
+    private var tail: Promise[Yield[A, Binding[A]]] = Promise()
+
+    def apply: Binding[A] = StreamT(Future.successful(Yield(head, this)))
+    def get = head
+    def set(newHead: A): Unit =
+      val newTail = Promise[Yield[A, Binding[A]]]()
+      val oldTail = synchronized {
+        val oldTail = tail
+        head = newHead
+        tail = newTail
+        oldTail
+      }
+      oldTail.success(Yield(newHead, this))
+
   opaque type Var[A] <: Binding[A] = Binding[A] {
-    val step: DefaultFuture[
-      StreamT.Yield[A, Binding[A]]
-    ] {
+    val step: DefaultFuture[StreamT.Skip[A, Binding[A]]] {
       def value: Some[Success[
-        StreamT.Yield[A, Binding[A]] {
-          val s: Pipe[A]
+        StreamT.Skip[A, Binding[A]] {
+          val s: VarFunction[A]
         }
       ]]
     }
   }
 
-  @deprecated("Use `pipe` or `jsPipe` instead", "13.0.0")
   object Var:
     def apply[A](a: A): Var[A] =
       val binding: Binding[A] = StreamT(
-        Future.successful(StreamT.Yield(a, Pipe[A]()))
+        Future.successful(StreamT.Skip(VarFunction(a)))
       )
       binding.asInstanceOf[Var[A]]
     extension [A](self: Var[A])
-      private def value: A = ???
-      def value_= : A => Unit =
-        new (A => Unit) {
-          var currentPipe = self.step.value.get.get.s
-          def apply(a: A) =
-            val nextPipe = Pipe[A]()
-            val oldPipe = synchronized {
-              val oldPipe = currentPipe
-              currentPipe = nextPipe
-              oldPipe
-            }
-            oldPipe.writeHead(a)
-        }
+      def value: A = self.step.value.get.get.s.get
+      def value_=(a: A): Unit = self.step.value.get.get.s.set(a)
 
   opaque type Constants[+A] <: BindingSeq[A] = BindingSeq[A]
   object Constants:
