@@ -189,9 +189,6 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
     def flatMap[B](f: A => PatchStreamT[M, B])(using
         M: Nondeterminism[M]
     ): PatchStreamT[M, B] =
-      val toStepB = { (a: A) =>
-        f(a).step
-      }
       type EventStep[B] =
         StreamT.Step[Patch[B], scalaz.StreamT[M, Patch[B]]]
       final case class SliceEvent(eventStep: EventStep[B], sliceIndex: Int)
@@ -207,9 +204,6 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       final case class ActiveSlice(size: Int, eventQueue: M[EventStep[B]])
           extends Slice
       final case class InactiveSlice(size: Int) extends Slice
-      val emptyEventBuilder = { (numberOfPreviousSlices: Int) =>
-        DList.mkDList[M[SliceEvent]](Free.pure)
-      }
       given Monoid[SliceMeasure] with
         def zero = SliceMeasure(0, 0, None)
         def append(f1: SliceMeasure, f2: => SliceMeasure) =
@@ -256,10 +250,10 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         )
       }
 
-      def mergeEventQueue(
+      def loop(
           upstreamEventQueueOption: Option[M[EventStep[A]]],
           sliceTree: FingerTree[SliceMeasure, Slice]
-      ): Option[M[EventStep[B]]] =
+      ): StreamT[M, Patch[B]] =
         def handleUpstreamEvent(upstreamEvent: EventStep[A]): EventStep[B] =
           upstreamEvent match
             case Yield(
@@ -269,16 +263,18 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
                 ) =>
               patch match
                 case Patch.ReplaceChildren(newItems) =>
-                  val newSliceTree = newItems.foldLeft(FingerTree.empty) {
-                    (tree, a) =>
-                      tree :+ ActiveSlice(0, toStepB(a))
+                  val tail = { () =>
+                    val newSliceTree =
+                      newItems.foldLeft(FingerTree.empty) { (tree, a) =>
+                        tree :+ ActiveSlice(0, f(a).step)
+                      }
+                    loop(Some(s().step), newSliceTree)
                   }
-                  val Some(next) = mergeEventQueue(Some(s().step), newSliceTree)
                   sliceTree.measure match
                     case Maybe.Just(measure) if measure.numberOfElements > 0 =>
-                      Yield(Patch.ReplaceChildren(Nil), () => StreamT(next))
+                      Yield(Patch.ReplaceChildren(Nil), tail)
                     case _ =>
-                      Skip(() => StreamT(next))
+                      Skip(tail)
                 case Patch.Splice(
                       patchIndex,
                       numberOfSlicesDeleted,
@@ -295,38 +291,35 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
                     numberOfItemsDeleted,
                     _
                   ) = deleted.measureMonoid
-                  val numberOfSlicesAdd = newItems.size
-                  val newSliceTree = newItems.foldLeft(left) { (tree, a) =>
-                    tree :+ ActiveSlice(0, toStepB(a))
-                  } <++> right
-                  val Some(next) = mergeEventQueue(Some(s().step), newSliceTree)
+                  val tail = { () =>
+                    val newSliceTree = newItems.foldLeft(left) { (tree, a) =>
+                      tree :+ ActiveSlice(0, f(a).step)
+                    } <++> right
+                    loop(Some(s().step), newSliceTree)
+                  }
                   if (numberOfItemsDeleted > 0) {
                     Yield(
                       Patch.Splice(mappedIndex, numberOfItemsDeleted, Nil),
-                      () => StreamT(next)
+                      tail
                     )
                   } else {
-                    Skip(() => StreamT(next))
+                    Skip(tail)
                   }
             case Skip(s) =>
-              val Some(next) = mergeEventQueue(Some(s().step), sliceTree)
-              Skip(() => StreamT(next))
+              Skip { () =>
+                loop(Some(s().step), sliceTree)
+              }
             case Done() =>
-              mergeEventQueue(None, sliceTree) match
-                case Some(next) =>
-                  Skip(() => StreamT(next))
-                case None =>
-                  Done()
+              Skip { () =>
+                loop(None, sliceTree)
+              }
+        end handleUpstreamEvent
         def handleSliceEvent(sliceEvent: SliceEvent): EventStep[B] =
           val sliceIndex = sliceEvent.sliceIndex
           val (left, oldSlice, right) =
             sliceTree.split1(_.numberOfSlices > sliceIndex)
           sliceEvent.eventStep match
             case Yield(patch, s) =>
-              val newSlice = ActiveSlice(patch.newSize(oldSlice.size), s().step)
-              val newSliceTree = left.add1(newSlice, right)
-              val Some(next) =
-                mergeEventQueue(upstreamEventQueueOption, newSliceTree)
               val patchWithOffset = patch match
                 case splice: Patch.Splice[B] =>
                   left.measure match
@@ -343,49 +336,57 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
                     case Maybe.Just(leftSliceMeasure) =>
                       leftSliceMeasure.numberOfElements
                   Patch.Splice(offset, oldSlice.size, newItems)
-              Yield(patchWithOffset, () => StreamT(next))
-            case Skip(s) =>
-              val newSliceTree = left.add1(
-                ActiveSlice(oldSlice.size, s().step),
-                right
+              Yield(
+                patchWithOffset,
+                { () =>
+                  val newSlice =
+                    ActiveSlice(patch.newSize(oldSlice.size), s().step)
+                  val newSliceTree = left.add1(newSlice, right)
+                  loop(upstreamEventQueueOption, newSliceTree)
+                }
               )
-              val Some(next) =
-                mergeEventQueue(upstreamEventQueueOption, newSliceTree)
-              Skip(() => StreamT(next))
+            case Skip(s) =>
+              Skip { () =>
+                val newSliceTree = left.add1(
+                  ActiveSlice(oldSlice.size, s().step),
+                  right
+                )
+                loop(upstreamEventQueueOption, newSliceTree)
+              }
             case Done() =>
-              val newSliceTree = left.add1(InactiveSlice(oldSlice.size), right)
-              mergeEventQueue(upstreamEventQueueOption, newSliceTree) match
-                case Some(next) =>
-                  Skip(() => StreamT(next))
-                case None =>
-                  Done()
-        val chooseSliceEventOption = sliceTree.measure.toOption.flatMap {
-          measure =>
-            measure.sliceEventBuilder.map(_(0))
-        }
+              Skip { () =>
+                val newSliceTree =
+                  left.add1(InactiveSlice(oldSlice.size), right)
+                loop(upstreamEventQueueOption, newSliceTree)
+              }
+        end handleSliceEvent
+        val sliceEventBuilderOption =
+          sliceTree.measure.toOption.flatMap(_.sliceEventBuilder)
         upstreamEventQueueOption match
           case None =>
-            chooseSliceEventOption match
+            sliceEventBuilderOption match
               case None =>
-                None
-              case Some(chooseEvent) =>
-                Some(M.map(chooseEvent)(handleSliceEvent))
+                StreamT.empty
+              case Some(sliceEventBuilder) =>
+                StreamT(M.map(sliceEventBuilder(0))(handleSliceEvent))
           case Some(upstreamEventQueue) =>
-            chooseSliceEventOption match
+            sliceEventBuilderOption match
               case None =>
-                Some(M.map(upstreamEventQueue) { upstreamEvent =>
+                StreamT(M.map(upstreamEventQueue) { upstreamEvent =>
                   handleUpstreamEvent(upstreamEvent)
                 })
-              case Some(chooseEvent) =>
-                Some(M.map(M.choose(upstreamEventQueue, chooseEvent)) {
-                  case \/-((_, sliceEvent)) =>
-                    handleSliceEvent(sliceEvent)
-                  case -\/((upstreamEvent, _)) =>
-                    handleUpstreamEvent(upstreamEvent)
-                })
-      val Some(mergedEventQueue) =
-        mergeEventQueue(Some(upstream.step), FingerTree.empty)
-      StreamT(mergedEventQueue)
+              case Some(sliceEventBuilder) =>
+                StreamT(
+                  M.map(M.choose(upstreamEventQueue, sliceEventBuilder(0))) {
+                    case \/-((_, sliceEvent)) =>
+                      handleSliceEvent(sliceEvent)
+                    case -\/((upstreamEvent, _)) =>
+                      handleUpstreamEvent(upstreamEvent)
+                  }
+                )
+      end loop
+      loop(Some(upstream.step), FingerTree.empty)
+    end flatMap
   def fromCovariantStreamT[M[_], A](
       stream: CovariantStreamT[M, A]
   )(using Functor[M]): PatchStreamT[M, A] =
