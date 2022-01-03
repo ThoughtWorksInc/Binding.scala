@@ -47,7 +47,8 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
     * @note
     *   The measurement of this [[scalaz.FingerTree]] is the size.
     */
-  opaque type Snapshot[A] <: FingerTree[Int, A] = FingerTree[Int, A]
+  opaque type Snapshot[+A] <: FingerTree[Int, A @uncheckedVariance] =
+    FingerTree[Int, A @uncheckedVariance]
   private[binding] object Snapshot:
     def empty[A]: Snapshot[A] =
       import scalaz.std.anyVal.intInstance
