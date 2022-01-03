@@ -40,26 +40,12 @@ opaque type CovariantStreamT[M[_], +A] >: StreamT[
   A @uncheckedVariance
 ]
 object CovariantStreamT:
-  export com.thoughtworks.binding.StreamT.{noSkip, memoize, runStreamT, scanLeft, apply}
+  export com.thoughtworks.binding.StreamT.{noSkip, memoize, runStreamT, apply}
 
   def apply[M[_], A]: StreamT[M, A] =:= CovariantStreamT[M, A] =
     summon
 
   extension [M[_], A](binding: CovariantStreamT[M, A])
-    // Polyfill of https://github.com/scalaz/scalaz/pull/2249
-    def collect[B](
-        pf: PartialFunction[A, B]
-    )(using M: Functor[M]): CovariantStreamT[M, B] =
-      StreamT(M.map(binding.step) {
-        case Yield(pf(b), s) =>
-          Yield(b, () => s().collect(pf))
-        case Yield(_, s) =>
-          Skip(() => s().collect(pf))
-        case Skip(s) =>
-          Skip(() => s().collect(pf))
-        case Done() =>
-          Done()
-      })
 
     def mergeWith(that: CovariantStreamT[M, A])(using
         Nondeterminism[M]
