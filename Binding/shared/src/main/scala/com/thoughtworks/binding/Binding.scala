@@ -51,6 +51,25 @@ object Binding extends JSBinding:
       )
     ).dropHistory
 
+  inline def events[A](
+      inline a: A
+  )(using Monad[DefaultFuture]): Binding[A] =
+    lazy val tail = {
+      @inline given Equal[A] = Equal.equalA[A]
+      StreamT.memoize(
+        StreamT
+          .noSkip(new Reset {
+            type ShouldResetNestedFunctions = false
+            type DontSuspend = true
+          }.*[Binding](a))
+      )
+    }
+    CovariantStreamT(
+      Applicative[DefaultFuture].pure(
+        Skip(() => tail)
+      )
+    ).dropHistory
+
   extension [A](binding: Binding[A])
     @tailrec
     private def dropHistoryStrict(latest: A)(using
