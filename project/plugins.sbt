@@ -24,6 +24,6 @@ libraryDependencies += "io.circe" %% "circe-generic" % "0.14.1"
 
 libraryDependencies += "com.softwaremill.sttp" %% "circe" % "1.7.2"
 
-libraryDependencies += "org.scalameta" %% "scalameta" % "4.4.31"
+libraryDependencies += "org.scalameta" %% "scalameta" % "4.4.32"
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.20.0")
