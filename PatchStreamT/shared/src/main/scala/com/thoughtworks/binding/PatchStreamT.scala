@@ -321,17 +321,17 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       *   The measurement of the [[scalaz.FingerTree]] is the size.
       * @example
       *   Given a [[PatchStreamT]] created from an iterable,
-      * {{{
+      *   {{{
       * import scala.concurrent.Future
       * import scalaz.std.scalaFuture.given
       * val bindingSeq = PatchStreamT.fromIterable[Future, String](Seq("foo", "bar", "baz"))
-      * }}}
-      * when taking [[snapshots]],
-      * {{{
+      *   }}}
+      *   when taking [[snapshots]],
+      *   {{{
       * val snapshots = bindingSeq.snapshots
-      * }}}
-      * then it should contains an empty value and an initial value
-      * {{{
+      *   }}}
+      *   then it should contains an empty value and an initial value
+      *   {{{
       * import com.thoughtworks.dsl.keywords.Await
       * import com.thoughtworks.dsl.macros.Reset.Default.*
       * `*`[Future] {
@@ -342,7 +342,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       *       initial.toList should be(List("foo", "bar", "baz"))
       *   }
       * }
-      * }}}
+      *   }}}
       */
     def snapshots(using
         Applicative[M]
@@ -371,11 +371,11 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       *
       * @example
       *   Given a source [[PatchStreamT]] from an iterable,
-      * {{{
+      *   {{{
       * import scala.concurrent.Future
       * import scalaz.std.scalaFuture.given
       * val bindingSeq = PatchStreamT.fromIterable[Future, String](Seq("foo", "bar"))
-      * }}}
+      *   }}}
       *
       * when flat-mapping it to more [[PatchStreamT]],
       * {{{

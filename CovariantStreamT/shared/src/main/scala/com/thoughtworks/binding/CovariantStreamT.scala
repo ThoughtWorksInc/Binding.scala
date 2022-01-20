@@ -46,7 +46,6 @@ object CovariantStreamT:
     summon
 
   extension [M[_], A](binding: CovariantStreamT[M, A])
-
     def mergeWith(that: CovariantStreamT[M, A])(using
         Nondeterminism[M]
     ): CovariantStreamT[M, A] =
