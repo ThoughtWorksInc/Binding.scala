@@ -135,31 +135,83 @@ private[binding] object Macros:
           ,
           null
         )
-      private var isProcessingCharacters =  false
+      private var isProcessingCharacters = false
       override def characters(text: XMLString, augs: Augmentations): Unit =
         if isProcessingCharacters then super.characters(text, augs)
         else
           isProcessingCharacters = true
-          try if augs == null then super.characters(text, augs)
-          else
-            val htmlEventInfo =
-              augs.getItem(AUGMENTATIONS).asInstanceOf[HTMLEventInfo]
-            val beginCharacterOffset = htmlEventInfo.getBeginCharacterOffset
-            val endCharacterOffset = htmlEventInfo.getEndCharacterOffset
-            val beginSearchResult =
-              partOffsets.search(beginCharacterOffset)
-            val endSearchResult =
-              partOffsets.search(endCharacterOffset)
-            val beginIndex = beginSearchResult.insertionPoint
-            val endIndex = endSearchResult.insertionPoint
-            if beginIndex == endIndex || (beginIndex % 2 == 0 && endIndex == beginIndex + 1) then
-              super.characters(text, augs)
+          try
+            if augs == null then super.characters(text, augs)
             else
-              def partLoop(index: Int): Unit =
-                assert(index % 2 == 0)
-                endSearchResult match {
-                  case Searching.InsertionPoint(`endIndex`)
-                      if endIndex == index + 1 =>
+              val htmlEventInfo =
+                augs.getItem(AUGMENTATIONS).asInstanceOf[HTMLEventInfo]
+              val beginCharacterOffset = htmlEventInfo.getBeginCharacterOffset
+              val endCharacterOffset = htmlEventInfo.getEndCharacterOffset
+              val beginSearchResult =
+                partOffsets.search(beginCharacterOffset)
+              val endSearchResult =
+                partOffsets.search(endCharacterOffset)
+              val beginIndex = beginSearchResult.insertionPoint
+              val endIndex = endSearchResult.insertionPoint
+              if beginIndex == endIndex || (beginIndex % 2 == 0 && endIndex == beginIndex + 1)
+              then super.characters(text, augs)
+              else
+                def partLoop(index: Int): Unit =
+                  assert(index % 2 == 0)
+                  endSearchResult match {
+                    case Searching.InsertionPoint(`endIndex`)
+                        if endIndex == index + 1 =>
+                      fParserConfiguration
+                        .asInstanceOf[HTMLConfiguration]
+                        .evaluateInputSource(
+                          XMLInputSource(
+                            null,
+                            null,
+                            null,
+                            StringReader(
+                              html.substring(
+                                partOffsets(index),
+                                endCharacterOffset
+                              )
+                            ),
+                            null
+                          )
+                        )
+                    case _ =>
+                      fParserConfiguration
+                        .asInstanceOf[HTMLConfiguration]
+                        .evaluateInputSource(
+                          XMLInputSource(
+                            null,
+                            null,
+                            null,
+                            StringReader(
+                              parts(index / 2)
+                            ),
+                            null
+                          )
+                        )
+                      argLoop(index + 1)
+                  }
+                end partLoop
+
+                def argLoop(index: Int): Unit =
+                  assert(index % 2 == 1)
+                  if (endIndex > index) {
+                    val comment = document.createComment("")
+                    comment.setUserData(
+                      ElementArgumentUserDataKey,
+                      index / 2,
+                      null
+                    )
+                    fCurrentNode.appendChild(comment)
+                    partLoop(index + 1)
+                  }
+                end argLoop
+
+                beginSearchResult match
+                  case Searching.InsertionPoint(`beginIndex`)
+                      if beginIndex % 2 == 1 =>
                     fParserConfiguration
                       .asInstanceOf[HTMLConfiguration]
                       .evaluateInputSource(
@@ -169,71 +221,20 @@ private[binding] object Macros:
                           null,
                           StringReader(
                             html.substring(
-                              partOffsets(index),
-                              endCharacterOffset
+                              beginCharacterOffset,
+                              partOffsets(beginIndex)
                             )
                           ),
                           null
                         )
                       )
+                    argLoop(beginIndex)
+                  case Searching.Found(`beginIndex`) if beginIndex % 2 == 1 =>
+                    argLoop(beginIndex)
+                  case Searching.Found(`beginIndex`) if beginIndex % 2 == 0 =>
+                    partLoop(beginIndex)
                   case _ =>
-                    fParserConfiguration
-                      .asInstanceOf[HTMLConfiguration]
-                      .evaluateInputSource(
-                        XMLInputSource(
-                          null,
-                          null,
-                          null,
-                          StringReader(
-                            parts(index / 2)
-                          ),
-                          null
-                        )
-                      )
-                    argLoop(index + 1)
-                }
-              end partLoop
-
-              def argLoop(index: Int): Unit =
-                assert(index % 2 == 1)
-                if (endIndex > index) {
-                  val comment = document.createComment("")
-                  comment.setUserData(
-                    ElementArgumentUserDataKey,
-                    index / 2,
-                    null
-                  )
-                  fCurrentNode.appendChild(comment)
-                  partLoop(index + 1)
-                }
-              end argLoop
-
-              beginSearchResult match
-                case Searching.InsertionPoint(`beginIndex`)
-                    if beginIndex % 2 == 1 =>
-                  fParserConfiguration
-                    .asInstanceOf[HTMLConfiguration]
-                    .evaluateInputSource(
-                      XMLInputSource(
-                        null,
-                        null,
-                        null,
-                        StringReader(
-                          html.substring(
-                            beginCharacterOffset,
-                            partOffsets(beginIndex)
-                          )
-                        ),
-                        null
-                      )
-                    )
-                  argLoop(beginIndex)
-                case Searching.Found(`beginIndex`) if beginIndex % 2 == 1 =>
-                  argLoop(beginIndex)
-                case Searching.Found(`beginIndex`) if beginIndex % 2 == 0 =>
-                  partLoop(beginIndex)
-                case _ =>
-                  report.error("Unexpected text: " + text)
+                    report.error("Unexpected text: " + text)
           finally isProcessingCharacters = false
       end characters
     parser.parse(InputSource(StringReader(html)), fragment)
@@ -426,9 +427,9 @@ private[binding] object Macros:
         case null =>
           Nil
         case attributeBindings =>
-          for
-            (qName: QName, argExprs(anyAttributeValueExpr)) <- attributeBindings
-              .asInstanceOf[Iterable[_]]
+          for (qName: QName, argExprs(anyAttributeValueExpr)) <-
+              attributeBindings
+                .asInstanceOf[Iterable[_]]
           yield anyAttributeValueExpr.asTerm.tpe.asType match
             case '[attributeType] =>
               val attributeValueExpr =

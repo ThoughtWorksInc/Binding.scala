@@ -1,7 +1,8 @@
 package java.lang.ref
 import scala.scalajs.js
 
-class WeakReference[T] private (jsWeakRef: js.WeakRef[T]) extends Reference[T]() {
+class WeakReference[T] private (jsWeakRef: js.WeakRef[T])
+    extends Reference[T]() {
   def this(referent: T) = this(new js.WeakRef[T](referent))
   def get(): T = {
     val referent = jsWeakRef.deref()
