@@ -18,7 +18,7 @@ addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.1.2")
 
 addSbtPlugin("com.thoughtworks.example" % "sbt-example" % "9.1.0")
 
-libraryDependencies += "net.sourceforge.htmlunit" % "htmlunit" % "2.56.0"
+libraryDependencies += "net.sourceforge.htmlunit" % "htmlunit" % "2.57.0"
 
 libraryDependencies += "io.circe" %% "circe-generic" % "0.14.1"
 
