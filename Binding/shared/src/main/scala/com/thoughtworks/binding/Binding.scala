@@ -51,6 +51,25 @@ object Binding extends JSBinding:
       )
     ).dropHistory
 
+  inline def events[A](
+      inline a: A
+  )(using Monad[DefaultFuture]): Binding[A] =
+    lazy val tail = {
+      @inline given Equal[A] = Equal.equalA[A]
+      StreamT.memoize(
+        StreamT
+          .noSkip(new Reset {
+            type ShouldResetNestedFunctions = false
+            type DontSuspend = true
+          }.*[Binding](a))
+      )
+    }
+    CovariantStreamT(
+      Applicative[DefaultFuture].pure(
+        Skip(() => tail)
+      )
+    ).dropHistory
+
   extension [A](binding: Binding[A])
     @tailrec
     private def dropHistoryStrict(latest: A)(using
@@ -116,7 +135,7 @@ object Binding extends JSBinding:
       }
     )
     @inline def fromMutationStream[A](
-        mutationStream: MutationStream[A],
+        mutationStream: => MutationStream[A],
         state: Snapshot[A] = Snapshot.empty
     )(using
         M: Monad[DefaultFuture]
@@ -126,12 +145,17 @@ object Binding extends JSBinding:
         @volatile
         private var cache = snapshotStream(mutationStream, state)
         def dropHistoryAndUpdateCache(): StreamT[DefaultFuture, Patch[A]] = {
-          cache = cache.dropHistoryStrict
-          cache.step.value match
+          val newCache = cache.dropHistoryStrict
+          cache = newCache
+          newCache.step.value match
             case Some(Success(Yield(a, s))) =>
-              Patch.ReplaceChildren(a._1.toList) :: s().map(_._2)
+              Patch.ReplaceChildren(new Iterable[A] {
+                def iterator = a._1.iterator
+              }) :: s().map(_._2)
             case _ =>
-              cache.map(_._2)
+              Patch.ReplaceChildren(new Iterable[A] {
+                def iterator = state.iterator
+              }) :: newCache.map(_._2)
         }
 
       BindingSeq(

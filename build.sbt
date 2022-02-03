@@ -24,12 +24,17 @@ lazy val `bindable-BindableSeq` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .dependsOn(Binding)
 
+lazy val `bindable-Bindable` = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Full)
+  .dependsOn(Binding)
+
 lazy val `html-Definitions` = project
 
 lazy val html =
   project.dependsOn(
     `html-Definitions`,
     `bindable-BindableSeq`.js,
+    `bindable-Bindable`.js,
     `keywords-Bind`.js % Test
   )
 
