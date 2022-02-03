@@ -1,6 +1,6 @@
 enablePlugins(Example)
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.10" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.11" % Test
 
 libraryDependencies += "com.thoughtworks.dsl" %%% "dsl" % "2.0.0-M2+265-3c2f0891"
 
