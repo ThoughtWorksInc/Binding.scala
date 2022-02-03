@@ -10,7 +10,7 @@ libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.11" % Test
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.1.0"
 
-libraryDependencies += "net.sourceforge.htmlunit" % "neko-htmlunit" % "2.56.0"
+libraryDependencies += "net.sourceforge.htmlunit" % "neko-htmlunit" % "2.57.0"
 
 libraryDependencies += "com.thoughtworks.dsl" %%% "macros-reset" % "2.0.0-M2+265-3c2f0891"
 
