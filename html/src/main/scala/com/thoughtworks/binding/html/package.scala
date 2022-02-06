@@ -49,8 +49,10 @@ private[binding] object Macros:
   import com.thoughtworks.binding.CovariantStreamT
   import com.thoughtworks.binding.html.Definitions
   import com.thoughtworks.binding.bindable.BindableSeq
+  import com.thoughtworks.binding.bindable.Bindable
   import org.w3c.dom.NamedNodeMap
   import com.thoughtworks.dsl.Dsl
+  import com.thoughtworks.dsl.keywords
   import org.w3c.dom.Text
   import org.w3c.dom.CDATASection
   import org.w3c.dom.ProcessingInstruction
@@ -135,7 +137,7 @@ private[binding] object Macros:
           ,
           null
         )
-      private var isProcessingCharacters =  false
+      private var isProcessingCharacters = false
       override def characters(text: XMLString, augs: Augmentations): Unit =
         if isProcessingCharacters then super.characters(text, augs)
         else
@@ -296,14 +298,13 @@ private[binding] object Macros:
     import scala.quoted.quotes.reflect.*
     TypeRepr.of[E].memberType(propertySymbol).asType match
       case '[propertyType] =>
-        type DslType =
-          Dsl.Run[K, Binding[propertyType], V]
-        Implicits.search(TypeRepr.of[DslType]) match
+        type BindableType = Bindable[K, propertyType]
+        Implicits.search(TypeRepr.of[BindableType]) match
           case success: ImplicitSearchSuccess =>
             '{
               given Nondeterminism[DefaultFuture] =
                 $summon
-              ${ success.tree.asExprOf[DslType] }
+              ${ success.tree.asExprOf[BindableType] }
                 .apply($reifiedExpr)
                 .collect(Function.unlift { propertyValue =>
                   ${
@@ -321,7 +322,8 @@ private[binding] object Macros:
           case failure: ImplicitSearchFailure =>
             report.error(
               s"Cannot produce a bindable expression for the property ${propertySymbol.name}. Expect ${Type
-                .show[propertyType]}, actual ${Type.show[V]}\n${failure.explanation}",
+                .show[propertyType]}, actual ${Type.show[V]}\nCannot find an instance of ${Type
+                .show[BindableType]}\n${failure.explanation} ",
               attributeValueExpr.asTerm.pos
             )
             '{ ??? }
@@ -340,14 +342,13 @@ private[binding] object Macros:
       Quotes
   ): Expr[Binding[Nothing]] =
     import scala.quoted.quotes.reflect.*
-    type DslType =
-      Dsl.Run[K, Binding[String], V]
-    Implicits.search(TypeRepr.of[DslType]) match
+    type BindableType = Bindable[keywords.Typed[K, V], String]
+    Implicits.search(TypeRepr.of[BindableType]) match
       case success: ImplicitSearchSuccess =>
         '{
           given Nondeterminism[DefaultFuture] = $summon
-          ${ success.tree.asExprOf[DslType] }
-            .apply($reifiedExpr)
+          ${ success.tree.asExprOf[BindableType] }
+            .apply(keywords.Typed($reifiedExpr))
             .collect(Function.unlift { stringAttributeValue =>
               ${
                 qName.uri match
@@ -459,9 +460,13 @@ private[binding] object Macros:
                           reifiedExpr
                         )
                       else
-                        report.warning(
-                          s"${qName.rawname} is not a valid property for <${element.getTagName}>"
-                        )
+                        if !Definitions.isValidAttribute[E](
+                            qName.rawname
+                          )
+                        then
+                          report.warning(
+                            s"${qName.rawname} is neither a valid property nor a valide attribute for <${element.getTagName}>"
+                          )
                         mountAttribute(
                           element,
                           elementExpr,
@@ -729,13 +734,16 @@ def mountChildNodes(
         val childNodes = parent.childNodes
         if (index < childNodes.length) then
           val refChild = parent.childNodes(index)
-          for child <- newItems do parent.insertBefore(child, refChild)
           @tailrec
           def delete(remaining: Int, refChild: Node): Unit =
             if remaining > 0 then
               val nextSibling = refChild.nextSibling
               parent.removeChild(refChild)
               delete(remaining - 1, nextSibling)
+            else if (refChild == null)
+              for child <- newItems do parent.appendChild(child)
+            else
+              for child <- newItems do parent.insertBefore(child, refChild)
           delete(deleteCount, refChild)
         else if (index == childNodes.length && deleteCount == 0)
           for child <- newItems do parent.appendChild(child)
@@ -792,17 +800,6 @@ object NodeBinding:
     result.asInstanceOf[NodeBinding[A]]
   }
 
-  given [Element](using
-      Applicative[DefaultFuture]
-  ): BindableSeq[NodeBinding[Element], Element] = BindableSeq { nodeBinding =>
-    PatchStreamT(
-      CovariantStreamT(
-        PatchStreamT.Patch.ReplaceChildren[Element](
-          collection.View.Single(nodeBinding.value)
-        ) :: CovariantStreamT.apply.flip(nodeBinding.eventLoop)
-      )
-    )
-  }
 extension (inline stringContext: StringContext)
   transparent inline def html(
       inline args: Any*
