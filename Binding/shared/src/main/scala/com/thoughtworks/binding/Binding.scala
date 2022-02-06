@@ -106,6 +106,28 @@ object Binding extends JSBinding:
         }))
       )
 
+
+    @tailrec
+    private def dropCompletedStrict: Binding[A] =
+      binding.step.value match
+        case None | Some(Success(Done())) | Some(Failure(_)) =>
+          binding
+        case Some(Success(Yield(_, s))) =>
+          s().dropCompletedStrict
+        case Some(Success(Skip(s))) =>
+          s().dropCompletedStrict
+
+    def dropCompleted(using Applicative[DefaultFuture]): Binding[A] =
+      CovariantStreamT(
+        Applicative[DefaultFuture].point(Skip(new (() => Binding[A]) {
+          @volatile
+          private var cache: Binding[A] = binding
+          def apply(): Binding[A] =
+            cache = cache.dropCompletedStrict
+            cache
+        }))
+      )
+
   /** The data binding expression of a sequence, essentially an asynchronous
     * stream of patches describing how the sequence is changing.
     */
