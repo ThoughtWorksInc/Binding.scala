@@ -33,9 +33,9 @@ private[binding] trait JSBinding { this: Binding.type =>
       ExecutionContext
   ): Binding[js.Function1[A, Unit]] =
     import pipe.*
-    StreamT(promise.future.map { case StreamT.Yield(_, pipe: Pipe[A]) =>
-      StreamT.Yield(pipe.writeHead, () => jsPipeWriteTail(pipe))
-    })
+    CovariantStreamT(StreamT(promise.future.map { case StreamT.Yield(_, pipe: Pipe[A]) =>
+      StreamT.Yield(pipe.writeHead, () => CovariantStreamT.apply flip jsPipeWriteTail(pipe))
+    }))
   private def jsPipeWrite[A](pipe: Pipe[A])(using
       ExecutionContext
   ): Binding[js.Function1[A, Unit]] =

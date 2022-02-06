@@ -93,7 +93,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
           tree :+ a
         } <++> right
 
-  extension [M[_], A](upstream: PatchStreamT[M, A])
+  extension [M[_], A](upstream: => PatchStreamT[M, A])
     def mergeWith(
         eventLoop: => CovariantStreamT[M, Nothing]
     )(using Nondeterminism[M]): PatchStreamT[M, A] =
@@ -103,7 +103,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         )(eventLoop)
       )
     def noSkip(using Monad[M]): PatchStreamT[M, A] =
-      StreamT.noSkip(upstream)
+      CovariantStreamT.noSkip(upstream)
     def memoize(using Functor[M]): PatchStreamT[M, A] =
       CovariantStreamT.memoize(upstream)
     def mergeMap[B](mapper: A => CovariantStreamT[M, B])(using
@@ -165,12 +165,12 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
           mappedTree: FingerTree[MappedMeasure, Option[
             M[StreamT.Step[B, StreamT[M, B]]]
           ]]
-      ): StreamT[M, B] =
+      ): CovariantStreamT[M, B] =
         def handleUpstreamEvent(
             upstreamEvent: StreamT.Step[Patch[A], StreamT[M, Patch[A]]]
         ): StreamT.Step[B, StreamT[M, B]] =
           Skip { () =>
-            upstreamEvent match
+            CovariantStreamT.apply.flip(upstreamEvent match
               case Yield(
                     // Work around https://github.com/lampepfl/dotty/issues/13998
                     patch: Patch[A],
@@ -200,6 +200,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
                 loop(Some(s().step), mappedTree)
               case Done() =>
                 loop(None, mappedTree)
+            )
           }
 
         end handleUpstreamEvent
@@ -218,9 +219,12 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
           end replaceWithActiveStep
           event.step match
             case Yield(b, s) =>
-              Yield(b, () => replaceWithActiveStep(s))
+              Yield(
+                b,
+                () => CovariantStreamT.apply flip replaceWithActiveStep(s)
+              )
             case Skip(s) =>
-              Skip(() => replaceWithActiveStep(s))
+              Skip(() => CovariantStreamT.apply flip replaceWithActiveStep(s))
             case Done() =>
               Skip { () =>
                 val (left, oldStepM, right) =
@@ -229,12 +233,15 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
                   None,
                   right
                 )
-                loop(upstreamEventQueueOption, newTree)
+                CovariantStreamT.apply flip loop(
+                  upstreamEventQueueOption,
+                  newTree
+                )
               }
         end handleMappedEvents
         val mappedEventBuilderOption =
           mappedTree.measure.toOption.flatMap(_.mappedEventBuilder)
-        upstreamEventQueueOption match
+        CovariantStreamT(upstreamEventQueueOption match
           case None =>
             mappedEventBuilderOption match
               case None =>
@@ -256,6 +263,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
                       handleUpstreamEvent(upstreamEvent)
                   }
                 )
+        )
       end loop
       loop(Some(upstream.step), FingerTree.empty)
     end mergeMap
@@ -263,13 +271,16 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         M: Applicative[M]
     ): CovariantStreamT[M, Int] =
       CovariantStreamT(
-        M.pure(
-          Yield(
-            currentIndex,
-            () => indexTail(currentIndex)
+        StreamT(
+          M.pure(
+            Yield(
+              currentIndex,
+              () => CovariantStreamT.apply flip indexTail(currentIndex)
+            )
           )
         )
       )
+    end index
 
     private def indexTail(currentIndex: Int)(using
         M: Applicative[M]
@@ -608,7 +619,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
                   }
                 )
       end loop
-      loop(Some(upstream.step), FingerTree.empty)
+      CovariantStreamT(loop(Some(upstream.step), FingerTree.empty))
     end flatMap
   def fromCovariantStreamT[M[_], A](
       stream: CovariantStreamT[M, A]

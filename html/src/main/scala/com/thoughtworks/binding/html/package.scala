@@ -705,7 +705,7 @@ def mount[A](a: A, events: Binding[A => Unit])(using
       case Done() =>
         Done()
     })
-  mapEvents(stream)
+  CovariantStreamT(mapEvents(stream))
 
 def mountChildNodes(
     parent: ParentNode & Node,
@@ -755,36 +755,21 @@ def mountChildNodes(
       case Done() =>
         Done()
     })
-  mapEvents(patchStream)
+  CovariantStreamT(mapEvents(patchStream))
 
-opaque type NodeBinding[+A] <: Binding[A] = Binding[A] {
-  val step: DefaultFuture[
-    StreamT.Yield[
-      // Don't use `_ <: A` because the Scala 3 type checker could eliminate
-      // wildcard types expectedly.
-      // See https://github.com/lampepfl/dotty/issues/14152
-      A @uncheckedVariance,
-      Binding[Nothing]
-    ]
-  ] {
-    def isCompleted: true
-    def value: Some[Success[
-      StreamT.Yield[
-        // Don't use `_ <: A` because the Scala 3 type checker could eliminate
-        // wildcard types expectedly.
-        // See https://github.com/lampepfl/dotty/issues/14152
-        A @uncheckedVariance,
-        Binding[Nothing]
-      ]
-    ]]
-  }
-}
+opaque type NodeBinding[+A] <: Binding[A] = Binding[A]
 
 object NodeBinding:
 
   extension [A](nodeBinding: NodeBinding[A])
-    def value = nodeBinding.step.value.get.get.a
-    def eventLoop = nodeBinding.step.value.get.get.s()
+    def value =
+      val StreamT.Yield(a, _) =
+        CovariantStreamT.apply.flip(nodeBinding).step.value.get.get
+      a
+    def eventLoop =
+      val StreamT.Yield(_, s) =
+        CovariantStreamT.apply.flip(nodeBinding).step.value.get.get
+      s()
 
   def apply[A](value: A, eventLoop: Binding[Nothing]): NodeBinding[A] = {
     val result: Binding[A] = CovariantStreamT(
