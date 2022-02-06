@@ -166,7 +166,7 @@ object Binding extends JSBinding:
         )
       )
 
-  export CovariantStreamT._
+  export CovariantStreamT.{apply => _, _}
 
   opaque type Constant[+A] <: Binding[A] = Binding[A]
   object Constant:
