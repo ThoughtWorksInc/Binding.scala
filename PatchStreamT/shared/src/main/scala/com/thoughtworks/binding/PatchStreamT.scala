@@ -94,6 +94,14 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
         } <++> right
 
   extension [M[_], A](upstream: PatchStreamT[M, A])
+    def mergeWith(
+        eventLoop: => CovariantStreamT[M, Nothing]
+    )(using Nondeterminism[M]): PatchStreamT[M, A] =
+      PatchStreamT(
+        CovariantStreamT.mergeWith[M, Patch[A]](
+          PatchStreamT.apply.flip(upstream)
+        )(eventLoop)
+      )
     def noSkip(using Monad[M]): PatchStreamT[M, A] =
       StreamT.noSkip(upstream)
     def memoize(using Functor[M]): PatchStreamT[M, A] =
