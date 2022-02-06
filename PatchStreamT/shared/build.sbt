@@ -2,11 +2,11 @@ enablePlugins(Example)
 
 libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.11" % Test
 
-libraryDependencies += "com.thoughtworks.dsl" %%% "dsl" % "2.0.0-M2+265-3c2f0891"
+libraryDependencies += "com.thoughtworks.dsl" %%% "dsl" % "2.0.0-M2+284-32b516da"
 
-libraryDependencies += "com.thoughtworks.dsl" %%% "macros-reset" % "2.0.0-M2+265-3c2f0891" % Test
+libraryDependencies += "com.thoughtworks.dsl" %%% "macros-reset" % "2.0.0-M2+284-32b516da" % Test
 
-libraryDependencies += "com.thoughtworks.dsl" %%% "keywords-await" % "2.0.0-M2+265-3c2f0891" % Test
+libraryDependencies += "com.thoughtworks.dsl" %%% "keywords-await" % "2.0.0-M2+284-32b516da" % Test
 
 import meta._
 exampleSuperTypes := {
