@@ -45,11 +45,11 @@ import scala.collection.SeqOps
 import scala.collection.mutable.ArrayBuffer
 
 /** @groupname typeClasses
-  *   Type class instance
+  * Type class instance
   * @groupname implicits
-  *   Implicits Conversions
+  * Implicits Conversions
   * @groupname expressions
-  *   Binding Expressions
+  * Binding Expressions
   * @groupdesc expressions
   *   AST nodes of binding expressions
   * @author
@@ -1819,7 +1819,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *
       * @example
       *   Given a sequence of [[Observable]]s,
-      * {{{
+      *   {{{
       * import com.thoughtworks.binding.Binding._, BindingInstances.monadSyntax._
       * val observable0 = Var[Option[String]](None)
       * val observable1 = Var[Option[String]](Some("1"))
@@ -1846,7 +1846,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *   observable8,
       *   observable9,
       * )
-      * }}}
+      *   }}}
       *
       * when concatenate them together,
       *
@@ -1951,7 +1951,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *
       * @example
       *   Circular referenced [[Observable]]s can be created with the help of [[defer]]
-      * {{{
+      *   {{{
       *   import Binding._
       *   val source = Var("init")
       *   lazy val observable1: Rx.Observable[String] =
@@ -1969,7 +1969,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *       Some(observable1.getClass.getSimpleName)
       *     }
       *   )
-      * }}}
+      *   }}}
       *
       * Initially, `observable1` did not subscribe `observable2` because `source` is `init`,
       * {{{
@@ -2003,7 +2003,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *
       * @example
       *   Given a sequence of [[Observable]]s,
-      * {{{
+      *   {{{
       * import com.thoughtworks.binding.Binding._, BindingInstances.monadSyntax._
       * val observable0 = Var[Option[String]](None)
       * val observable1 = Var[Option[String]](Some("1"))
@@ -2030,7 +2030,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *   observable8,
       *   observable9,
       * )
-      * }}}
+      *   }}}
       *
       * when merge them together,
       *
@@ -2127,10 +2127,10 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       *
       * @example
       *   Given a source observable,
-      * {{{
+      *   {{{
       *   import com.thoughtworks.binding.Binding._
       *   val observable = Var[Option[String]](Some("1"))
-      * }}}
+      *   }}}
       *
       * when converting it into a [[BindingSeq]],
       *
