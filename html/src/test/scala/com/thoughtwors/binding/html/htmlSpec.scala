@@ -9,6 +9,7 @@ import Binding.BindingSeq
 import org.scalajs.dom.Node
 import scala.concurrent.Future
 import org.scalajs.dom.Element
+import org.scalajs.dom.document
 
 // TODO: Move to html.scala once sbt-example supports extensions
 final class htmlSpec extends AsyncFreeSpec with Matchers {
@@ -30,6 +31,23 @@ final class htmlSpec extends AsyncFreeSpec with Matchers {
           "",
           "<p>1&nbsp;foo2bar3</p>",
           "<p>1&nbsp;foo2bar3</p><div class=\"my-class\" id=\"my-id\">baz</div>"
+        )
+      )
+    }
+  }
+
+  "bug in todoapp" ignore {
+    val children = html"<section>${"text"}</section><footer></footer>"
+    *[Future] {
+      (
+        for snapshot <- !Await(children.snapshots.toLazyList)
+        yield {
+          for node <- snapshot.toList
+          yield node.asInstanceOf[Element].outerHTML
+        }.mkString
+      ) should be(
+        LazyList(
+          "", "<footer></footer>", "<section>text</section><footer></footer>"
         )
       )
     }
