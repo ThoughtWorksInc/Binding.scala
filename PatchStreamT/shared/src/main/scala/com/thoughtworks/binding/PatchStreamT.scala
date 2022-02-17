@@ -621,6 +621,12 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       end loop
       CovariantStreamT(loop(Some(upstream.step), FingerTree.empty))
     end flatMap
+  
+  def fromIterableCovariantStreamT[M[_], A](
+      stream: CovariantStreamT[M, Iterable[A]]
+  )(using Functor[M]): PatchStreamT[M, A] =
+    stream.map(Patch.ReplaceChildren(_))
+
   def fromCovariantStreamT[M[_], A](
       stream: CovariantStreamT[M, A]
   )(using Functor[M]): PatchStreamT[M, A] =
