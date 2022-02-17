@@ -36,20 +36,4 @@ final class htmlSpec extends AsyncFreeSpec with Matchers {
     }
   }
 
-  "bug in todoapp" ignore {
-    val children = html"<section>${"text"}</section><footer></footer>"
-    *[Future] {
-      (
-        for snapshot <- !Await(children.snapshots.toLazyList)
-        yield {
-          for node <- snapshot.toList
-          yield node.asInstanceOf[Element].outerHTML
-        }.mkString
-      ) should be(
-        LazyList(
-          "", "<footer></footer>", "<section>text</section><footer></footer>"
-        )
-      )
-    }
-  }
 }

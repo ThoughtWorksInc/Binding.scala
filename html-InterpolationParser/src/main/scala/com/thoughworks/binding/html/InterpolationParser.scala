@@ -9,6 +9,8 @@ import org.apache.xerces.xni.QName
 import org.apache.xerces.xni.XMLAttributes
 import org.apache.xerces.xni.XMLString
 import org.apache.xerces.xni.parser.XMLInputSource
+import org.w3c.dom.Document
+import org.w3c.dom.DocumentFragment
 import org.w3c.dom.Node
 import org.xml.sax.InputSource
 
@@ -41,12 +43,56 @@ object InterpolationParser:
           args.values.to(BitSet)
       )
 
-  def parseHtmlParts(
+  /** Concatenate `parts` and parse it as HTML, assuming there are arguments
+    * between each parts.
+    *
+    * @example
+    *   Given two HTML elements, and an argument as the content of the first
+    *   element,
+    *   {{{
+    *   val parts = IndexedSeq("<section>", "</section><br><footer></footer>")
+    *   }}}
+    *   when parsing it,
+    *   {{{
+    *   val htmlFragment = InterpolationParser.parseHtmlParts(
+    *     parts,
+    *     { (message, _) => fail(message) },
+    *
+    *   )
+    *   }}}
+    *   then the result should be an HTML fragment including the two elements,
+    *   {{{
+    *   import javax.xml.transform.stream.StreamResult
+    *   import javax.xml.transform.TransformerFactory
+    *   import javax.xml.transform.OutputKeys
+    *   import javax.xml.transform.dom.DOMSource
+    *   import java.io.StringWriter
+    *   import scala.util.chaining.given
+    *   val writer = new StringWriter()
+    *   TransformerFactory
+    *     .newInstance()
+    *     .newTransformer()
+    *     .tap(_.setOutputProperty(OutputKeys.METHOD, "html"))
+    *     .tap(_.setOutputProperty(OutputKeys.INDENT, "no"))
+    *     .transform(new DOMSource(htmlFragment), new StreamResult(writer))
+    *   writer.toString() should be("<SECTION><!----></SECTION><BR><FOOTER></FOOTER>")
+    *   }}}
+    *   and there should be a placeholder in the first element.
+    *   {{{
+    *   val placeholder = htmlFragment.getFirstChild().getFirstChild()
+    *   val argIndex = placeholder.getUserData(
+    *     InterpolationParser.ElementArgumentUserDataKey
+    *   )
+    *   argIndex should be(0)
+    *   }}}
+    */
+  def parseHtmlParts[Fragment <: DocumentFragment](
       parts: IndexedSeq[String],
-      argumentErrorHandler: (message: String, argumentIndex: Int) => Unit
-  ) =
+      argumentErrorHandler: (message: String, argumentIndex: Int) => Unit,
+      document: Document { def createDocumentFragment(): Fragment } =
+        org.apache.html.dom.HTMLDocumentImpl()
+  ): Fragment =
     val parser = new InterpolationParser(parts, argumentErrorHandler)
-    val document = org.apache.html.dom.HTMLDocumentImpl()
     val fragment = document.createDocumentFragment()
     val html = parts.mkString(Placeholder)
     parser.parse(InputSource(StringReader(html)), fragment)
@@ -156,41 +202,36 @@ private class InterpolationParser(
           if beginIndex == endIndex || (beginIndex % 2 == 0 && endIndex == beginIndex + 1)
           then super.characters(text, augs)
           else
+            def parseTextData(encodedText: String): Unit =
+              if encodedText.nonEmpty then
+                fParserConfiguration
+                  .asInstanceOf[HTMLConfiguration]
+                  .evaluateInputSource(
+                    XMLInputSource(
+                      null,
+                      null,
+                      null,
+                      StringReader(encodedText),
+                      null
+                    )
+                  )
+              end if
             def partLoop(index: Int): Unit =
               assert(index % 2 == 0)
               endSearchResult match
                 case Searching.InsertionPoint(`endIndex`)
                     if endIndex == index + 1 =>
-                  fParserConfiguration
-                    .asInstanceOf[HTMLConfiguration]
-                    .evaluateInputSource(
-                      XMLInputSource(
-                        null,
-                        null,
-                        null,
-                        StringReader(
-                          html.substring(
-                            partOffsets(index),
-                            endCharacterOffset
-                          )
-                        ),
-                        null
-                      )
+                  parseTextData(
+                    html.substring(
+                      partOffsets(index),
+                      endCharacterOffset
                     )
+                  )
+                case Searching.Found(`endIndex`) if endIndex == index =>
+                  // break
                 case _ =>
-                  fParserConfiguration
-                    .asInstanceOf[HTMLConfiguration]
-                    .evaluateInputSource(
-                      XMLInputSource(
-                        null,
-                        null,
-                        null,
-                        StringReader(
-                          parts(index / 2)
-                        ),
-                        null
-                      )
-                    )
+                  assert(index < endIndex)
+                  parseTextData(parts(index / 2))
                   argLoop(index + 1)
               end match
             end partLoop
@@ -212,22 +253,12 @@ private class InterpolationParser(
             beginSearchResult match
               case Searching.InsertionPoint(`beginIndex`)
                   if beginIndex % 2 == 1 =>
-                fParserConfiguration
-                  .asInstanceOf[HTMLConfiguration]
-                  .evaluateInputSource(
-                    XMLInputSource(
-                      null,
-                      null,
-                      null,
-                      StringReader(
-                        html.substring(
-                          beginCharacterOffset,
-                          partOffsets(beginIndex)
-                        )
-                      ),
-                      null
-                    )
+                parseTextData(
+                  html.substring(
+                    beginCharacterOffset,
+                    partOffsets(beginIndex)
                   )
+                )
                 argLoop(beginIndex)
               case Searching.Found(`beginIndex`) if beginIndex % 2 == 1 =>
                 argLoop(beginIndex)
