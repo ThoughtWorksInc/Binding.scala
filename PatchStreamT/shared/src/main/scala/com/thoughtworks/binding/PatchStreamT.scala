@@ -654,6 +654,13 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
   ): Dsl.Lift.OneStep[Iterable[A], PatchStreamT[M, A]] =
     fromIterable(_)
 
+  given [M[_], From, A](using
+      M: Nondeterminism[M],
+      asIterable: From => Iterable[CovariantStreamT[M, A]]
+  ): Dsl.Lift.OneStep[From, PatchStreamT[M, A]] = { from =>
+    fromIterable(asIterable(from)).flatMap(fromCovariantStreamT)
+  }
+
   given [Keyword, M[_], Element, Value](using
       streamDsl: Dsl.Searching[Keyword, CovariantStreamT[M, PatchStreamT.Patch[
         Element
