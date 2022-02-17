@@ -465,7 +465,7 @@ private[binding] object Macros:
                           )
                         then
                           report.warning(
-                            s"${qName.rawname} is neither a valid property nor a valide attribute for <${element.getTagName}>"
+                            s"${qName.rawname} is neither a valid property nor a valid attribute for <${element.getTagName}>"
                           )
                         mountAttribute(
                           element,
