@@ -341,28 +341,28 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       *   The measurement of the [[scalaz.FingerTree]] is the size.
       * @example
       *   Given a [[PatchStreamT]] created from an iterable,
-      * {{{
-      * import scala.concurrent.Future
-      * import scalaz.std.scalaFuture.given
-      * val bindingSeq = PatchStreamT.fromIterable[Future, String](Seq("foo", "bar", "baz"))
-      * }}}
-      * when taking [[snapshots]],
-      * {{{
-      * val snapshots = bindingSeq.snapshots
-      * }}}
-      * then it should contains an empty value and an initial value
-      * {{{
-      * import com.thoughtworks.dsl.keywords.Await
-      * import com.thoughtworks.dsl.macros.Reset.Default.*
-      * `*`[Future] {
-      *   val snapshotLazyList = !Await(snapshots.toLazyList)
-      *   inside(snapshotLazyList) {
-      *     case LazyList(empty, initial) =>
-      *       empty.toList should be(Nil)
-      *       initial.toList should be(List("foo", "bar", "baz"))
+      *   {{{
+      *   import scala.concurrent.Future
+      *   import scalaz.std.scalaFuture.given
+      *   val bindingSeq = PatchStreamT.fromIterable[Future, String](Seq("foo", "bar", "baz"))
+      *   }}}
+      *   when taking [[snapshots]],
+      *   {{{
+      *   val snapshots = bindingSeq.snapshots
+      *   }}}
+      *   then it should contains an empty value and an initial value
+      *   {{{
+      *   import com.thoughtworks.dsl.keywords.Await
+      *   import com.thoughtworks.dsl.macros.Reset.Default.*
+      *   `*`[Future] {
+      *     val snapshotLazyList = !Await(snapshots.toLazyList)
+      *     inside(snapshotLazyList) {
+      *       case LazyList(empty, initial) =>
+      *         empty.toList should be(Nil)
+      *         initial.toList should be(List("foo", "bar", "baz"))
+      *     }
       *   }
-      * }
-      * }}}
+      *   }}}
       */
     def snapshots(using
         Applicative[M]
@@ -391,34 +391,33 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       *
       * @example
       *   Given a source [[PatchStreamT]] from an iterable,
-      * {{{
-      * import scala.concurrent.Future
-      * import scalaz.std.scalaFuture.given
-      * val bindingSeq = PatchStreamT.fromIterable[Future, String](Seq("foo", "bar"))
-      * }}}
-      *
-      * when flat-mapping it to more [[PatchStreamT]],
-      * {{{
-      * val flatten = bindingSeq.flatMap { s =>
-      *   PatchStreamT.fromIterable(s)
-      * }
-      * }}}
-      * then it should returns a [[StreamT]] including each intermediate states
-      * during flat-mapping
-      * {{{
-      * import com.thoughtworks.dsl.keywords.Await
-      * import com.thoughtworks.dsl.macros.Reset.Default.*
-      * `*`[Future] {
-      *   val snapshotLazyList = !Await(flatten.snapshots.toLazyList)
-      *   snapshotLazyList.map(_.toList.mkString) should be(
-      *     LazyList(
-      *       "",
-      *       "foo",
-      *       "foobar",
+      *   {{{
+      *   import scala.concurrent.Future
+      *   import scalaz.std.scalaFuture.given
+      *   val bindingSeq = PatchStreamT.fromIterable[Future, String](Seq("foo", "bar"))
+      *   }}}
+      *   when flat-mapping it to more [[PatchStreamT]],
+      *   {{{
+      *   val flatten = bindingSeq.flatMap { s =>
+      *     PatchStreamT.fromIterable(s)
+      *   }
+      *   }}}
+      *   then it should returns a [[StreamT]] including each intermediate
+      *   states during flat-mapping
+      *   {{{
+      *   import com.thoughtworks.dsl.keywords.Await
+      *   import com.thoughtworks.dsl.macros.Reset.Default.*
+      *   `*`[Future] {
+      *     val snapshotLazyList = !Await(flatten.snapshots.toLazyList)
+      *     snapshotLazyList.map(_.toList.mkString) should be(
+      *       LazyList(
+      *         "",
+      *         "foo",
+      *         "foobar",
+      *       )
       *     )
-      *   )
-      * }
-      * }}}
+      *   }
+      *   }}}
       */
     def flatMap[B](f: A => PatchStreamT[M, B])(using
         M: Nondeterminism[M]
@@ -621,7 +620,7 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
       end loop
       CovariantStreamT(loop(Some(upstream.step), FingerTree.empty))
     end flatMap
-  
+
   def fromIterableCovariantStreamT[M[_], A](
       stream: CovariantStreamT[M, Iterable[A]]
   )(using Functor[M]): PatchStreamT[M, A] =
