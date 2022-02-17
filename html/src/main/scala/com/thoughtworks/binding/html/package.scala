@@ -58,188 +58,8 @@ private[binding] object Macros:
   import org.w3c.dom.ProcessingInstruction
   import scala.collection.IndexedSeqView
   import scala.collection.immutable.BitSet
-
-  val Placeholder = "\"\""
-  val ElementArgumentUserDataKey = "Binding.scala element argument"
-  val AttributeArgumentsUserDataKey =
-    "Binding.scala attribute arguments"
-  val AUGMENTATIONS = "http://cyberneko.org/html/features/augmentations"
-  val SYNTHESIZED_ITEM =
-    HTMLEventInfo.SynthesizedItem();
-  def parseHtmlParts(using Quotes)(
-      parts: IndexedSeq[String],
-      argExprs: Seq[Expr[Any]]
-  ) =
-    import scala.quoted.quotes.reflect.asTerm
-    import scala.quoted.quotes.reflect.report
-    val html = parts.mkString(Placeholder)
-    val partOffsets = parts.view
-      .flatMap { part =>
-        Seq(part.length, Placeholder.length)
-      }
-      .scanLeft(0)(_ + _)
-      .dropRight(1)
-      .toIndexedSeq
-    val document = org.apache.html.dom.HTMLDocumentImpl()
-    val fragment = document.createDocumentFragment()
-    val parser = new DOMFragmentParser:
-      fParserConfiguration
-        .asInstanceOf[HTMLConfiguration]
-        .setFeature(AUGMENTATIONS, true);
-      override def startElement(
-          element: QName,
-          attrs: XMLAttributes,
-          augs: Augmentations
-      ): Unit =
-        val dynamicAttributeIndices =
-          (0 until attrs.getLength).view
-            .collect(Function.unlift { i =>
-              val htmlEventInfo = attrs
-                .getAugmentations(i)
-                .getItem(AUGMENTATIONS)
-                .asInstanceOf[HTMLEventInfo]
-              val beginCharacterOffset = htmlEventInfo.getBeginCharacterOffset
-              val endCharacterOffset = htmlEventInfo.getEndCharacterOffset
-              val beginSearchResult =
-                partOffsets.search(beginCharacterOffset)
-              val endSearchResult =
-                partOffsets.search(endCharacterOffset)
-              val beginIndex = beginSearchResult.insertionPoint
-              val endIndex = endSearchResult.insertionPoint
-              if beginIndex % 2 == 1 && endIndex == beginIndex + 1 then
-                Some(i -> (beginIndex / 2))
-              else None
-            })
-            .toMap
-        val staticAttributes = XMLAttributesImpl()
-        for i <- 0 until attrs.getLength do
-          if !dynamicAttributeIndices.contains(i) then
-            val qName = QName()
-            attrs.getName(i, /* out */ qName)
-            staticAttributes.addAttribute(
-              qName,
-              attrs.getType(i),
-              attrs.getValue(i)
-            )
-        super.startElement(element, staticAttributes, augs)
-        fCurrentNode.setUserData(
-          AttributeArgumentsUserDataKey,
-          for (i, arg) <- dynamicAttributeIndices
-          yield
-            if attrs.getValue(i) != "" then
-              report.error(
-                "String interpolation must be the whole attribute value, not a part of the attribute value.",
-                argExprs(arg).asTerm.pos
-              )
-            val qName = QName()
-            attrs.getName(i, /* out */ qName)
-            qName -> arg
-          ,
-          null
-        )
-      private var isProcessingCharacters = false
-      override def characters(text: XMLString, augs: Augmentations): Unit =
-        if isProcessingCharacters then super.characters(text, augs)
-        else
-          isProcessingCharacters = true
-          try if augs == null then super.characters(text, augs)
-          else
-            val htmlEventInfo =
-              augs.getItem(AUGMENTATIONS).asInstanceOf[HTMLEventInfo]
-            val beginCharacterOffset = htmlEventInfo.getBeginCharacterOffset
-            val endCharacterOffset = htmlEventInfo.getEndCharacterOffset
-            val beginSearchResult =
-              partOffsets.search(beginCharacterOffset)
-            val endSearchResult =
-              partOffsets.search(endCharacterOffset)
-            val beginIndex = beginSearchResult.insertionPoint
-            val endIndex = endSearchResult.insertionPoint
-            if beginIndex == endIndex || (beginIndex % 2 == 0 && endIndex == beginIndex + 1) then
-              super.characters(text, augs)
-            else
-              def partLoop(index: Int): Unit =
-                assert(index % 2 == 0)
-                endSearchResult match {
-                  case Searching.InsertionPoint(`endIndex`)
-                      if endIndex == index + 1 =>
-                    fParserConfiguration
-                      .asInstanceOf[HTMLConfiguration]
-                      .evaluateInputSource(
-                        XMLInputSource(
-                          null,
-                          null,
-                          null,
-                          StringReader(
-                            html.substring(
-                              partOffsets(index),
-                              endCharacterOffset
-                            )
-                          ),
-                          null
-                        )
-                      )
-                  case _ =>
-                    fParserConfiguration
-                      .asInstanceOf[HTMLConfiguration]
-                      .evaluateInputSource(
-                        XMLInputSource(
-                          null,
-                          null,
-                          null,
-                          StringReader(
-                            parts(index / 2)
-                          ),
-                          null
-                        )
-                      )
-                    argLoop(index + 1)
-                }
-              end partLoop
-
-              def argLoop(index: Int): Unit =
-                assert(index % 2 == 1)
-                if (endIndex > index) {
-                  val comment = document.createComment("")
-                  comment.setUserData(
-                    ElementArgumentUserDataKey,
-                    index / 2,
-                    null
-                  )
-                  fCurrentNode.appendChild(comment)
-                  partLoop(index + 1)
-                }
-              end argLoop
-
-              beginSearchResult match
-                case Searching.InsertionPoint(`beginIndex`)
-                    if beginIndex % 2 == 1 =>
-                  fParserConfiguration
-                    .asInstanceOf[HTMLConfiguration]
-                    .evaluateInputSource(
-                      XMLInputSource(
-                        null,
-                        null,
-                        null,
-                        StringReader(
-                          html.substring(
-                            beginCharacterOffset,
-                            partOffsets(beginIndex)
-                          )
-                        ),
-                        null
-                      )
-                    )
-                  argLoop(beginIndex)
-                case Searching.Found(`beginIndex`) if beginIndex % 2 == 1 =>
-                  argLoop(beginIndex)
-                case Searching.Found(`beginIndex`) if beginIndex % 2 == 0 =>
-                  partLoop(beginIndex)
-                case _ =>
-                  report.error("Unexpected text: " + text)
-          finally isProcessingCharacters = false
-      end characters
-    parser.parse(InputSource(StringReader(html)), fragment)
-    fragment
+  import InterpolationParser.AttributeArgumentsUserDataKey
+  import InterpolationParser.ElementArgumentUserDataKey
 
   def transformCDATASection(cdataSection: CDATASection)(using Quotes) =
     '{
@@ -593,24 +413,6 @@ private[binding] object Macros:
       }: _*))
     }
 
-  def consumedArgumentIndices(node: Node): BitSet =
-    val nodeList = node.getChildNodes
-
-    (0 until nodeList.getLength).view
-      .flatMap(i => consumedArgumentIndices(nodeList.item(i)))
-      .to(BitSet)
-      ++ (node.getUserData(ElementArgumentUserDataKey) match
-        case null =>
-          BitSet.empty
-        case arg: Int =>
-          BitSet(arg)
-      ) ++ (node.getUserData(AttributeArgumentsUserDataKey) match
-        case null =>
-          BitSet.empty
-        case args: Map[_, Int @unchecked] =>
-          args.values.to(BitSet)
-      )
-
   def html(
       stringContext: Expr[StringContext],
       args: Expr[Seq[Any]]
@@ -628,16 +430,10 @@ private[binding] object Macros:
     val '{ StringContext($partsExpr: _*) } = stringContext
     val Expr(partList) = partsExpr
     val parts = partList.toIndexedSeq
-    val fragment = parseHtmlParts(parts, argExprs)
-    val isConsumed = this.consumedArgumentIndices(fragment)
-    for
-      (argExpr, arg) <- argExprs.view.zipWithIndex
-      if !isConsumed(arg)
-    do
-      report.error(
-        "A variable must be either an attribute value or child nodes under an element",
-        argExpr.asTerm.pos
-      )
+    val fragment = InterpolationParser.parseHtmlParts(
+      parts,
+      { (message, arg) => report.error(message, argExprs(arg).asTerm.pos) }
+    )
 
     // report.info(
     //   "arg:" + fragment.getFirstChild.getChildNodes

@@ -30,9 +30,12 @@ lazy val `bindable-Bindable` = crossProject(JSPlatform, JVMPlatform)
 
 lazy val `html-Definitions` = project
 
+lazy val `html-InterpolationParser` = project
+
 lazy val html =
   project.dependsOn(
     `html-Definitions`,
+    `html-InterpolationParser`,
     `bindable-BindableSeq`.js,
     `bindable-Bindable`.js,
     `keywords-Bind`.js % Test
