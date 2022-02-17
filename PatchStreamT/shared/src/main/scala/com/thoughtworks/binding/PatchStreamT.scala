@@ -649,10 +649,12 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
     ): PatchStreamT[M, B] =
       upstream.flatMap(f)
 
-  given [M[_], A](using
-      M: Applicative[M]
-  ): Dsl.Lift.OneStep[Iterable[A], PatchStreamT[M, A]] =
-    fromIterable(_)
+  given [M[_], From, A](using
+      M: Applicative[M],
+      asIterable: From => Iterable[A]
+  ): Dsl.Lift.OneStep[From, PatchStreamT[M, A]] = { from =>
+    fromIterable(asIterable(from))
+  }
 
   given [M[_], From, A](using
       M: Nondeterminism[M],
