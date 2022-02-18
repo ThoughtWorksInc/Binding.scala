@@ -275,11 +275,11 @@ object Binding extends JSBinding:
         )
       )
     extension [A](self: Var[A])
-      private def varFunction = {
-        val StreamT.Skip(s) =
+      private def varFunction =
+        val StreamT.Skip(s: VarFunction[A]) =
           CovariantStreamT.apply.flip(self).step.value.get.get
-        s.asInstanceOf[VarFunction[A]]
-      }
+        s
+      end varFunction
       def value: A = varFunction.get
       def value_=(a: A): Unit = varFunction.set(a)
 
