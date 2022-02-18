@@ -245,9 +245,14 @@ object Binding extends JSBinding:
       extends (() => StreamT[DefaultFuture, A]):
     private var tail: Promise[Yield[A, StreamT[DefaultFuture, A]]] = Promise()
 
-    def apply() = StreamT(
-      Future.successful(Yield(head, this))
-    )
+    def apply() =
+      val (head, tail) = synchronized {
+        (this.head, this.tail)
+      }
+      StreamT(
+        Future.successful(Yield(head, StreamT(tail.future)))
+      )
+    end apply
     def get = head
     def set(newHead: A): Unit =
       val newTail = Promise[Yield[A, StreamT[DefaultFuture, A]]]()
@@ -258,6 +263,7 @@ object Binding extends JSBinding:
         oldTail
       }
       oldTail.success(Yield(newHead, this))
+    end set
 
   opaque type Var[A] <: Binding[A] = Binding[A]
 
