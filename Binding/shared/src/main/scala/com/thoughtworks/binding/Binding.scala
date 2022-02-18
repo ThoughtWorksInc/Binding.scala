@@ -263,12 +263,11 @@ object Binding extends JSBinding:
 
   object Var:
     def apply[A](a: A): Var[A] =
-      val binding: Binding[A] = CovariantStreamT(
+      CovariantStreamT(
         StreamT(
           Future.successful(StreamT.Skip(VarFunction(a)))
         )
       )
-      binding.asInstanceOf[Var[A]]
     extension [A](self: Var[A])
       private def varFunction = {
         val StreamT.Skip(s) =
