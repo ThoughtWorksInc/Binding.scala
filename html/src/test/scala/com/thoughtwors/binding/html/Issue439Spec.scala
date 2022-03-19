@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 import com.thoughtworks.dsl.keywords.Await
 import com.thoughtworks.dsl.Dsl
 import com.thoughtworks.dsl.macros.Reset.Default.`*`
-import Binding.BindingSeq
+import LegacyBinding.BindingSeq
 import bindable.BindableSeq
 import org.scalajs.dom.Node
 import scala.concurrent.Future

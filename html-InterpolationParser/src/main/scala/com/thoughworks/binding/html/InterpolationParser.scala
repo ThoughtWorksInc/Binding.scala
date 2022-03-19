@@ -22,8 +22,8 @@ object InterpolationParser:
   private val AUGMENTATIONS = "http://cyberneko.org/html/features/augmentations"
   private val SYNTHESIZED_ITEM = HTMLEventInfo.SynthesizedItem()
   private val Placeholder = "\"\""
-  val ElementArgumentUserDataKey = "Binding.scala element argument"
-  val AttributeArgumentsUserDataKey = "Binding.scala attribute arguments"
+  val ElementArgumentUserDataKey = "LegacyBinding.scala element argument"
+  val AttributeArgumentsUserDataKey = "LegacyBinding.scala attribute arguments"
 
   private def consumedArgumentIndices(node: Node): BitSet =
     val nodeList = node.getChildNodes

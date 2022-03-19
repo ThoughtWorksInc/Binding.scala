@@ -12,7 +12,7 @@ lazy val PatchStreamT = crossProject(JSPlatform, JVMPlatform)
 lazy val DefaultFuture =
   crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build()
 
-lazy val Binding = crossProject(JSPlatform, JVMPlatform)
+lazy val LegacyBinding = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .dependsOn(CovariantStreamT, PatchStreamT, DefaultFuture)
 
@@ -22,11 +22,11 @@ lazy val `keywords-Bind` = crossProject(JSPlatform, JVMPlatform)
 
 lazy val `bindable-BindableSeq` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
-  .dependsOn(Binding)
+  .dependsOn(LegacyBinding)
 
 lazy val `bindable-Bindable` = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
-  .dependsOn(Binding)
+  .dependsOn(LegacyBinding)
 
 lazy val `html-Definitions` = project
 

@@ -27,24 +27,24 @@ import scala.concurrent.Promise
 import scala.util.Success
 import scalajs.js
 
-private[binding] trait JSBinding { this: Binding.type =>
+private[binding] trait LegacyJSBinding { this: LegacyBinding.type =>
 
   private def jsPipeWriteTail[A](pipe: Pipe[A])(using
       ExecutionContext
-  ): Binding[js.Function1[A, Unit]] =
+  ): LegacyBinding[js.Function1[A, Unit]] =
     import pipe.*
     CovariantStreamT(StreamT(promise.future.map { case StreamT.Yield(_, pipe: Pipe[A]) =>
       StreamT.Yield(pipe.writeHead, () => CovariantStreamT.apply flip jsPipeWriteTail(pipe))
     }))
   private def jsPipeWrite[A](pipe: Pipe[A])(using
       ExecutionContext
-  ): Binding[js.Function1[A, Unit]] =
+  ): LegacyBinding[js.Function1[A, Unit]] =
     import pipe.*
     writeHead _ :: jsPipeWriteTail(pipe)
 
   @inline def jsPipe[A](using
       ExecutionContext
-  ): (Binding[A], Binding[js.Function1[A, Unit]]) =
+  ): (LegacyBinding[A], LegacyBinding[js.Function1[A, Unit]]) =
     val p = new Pipe[A]()
     (p.read, jsPipeWrite(p))
 

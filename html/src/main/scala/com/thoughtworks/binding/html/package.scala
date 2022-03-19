@@ -30,7 +30,7 @@ private[binding] object Macros:
   import org.apache.xml.serialize.XMLSerializer
   import org.w3c.dom.ls.LSSerializer
   import org.w3c.dom.ls.DOMImplementationLS
-  import Binding.BindingSeq
+  import LegacyBinding.BindingSeq
   import org.w3c.dom.Node
   import scala.collection.View
   import scala.scalajs.js.`import`
@@ -114,7 +114,7 @@ private[binding] object Macros:
       Type[E],
       Type[K],
       Type[V]
-  ): Expr[Binding[Nothing]] =
+  ): Expr[LegacyBinding[Nothing]] =
     import scala.quoted.quotes.reflect.*
     TypeRepr.of[E].memberType(propertySymbol).asType match
       case '[propertyType] =>
@@ -160,7 +160,7 @@ private[binding] object Macros:
       Type[K],
       Type[V],
       Quotes
-  ): Expr[Binding[Nothing]] =
+  ): Expr[LegacyBinding[Nothing]] =
     import scala.quoted.quotes.reflect.*
     type BindableType = Bindable[keywords.Typed[K, V], String]
     Implicits.search(TypeRepr.of[BindableType]) match
@@ -377,7 +377,7 @@ private[binding] object Macros:
     import scala.quoted.quotes.reflect.ImplicitSearchSuccess
     '{
       @inline given Nondeterminism[DefaultFuture] = $summon
-      Monad[BindingSeq].join(Binding.Constants(${
+      Monad[BindingSeq].join(LegacyBinding.Constants(${
         Expr.ofSeq(
           (
             for i <- 0 until nodeList.getLength
@@ -485,9 +485,9 @@ import PatchStreamT.Patch
 import scala.annotation.tailrec
 import org.scalajs.dom.Element
 
-def mount[A](a: A, events: Binding[A => Unit])(using
+def mount[A](a: A, events: LegacyBinding[A => Unit])(using
     N: Functor[DefaultFuture]
-): Binding[Nothing] =
+): LegacyBinding[Nothing] =
   val stream = CovariantStreamT.apply.flip(events)
   def mapEvents(
       stream: StreamT[DefaultFuture, A => Unit]
@@ -505,8 +505,8 @@ def mount[A](a: A, events: Binding[A => Unit])(using
 
 def mountChildNodes(
     parent: ParentNode & Node,
-    childNodes: Binding.BindingSeq[Node]
-)(using N: Functor[DefaultFuture]): Binding[Nothing] =
+    childNodes: LegacyBinding.BindingSeq[Node]
+)(using N: Functor[DefaultFuture]): LegacyBinding[Nothing] =
   val patchStream =
     CovariantStreamT.apply.flip(PatchStreamT.apply.flip(childNodes))
   def mapEvents(
@@ -553,7 +553,7 @@ def mountChildNodes(
     })
   CovariantStreamT(mapEvents(patchStream))
 
-opaque type NodeBinding[+A] <: Binding[A] = Binding[A]
+opaque type NodeBinding[+A] <: LegacyBinding[A] = LegacyBinding[A]
 
 object NodeBinding:
 
@@ -567,8 +567,8 @@ object NodeBinding:
         CovariantStreamT.apply.flip(nodeBinding).step.value.get.get
       s()
 
-  def apply[A](value: A, eventLoop: Binding[Nothing]): NodeBinding[A] = {
-    val result: Binding[A] = CovariantStreamT(
+  def apply[A](value: A, eventLoop: LegacyBinding[Nothing]): NodeBinding[A] = {
+    val result: LegacyBinding[A] = CovariantStreamT(
       StreamT[DefaultFuture, A](
         Future.successful(
           StreamT.Yield(
