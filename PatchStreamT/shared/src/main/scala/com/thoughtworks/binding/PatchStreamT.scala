@@ -665,9 +665,20 @@ object PatchStreamT extends PatchStreamT.LowPriority0:
   given [Keyword, M[_], Element, Value](using
       streamDsl: Dsl.Searching[Keyword, CovariantStreamT[M, PatchStreamT.Patch[
         Element
-      ]], Value]
+      ]], Value],
+      M: Applicative[M]
   ): Dsl.Derived.StackSafe[Keyword, PatchStreamT[M, Element], Value] =
-    Dsl.Derived.StackSafe(streamDsl)
+    ??? // TODO: Implement subject for BindingSeq
+    // Dsl.Derived.StackSafe { (keyword, handler) =>
+    //   streamDsl(
+    //     keyword,
+    //     { a =>
+    //       PatchStreamT.Patch.ReplaceChildren(collection.View.Empty) #:: handler(
+    //         a
+    //       )
+    //     }
+    //   )
+    // }
 
   private[PatchStreamT] trait LowPriority0:
     given [M[_], A, From](using
