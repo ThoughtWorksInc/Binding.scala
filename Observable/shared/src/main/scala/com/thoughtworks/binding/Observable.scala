@@ -9,7 +9,7 @@ import scala.annotation.unchecked.uncheckedVariance
 import scala.collection.View
 
 sealed trait Observable[+A]:
-  @inline def flatMapLatest[B](
+  @inline final def flatMapLatest[B](
       mapper: A => Observable[B],
       default: Observable[B] = Observable.AsyncList.Empty
   )(using ExecutionContext): Observable.AsyncList.NonEmpty.Lazy[B] =
@@ -69,7 +69,7 @@ sealed trait Observable[+A]:
                 nonEmptyB.next()
     new FlatMapLatest
   end flatMapLatest
-  def replay: Observable.AsyncList[A] =
+  final def replay: Observable.AsyncList[A] =
     this match
       case asyncList: Observable.AsyncList[A] =>
         asyncList
