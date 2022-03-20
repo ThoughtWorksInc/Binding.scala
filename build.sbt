@@ -16,13 +16,13 @@ lazy val Observable = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .build()
 
-lazy val Patch = crossProject(JSPlatform, JVMPlatform)
+lazy val ObservableSeq = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .dependsOn(Observable)
 
 lazy val Binding = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
-  .dependsOn(Observable, Patch)
+  .dependsOn(Observable, ObservableSeq)
 
 lazy val LegacyBinding = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
