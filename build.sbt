@@ -14,11 +14,15 @@ lazy val DefaultFuture =
 
 lazy val Observable = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
-  .dependsOn(CovariantStreamT, PatchStreamT, DefaultFuture)
+  .build()
+
+lazy val Patch = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Full)
+  .dependsOn(Observable)
 
 lazy val Binding = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
-  .dependsOn(Observable)
+  .dependsOn(Observable, Patch)
 
 lazy val LegacyBinding = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
