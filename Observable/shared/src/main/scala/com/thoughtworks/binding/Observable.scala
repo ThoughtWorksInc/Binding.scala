@@ -36,10 +36,10 @@ sealed trait Observable[+A]:
               Seq(
                 nonEmptyA.next().map { case (head, tail) =>
                   () => handleA(head, tail)
-                },
+                }(using ExecutionContext.parasitic),
                 nonEmptyB.next().map { case (head, tail) =>
                   () => handleB(head, tail)
-                }
+                }(using ExecutionContext.parasitic)
               )
             )
             handler.map(_())
