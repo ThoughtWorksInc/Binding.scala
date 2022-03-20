@@ -10,23 +10,13 @@ import scala.collection.View
 import com.thoughtworks.binding.Observable.Operator
 
 sealed trait Observable[+A]:
-  @inline final def flatMapLatest[B](
+  final def flatMapLatest[B](
       mapper: A => Observable[B],
       default: Observable[B] = Observable.Operator.Empty
-  )(using ExecutionContext): Observable.Operator.NonEmpty.Lazy[B] =
-    flatMapLatest(
-      { a =>
-        mapper(a).replay
-      },
-      default.replay
-    )
-  private def flatMapLatest[B](
-      mapper: A => Observable.Operator[B],
-      default: Observable.Operator[B]
   )(using ExecutionContext): Observable.Operator[B] =
     Observable.this match
       case Observable.Empty =>
-        default
+        default.replay
       case nonEmptyA: Observable.NonEmpty[A] =>
         def handleA(
             head: Iterable[A],
@@ -40,15 +30,15 @@ sealed trait Observable[+A]:
           (View.Empty, tail.flatMapLatest(mapper, newDefault))
         def handleB(
             head: Iterable[B],
-            tail: Observable.Operator[B]
+            tail: Observable[B]
         ): (Iterable[B], Observable.Operator[B]) =
           (head, nonEmptyA.flatMapLatest[B](mapper, tail))
         final class FlatMapLatest extends Observable.Operator.NonEmpty.Lazy[B]:
           lazy val nextValue =
             default match
-              case Observable.Operator.Empty =>
+              case Observable.Empty =>
                 nonEmptyA.next().map(handleA)
-              case nonEmptyB: Observable.Operator.NonEmpty[B] =>
+              case nonEmptyB: Observable.NonEmpty[B] =>
                 val handler = Future.firstCompletedOf(
                   Seq(
                     nonEmptyA
