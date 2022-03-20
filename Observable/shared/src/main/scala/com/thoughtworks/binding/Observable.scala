@@ -7,6 +7,7 @@ import scala.annotation.tailrec
 import scalaz.Monad
 import scala.annotation.unchecked.uncheckedVariance
 import scala.collection.View
+import com.thoughtworks.binding.Observable.Operator
 
 sealed trait Observable[+A]:
   @inline final def flatMapLatest[B](
@@ -22,9 +23,11 @@ sealed trait Observable[+A]:
   private def flatMapLatest[B](
       mapper: A => Observable.Operator[B],
       default: Observable.Operator[B]
-  )(using ExecutionContext): Observable.Operator.NonEmpty.Lazy[B] =
-    final class FlatMapLatest extends Observable.Operator.NonEmpty.Lazy[B]:
-      protected lazy val nextValue =
+  )(using ExecutionContext): Observable.Operator[B] =
+    Observable.this match
+      case Observable.Empty =>
+        default
+      case nonEmptyA: Observable.NonEmpty[A] =>
         def handleA(
             head: Iterable[A],
             tail: Observable[A]
@@ -39,9 +42,9 @@ sealed trait Observable[+A]:
             head: Iterable[B],
             tail: Observable.Operator[B]
         ): (Iterable[B], Observable.Operator[B]) =
-          (head, Observable.this.flatMapLatest[B](mapper, tail))
-        Observable.this match
-          case nonEmptyA: Observable.NonEmpty[A] =>
+          (head, nonEmptyA.flatMapLatest[B](mapper, tail))
+        final class FlatMapLatest extends Observable.Operator.NonEmpty.Lazy[B]:
+          lazy val nextValue =
             default match
               case Observable.Operator.Empty =>
                 nonEmptyA.next().map(handleA)
@@ -49,7 +52,7 @@ sealed trait Observable[+A]:
                 val handler = Future.firstCompletedOf(
                   Seq(
                     nonEmptyA
-                      .next() // This is problematic because nonEmptyA.next() might not be idempotent
+                      .next()
                       .map { case (head, tail) =>
                         () => handleA(head, tail)
                       }(using ExecutionContext.parasitic),
@@ -61,13 +64,8 @@ sealed trait Observable[+A]:
                   )
                 )
                 handler.map(_())
-          case Observable.Empty =>
-            default match
-              case Observable.Operator.Empty =>
-                Future.successful(View.Empty, Observable.Empty)
-              case nonEmptyB: Observable.Operator.NonEmpty[B] =>
-                nonEmptyB.next()
-    new FlatMapLatest
+            end match
+        new FlatMapLatest
   end flatMapLatest
   final def replay: Observable.Operator[A] =
     this match
