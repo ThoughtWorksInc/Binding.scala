@@ -101,9 +101,9 @@ object Observable:
       trait Lazy[+A] extends NonEmpty[A]:
         protected lazy val nextValue: Future[(Iterable[A], AsyncList[A])]
       end Lazy
-      final case class Eager[+A](
-          protected val nextValue: Future[(Iterable[A], AsyncList[A])]
-      ) extends NonEmpty[A]
+      trait Eager[+A] extends NonEmpty[A]:
+        protected val nextValue: Future[(Iterable[A], AsyncList[A])]
+      end Eager
     end NonEmpty
   end AsyncList
 
