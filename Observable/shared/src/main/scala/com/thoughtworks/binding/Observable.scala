@@ -11,8 +11,8 @@ import scala.collection.View
 sealed trait Observable[+A]:
   @inline final def flatMapLatest[B](
       mapper: A => Observable[B],
-      default: Observable[B] = Observable.AsyncList.Empty
-  )(using ExecutionContext): Observable.AsyncList.NonEmpty.Lazy[B] =
+      default: Observable[B] = Observable.Operator.Empty
+  )(using ExecutionContext): Observable.Operator.NonEmpty.Lazy[B] =
     flatMapLatest(
       { a =>
         mapper(a).replay
@@ -20,15 +20,15 @@ sealed trait Observable[+A]:
       default.replay
     )
   private def flatMapLatest[B](
-      mapper: A => Observable.AsyncList[B],
-      default: Observable.AsyncList[B]
-  )(using ExecutionContext): Observable.AsyncList.NonEmpty.Lazy[B] =
-    final class FlatMapLatest extends Observable.AsyncList.NonEmpty.Lazy[B]:
+      mapper: A => Observable.Operator[B],
+      default: Observable.Operator[B]
+  )(using ExecutionContext): Observable.Operator.NonEmpty.Lazy[B] =
+    final class FlatMapLatest extends Observable.Operator.NonEmpty.Lazy[B]:
       protected lazy val nextValue =
         def handleA(
             head: Iterable[A],
             tail: Observable[A]
-        ): (Iterable[B], Observable.AsyncList[B]) =
+        ): (Iterable[B], Observable.Operator[B]) =
           val newDefault = head.lastOption match
             case None =>
               default
@@ -37,15 +37,15 @@ sealed trait Observable[+A]:
           (View.Empty, tail.flatMapLatest(mapper, newDefault))
         def handleB(
             head: Iterable[B],
-            tail: Observable.AsyncList[B]
-        ): (Iterable[B], Observable.AsyncList[B]) =
+            tail: Observable.Operator[B]
+        ): (Iterable[B], Observable.Operator[B]) =
           (head, Observable.this.flatMapLatest[B](mapper, tail))
         Observable.this match
           case nonEmptyA: Observable.NonEmpty[A] =>
             default match
-              case Observable.AsyncList.Empty =>
+              case Observable.Operator.Empty =>
                 nonEmptyA.next().map(handleA)
-              case nonEmptyB: Observable.AsyncList.NonEmpty[B] =>
+              case nonEmptyB: Observable.Operator.NonEmpty[B] =>
                 val handler = Future.firstCompletedOf(
                   Seq(
                     nonEmptyA
@@ -63,18 +63,18 @@ sealed trait Observable[+A]:
                 handler.map(_())
           case Observable.Empty =>
             default match
-              case Observable.AsyncList.Empty =>
+              case Observable.Operator.Empty =>
                 Future.successful(View.Empty, Observable.Empty)
-              case nonEmptyB: Observable.AsyncList.NonEmpty[B] =>
+              case nonEmptyB: Observable.Operator.NonEmpty[B] =>
                 nonEmptyB.next()
     new FlatMapLatest
   end flatMapLatest
-  final def replay: Observable.AsyncList[A] =
+  final def replay: Observable.Operator[A] =
     this match
-      case asyncList: Observable.AsyncList[A] =>
+      case asyncList: Observable.Operator[A] =>
         asyncList
       case nonEmpty: Observable.NonEmpty[A] =>
-        final class Replay extends Observable.AsyncList.NonEmpty.Lazy[A]:
+        final class Replay extends Observable.Operator.NonEmpty.Lazy[A]:
           protected lazy val nextValue = nonEmpty
             .next()
             .map { case (head, tail) =>
@@ -84,30 +84,30 @@ sealed trait Observable[+A]:
   end replay
 
 object Observable:
-  sealed trait AsyncList[+A] extends Observable[A]
-  object AsyncList:
+  sealed trait Operator[+A] extends Observable[A]
+  object Operator:
 
-    object Empty extends AsyncList[Nothing]
-    sealed trait NonEmpty[+A] extends AsyncList[A] with Observable.NonEmpty[A]:
-      final def next(): Future[(Iterable[A], AsyncList[A])] = nextValue
+    object Empty extends Operator[Nothing]
+    sealed trait NonEmpty[+A] extends Operator[A] with Observable.NonEmpty[A]:
+      final def next(): Future[(Iterable[A], Operator[A])] = nextValue
 
       /** The stable memoized value of `next()`, which must be either a
         * non-`lazy` or `lazy val`
         */
-      protected def nextValue: Future[(Iterable[A], AsyncList[A])]
+      protected def nextValue: Future[(Iterable[A], Operator[A])]
     end NonEmpty
 
     object NonEmpty:
       trait Lazy[+A] extends NonEmpty[A]:
-        protected lazy val nextValue: Future[(Iterable[A], AsyncList[A])]
+        protected lazy val nextValue: Future[(Iterable[A], Operator[A])]
       end Lazy
       trait Eager[+A] extends NonEmpty[A]:
-        protected val nextValue: Future[(Iterable[A], AsyncList[A])]
+        protected val nextValue: Future[(Iterable[A], Operator[A])]
       end Eager
     end NonEmpty
-  end AsyncList
+  end Operator
 
-  val Empty = AsyncList.Empty
+  val Empty = Operator.Empty
   trait NonEmpty[+A] extends Observable[A]:
     /** Returns the next batch of data, which includes a tuple of finished items
       * and the next observable of further batches.
