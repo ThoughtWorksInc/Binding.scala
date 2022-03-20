@@ -109,7 +109,40 @@ object Observable:
 
   val Empty = AsyncList.Empty
   trait NonEmpty[+A] extends Observable[A]:
-  sealed trait NonEmpty[+A] extends Observable[A]:
+    /** Returns the next batch of data, which includes a tuple of finished items
+      * and the next observable of further batches.
+      *
+      * @note
+      *   This method must be idempotent for both side effects and CPU cost.
+      *   Given `callNextOnce` and `callNextTwice` calling [[next]] once and
+      *   twice, respectively,
+      *   {{{
+      *   def callNextOnce[A](observable: Observable[A])(using
+      *       ExecutionContext
+      *   ): Future[Int] =
+      *     val startTime = System.nanoTime()
+      *     for
+      *       _ <- observable.next()
+      *       endTime = System.nanoTime()
+      *     yield
+      *       endTime - startTime
+      *   end
+      *   def callNextTwice[A](observable: Observable[A])(using
+      *       ExecutionContext
+      *   ): Future[Int] =
+      *     val startTime = System.nanoTime()
+      *     for
+      *       _ <- observable.next()
+      *       _ <- observable.next()
+      *       endTime = System.nanoTime()
+      *     yield
+      *     endTime - startTime
+      *   end
+      *   }}}
+      *
+      * Then the execution time should not be significant different and the side
+      * effects performed, if any, should not show any noticeable difference.
+      */
     def next(): Future[(Iterable[A], Observable[A])]
 
   trait BehaviorSubject[+A] extends Observable.NonEmpty[A]:
