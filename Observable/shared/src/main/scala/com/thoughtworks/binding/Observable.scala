@@ -108,83 +108,80 @@ object Observable:
   end AsyncList
 
   val Empty = AsyncList.Empty
+  trait NonEmpty[+A] extends Observable[A]:
   sealed trait NonEmpty[+A] extends Observable[A]:
     def next(): Future[(Iterable[A], Observable[A])]
 
-  @FunctionalInterface
-  trait Subject[+A] extends Observable.NonEmpty[A]
-  object Subject:
-    trait Behavior[+A] extends NonEmpty[A]:
-      def updatedState(): Behavior.State[A]
-      final def next() = {
-        updatedState() match
-          case Behavior.State.Incompleted(head, nextValue) =>
-            Future.successful(
-              (View.Single(head), (() => nextValue): Subject[A])
-            )
-          case Behavior.State.Completed(head) =>
-            Future.successful((View.Single(head), Empty))
-      }
-
-    object Behavior:
-      sealed trait State[+A]:
-        def head: A
-        def tail: Observable[A]
-      object State:
-        def apply[A](head: A, tail: Observable[A]) =
-          tail match
-            case Empty =>
-              State.Completed(head)
-            case nonEmptyTail: NonEmpty[A] =>
-              State.Incompleted(head, nonEmptyTail.next())
-
-        final case class Incompleted[A](
-            head: A,
-            nextValue: Future[(Iterable[A], Observable[A])]
-        ) extends State[A]:
-          def tail: Subject[A] = () => nextValue
-        final case class Completed[A](head: A) extends State[A]:
-          def tail = Empty
-
-      def pure[A](a: A): Behavior[A] = (() => State.Completed(a))
-      def apply[A](initialValue: A, source: Observable[A]): Behavior[A] =
-        new Behavior[A]:
-          private var state = State(initialValue, source)
-          def updatedState() = synchronized {
-            @tailrec
-            def loop(state: State[A]): State[A] =
-              state match
-                case State.Incompleted(head, nextValue) =>
-                  nextValue.value match
-                    case None =>
-                      state
-                    case Some(tryValue) =>
-                      val (batch, newTail) = tryValue.get
-                      loop(
-                        State(batch.lastOption.getOrElse(head), newTail)
-                      )
-                case _: State.Completed[?] =>
-                  state
-            end loop
-            state = loop(state)
-            state
-          }
-        end new
-      end apply
-
-      given (using ExecutionContext): Monad[Behavior] with
-        def point[A](a: => A): Behavior[A] = Behavior.pure(a)
-
-        def bind[A, B](
-            fa: Behavior[A]
-        )(mapper: A => Behavior[B]): Behavior[B] =
-          val cacheA = fa.updatedState()
-          val cacheB = mapper(cacheA.head).updatedState()
-          Behavior(
-            cacheB.head,
-            cacheA.tail.flatMapLatest(mapper, cacheB.tail)
+  trait BehaviorSubject[+A] extends Observable.NonEmpty[A]:
+    def updatedState(): BehaviorSubject.State[A]
+    final def next() = {
+      updatedState() match
+        case BehaviorSubject.State.Incompleted(head, nextValue) =>
+          Future.successful(
+            (View.Single(head), (() => nextValue): Observable.NonEmpty[A])
           )
-        end bind
-      end given
-    end Behavior
-  end Subject
+        case BehaviorSubject.State.Completed(head) =>
+          Future.successful((View.Single(head), Empty))
+    }
+
+  object BehaviorSubject:
+    sealed trait State[+A]:
+      def head: A
+      def tail: Observable[A]
+    object State:
+      def apply[A](head: A, tail: Observable[A]) =
+        tail match
+          case Empty =>
+            State.Completed(head)
+          case nonEmptyTail: Observable.NonEmpty[A] =>
+            State.Incompleted(head, nonEmptyTail.next())
+
+      final case class Incompleted[A](
+          head: A,
+          nextValue: Future[(Iterable[A], Observable[A])]
+      ) extends State[A]:
+        def tail: Observable.NonEmpty[A] = () => nextValue
+      final case class Completed[A](head: A) extends State[A]:
+        def tail = Empty
+
+    def pure[A](a: A): BehaviorSubject[A] = (() => State.Completed(a))
+    def apply[A](initialValue: A, source: Observable[A]): BehaviorSubject[A] =
+      new BehaviorSubject[A]:
+        private var state = State(initialValue, source)
+        def updatedState() = synchronized {
+          @tailrec
+          def loop(state: State[A]): State[A] =
+            state match
+              case State.Incompleted(head, nextValue) =>
+                nextValue.value match
+                  case None =>
+                    state
+                  case Some(tryValue) =>
+                    val (batch, newTail) = tryValue.get
+                    loop(
+                      State(batch.lastOption.getOrElse(head), newTail)
+                    )
+              case _: State.Completed[?] =>
+                state
+          end loop
+          state = loop(state)
+          state
+        }
+      end new
+    end apply
+
+    given (using ExecutionContext): Monad[BehaviorSubject] with
+      def point[A](a: => A): BehaviorSubject[A] = BehaviorSubject.pure(a)
+
+      def bind[A, B](
+          fa: BehaviorSubject[A]
+      )(mapper: A => BehaviorSubject[B]): BehaviorSubject[B] =
+        val cacheA = fa.updatedState()
+        val cacheB = mapper(cacheA.head).updatedState()
+        BehaviorSubject(
+          cacheB.head,
+          cacheA.tail.flatMapLatest(mapper, cacheB.tail)
+        )
+      end bind
+    end given
+  end BehaviorSubject
