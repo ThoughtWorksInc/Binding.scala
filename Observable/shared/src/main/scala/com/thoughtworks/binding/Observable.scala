@@ -52,7 +52,7 @@ sealed trait Observable[+A]:
                         () => handleB(head, tail)
                       }(using ExecutionContext.parasitic)
                   )
-                )
+                )(using ExecutionContext.parasitic)
                 handler.map(_())
             end match
         new FlatMapLatest
