@@ -8,6 +8,7 @@ import scalaz.Monad
 import scala.annotation.unchecked.uncheckedVariance
 import scala.collection.View
 import com.thoughtworks.binding.Observable.Operator
+import scala.util.control.NonFatal
 
 sealed trait Observable[+A]:
   final def flatMapLatest[B](
@@ -33,42 +34,42 @@ sealed trait Observable[+A]:
             tail: Observable[B]
         ): (Iterable[B], Observable.Operator[B]) =
           (head, nonEmptyA.flatMapLatest[B](mapper, tail))
-        final class FlatMapLatest extends Observable.Operator.NonEmpty.Lazy[B]:
-          lazy val nextValue =
-            default match
-              case Observable.Empty =>
-                nonEmptyA.next().map(handleA)
-              case nonEmptyB: Observable.NonEmpty[B] =>
-                val handler = Future.firstCompletedOf(
-                  Seq(
-                    nonEmptyA
-                      .next()
-                      .map { case (head, tail) =>
-                        () => handleA(head, tail)
-                      }(using ExecutionContext.parasitic),
-                    nonEmptyB
-                      .next()
-                      .map { case (head, tail) =>
-                        () => handleB(head, tail)
-                      }(using ExecutionContext.parasitic)
-                  )
-                )(using ExecutionContext.parasitic)
-                handler.map(_())
-            end match
-        new FlatMapLatest
+
+        locally[Observable.Operator.NonEmpty.Lazy[B]] { () =>
+          default match
+            case Observable.Empty =>
+              nonEmptyA.next().map(handleA)
+            case nonEmptyB: Observable.NonEmpty[B] =>
+              val handler = Future.firstCompletedOf(
+                Seq(
+                  nonEmptyA
+                    .next()
+                    .map { case (head, tail) =>
+                      () => handleA(head, tail)
+                    }(using ExecutionContext.parasitic),
+                  nonEmptyB
+                    .next()
+                    .map { case (head, tail) =>
+                      () => handleB(head, tail)
+                    }(using ExecutionContext.parasitic)
+                )
+              )(using ExecutionContext.parasitic)
+              handler.map(_())
+        }
+
   end flatMapLatest
   final def replay: Observable.Operator[A] =
     this match
       case asyncList: Observable.Operator[A] =>
         asyncList
       case nonEmpty: Observable.NonEmpty[A] =>
-        final class Replay extends Observable.Operator.NonEmpty.Lazy[A]:
-          protected lazy val nextValue = nonEmpty
+        locally[Observable.Operator.NonEmpty.Lazy[A]] { () =>
+          nonEmpty
             .next()
             .map { case (head, tail) =>
               (head, tail.replay)
             }(ExecutionContext.parasitic)
-        new Replay
+        }
   end replay
 
 object Observable:
@@ -77,20 +78,28 @@ object Observable:
 
     object Empty extends Operator[Nothing]
     sealed trait NonEmpty[+A] extends Operator[A] with Observable.NonEmpty[A]:
-      final def next(): Future[(Iterable[A], Operator[A])] = nextValue
-
       /** The stable memoized value of `next()`, which must be either a
         * non-`lazy` or `lazy val`
         */
-      protected def nextValue: Future[(Iterable[A], Operator[A])]
+      def next(): Future[(Iterable[A], Operator[A])]
+
     end NonEmpty
 
     object NonEmpty:
       trait Lazy[+A] extends NonEmpty[A]:
-        protected lazy val nextValue: Future[(Iterable[A], Operator[A])]
+        def computeNext(): Future[(Iterable[A], Operator[A])]
+        private lazy val nextLazyVal: Future[(Iterable[A], Operator[A])] =
+          try {
+            computeNext()
+          } catch {
+            case NonFatal(e) =>
+              Future.failed(e)
+          }
+        final def next() = nextLazyVal
       end Lazy
       trait Eager[+A] extends NonEmpty[A]:
-        protected val nextValue: Future[(Iterable[A], Operator[A])]
+        protected val nextVal: Future[(Iterable[A], Operator[A])]
+        def next() = nextVal
       end Eager
     end NonEmpty
   end Operator

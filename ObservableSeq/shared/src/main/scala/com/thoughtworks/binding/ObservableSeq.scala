@@ -307,31 +307,32 @@ object ObservableSeq:
               case None =>
                 Observable.Operator.Empty
               case Some(sliceEventBuilder) =>
-                new Observable.Operator.NonEmpty.Lazy[Patch[B]]:
-                  lazy val nextValue =
-                    sliceEventBuilder(0).map(handleSliceEvent)
+                locally[Observable.Operator.NonEmpty.Lazy[Patch[B]]] { () =>
+                  sliceEventBuilder(0).map(handleSliceEvent)
+                }
           case nonEmpty: Observable.NonEmpty[Patch[A]] =>
             sliceEventBuilderOption match
               case None =>
-                new Observable.Operator.NonEmpty.Lazy[Patch[B]]:
-                  lazy val nextValue = nonEmpty.next().map(handleUpstreamEvent)
+                locally[Observable.Operator.NonEmpty.Lazy[Patch[B]]] { () =>
+                  nonEmpty.next().map(handleUpstreamEvent)
+                }
               case Some(sliceEventBuilder) =>
-                new Observable.Operator.NonEmpty.Lazy[Patch[B]]:
-                  lazy val nextValue =
-                    Future
-                      .firstCompletedOf(
-                        Seq(
-                          nonEmpty
-                            .next()
-                            .map(upstreamEvent =>
-                              () => handleUpstreamEvent(upstreamEvent)
-                            )(using ExecutionContext.parasitic),
-                          sliceEventBuilder(0).map(sliceEvent =>
-                            () => handleSliceEvent(sliceEvent)
-                          )(using ExecutionContext.parasitic)
-                        )
-                      )(using ExecutionContext.parasitic)
-                      .map(_())
+                locally[Observable.Operator.NonEmpty.Lazy[Patch[B]]] { () =>
+                  Future
+                    .firstCompletedOf(
+                      Seq(
+                        nonEmpty
+                          .next()
+                          .map(upstreamEvent =>
+                            () => handleUpstreamEvent(upstreamEvent)
+                          )(using ExecutionContext.parasitic),
+                        sliceEventBuilder(0).map(sliceEvent =>
+                          () => handleSliceEvent(sliceEvent)
+                        )(using ExecutionContext.parasitic)
+                      )
+                    )(using ExecutionContext.parasitic)
+                    .map(_())
+                }
             end match
         end match
       end loop
