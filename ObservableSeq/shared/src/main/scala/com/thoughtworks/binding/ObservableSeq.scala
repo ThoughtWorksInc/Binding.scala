@@ -32,45 +32,38 @@ import scala.concurrent.ExecutionContext
 import scala.collection.immutable.Queue
 import scala.collection.View
 
-opaque type ObservableSeq[+A] <: Observable[ObservableSeq.Patch[A]] =
-  Observable[ObservableSeq.Patch[A]]
+opaque type ObservableSeq[+A] = Observable[ObservableSeq.Patch[A]]
 
 object ObservableSeq:
   def apply[A]: Observable[ObservableSeq.Patch[A]] =:= ObservableSeq[A] = summon
-  opaque type Operator[+A] <: ObservableSeq[A] &
-    Observable.Operator[ObservableSeq.Patch[A]] =
+  opaque type Operator[+A] <: ObservableSeq[A] =
     Observable.Operator[ObservableSeq.Patch[A]]
   end Operator
   object Operator:
-    opaque type Empty <: ObservableSeq[Nothing] &
-      Observable.Operator.Empty.type =
+    opaque type Empty <: ObservableSeq[Nothing] =
       Observable.Operator.Empty.type
     val Empty: Empty = Observable.Operator.Empty
-    opaque type NonEmpty[+A] <: ObservableSeq.NonEmpty[A] & Operator[A] &
-      Observable.Operator.NonEmpty[ObservableSeq.Patch[A]] =
+    opaque type NonEmpty[+A] <: ObservableSeq.NonEmpty[A] & Operator[A] =
       Observable.Operator.NonEmpty[ObservableSeq.Patch[A]]
     object NonEmpty:
       def apply[A]
           : Observable.Operator.NonEmpty[ObservableSeq.Patch[A]] =:= NonEmpty[
             A
           ] = summon
-      opaque type Lazy[+A] <: NonEmpty[A] &
-        Observable.Operator.NonEmpty.Lazy[ObservableSeq.Patch[A]] =
+      opaque type Lazy[+A] <: NonEmpty[A] =
         Observable.Operator.NonEmpty.Lazy[ObservableSeq.Patch[A]]
       object Lazy:
         def apply[A]: Observable.Operator.NonEmpty.Lazy[
           ObservableSeq.Patch[A]
         ] =:= Lazy[A] = summon
-      opaque type Eager[+A] <: NonEmpty[A] &
-        Observable.Operator.NonEmpty.Eager[ObservableSeq.Patch[A]] =
+      opaque type Eager[+A] <: NonEmpty[A] =
         Observable.Operator.NonEmpty.Eager[ObservableSeq.Patch[A]]
       object Eager:
         def apply[A]: Observable.Operator.NonEmpty.Eager[
           ObservableSeq.Patch[A]
         ] =:= Eager[A] = summon
   val Empty = Operator.Empty
-  opaque type NonEmpty[+A] <: ObservableSeq[A] &
-    Observable.NonEmpty[ObservableSeq.Patch[A]] =
+  opaque type NonEmpty[+A] <: ObservableSeq[A] =
     Observable.NonEmpty[ObservableSeq.Patch[A]]
   object NonEmpty:
     def apply[A]: Observable.NonEmpty[ObservableSeq.Patch[A]] =:= NonEmpty[A] =
