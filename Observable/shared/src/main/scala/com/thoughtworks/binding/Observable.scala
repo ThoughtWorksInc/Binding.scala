@@ -9,13 +9,57 @@ import scala.annotation.unchecked.uncheckedVariance
 import scala.collection.View
 import com.thoughtworks.binding.Observable.Operator
 import scala.util.control.NonFatal
-
+import scala.collection.immutable.ArraySeq
 sealed trait Observable[+A]:
+  private[binding] final def postScanLeft[B](z: B)(
+      op: (B, A) => B
+  )(using ExecutionContext): Observable.Operator[B] =
+    this match
+      case Observable.Empty =>
+        Observable.Empty
+      case nonEmptyA: Observable.NonEmpty[A] =>
+        locally[Observable.Operator.NonEmpty.Lazy[B]] { () =>
+          nonEmptyA.next().map { case (head, tail) =>
+            val builder = head.iterableFactory.newBuilder[B]
+            val headIterator = head.iterator
+            var acc = z
+            while headIterator.hasNext do
+              acc = op(acc, headIterator.next())
+              builder += acc
+            (builder.result, tail.postScanLeft(acc)(op))
+          }
+        }
+    end match
+  end postScanLeft
+  final def scanLeft[B](z: B)(op: (B, A) => B)(using
+      ExecutionContext
+  ): Observable.Operator[B] =
+    z +: postScanLeft(z)(op)
+  end scanLeft
+  final def +:[B >: A](a: B): Observable.Operator.NonEmpty.Eager[B] =
+    Observable.Operator.NonEmpty.Eager[B](
+      Future.successful((View.Single(a), replay))
+    )
+  end +:
+  final def map[B](mapper: A => B)(using
+      ExecutionContext
+  ): Observable.Operator[B] =
+    this match
+      case Observable.Empty =>
+        Observable.Empty
+      case nonEmptyA: Observable.NonEmpty[A] =>
+        locally[Observable.Operator.NonEmpty.Lazy[B]] { () =>
+          nonEmptyA.next().map { case (head, tail) =>
+            (head.map(mapper), tail.map(mapper))
+          }
+        }
+    end match
+  end map
   final def flatMapLatest[B](
       mapper: A => Observable[B],
       default: Observable[B] = Observable.Operator.Empty
   )(using ExecutionContext): Observable.Operator[B] =
-    Observable.this match
+    this match
       case Observable.Empty =>
         default.replay
       case nonEmptyA: Observable.NonEmpty[A] =>
@@ -29,39 +73,41 @@ sealed trait Observable[+A]:
             case Some(last) =>
               mapper(last)
           (View.Empty, tail.flatMapLatest(mapper, newDefault))
+        end handleA
         def handleB(
             head: Iterable[B],
             tail: Observable[B]
         ): (Iterable[B], Observable.Operator[B]) =
           (head, nonEmptyA.flatMapLatest[B](mapper, tail))
-
+        end handleB
         locally[Observable.Operator.NonEmpty.Lazy[B]] { () =>
           default match
             case Observable.Empty =>
               nonEmptyA.next().map(handleA)
             case nonEmptyB: Observable.NonEmpty[B] =>
-              val handler = Future.firstCompletedOf(
-                Seq(
-                  nonEmptyA
-                    .next()
-                    .map { case (head, tail) =>
-                      () => handleA(head, tail)
-                    }(using ExecutionContext.parasitic),
-                  nonEmptyB
-                    .next()
-                    .map { case (head, tail) =>
-                      () => handleB(head, tail)
-                    }(using ExecutionContext.parasitic)
-                )
-              )(using ExecutionContext.parasitic)
-              handler.map(_())
+              Future
+                .firstCompletedOf(
+                  Seq(
+                    nonEmptyA
+                      .next()
+                      .map { case (head, tail) =>
+                        () => handleA(head, tail)
+                      }(using ExecutionContext.parasitic),
+                    nonEmptyB
+                      .next()
+                      .map { case (head, tail) =>
+                        () => handleB(head, tail)
+                      }(using ExecutionContext.parasitic)
+                  )
+                )(using ExecutionContext.parasitic)
+                .map(_())
         }
-
+    end match
   end flatMapLatest
   final def replay: Observable.Operator[A] =
     this match
-      case asyncList: Observable.Operator[A] =>
-        asyncList
+      case operator: Observable.Operator[A] =>
+        operator
       case nonEmpty: Observable.NonEmpty[A] =>
         locally[Observable.Operator.NonEmpty.Lazy[A]] { () =>
           nonEmpty
@@ -70,8 +116,9 @@ sealed trait Observable[+A]:
               (head, tail.replay)
             }(ExecutionContext.parasitic)
         }
+    end match
   end replay
-
+end Observable
 object Observable:
   sealed trait Operator[+A] extends Observable[A]
   object Operator:
@@ -97,8 +144,8 @@ object Observable:
           }
         final def next() = nextLazyVal
       end Lazy
-      trait Eager[+A] extends NonEmpty[A]:
-        protected val nextVal: Future[(Iterable[A], Operator[A])]
+      final case class Eager[+A](nextVal: Future[(Iterable[A], Operator[A])])
+          extends NonEmpty[A]:
         def next() = nextVal
       end Eager
     end NonEmpty
@@ -199,7 +246,6 @@ object Observable:
         }
       end new
     end apply
-
     given (using ExecutionContext): Monad[BehaviorSubject] with
       def point[A](a: => A): BehaviorSubject[A] = BehaviorSubject.pure(a)
 
@@ -215,3 +261,4 @@ object Observable:
       end bind
     end given
   end BehaviorSubject
+end Observable
