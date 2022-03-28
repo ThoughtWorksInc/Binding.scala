@@ -33,4 +33,6 @@ secret/
 .metals/
 .bloop/
 metals.sbt
-.bsp/sbt.json
+.bsp/
+.vscode/launch.json
+*.scala.semanticdb
