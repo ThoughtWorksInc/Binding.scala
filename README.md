@@ -11,7 +11,7 @@
 
 **Binding.scala** is a data-binding library for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
-Binding.scala can be used as the basis of UI frameworks, however latest Binding.scala 12.x does not contain any build-in UI frameworks any more. For creating reactive HTML UI, you may want to check out [html.scala](https://github.com/GlasslabGames/html.scala), which is an UI framework based on Binding.scala, and it is also the successor of previously built-in [dom](https://javadoc.io/page/com.thoughtworks.binding/dom_sjs0.6_2.12/latest/com/thoughtworks/binding/dom.html) library.
+Binding.scala can be used as the basis of UI frameworks, however latest Binding.scala 12.x does not contain any build-in UI frameworks any more. For creating reactive HTML UI, you may want to check out [html.scala](https://github.com/Atry/html.scala), which is an UI framework based on Binding.scala, and it is also the successor of previously built-in [dom](https://javadoc.io/page/com.thoughtworks.binding/dom_sjs0.6_2.12/latest/com/thoughtworks/binding/dom.html) library.
 
 See [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/) or [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs) as examples for common tasks when working with Binding.scala.
 
@@ -89,7 +89,7 @@ libraryDependencies ++= {
   }
 }
 
-libraryDependencies += "org.lrng.binding" %%% "html" % "latest.release"
+libraryDependencies += "com.yang-bo" %%% "html" % "latest.release"
 ```
 
 ### Step 2: Create a `data` field, which contains some `Var` and `Vars` as data source for your data-binding expressions
@@ -507,7 +507,7 @@ libraryDependencies ++= {
 }
 
 // For Scala.js projects (Scala 2.12 - 2.13)
-libraryDependencies += "org.lrng.binding" %%% "html" % "latest.release"
+libraryDependencies += "com.yang-bo" %%% "html" % "latest.release"
 ```
 
 See [html.scala](https://github.com/GlasslabGames/html.scala) for more information.
