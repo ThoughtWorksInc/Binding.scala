@@ -24,11 +24,11 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import scala.collection.mutable.ArrayBuffer
-import scala.collection.mutable.Buffer
-
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.Buffer
 
 import Binding._
 import BindingSeq.removePatchedListener
@@ -369,10 +369,10 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     val source = Vars(1, 2, 3)
     val mapped = new BindingSeq.FlatMap(
       source,
-      { sourceElement: Int =>
+      { (sourceElement: Int) =>
         new BindingSeq.MapBinding(
           Constants((0 until sourceElement): _*),
-          { i: Int =>
+          { (i: Int) =>
             Binding {
               raw"""${prefix.bind}$sourceElement"""
             }
@@ -476,7 +476,7 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     val source = Vars(1, 2, 3)
     val mapped = new BindingSeq.MapBinding(
       source,
-      { a: Int =>
+      { (a: Int) =>
         Binding {
           raw"""${prefix.bind}${a}"""
         }
@@ -718,7 +718,7 @@ final class BindingTest extends AnyFreeSpec with Matchers {
       logs ++= "Binding\n"
       for (i <- vars) {
         logs ++= s"creating mount point ${i.value}\n"
-        new SingleMountPoint(i) {
+        new SingleMountPoint[Int](i) {
           override def mount() = {
             super.mount()
             logs ++= s"mount ${i.value}\n"
