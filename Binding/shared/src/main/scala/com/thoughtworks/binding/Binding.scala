@@ -24,20 +24,19 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import java.util.EventObject
+import scalaz.Monad
+import scalaz.MonadPlus
 
+import java.util.EventObject
 import scala.annotation.meta.companionMethod
 import scala.annotation.tailrec
-import scala.language.implicitConversions
-import scala.language.higherKinds
 import scala.collection.SeqView
-import scala.collection.mutable.Buffer
 import scala.collection.View
-import scalaz.{Monad, MonadPlus}
+import scala.collection.mutable.Buffer
+import scala.language.higherKinds
+import scala.language.implicitConversions
 
-import scala.language.existentials
-import scala.collection.SeqOps
-import scala.collection.mutable.ArrayBuffer
+import Binding2Or3.SeqOpsIterable
 
 /** @groupname typeClasses
   * Type class instance
@@ -55,10 +54,6 @@ object Binding extends Binding2Or3.Companion {
   sealed trait Watchable[+A] {
     def watch(): Unit
     def unwatch(): Unit
-  }
-
-  private[binding] type SeqOpsIterable[+A] = Iterable[A] with SeqOps[A, CC, CC[A]] forSome {
-    type CC[+A] <: Iterable[A]
   }
 
   private[binding] def addChangedListener[A](binding: Binding[A], listener: ChangedListener[A]) = {

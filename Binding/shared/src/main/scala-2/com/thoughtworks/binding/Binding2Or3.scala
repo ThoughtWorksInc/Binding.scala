@@ -1,11 +1,20 @@
 package com.thoughtworks
 package binding
 
-import scala.language.experimental.macros
-import scalaz.Monad
-import Binding.BindingSeq
 import com.thoughtworks.sde.core.MonadicFactory
+import scalaz.Monad
+
+import scala.collection.SeqOps
+import scala.language.existentials
+import scala.language.experimental.macros
+
+import Binding.BindingSeq
+
 private[binding] object Binding2Or3 {
+
+  private[binding] type SeqOpsIterable[+A] = Iterable[A] with SeqOps[A, CC, CC[A]] forSome {
+    type CC[+A] <: Iterable[A]
+  }
 
   final class Macros(val c: scala.reflect.macros.blackbox.Context) {
 
