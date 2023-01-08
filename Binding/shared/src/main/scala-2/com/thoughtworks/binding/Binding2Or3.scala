@@ -180,7 +180,7 @@ private[binding] object Binding2Or3 {
 
 }
 
-trait Binding2Or3[+A] { this: binding.Binding[A] =>
+private[binding] trait Binding2Or3[+A] { this: binding.Binding[A] =>
 
   /** Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].
     *
