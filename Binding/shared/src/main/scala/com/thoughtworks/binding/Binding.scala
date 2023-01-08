@@ -26,9 +26,6 @@ package com.thoughtworks.binding
 
 import java.util.EventObject
 
-import com.thoughtworks.sde.core.MonadicFactory._
-import com.thoughtworks.sde.core.MonadicFactory
-
 import scala.annotation.meta.companionMethod
 import scala.annotation.tailrec
 import scala.language.implicitConversions
@@ -38,7 +35,6 @@ import scala.collection.mutable.Buffer
 import scala.collection.View
 import scalaz.{Monad, MonadPlus}
 
-import scala.language.experimental.macros
 import scala.language.existentials
 import scala.collection.SeqOps
 import scala.collection.mutable.ArrayBuffer
@@ -54,7 +50,7 @@ import scala.collection.mutable.ArrayBuffer
   * @author
   *   杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
+object Binding extends Binding2Or3.Companion {
 
   sealed trait Watchable[+A] {
     def watch(): Unit
@@ -72,8 +68,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   private[binding] def removeChangedListener[A](binding: Binding[A], listener: ChangedListener[A]) = {
     binding.removeChangedListener(listener)
   }
-
-  override val typeClass = BindingInstances
 
   import BindingJvmOrJs._
 
@@ -345,78 +339,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     override def untilM_[A](f: Binding[A], cond: => Binding[Boolean]): Binding[Unit] = {
       bind(f)(_ => whileM_(map(cond)(!_), f))
-    }
-
-  }
-
-  private[Binding] class Macros(val c: scala.reflect.macros.blackbox.Context) {
-
-    import c.universe._
-
-    lazy val functionOrFunctionLiteral: PartialFunction[Tree, (List[ValDef], Tree)] = {
-      case Function(vparams, body) =>
-        (vparams, body)
-      case f =>
-        val elementName = TermName(c.freshName("bindingElement"))
-        (List(q"val $elementName: ${TypeTree()} = $EmptyTree"), atPos(f.pos)(q"$f($elementName)"))
-    }
-
-    final def foreach(f: Tree): Tree = {
-      val apply @ Apply(
-        TypeApply(Select(self, TermName("foreach")), List(u)),
-        List(f @ functionOrFunctionLiteral(vparams, body))
-      ) =
-        c.macroApplication
-      val monadicBody =
-        q"""_root_.com.thoughtworks.binding.Binding.apply[$u]($body)"""
-      val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
-      atPos(apply.pos)(
-        q"""_root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
-          _root_.com.thoughtworks.binding.Binding,
-          _root_.scala.Unit
-        ]($self.foreachBinding[$u]($monadicFunction))"""
-      )
-    }
-
-    final def map(f: Tree): Tree = {
-      val apply @ Apply(
-        TypeApply(Select(self, TermName("map")), List(b)),
-        List(f @ functionOrFunctionLiteral(vparams, body))
-      ) =
-        c.macroApplication
-      val monadicBody =
-        q"""_root_.com.thoughtworks.binding.Binding.apply[$b]($body)"""
-      val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
-      atPos(apply.pos)(q"""$self.mapBinding[$b]($monadicFunction)""")
-    }
-
-    final def flatMap(f: Tree): Tree = {
-      val apply @ Apply(
-        TypeApply(Select(self, TermName("flatMap")), List(b)),
-        List(f @ functionOrFunctionLiteral(vparams, body))
-      ) =
-        c.macroApplication
-      val monadicBody =
-        q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.com.thoughtworks.binding.Binding.BindingSeq[$b]]($body)"""
-      val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
-      atPos(apply.pos)(q"""$self.flatMapBinding[$b]($monadicFunction)""")
-    }
-
-    final def withFilter(condition: Tree): Tree = {
-      val apply @ Apply(Select(self, TermName("withFilter")), List(f @ functionOrFunctionLiteral(vparams, body))) =
-        c.macroApplication
-      val monadicBody =
-        q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Boolean]($body)"""
-      val monadicFunction = atPos(f.pos)(Function(vparams, monadicBody))
-      atPos(apply.pos)(q"""$self.withFilterBinding($monadicFunction)""")
-    }
-
-    final def bind: Tree = {
-      val q"$binding.$methodName" = c.macroApplication
-      q"""_root_.com.thoughtworks.sde.core.MonadicFactory.Instructions.each[
-        _root_.com.thoughtworks.binding.Binding,
-        ${TypeTree(c.macroApplication.tpe)}
-      ]($binding)"""
     }
 
   }
@@ -795,7 +717,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
     *
     * @group expressions
     */
-  trait BindingSeq[+A] extends Watchable[A] {
+  trait BindingSeq[+A] extends Watchable[A] with Binding2Or3.BindingSeq2Or3[A] {
 
     /** Returns a new [[Binding]] expression of all elements in this [[BindingSeq]]. */
     final def all: Binding[All[A]] = new Binding[All[A]] { asBinding =>
@@ -876,22 +798,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     def nonEmpty: Binding[Boolean] = BindingInstances.map(all)(_.nonEmpty)
 
-    def foreach[U](f: A => U): Unit = macro Macros.foreach
-
-    /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
-      *
-      * @param f
-      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
-      */
-    def map[B](f: A => B): BindingSeq[B] = macro Macros.map
-
-    /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
-      *
-      * @param f
-      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
-      */
-    def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
-
     /** The underlying implementation of [[foreach]].
       *
       * @note
@@ -920,13 +826,6 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       new BindingSeq.FlatMap[BindingSeq[B], B](new BindingSeq.MapBinding[A, BindingSeq[B]](this, f), locally)
     }
 
-    /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
-      *
-      * @param f
-      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
-      */
-    def withFilter(condition: A => Boolean): BindingSeq[A]#WithFilter = macro Macros.withFilter
-
     /** The underlying implementation of [[withFilter]].
       *
       * @note
@@ -939,19 +838,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
 
     /** A helper to build complicated comprehension expressions for [[BindingSeq]]
       */
-    final class WithFilter(condition: A => Binding[Boolean]) {
-
-      /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
-        */
-      def map[B](f: A => B): BindingSeq[B] = macro Macros.map
-
-      /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
-        */
-      def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
-
-      /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
-        */
-      def withFilter(condition: A => Boolean): WithFilter = macro Macros.withFilter
+    final class WithFilter(condition: A => Binding[Boolean]) extends WithFilter2Or3 {
 
       /** Underlying implementation of [[withFilter.
         *
@@ -961,12 +848,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       @inline
       def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
         new WithFilter({ a =>
-          Binding {
-            if (Instructions.each[Binding, Boolean](condition(a))) {
-              Instructions.each[Binding, Boolean](nextCondition(a))
-            } else {
-              false
-            }
+          import BindingInstances.monadSyntax._
+          condition(a).flatMap {
+            case true =>
+              nextCondition(a)
+            case false =>
+              Binding.Constant(false)
           }
         })
       }
@@ -979,12 +866,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       @inline
       def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a: A =>
-          Binding {
-            if (Instructions.each[Binding, Boolean](condition(a))) {
-              Constants(Instructions.each[Binding, B](f(a)))
-            } else {
-              Empty
-            }
+          import BindingInstances.monadSyntax._
+          condition(a).flatMap {
+            case true =>
+              f(a).map(Constants(_))
+            case false =>
+              Constant(Empty)
           }
         }
       }
@@ -997,12 +884,12 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
       @inline
       def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a: A =>
-          Binding {
-            if (Instructions.each[Binding, Boolean](condition(a))) {
-              Instructions.each[Binding, BindingSeq[B]](f(a))
-            } else {
-              Empty
-            }
+          import BindingInstances.monadSyntax._
+          condition(a).flatMap {
+            case true =>
+              f(a)
+            case false =>
+              Constant(Empty)
           }
         }
       }
@@ -2002,19 +1889,7 @@ object Binding extends MonadicFactory.WithTypeClass[Monad, Binding] {
   * @author
   *   杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-trait Binding[+A] extends Binding.Watchable[A] {
-
-  /** Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].
-    *
-    * Each time the value changes, in the current `@dom` method, all code after the current `bind` expression will be
-    * re-evaluated if the current `@dom` method is [[#watch watch]]ing. However, code in current `@dom` method and
-    * before the current `bind` expression will not be re-evaluated. The above rule is not applied to DOM nodes created
-    * by XHTML literal. A `bind` expression under a DOM node does not affect siblings and parents of that node.
-    *
-    * @note
-    *   This method must be invoked inside a `@dom` method body or a `Binding { ... }` block..
-    */
-  final def bind: A = macro Binding.Macros.bind
+trait Binding[+A] extends Binding.Watchable[A] with Binding2Or3[A] {
 
   private[binding] def get: A = value
 
