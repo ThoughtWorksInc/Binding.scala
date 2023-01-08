@@ -269,7 +269,7 @@ object Binding extends Binding2Or3.Companion {
       @inline
       def tailrecGetValue(binding: Binding[B]): B = {
         binding match {
-          case flatMap: FlatMap[_, B] => tailrecGetValue(flatMap.cache)
+          case flatMap: FlatMap[_, _] => tailrecGetValue(flatMap.cache)
           case _                      => binding.value
         }
       }
@@ -807,7 +807,7 @@ object Binding extends Binding2Or3.Companion {
         */
       @inline
       def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
-        BindingSeq.this.flatMapBinding { a: A =>
+        BindingSeq.this.flatMapBinding { (a: A) =>
           condition(a).flatMap {
             case true =>
               f(a).map(Constants(_))
@@ -824,7 +824,7 @@ object Binding extends Binding2Or3.Companion {
         */
       @inline
       def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
-        BindingSeq.this.flatMapBinding { a: A =>
+        BindingSeq.this.flatMapBinding { (a: A) =>
           condition(a).flatMap {
             case true =>
               f(a)
