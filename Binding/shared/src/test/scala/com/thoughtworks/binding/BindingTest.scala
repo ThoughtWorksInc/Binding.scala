@@ -29,7 +29,6 @@ import scala.collection.mutable.Buffer
 
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-import scalaz._
 
 import Binding._
 import BindingSeq.removePatchedListener
@@ -632,8 +631,6 @@ final class BindingTest extends AnyFreeSpec with Matchers {
   }
 
   "ScalaRxLeakExample" in {
-    import scalaz._, Scalaz._
-
     var count: Int = 0
     val a: Var[Int] = Var(1)
     val b: Var[Int] = Var(2)
@@ -663,23 +660,21 @@ final class BindingTest extends AnyFreeSpec with Matchers {
   }
 
   "multi to one dependencies" in {
-    import scalaz.syntax.all._
-    import scalaz._
 
     val a: Var[Int] = Var(100)
     val b: Var[Int] = Var(200)
     var aFlushCount = 0
     var bFlushCount = 0
-    val aPlusOne = (a: Binding[Int]).map { value =>
+    val aPlusOne = a.map { value =>
       aFlushCount += 1
       value + 1
     }
-    val bPlusOne = (b: Binding[Int]).map { value =>
+    val bPlusOne = b.map { value =>
       bFlushCount += 1
       value + 1
     }
-    val aPlusOneTimesBPlusOn = Binding.BindingInstances.apply2(aPlusOne, bPlusOne) { (aValue, bValue) =>
-      aValue * bValue
+    val aPlusOneTimesBPlusOn = Binding {
+      aPlusOne.bind * bPlusOne.bind
     }
     aPlusOneTimesBPlusOn.watch()
     aPlusOneTimesBPlusOn.get should be((100 + 1) * (200 + 1))

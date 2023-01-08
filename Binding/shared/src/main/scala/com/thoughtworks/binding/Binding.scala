@@ -24,9 +24,6 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import scalaz.Monad
-import scalaz.MonadPlus
-
 import java.util.EventObject
 import scala.annotation.meta.companionMethod
 import scala.annotation.tailrec
@@ -285,55 +282,6 @@ object Binding extends Binding2Or3.Companion {
         upstream.removeChangedListener(forwarder)
         cache.removeChangedListener(this)
       }
-    }
-
-  }
-
-  /** Monad instances for [[Binding]].
-    *
-    * @group typeClasses
-    */
-  implicit object BindingInstances extends Monad[Binding] {
-
-    override def map[A, B](fa: Binding[A])(f: A => B): Binding[B] = {
-      fa match {
-        case Constant(a) =>
-          Constant(f(a))
-        case _ =>
-          new Map[A, B](fa, f)
-      }
-    }
-
-    override def bind[A, B](fa: Binding[A])(f: A => Binding[B]): Binding[B] = {
-      fa match {
-        case Constant(a) =>
-          f(a)
-        case _ =>
-          new FlatMap[A, B](fa, f)
-      }
-    }
-
-    @inline
-    override def point[A](a: => A): Binding[A] = Constant(a)
-
-    override def ifM[B](value: Binding[Boolean], ifTrue: => Binding[B], ifFalse: => Binding[B]): Binding[B] = {
-      bind(value)(if (_) ifTrue else ifFalse)
-    }
-
-    override def whileM[G[_], A](p: Binding[Boolean], body: => Binding[A])(implicit G: MonadPlus[G]): Binding[G[A]] = {
-      ifM(p, bind(body)(x => map(whileM(p, body))(xs => G.plus(G.point(x), xs))), point(G.empty))
-    }
-
-    override def whileM_[A](p: Binding[Boolean], body: => Binding[A]): Binding[Unit] = {
-      ifM(p, bind(body)(_ => whileM_(p, body)), point(()))
-    }
-
-    override def untilM[G[_], A](f: Binding[A], cond: => Binding[Boolean])(implicit G: MonadPlus[G]): Binding[G[A]] = {
-      bind(f)(x => map(whileM(map(cond)(!_), f))(xs => G.plus(G.point(x), xs)))
-    }
-
-    override def untilM_[A](f: Binding[A], cond: => Binding[Boolean]): Binding[Unit] = {
-      bind(f)(_ => whileM_(map(cond)(!_), f))
     }
 
   }
@@ -789,9 +737,9 @@ object Binding extends Binding2Or3.Companion {
 
     def length: Binding[Int] = new BindingSeq.Length(this)
 
-    def isEmpty: Binding[Boolean] = BindingInstances.map(all)(_.isEmpty)
+    def isEmpty: Binding[Boolean] = all.map(_.isEmpty)
 
-    def nonEmpty: Binding[Boolean] = BindingInstances.map(all)(_.nonEmpty)
+    def nonEmpty: Binding[Boolean] = all.map(_.nonEmpty)
 
     /** The underlying implementation of [[foreach]].
       *
@@ -843,7 +791,6 @@ object Binding extends Binding2Or3.Companion {
       @inline
       def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
         new WithFilter({ a =>
-          import BindingInstances.monadSyntax._
           condition(a).flatMap {
             case true =>
               nextCondition(a)
@@ -861,7 +808,6 @@ object Binding extends Binding2Or3.Companion {
       @inline
       def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a: A =>
-          import BindingInstances.monadSyntax._
           condition(a).flatMap {
             case true =>
               f(a).map(Constants(_))
@@ -879,7 +825,6 @@ object Binding extends Binding2Or3.Companion {
       @inline
       def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
         BindingSeq.this.flatMapBinding { a: A =>
-          import BindingInstances.monadSyntax._
           condition(a).flatMap {
             case true =>
               f(a)
@@ -1503,7 +1448,7 @@ object Binding extends Binding2Or3.Companion {
       * @example
       *   Given a sequence of [[Observable]]s,
       *   {{{
-      * import com.thoughtworks.binding.Binding._, BindingInstances.monadSyntax._
+      * import com.thoughtworks.binding.Binding._
       * val observable0 = Var[Option[String]](None)
       * val observable1 = Var[Option[String]](Some("1"))
       * val observable2 = Var[Option[String]](Some("2"))
@@ -1687,7 +1632,7 @@ object Binding extends Binding2Or3.Companion {
       * @example
       *   Given a sequence of [[Observable]]s,
       *   {{{
-      * import com.thoughtworks.binding.Binding._, BindingInstances.monadSyntax._
+      * import com.thoughtworks.binding.Binding._
       * val observable0 = Var[Option[String]](None)
       * val observable1 = Var[Option[String]](Some("1"))
       * val observable2 = Var[Option[String]](Some("2"))
@@ -1796,7 +1741,7 @@ object Binding extends Binding2Or3.Companion {
     def merge[A](observables: IterableOnce[Observable[A]]): Observable[A] = {
       new RxMerge(
         new Constants(toConstantsData(observables)).flatMapBinding(
-          BindingInstances.map(_) { option =>
+          _.map { option =>
             new Constants(toConstantsData(option))
           }
         )
@@ -1922,4 +1867,21 @@ trait Binding[+A] extends Binding.Watchable[A] with Binding2Or3[A] {
     removeChangedListener(Binding.DummyChangedListener)
   }
 
+  final def map[B](f: A => B): Binding[B] = {
+    this match {
+      case Binding.Constant(a) =>
+        Binding.Constant(f(a))
+      case fa =>
+        new Binding.Map[A, B](fa, f)
+    }
+  }
+
+  final def flatMap[B](f: A => Binding[B]): Binding[B] = {
+    this match {
+      case Binding.Constant(a) =>
+        f(a)
+      case fa =>
+        new Binding.FlatMap[A, B](fa, f)
+    }
+  }
 }
