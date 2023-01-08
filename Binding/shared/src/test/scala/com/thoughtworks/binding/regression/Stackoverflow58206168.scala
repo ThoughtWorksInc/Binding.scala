@@ -1,10 +1,11 @@
 package com.thoughtworks.binding
 package regression
-import Binding._
-import scala.collection.mutable
-import Binding.BindingInstances.functorSyntax._
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.collection.mutable
+
+import Binding._
 
 final class Stackoverflow58206168 extends AnyFreeSpec with Matchers {
   // See https://stackoverflow.com/questions/58206168/binding-scala-vars-bind-seems-to-not-work-correctly
