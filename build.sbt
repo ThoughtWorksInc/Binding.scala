@@ -2,9 +2,9 @@ import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 parallelExecution in Global := false
 
-lazy val SafeBuffer = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).build
+lazy val SafeBuffer = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).build
 
-lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure).dependsOn(SafeBuffer)
+lazy val Binding = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).dependsOn(SafeBuffer)
 
 organization in ThisBuild := "com.thoughtworks.binding"
 
