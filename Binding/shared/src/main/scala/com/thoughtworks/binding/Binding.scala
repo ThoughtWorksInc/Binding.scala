@@ -775,7 +775,7 @@ object Binding extends Binding2Or3.Companion {
       *   Don't use this method in user code.
       */
     @inline
-    final def withFilterBinding(condition: A => Binding[Boolean]): BindingSeq[A]#WithFilter = {
+    final def withFilterBinding(condition: A => Binding[Boolean]): WithFilter = {
       new WithFilter(condition)
     }
 
