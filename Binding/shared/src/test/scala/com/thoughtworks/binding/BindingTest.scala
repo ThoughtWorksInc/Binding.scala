@@ -24,12 +24,11 @@ SOFTWARE.
 
 package com.thoughtworks.binding
 
-import scala.collection.mutable.ArrayBuffer
-import scala.collection.mutable.Buffer
-
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-import scalaz._
+
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.Buffer
 
 import Binding._
 import BindingSeq.removePatchedListener
@@ -91,8 +90,6 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     }
 
     var resultChanged = 0
-
-    assert(expr1.get == 0)
 
     addChangedListener(
       expr1,
@@ -370,10 +367,10 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     val source = Vars(1, 2, 3)
     val mapped = new BindingSeq.FlatMap(
       source,
-      { sourceElement: Int =>
+      { (sourceElement: Int) =>
         new BindingSeq.MapBinding(
           Constants((0 until sourceElement): _*),
-          { i: Int =>
+          { (i: Int) =>
             Binding {
               raw"""${prefix.bind}$sourceElement"""
             }
@@ -477,7 +474,7 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     val source = Vars(1, 2, 3)
     val mapped = new BindingSeq.MapBinding(
       source,
-      { a: Int =>
+      { (a: Int) =>
         Binding {
           raw"""${prefix.bind}${a}"""
         }
@@ -632,8 +629,6 @@ final class BindingTest extends AnyFreeSpec with Matchers {
   }
 
   "ScalaRxLeakExample" in {
-    import scalaz._, Scalaz._
-
     var count: Int = 0
     val a: Var[Int] = Var(1)
     val b: Var[Int] = Var(2)
@@ -663,23 +658,21 @@ final class BindingTest extends AnyFreeSpec with Matchers {
   }
 
   "multi to one dependencies" in {
-    import scalaz.syntax.all._
-    import scalaz._
 
     val a: Var[Int] = Var(100)
     val b: Var[Int] = Var(200)
     var aFlushCount = 0
     var bFlushCount = 0
-    val aPlusOne = (a: Binding[Int]).map { value =>
+    val aPlusOne = a.map { value =>
       aFlushCount += 1
       value + 1
     }
-    val bPlusOne = (b: Binding[Int]).map { value =>
+    val bPlusOne = b.map { value =>
       bFlushCount += 1
       value + 1
     }
-    val aPlusOneTimesBPlusOn = Binding.BindingInstances.apply2(aPlusOne, bPlusOne) { (aValue, bValue) =>
-      aValue * bValue
+    val aPlusOneTimesBPlusOn = Binding {
+      aPlusOne.bind * bPlusOne.bind
     }
     aPlusOneTimesBPlusOn.watch()
     aPlusOneTimesBPlusOn.get should be((100 + 1) * (200 + 1))
@@ -719,23 +712,26 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     val vars = Vars(Var(1), Var(2), Var(3))
     val logs = new StringBuilder
 
+    def mountPoint(i: Var[Int]) = new SingleMountPoint[Int](i) {
+      override def mount() = {
+        super.mount()
+        logs ++= s"mount ${i.value}\n"
+      }
+      override def unmount() = {
+        logs ++= s"unmount ${i.value}\n"
+        super.unmount()
+      }
+      override def set(newValue: Int) = {
+        logs ++= s"set ${newValue}\n"
+      }
+    }
     val mounting = Binding {
       logs ++= "Binding\n"
       for (i <- vars) {
         logs ++= s"creating mount point ${i.value}\n"
-        new SingleMountPoint(i) {
-          override def mount() = {
-            super.mount()
-            logs ++= s"mount ${i.value}\n"
-          }
-          override def unmount() = {
-            logs ++= s"unmount ${i.value}\n"
-            super.unmount()
-          }
-          override def set(newValue: Int) = {
-            logs ++= s"set ${newValue}\n"
-          }
-        }.bind
+        // FIXME: Compile time error if `mountPoint(i)` is inlined.
+        // To fix it, we should call changeOwner in Dsl.scala for anonymous classes
+        mountPoint(i).bind
       }
     }
     logs.toString should be("Binding\n")

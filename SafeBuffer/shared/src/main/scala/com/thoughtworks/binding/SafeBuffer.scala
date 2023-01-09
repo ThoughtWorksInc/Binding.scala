@@ -38,10 +38,21 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
   override def isEmpty = data.forall(_ == Hole)
 
   override def foreach[U](f: A => U): Unit = {
+    @inline def foreachNonHole(): Unit = {
+      // Don't use `for (element <- data)` because it will throw an exception when
+      // a element is added to the buffer during running the `for` loop.
+      for (i <- data.indices) {
+        data(i) match {
+          case Hole =>
+          case element: A @unchecked =>
+            f(element)
+        }
+      }
+    }
     state match {
       case Idle =>
         state = CleanForeach
-        data.withFilter(_ != Hole).foreach(f.asInstanceOf[Any => U])
+        foreachNonHole()
         state match {
           case DirtyForeach => {
             @tailrec
@@ -67,7 +78,7 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
             throw new IllegalStateException("Expect CleanForeach or DirtyForeach")
         }
       case CleanForeach | DirtyForeach =>
-        data.withFilter(_ != Hole).foreach(f.asInstanceOf[Any => U])
+        foreachNonHole()
     }
   }
 
