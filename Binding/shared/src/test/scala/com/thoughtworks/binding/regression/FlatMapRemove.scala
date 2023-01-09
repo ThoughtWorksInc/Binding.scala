@@ -28,18 +28,18 @@ final class FlatMapRemove extends AnyFreeSpec with Matchers {
         events += "does not has left"
       }
     }
-    assert(events.forall(_ == "does not has left"))
+    every(events) should be("does not has left")
     autoPrint.watch()
-    assert(events.forall(_ == "does not has left"))
+    every(events) should be("does not has left")
     data.value += Right("1")
-    assert(events.forall(_ == "does not has left"))
+    every(events) should be("does not has left")
     data.value += Right("2")
-    assert(events.forall(_ == "does not has left"))
+    every(events) should be("does not has left")
     data.value += Right("3")
-    assert(events.forall(_ == "does not has left"))
+    every(events) should be("does not has left")
     data.value(1) = Left("left 2")
-    assert(events.last == "has left")
+    events.last should be("has left")
     data.value --= Seq(Left("left 2"))
-    assert(events.last == "does not has left")
+    events.last should be("does not has left")
   }
 }
