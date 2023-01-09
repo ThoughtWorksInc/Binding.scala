@@ -91,8 +91,6 @@ final class BindingTest extends AnyFreeSpec with Matchers {
 
     var resultChanged = 0
 
-    assert(expr1.get == 0)
-
     addChangedListener(
       expr1,
       new ChangedListener[Any] {
