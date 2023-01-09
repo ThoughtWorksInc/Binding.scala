@@ -714,23 +714,26 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     val vars = Vars(Var(1), Var(2), Var(3))
     val logs = new StringBuilder
 
+    def mountPoint(i: Var[Int]) = new SingleMountPoint[Int](i) {
+      override def mount() = {
+        super.mount()
+        logs ++= s"mount ${i.value}\n"
+      }
+      override def unmount() = {
+        logs ++= s"unmount ${i.value}\n"
+        super.unmount()
+      }
+      override def set(newValue: Int) = {
+        logs ++= s"set ${newValue}\n"
+      }
+    }
     val mounting = Binding {
       logs ++= "Binding\n"
       for (i <- vars) {
         logs ++= s"creating mount point ${i.value}\n"
-        new SingleMountPoint[Int](i) {
-          override def mount() = {
-            super.mount()
-            logs ++= s"mount ${i.value}\n"
-          }
-          override def unmount() = {
-            logs ++= s"unmount ${i.value}\n"
-            super.unmount()
-          }
-          override def set(newValue: Int) = {
-            logs ++= s"set ${newValue}\n"
-          }
-        }.bind
+        // FIXME: Compile time error if `mountPoint(i)` is inlined.
+        // To fix it, we should call changeOwner in Dsl.scala for anonymous classes
+        mountPoint(i).bind
       }
     }
     logs.toString should be("Binding\n")
