@@ -344,6 +344,33 @@ object Binding extends Binding2Or3.Companion {
     */
   object BindingSeq {
 
+    /** A helper to build complicated comprehension expressions for [[BindingSeq]]
+      */
+    abstract class WithFilter[+A] private[BindingSeq] extends Binding2Or3.BindingSeq2Or3.WithFilter2Or3[A] {
+
+      /** Underlying implementation of [[withFilter.
+        *
+        * @note
+        *   Don't use this method in user code.
+        */
+      def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter[A]
+
+      /** Underlying implementation of [[map]].
+        *
+        * @note
+        *   Don't use this method in user code.
+        */
+      def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B]
+
+      /** Underlying implementation of [[flatMap]].
+        *
+        * @note
+        *   Don't use this method in user code.
+        */
+      @inline
+      def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B]
+    }
+
     private[binding] final class FlatProxy[B](protected val underlying: collection.Seq[BindingSeq[B]])
         extends SeqView[B] {
 
@@ -775,65 +802,61 @@ object Binding extends Binding2Or3.Companion {
       *   Don't use this method in user code.
       */
     @inline
-    final def withFilterBinding(condition: A => Binding[Boolean]): WithFilter = {
-      new WithFilter(condition)
-    }
+    final def withFilterBinding(condition: A => Binding[Boolean]): BindingSeq.WithFilter[A] = {
+      new BindingSeq.WithFilter[A] {
 
-    /** A helper to build complicated comprehension expressions for [[BindingSeq]]
-      */
-    final class WithFilter(condition: A => Binding[Boolean]) extends WithFilter2Or3 {
-
-      /** Underlying implementation of [[withFilter.
-        *
-        * @note
-        *   Don't use this method in user code.
-        */
-      @inline
-      def withFilterBinding(nextCondition: A => Binding[Boolean]): WithFilter = {
-        new WithFilter({ a =>
-          condition(a).flatMap {
-            case true =>
-              nextCondition(a)
-            case false =>
-              Binding.Constant(false)
-          }
-        })
-      }
-
-      /** Underlying implementation of [[map]].
-        *
-        * @note
-        *   Don't use this method in user code.
-        */
-      @inline
-      def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
-        BindingSeq.this.flatMapBinding { (a: A) =>
-          condition(a).flatMap {
-            case true =>
-              f(a).map(Constants(_))
-            case false =>
-              Constant(Empty)
+        /** Underlying implementation of [[withFilter.
+          *
+          * @note
+          *   Don't use this method in user code.
+          */
+        @inline
+        def withFilterBinding(nextCondition: A => Binding[Boolean]): BindingSeq.WithFilter[A] = {
+          BindingSeq.this.withFilterBinding { (a: A) =>
+            condition(a).flatMap {
+              case true =>
+                nextCondition(a)
+              case false =>
+                Binding.Constant(false)
+            }
           }
         }
-      }
 
-      /** Underlying implementation of [[flatMap]].
-        *
-        * @note
-        *   Don't use this method in user code.
-        */
-      @inline
-      def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
-        BindingSeq.this.flatMapBinding { (a: A) =>
-          condition(a).flatMap {
-            case true =>
-              f(a)
-            case false =>
-              Constant(Empty)
+        /** Underlying implementation of [[map]].
+          *
+          * @note
+          *   Don't use this method in user code.
+          */
+        @inline
+        def mapBinding[B](f: (A) => Binding[B]): BindingSeq[B] = {
+          BindingSeq.this.flatMapBinding { (a: A) =>
+            condition(a).flatMap {
+              case true =>
+                f(a).map(Constants(_))
+              case false =>
+                Constant(Empty)
+            }
           }
         }
-      }
 
+        /** Underlying implementation of [[flatMap]].
+          *
+          * @note
+          *   Don't use this method in user code.
+          */
+        @inline
+        def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
+          BindingSeq.this.flatMapBinding { (a: A) =>
+            condition(a).flatMap {
+              case true =>
+                f(a)
+              case false =>
+                Constant(Empty)
+            }
+          }
+        }
+
+      }
     }
 
   }

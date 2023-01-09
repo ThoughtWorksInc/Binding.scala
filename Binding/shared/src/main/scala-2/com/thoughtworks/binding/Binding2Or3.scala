@@ -158,9 +158,12 @@ private[binding] object Binding2Or3 {
       * @param f
       *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
       */
-    def withFilter(condition: A => Boolean): BindingSeq[A]#WithFilter = macro Macros.withFilter
+    def withFilter(condition: A => Boolean): BindingSeq.WithFilter[A] = macro Macros.withFilter
 
-    trait WithFilter2Or3 {
+  }
+
+  object BindingSeq2Or3 {
+    trait WithFilter2Or3[+A] {
 
       /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
         */
@@ -172,12 +175,10 @@ private[binding] object Binding2Or3 {
 
       /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
         */
-      def withFilter(condition: A => Boolean): WithFilter = macro Macros.withFilter
+      def withFilter(condition: A => Boolean): BindingSeq.WithFilter[A] = macro Macros.withFilter
 
     }
-
   }
-
 }
 
 private[binding] trait Binding2Or3[+A] { this: binding.Binding[A] =>
