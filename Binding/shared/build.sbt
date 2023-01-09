@@ -10,7 +10,7 @@ libraryDependencies ++= {
   }
 }
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.14" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.15" % Test
 
 libraryDependencies ++= {
   if (scalaBinaryVersion.value == "2.13") {
@@ -23,6 +23,14 @@ libraryDependencies ++= {
 libraryDependencies ++= {
   if (scalaBinaryVersion.value == "2.13") {
     Some("org.scala-lang" % "scala-compiler" % scalaVersion.value % Provided)
+  } else {
+    None
+  }
+}
+
+libraryDependencies ++= {
+  if (scalaBinaryVersion.value == "3") {
+    Some("com.thoughtworks.dsl" %%% "macros-reset" % "2.0.0-M2+334-530935fc")
   } else {
     None
   }
