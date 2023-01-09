@@ -1,48 +1,51 @@
 name: Scala CI
 
 on:
-- push
-- pull_request
+  - push
+  - pull_request
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
         scala:
-        - 2.13.4
+          - 2.13.4
+          - 3.2.1
         sbt-args:
-        - -J-XX:MaxRAMPercentage=90.0 --addPluginSbtFile=project/plugins.sbt.scala-js.0.6
-        - -J-XX:MaxRAMPercentage=90.0
+          - -J-XX:MaxRAMPercentage=90.0 --addPluginSbtFile=project/plugins.sbt.scala-js.0.6
+          - -J-XX:MaxRAMPercentage=90.0
+        exclude:
+          - scala: 3.2.1
+            sbt-args: -J-XX:MaxRAMPercentage=90.0 --addPluginSbtFile=project/plugins.sbt.scala-js.0.6
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 # Need the git history for sbt-dynver to determine the version
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: temurin
-    - name: Cache SBT
-      uses: actions/cache@v2
-      with:
-        path: | 
-          ~/.ivy2/local/
-          ~/.ivy2/cache/
-          ~/.sbt/
-          ~/.coursier/
-        key: |
-          ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-${{matrix.sbt-args}}
-          ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-
-          ${{runner.os}}-${{matrix.scala}}-
-    - name: Run tests
-      run: sbt ${{matrix.sbt-args}} ++${{matrix.scala}} test
-    - name: Publish to Maven Central Repository
-      env:
-        GITHUB_PERSONAL_ACCESS_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
-      if: ${{ env.GITHUB_PERSONAL_ACCESS_TOKEN != '' }}
-      run: sbt ${{matrix.sbt-args}} ++${{ matrix.scala }} "set every Seq(sonatypeSessionName := \"${{github.workflow}} ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}-$$ ${{ matrix.scala }}\", publishTo := sonatypePublishToBundle.value)" publishSigned sonatypeBundleRelease
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Need the git history for sbt-dynver to determine the version
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: temurin
+      - name: Cache SBT
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.ivy2/local/
+            ~/.ivy2/cache/
+            ~/.sbt/
+            ~/.coursier/
+          key: |
+            ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-${{matrix.sbt-args}}
+            ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-
+            ${{runner.os}}-${{matrix.scala}}-
+      - name: Run tests
+        run: sbt ${{matrix.sbt-args}} ++${{matrix.scala}} test
+      - name: Publish to Maven Central Repository
+        env:
+          GITHUB_PERSONAL_ACCESS_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+        if: ${{ env.GITHUB_PERSONAL_ACCESS_TOKEN != '' }}
+        run: sbt ${{matrix.sbt-args}} ++${{ matrix.scala }} "set every Seq(sonatypeSessionName := \"${{github.workflow}} ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}-$$ ${{ matrix.scala }}\", publishTo := sonatypePublishToBundle.value)" publishSigned sonatypeBundleRelease
