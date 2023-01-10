@@ -5,10 +5,15 @@ lazy val secret = {
       IO.delete(secretDirectory)
       org.eclipse.jgit.api.Git
         .cloneRepository()
-        .setURI("https://github.com/ThoughtWorksInc/tw-data-china-continuous-delivery-password.git")
+        .setURI(
+          "https://github.com/ThoughtWorksInc/tw-data-china-continuous-delivery-password.git"
+        )
         .setDirectory(secretDirectory)
         .setCredentialsProvider(
-          new org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider(token, "")
+          new org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider(
+            token,
+            ""
+          )
         )
         .call()
         .close()
