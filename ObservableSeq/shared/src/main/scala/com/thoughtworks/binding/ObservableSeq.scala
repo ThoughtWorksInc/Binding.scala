@@ -126,6 +126,37 @@ object ObservableSeq:
     end Splice
   end Patch
   extension [A](observableSeq: ObservableSeq[A])
+    def toFingerTree[M <: Comparable[Int] | Int](using
+        Reducer[A, M]
+    )(using ExecutionContext): Observable.Operator[FingerTree[M, A]] =
+      def greaterThan(left: Comparable[Int] | Int, right: Int) =
+        left match
+          case int: Int =>
+            int > right
+          case comparable: Comparable[Int] =>
+            comparable.compareTo(right) > 0
+      end greaterThan
+      observableSeq
+        .postScanLeft(FingerTree.empty) { (snapshot, patch) =>
+          patch match
+            case Patch.Splice(
+                  index,
+                  deleteCount,
+                  newItems
+                ) =>
+              val (left, notLeft) = snapshot.split(greaterThan(_, index))
+              val (deleted, right) = notLeft.split(greaterThan(_, deleteCount))
+              newItems.foldLeft(left)(_ :+ _) <++> right
+            case Patch.ReplaceChildren(newItems) =>
+              newItems.foldLeft(FingerTree.empty)(_ :+ _)
+        }
+    end toFingerTree
+    def measure[M <: Comparable[Int]](using Reducer[A, M])(using
+        Monoid[M],
+        ExecutionContext
+    ): Observable.Operator[M] =
+      observableSeq.toFingerTree[M].map(_.measureMonoid)
+    end measure
     def flatMap[B](f: A => ObservableSeq[B])(using
         ExecutionContext
     ): ObservableSeq[B] =
