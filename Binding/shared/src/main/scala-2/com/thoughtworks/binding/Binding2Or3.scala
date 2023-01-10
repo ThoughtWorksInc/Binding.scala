@@ -10,6 +10,7 @@ import scala.language.existentials
 import scala.language.experimental.macros
 
 import Binding.BindingSeq
+import scala.annotation.nowarn
 
 private[binding] object Binding2Or3 {
 
@@ -89,51 +90,47 @@ private[binding] object Binding2Or3 {
 
   }
 
-  trait Companion extends MonadicFactory.WithTypeClass[Monad, binding.Binding] { this: binding.Binding.type =>
-
-    /** Monad instances for [[Binding]].
-      *
-      * @group typeClasses
-      */
-    implicit object BindingInstances extends Monad[Binding] {
-
-      override def map[A, B](fa: Binding[A])(f: A => B): Binding[B] = {
-        fa.map(f)
-      }
-
-      override def bind[A, B](fa: Binding[A])(f: A => Binding[B]): Binding[B] = {
-        fa.flatMap(f)
-      }
-
-      @inline
-      override def point[A](a: => A): Binding[A] = Constant(a)
-
-      override def ifM[B](value: Binding[Boolean], ifTrue: => Binding[B], ifFalse: => Binding[B]): Binding[B] = {
-        bind(value)(if (_) ifTrue else ifFalse)
-      }
-
-      override def whileM[G[_], A](p: Binding[Boolean], body: => Binding[A])(implicit
-          G: MonadPlus[G]
-      ): Binding[G[A]] = {
-        ifM(p, bind(body)(x => map(whileM(p, body))(xs => G.plus(G.point(x), xs))), point(G.empty))
-      }
-
-      override def whileM_[A](p: Binding[Boolean], body: => Binding[A]): Binding[Unit] = {
-        ifM(p, bind(body)(_ => whileM_(p, body)), point(()))
-      }
-
-      override def untilM[G[_], A](f: Binding[A], cond: => Binding[Boolean])(implicit
-          G: MonadPlus[G]
-      ): Binding[G[A]] = {
-        bind(f)(x => map(whileM(map(cond)(!_), f))(xs => G.plus(G.point(x), xs)))
-      }
-
-      override def untilM_[A](f: Binding[A], cond: => Binding[Boolean]): Binding[Unit] = {
-        bind(f)(_ => whileM_(map(cond)(!_), f))
-      }
-
+  trait BindingInstances2Or3 extends Monad[Binding] {
+    override def map[A, B](fa: Binding[A])(f: A => B): Binding[B] = {
+      fa.map(f)
     }
-    override val typeClass = BindingInstances
+
+    override def bind[A, B](fa: Binding[A])(f: A => Binding[B]): Binding[B] = {
+      fa.flatMap(f)
+    }
+
+    @inline
+    override def point[A](a: => A): Binding[A] = Binding.Constant(a)
+
+    override def ifM[B](value: Binding[Boolean], ifTrue: => Binding[B], ifFalse: => Binding[B]): Binding[B] = {
+      bind(value)(if (_) ifTrue else ifFalse)
+    }
+
+    override def whileM[G[_], A](p: Binding[Boolean], body: => Binding[A])(implicit
+        G: MonadPlus[G]
+    ): Binding[G[A]] = {
+      ifM(p, bind(body)(x => map(whileM(p, body))(xs => G.plus(G.point(x), xs))), point(G.empty))
+    }
+
+    override def whileM_[A](p: Binding[Boolean], body: => Binding[A]): Binding[Unit] = {
+      ifM(p, bind(body)(_ => whileM_(p, body)), point(()))
+    }
+
+    override def untilM[G[_], A](f: Binding[A], cond: => Binding[Boolean])(implicit
+        G: MonadPlus[G]
+    ): Binding[G[A]] = {
+      bind(f)(x => map(whileM(map(cond)(!_), f))(xs => G.plus(G.point(x), xs)))
+    }
+
+    override def untilM_[A](f: Binding[A], cond: => Binding[Boolean]): Binding[Unit] = {
+      bind(f)(_ => whileM_(map(cond)(!_), f))
+    }
+
+  }
+
+  trait Companion extends MonadicFactory.WithTypeClass[Monad, binding.Binding] { this: binding.Binding.type =>
+    @nowarn
+    implicit override val typeClass = BindingInstances
   }
 
   trait BindingSeq2Or3[+A] { this: BindingSeq[A] =>
