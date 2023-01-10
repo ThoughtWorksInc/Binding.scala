@@ -13,6 +13,8 @@ import Binding.BindingSeq
 private[binding] object Binding2Or3:
   type SeqOpsIterable[+A] = Iterable[A] with SeqOps[A, _ <: Iterable, _ <: Iterable[A]]
 
+  trait BindingInstances2Or3
+
   val BindingReset = new Reset:
     type ShouldResetNestedFunctions = false
     type DontSuspend = true

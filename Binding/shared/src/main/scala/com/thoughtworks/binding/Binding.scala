@@ -48,6 +48,16 @@ import Binding2Or3.SeqOpsIterable
   */
 object Binding extends Binding2Or3.Companion {
 
+  /** Monad instances for [[Binding]].
+    *
+    * @group typeClasses
+    */
+  @deprecated(
+    "Binding.scala for Scala 3 does not provide scalaz instances any more out-of-box.",
+    "Binding.scala 12.2.0"
+  )
+  object BindingInstances extends Binding2Or3.BindingInstances2Or3
+
   sealed trait Watchable[+A] {
     def watch(): Unit
     def unwatch(): Unit
