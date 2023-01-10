@@ -99,7 +99,6 @@ private[binding] object Binding2Or3:
             )
             .asExprOf[A => Binding[B]]
         case _ =>
-          report.warning(f.asTerm.toString, f.asTerm.pos)
           '{ (a: A) => Binding.Constant($f(a)): Binding[B] }
       end match
     end bindingFunctionBody
