@@ -1,8 +1,10 @@
 name: Scala CI
 
 on:
-- push
-- pull_request
+  push:
+    branches-ignore:
+    - 'update/**'
+  pull_request:
 
 jobs:
   build:
