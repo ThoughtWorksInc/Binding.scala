@@ -30,7 +30,7 @@ libraryDependencies ++= {
 
 libraryDependencies ++= {
   if (scalaBinaryVersion.value == "3") {
-    Some("com.thoughtworks.dsl" %%% "macros-reset" % "2.0.0-M2+335-7cefa5ea")
+    Some("com.thoughtworks.dsl" %%% "macros-reset" % "2.0.0-M2+339-69c389a4")
   } else {
     None
   }
