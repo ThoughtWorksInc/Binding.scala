@@ -1,12 +1,20 @@
 lazy val secret = {
-  for (gist <- sys.env.get("SECRET_GIST")) yield {
+  for (token <- sys.env.get("GITHUB_PERSONAL_ACCESS_TOKEN")) yield {
     val secret = project.settings(publish / skip := true).in {
       val secretDirectory = file(sourcecode.File()).getParentFile / "secret"
       IO.delete(secretDirectory)
       org.eclipse.jgit.api.Git
         .cloneRepository()
-        .setURI(gist)
+        .setURI(
+          "https://github.com/Atry/secrets.git"
+        )
         .setDirectory(secretDirectory)
+        .setCredentialsProvider(
+          new org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider(
+            token,
+            ""
+          )
+        )
         .call()
         .close()
       secretDirectory
