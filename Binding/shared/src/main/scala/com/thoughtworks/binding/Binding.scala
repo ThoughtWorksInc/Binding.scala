@@ -97,11 +97,19 @@ object Binding extends Binding2Or3.Companion {
     def patched(event: PatchedEvent[Element]): Unit
   }
 
+  /** A data binding expression that has a stable referecence of [[value]].
+   *
+   *  @note Even though [[value]] always references to the same object, the content of the object coule be mutable.
+   */
+  trait Stable[+A] extends Binding[A] {
+    val value: A
+  }
+
   /** A data binding expression that never changes.
     *
     * @group expressions
     */
-  final case class Constant[+A](override val value: A) extends Binding[A] {
+  final case class Constant[+A](override val value: A) extends Stable[A] {
 
     @inline
     override protected def removeChangedListener(listener: ChangedListener[A]): Unit = {
