@@ -72,7 +72,9 @@ See http://www.scala-js.org/tutorial/basic/ for information about how to setup s
 // Enable macro annotations by setting scalac flags for Scala 2.13
 scalacOptions ++= {
   import Ordering.Implicits._
-  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(3L)) {
+    Nil
+  } if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
     Seq("-Ymacro-annotations")
   } else {
     Nil
@@ -114,8 +116,36 @@ the value of the expression changes whenever value of the `Vars` changes.
 ### Step 3: Create a `@html` method that contains data-binding expressions
 
 ``` scala
+// For Scala 3
+def table: Binding[HTMLTableElement] = {
+  html"""<table border="1" cellPadding="5">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>E-mail</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${
+        for (contact <- data) yield {
+          html"""<tr>
+            <td>
+              ${contact.name.bind}
+            </td>
+            <td>
+              ${contact.email.bind}
+            </td>
+          </tr>"""
+        }
+      }
+    </tbody>
+  </table>"""
+}
+```
+``` scala
+// For Scala 2
 @html
-def table: Binding[Table] = {
+def table: Binding[HTMLTableElement] = {
   <table border="1" cellPadding="5">
     <thead>
       <tr>
@@ -141,16 +171,15 @@ def table: Binding[Table] = {
 }
 ```
 
-A `@html` method represents an reactive XHTML template, which supports HTML literal.
-Unlike normal XML literal in a normal Scala method,
-the types of HTML literal are specific subtypes of `org.scalajs.dom.raw.Node` or `com.thoughtworks.binding.BindingSeq[org.scalajs.dom.raw.Node]`,
+`html"""..."""` interpolation in Scala 3 (or @html annotated methods in Scala 3) represents an reactive XHTML template, which supports HTML literal.
+The type of HTML interpolation/literal is a specific subtype of `com.thoughtworks.binding.Binding[org.scalajs.dom.Node]` or `com.thoughtworks.binding.Binding.BindingSeq[org.scalajs.dom.Node]`,
 instead of `scala.xml.Node` or `scala.xml.NodeSeq`.
-So we could have `@html def node: Binding[org.scalajs.dom.raw.HTMLBRElement] = <br/>`
-and `@html def node: Binding[BindingSeq[org.scalajs.dom.raw.HTMLBRElement]] = <br/><br/>`.
+So we could have `def node: Binding[HTMLBRElement] = html"""<br/>"""`
+and `def node: BindingSeq[HTMLBRElement] = html"""<br/><br/>"""`.
 
-A `@html` method is composed with other data-binding expressions in two ways:
+A HTML interpolation/literal method is composed with other data-binding expressions in two ways:
 
- 1. You could use `bind` method in a `@html` method to get value of another `Binding`.
+ 1. You could use `bind` method in an interpolation to get the value of another `Binding`.
  2. You could use `for` / `yield` expression in a `@html` method to map a `BindingSeq` to another.
 
 You can nest `Node` or `BindingSeq[Node]` in other HTML element literals via `{ ... }` interpolation syntax.
@@ -185,11 +214,10 @@ Now you will see a table that just contains a header, because `data` is empty at
 ### Step 6: Add some `<button>` to fill `data` for the table
 
 ``` scala
-@html
 def table: BindingSeq[Node] = {
-  <div>
+  html"""<div>
     <button
-      onclick={ event: Event =>
+      onclick=${ event: Event =>
         data.value += Contact(Var("Yang Bo"), Var("yang.bo@rea-group.com"))
       }
     >
@@ -205,18 +233,18 @@ def table: BindingSeq[Node] = {
       </tr>
     </thead>
     <tbody>
-      {
+      ${
         for (contact <- data) yield {
           <tr>
             <td>
-              {contact.name.bind}
+              ${contact.name.bind}
             </td>
             <td>
-              {contact.email.bind}
+              ${contact.email.bind}
             </td>
             <td>
               <button
-                onclick={ event: Event =>
+                onclick=${ event: Event =>
                   contact.name.value = "Modified Name"
                 }
               >
@@ -227,7 +255,7 @@ def table: BindingSeq[Node] = {
         }
       }
     </tbody>
-  </table>
+  </table>"""
 }
 ```
 
@@ -282,37 +310,34 @@ Every `@html` method is able to compose other `@html` methods via `.bind`.
 ``` scala
 case class Contact(name: Var[String], email: Var[String])
 
-@html
 def bindingButton(contact: Contact): Binding[Button] = {
-  <button
-    onclick={ event: Event =>
+  html"""<button
+    onclick=${ event: Event =>
       contact.name.value = "Modified Name"
     }
   >
    Modify the name
-  </button>
+  </button>"""
 }
 
-@html
 def bindingTr(contact: Contact): Binding[TableRow] = {
-  <tr>
-    <td>{ contact.name.bind }</td>
-    <td>{ contact.email.bind }</td>
-    <td>{ bindingButton(contact).bind }</td>
-  </tr>
+  html"""<tr>
+    <td>${ contact.name.bind }</td>
+    <td>${ contact.email.bind }</td>
+    <td>${ bindingButton(contact).bind }</td>
+  </tr>"""
 }
 
-@html
 def bindingTable(contacts: BindingSeq[Contact]): Binding[Table] = {
-  <table>
+  html"""<table>
     <tbody>
-      {
+      ${
         for (contact <- contacts) yield {
           bindingTr(contact).bind
         }
       }
     </tbody>
-  </table>
+  </table>"""
 }
 
 @JSExport
@@ -359,13 +384,12 @@ As you see, you can embed HTML literals in `@html` methods in Scala source files
 You can also embed Scala expressions in braces in content or attribute values of the HTML literal.
 
 ``` scala
-@html
 def notificationBox(message: String): Binding[Div] = {
-  <div class="notification" title={ s"Tooltip: $message" }>
+  html"""<div class="notification" title=${ s"Tooltip: $message" }>
     {
       message
     }
-  </div>
+  </div>"""
 }
 ```
 
@@ -375,25 +399,24 @@ Binding.scala creates real DOM instead of ReactJS's virtual DOM.
 In the above example, `<div>...</div>` creates a DOM element with the type of `org.scalajs.dom.html.Div`.
 Then, the magic `@html` lets the method wrap the result as a `Binding`.
 
-You can even assign the `Div` to a local variable and invoke native DOM methods on the variable:
+You can even assign the `HTMLDivElement` to a local variable and invoke native DOM methods on the variable:
 
 ``` scala
-@html
-def notificationBox(message: String): Binding[Div] = {
-  val result: Div = <div class="notification" title={ s"Tooltip: $message" }>
-    {
+def notificationBox(message: String): Binding[HTMLDivElement] = {
+  val result: Binding.Stable[HTMLDivElement] = html"""<div class="notification" title=${ s"Tooltip: $message" }>
+    ${
       message
     }
-  </div>
+  </div>"""
 
-  result.scrollIntoView()
+  result.value.scrollIntoView()
 
   result
 }
 ```
 
-`scrollIntoView` method will be invoked when the `Div` is created.
-If you invoke another method not defined in `Div`,
+`scrollIntoView` method will be invoked when the `HTMLDivElement` is created.
+If you invoke another method not defined in `HTMLDivElement`,
 the Scala compiler will report a compile-time error instead of bringing the failure to run-time,
 because Scala is a statically typed language and the Scala compiler understands the type of `Div`.
 
@@ -403,10 +426,9 @@ They are type-checked by Scala compiler as well.
 For example, given the following `typo` method:
 
 ``` scala
-@html
 def typo = {
-  val myDiv = <div typoProperty="xx">content</div>
-  myDiv.typoMethod()
+  val myDiv = html"""<div typoProperty="xx">content</div>"""
+  myDiv.value.typoMethod()
   myDiv
 }
 ```
@@ -414,31 +436,17 @@ def typo = {
 The Scala compiler will report errors like this:
 
 ```
-typo.scala:23: value typoProperty is not a member of org.scalajs.dom.html.Div
-        val myDiv = <div typoProperty="xx">content</div>
-                     ^
-typo.scala:24: value typoMethod is not a member of org.scalajs.dom.html.Div
-        myDiv.typoMethod()
-              ^
+typo.scala:23: typoProperty is neither a valid property nor a valid attribute for <DIV>
+        val myDiv = html"""<div typoProperty="xx">content</div>"""
+                            ^
+typo.scala:24: value typoMethod is not a member of org.scalajs.dom.HTMLDivElement
+        myDiv.value.typoMethod()
+                    ^
 ```
 
 With the help of the static type system, `@html` methods can be much more robust than ReactJS components.
 
 You can find a complete list of supported properties and methods on [scaladoc of scalajs-dom](http://www.scala-js.org/api/scalajs-dom/0.8/org/scalajs/dom/raw/HTMLElement.html) or [MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement)
-
-#### Custom attributes
-
-If you want to suppress the static type checking of attributes, add a `data:` prefix to the attribute:
-
-``` scala
-@html def myCustomDiv = {
-  val myDiv = <div data:customAttributeName="attributeValue"></div>
-  assert(myDiv.getAttribute("customAttributeName") == "attributeValue")
-  myDiv
-}
-```
-
-The Scala compiler will not report errors now.
 
 ## Showcases
 
