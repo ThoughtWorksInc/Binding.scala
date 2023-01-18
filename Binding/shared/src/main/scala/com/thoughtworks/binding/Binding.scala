@@ -1144,7 +1144,7 @@ object Binding extends Binding2Or3.Companion {
     *
     * @group expressions
     */
-  abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element]) extends BindingSeq.MultiMountPoint(upstream)
+  abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element]) extends BindingSeq.MultiMountPoint[Element](upstream)
 
   /** A mechanism that mounts the result of a data binding expression of a single value into DOM or other system.
     *
