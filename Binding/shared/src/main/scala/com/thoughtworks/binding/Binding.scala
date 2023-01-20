@@ -98,9 +98,10 @@ object Binding extends Binding2Or3.Companion {
   }
 
   /** A data binding expression that has a stable referecence of [[value]].
-   *
-   *  @note Even though [[value]] always references to the same object, the content of the object coule be mutable.
-   */
+    *
+    * @note
+    *   Even though [[value]] always references to the same object, the content of the object coule be mutable.
+    */
   trait Stable[+A] extends Binding[A] {
     val value: A
   }
@@ -1152,7 +1153,8 @@ object Binding extends Binding2Or3.Companion {
     *
     * @group expressions
     */
-  abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element]) extends BindingSeq.MultiMountPoint[Element](upstream)
+  abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element])
+      extends BindingSeq.MultiMountPoint[Element](upstream)
 
   /** A mechanism that mounts the result of a data binding expression of a single value into DOM or other system.
     *
