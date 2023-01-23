@@ -68,7 +68,7 @@ See http://www.scala-js.org/tutorial/basic/ for information about how to setup s
 
 ### Step 1: Add html.scala dependencies into your `build.sbt`:
 
-``` scala
+``` sbt
 // Enable macro annotations by setting scalac flags for Scala 2.13
 scalacOptions ++= {
   import Ordering.Implicits._
@@ -479,12 +479,12 @@ The source files are split into few libraries, one file per library.
 
 This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
 
-``` scala
+``` sbt
 // For JVM projects
 libraryDependencies += "com.thoughtworks.binding" %% "binding" % "latest.release"
 ```
 
-``` scala
+``` sbt
 // For Scala.js projects, or JS/JVM cross projects
 libraryDependencies += "com.thoughtworks.binding" %%% "binding" % "latest.release"
 ```
@@ -493,7 +493,7 @@ libraryDependencies += "com.thoughtworks.binding" %%% "binding" % "latest.releas
 
 This is the new HTML templating library based on [Name Based XML Literals](https://docs.scala-lang.org/sips/name-based-xml.html), the module is only available for Scala.js, and the Scala version must between 2.12 and 2.13. You could add it in your `build.sbt`.
 
-```
+``` sbt
 // Enable macro annotations by setting scalac flags for Scala 2.13
 scalacOptions ++= {
   import Ordering.Implicits._
@@ -524,12 +524,12 @@ See [html.scala](https://github.com/GlasslabGames/html.scala) for more informati
 
 This module is available for both JVM and Scala.js. You could add it in your `build.sbt`.
 
-``` scala
+``` sbt
 // For JVM projects
 libraryDependencies += "com.thoughtworks.binding" %% "futurebinding" % "latest.release"
 ```
 
-``` scala
+``` sbt
 // For Scala.js projects, or JS/JVM cross projects
 libraryDependencies += "com.thoughtworks.binding" %%% "futurebinding" % "latest.release"
 ```
@@ -540,7 +540,7 @@ See [FutureBinding](https://github.com/Atry/FutureBinding.scala) for more inform
 
 This module is only available for Scala.js. You could add it in your `build.sbt`.
 
-``` scala
+``` sbt
 // For Scala.js projects
 libraryDependencies += "com.thoughtworks.binding" %%% "jspromisebinding" % "latest.release"
 ```
