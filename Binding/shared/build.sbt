@@ -36,4 +36,11 @@ libraryDependencies ++= {
   }
 }
 
-scalacOptions += "-Ymacro-annotations"
+
+scalacOptions ++= {
+  if (scalaBinaryVersion.value == "2.13") {
+    Some("-Ymacro-annotations")
+  } else {
+    None
+  }
+}
