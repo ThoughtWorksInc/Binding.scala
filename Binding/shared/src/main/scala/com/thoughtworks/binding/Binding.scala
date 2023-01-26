@@ -100,7 +100,7 @@ object Binding extends Binding2Or3.Companion {
   /** A data binding expression that has a stable referecence of [[value]].
     *
     * @note
-    *   Even though [[value]] always references to the same object, the content of the object coule be mutable.
+    *   Even though [[value]] always references to the same object, the content of the object could be mutable.
     */
   trait Stable[+A] extends Binding[A] {
     val value: A
