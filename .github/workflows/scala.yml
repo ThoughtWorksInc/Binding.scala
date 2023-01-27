@@ -4,6 +4,9 @@ on:
   push:
     branches-ignore:
     - 'update/**'
+    tags:
+    - 'v*'
+    
   pull_request:
 
 jobs:
