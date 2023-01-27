@@ -15,8 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        scala:
-          - 2.12.15
+        include:
+          - scala: 3.2.1
+            sbt-args: -J-XX:MaxRAMPercentage=90.0
+          - scala: 2.13.10
+            sbt-args: -J-XX:MaxRAMPercentage=90.0
+          - scala: 2.13.4
+            sbt-args: -J-XX:MaxRAMPercentage=90.0 --addPluginSbtFile=project/plugins.sbt.scala-js.0.6
 
     steps:
       - uses: actions/checkout@v3
