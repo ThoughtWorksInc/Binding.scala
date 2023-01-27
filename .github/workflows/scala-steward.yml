@@ -1,0 +1,20 @@
+on:
+  push:
+    branches-ignore:
+      - "update/**"
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+name: Launch Scala Steward
+
+jobs:
+  scala-steward:
+    runs-on: ubuntu-22.04
+    name: Launch Scala Steward
+    steps:
+      - name: Launch Scala Steward
+        uses: scala-steward-org/scala-steward-action@v2
+        with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
+          branches: ${{ github.ref_name }}
