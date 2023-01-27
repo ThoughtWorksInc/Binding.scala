@@ -37,8 +37,9 @@ jobs:
           ~/.sbt/
           ~/.coursier/
         key: |
-          ${{ runner.os }}-${{matrix.scala}}-${{ hashFiles('**/*.sbt') }}
-          ${{ runner.os }}-${{matrix.scala}}-
+          ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-${{matrix.sbt-args}}
+          ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-
+          ${{runner.os}}-${{matrix.scala}}-
     - name: Run tests
       run: sbt ${{matrix.sbt-args}} ++${{ matrix.scala }} test
     - name: Publish to Maven Central Repository
