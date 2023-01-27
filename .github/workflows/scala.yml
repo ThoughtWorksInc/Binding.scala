@@ -3,47 +3,46 @@ name: Scala CI
 on:
   push:
     branches-ignore:
-    - 'update/**'
+      - "update/**"
     tags:
-    - 'v*'
+      - "v*"
   pull_request:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
         scala:
-        - 2.12.15
+          - 2.12.15
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # Need the git history for sbt-dynver to determine the version
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: temurin
-    - name: Cache SBT
-      uses: actions/cache@v3
-      with:
-        path: | 
-          ~/.ivy2/local/
-          ~/.ivy2/cache/
-          ~/.sbt/
-          ~/.coursier/
-        key: |
-          ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-${{matrix.sbt-args}}
-          ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-
-          ${{runner.os}}-${{matrix.scala}}-
-    - name: Run tests
-      run: sbt ${{matrix.sbt-args}} ++${{ matrix.scala }} test
-    - name: Publish to Maven Central Repository
-      env:
-        GITHUB_PERSONAL_ACCESS_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
-      if: ${{ env.GITHUB_PERSONAL_ACCESS_TOKEN != '' && github.event_name != 'pull_request' }}
-      run: sbt ${{matrix.sbt-args}} ++${{ matrix.scala }} "set every Seq(sonatypeSessionName := \"${{github.workflow}} ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}-$$ ${{ matrix.scala }}\", publishTo := sonatypePublishToBundle.value)" publishSigned sonatypeBundleRelease
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Need the git history for sbt-dynver to determine the version
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: "11"
+          distribution: temurin
+      - name: Cache SBT
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ivy2/local/
+            ~/.ivy2/cache/
+            ~/.sbt/
+            ~/.coursier/
+          key: |
+            ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-${{matrix.sbt-args}}
+            ${{runner.os}}-${{matrix.scala}}-${{hashFiles('**/*.sbt')}}-
+            ${{runner.os}}-${{matrix.scala}}-
+      - name: Run tests
+        run: sbt ${{matrix.sbt-args}} ++${{ matrix.scala }} test
+      - name: Publish to Maven Central Repository
+        env:
+          GITHUB_PERSONAL_ACCESS_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+        if: ${{ env.GITHUB_PERSONAL_ACCESS_TOKEN != '' && github.event_name != 'pull_request' }}
+        run: sbt ${{matrix.sbt-args}} ++${{ matrix.scala }} "set every Seq(sonatypeSessionName := \"${{github.workflow}} ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}-$$ ${{ matrix.scala }}\", publishTo := sonatypePublishToBundle.value)" publishSigned sonatypeBundleRelease
