@@ -555,10 +555,9 @@ For Scala 2.10, 2.11 and 2.12 on JVM or Scala.js 0.6, use [Binding.scala 11.x](h
 
 ## Links
 
-* [html.scala](https://github.com/GlasslabGames/html.scala)
+* [html.scala](https://github.com/Atry/html.scala)
 * [The API documentation](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs)
 * [Binding.scala Questions on Stack Overflow](https://stackoverflow.com/questions/tagged/binding.scala)
-* [html.scala](https://github.com/GlasslabGames/html.scala)
 * [本README的中文版](https://github.com/ThoughtWorksInc/Binding.scala/blob/10.0.x/README-zh.md)
