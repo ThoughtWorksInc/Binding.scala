@@ -556,6 +556,7 @@ For Scala 2.10, 2.11 and 2.12 on JVM or Scala.js 0.6, use [Binding.scala 11.x](h
 ## Links
 
 * [html.scala](https://github.com/Atry/html.scala)
+* [All-in-One Scala.js Static Web Project Template (including Binding.scala)](https://github.com/Atry/scalajs-all-in-one-template)
 * [The API documentation](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
 * [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs)
