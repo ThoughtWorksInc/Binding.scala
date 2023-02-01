@@ -559,7 +559,7 @@ For Scala 2.10, 2.11 and 2.12 on JVM or Scala.js 0.6, use [Binding.scala 11.x](h
 * [LatestEvent.scala](https://github.com/ThoughtWorksInc/LatestEvent.scala) - Event handling and URL routing for Binding.scala
 * [ReactToBindingHtml.scala](https://github.com/Atry/ReactToBindingHtml.scala) - React / Binding.scala / html.scala Interoperability
 * [scalajs-all-in-one-template](https://github.com/Atry/scalajs-all-in-one-template) - All-in-One Scala.js Static Web Project Template (including Binding.scala)
-* [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/) - a example todo app built with Binding.scala
+* [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/) - An example todo app built with Binding.scala
 
 ## Other links
 
