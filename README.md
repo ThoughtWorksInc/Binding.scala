@@ -11,7 +11,7 @@
 
 **Binding.scala** is a data-binding library for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
-Binding.scala can be used as the basis of UI frameworks, however latest Binding.scala 12.x does not contain any build-in UI frameworks any more. For creating reactive HTML UI, you may want to check out [html.scala](https://github.com/Atry/html.scala), which is an UI framework based on Binding.scala, and it is also the successor of previously built-in [dom](https://javadoc.io/page/com.thoughtworks.binding/dom_sjs0.6_2.12/latest/com/thoughtworks/binding/dom.html) library.
+Binding.scala can be used as the basis of UI frameworks, however latest Binding.scala 12.x does not contain any build-in UI frameworks any more. For creating reactive HTML UI, you may want to check out [html.scala](https://github.com/Atry/html.scala), which is an UI framework based on Binding.scala, and it is also the successor of previously built-in [dom](https://javadoc.io/page/com.thoughtworks.binding/dom_sjs0.6_2.12/latest/com/thoughtworks/binding/dom.html) library. See also [React / Binding.scala / html.scala Interoperability](https://github.com/Atry/ReactToBindingHtml.scala) for using existing React components with Binding.scala, 
 
 See [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/) or [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs) as examples for common tasks when working with Binding.scala.
 
@@ -553,12 +553,17 @@ Due to collection API changes, Binding.scala 12.x only works on Scala 2.13, targ
 
 For Scala 2.10, 2.11 and 2.12 on JVM or Scala.js 0.6, use [Binding.scala 11.x](https://github.com/ThoughtWorksInc/Binding.scala/tree/11.9.x) instead.
 
-## Links
+## Related projects
 
-* [html.scala](https://github.com/Atry/html.scala)
-* [All-in-One Scala.js Static Web Project Template (including Binding.scala)](https://github.com/Atry/scalajs-all-in-one-template)
+* [html.scala](https://github.com/Atry/html.scala) - HTML templating library built with Binding.scala
+* [LatestEvent.scala](https://github.com/ThoughtWorksInc/LatestEvent.scala) - Event handling and URL routing for Binding.scala
+* [ReactToBindingHtml.scala](https://github.com/Atry/ReactToBindingHtml.scala) - React / Binding.scala / html.scala Interoperability
+* [scalajs-all-in-one-template](https://github.com/Atry/scalajs-all-in-one-template) - All-in-One Scala.js Static Web Project Template (including Binding.scala)
+* [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/) - a example todo app built with Binding.scala
+
+## Other links
+
 * [The API documentation](https://javadoc.io/page/com.thoughtworks.binding/binding_2.12/latest/com/thoughtworks/binding/index.html)
-* [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/)
 * [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs)
 * [Binding.scala Questions on Stack Overflow](https://stackoverflow.com/questions/tagged/binding.scala)
 * [本README的中文版](https://github.com/ThoughtWorksInc/Binding.scala/blob/10.0.x/README-zh.md)
