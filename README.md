@@ -333,7 +333,7 @@ def bindingTable(contacts: BindingSeq[Contact]) = {
     <tbody>
       ${
         for (contact <- contacts) yield {
-          bindingTr(contact).bind
+          bindingTr(contact)
         }
       }
     </tbody>
