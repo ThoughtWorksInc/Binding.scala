@@ -310,7 +310,7 @@ Every `@html` method is able to compose other `@html` methods via `.bind`.
 ``` scala
 case class Contact(name: Var[String], email: Var[String])
 
-def bindingButton(contact: Contact): Binding[Button] = {
+def bindingButton(contact: Contact) = {
   html"""<button
     onclick=${ event: Event =>
       contact.name.value = "Modified Name"
@@ -320,7 +320,7 @@ def bindingButton(contact: Contact): Binding[Button] = {
   </button>"""
 }
 
-def bindingTr(contact: Contact): Binding[TableRow] = {
+def bindingTr(contact: Contact) = {
   html"""<tr>
     <td>${ contact.name.bind }</td>
     <td>${ contact.email.bind }</td>
@@ -328,7 +328,7 @@ def bindingTr(contact: Contact): Binding[TableRow] = {
   </tr>"""
 }
 
-def bindingTable(contacts: BindingSeq[Contact]): Binding[Table] = {
+def bindingTable(contacts: BindingSeq[Contact]) = {
   html"""<table>
     <tbody>
       ${
