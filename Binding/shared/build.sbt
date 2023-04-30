@@ -36,7 +36,6 @@ libraryDependencies ++= {
   }
 }
 
-
 scalacOptions ++= {
   if (scalaBinaryVersion.value == "2.13") {
     Some("-Ymacro-annotations")
