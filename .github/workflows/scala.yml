@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - scala: 3.2.2
+          - scala: 3.3.0
             sbt-args: -J-XX:MaxRAMPercentage=90.0
           - scala: 2.13.10
             sbt-args: -J-XX:MaxRAMPercentage=90.0
