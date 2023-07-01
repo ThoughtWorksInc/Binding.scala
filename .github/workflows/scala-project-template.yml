@@ -23,8 +23,11 @@ jobs:
         with:
           ref: template
           repository: Atry/scala-project-template
+      - run: git config remote.origin.url "${{github.repositoryUrl}}"
       - uses: peter-evans/create-pull-request@v5
         with:
+          delete-branch: true
+          base: ${{github.ref_name}}
           branch: update/${{github.ref_name}}/scala-project-template
           title: Update scala-project-template
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
