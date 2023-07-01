@@ -24,6 +24,7 @@ jobs:
           ref: template
           repository: Atry/scala-project-template
       - run: git config remote.origin.url "https://github.com/${{github.repository}}"
+      - run: git switch -c ${{github.ref_name}}
       - uses: peter-evans/create-pull-request@v5
         with:
           delete-branch: true
