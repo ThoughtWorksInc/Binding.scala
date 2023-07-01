@@ -129,7 +129,6 @@ private[binding] object Binding2Or3:
 
   object BindingSeqOrWithFilter:
     extension [A](inline bindingSeqOrWithFilter: BindingSeqOrWithFilter[A])
-
       /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
         *
         * @param f
@@ -137,23 +136,23 @@ private[binding] object Binding2Or3:
         */
       inline def map[B](inline f: A => B): BindingSeq[B] = ${ Macros.map('bindingSeqOrWithFilter, 'f) }
 
-      /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
-        *
-        * @param f
-        *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
-        */
-      inline def flatMap[B](inline f: A => BindingSeq[B]): BindingSeq[B] = ${
-        Macros.flatMap('bindingSeqOrWithFilter, 'f)
-      }
+    /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+      *
+      * @param f
+      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
+      */
+    inline def flatMap[B](inline f: A => BindingSeq[B]): BindingSeq[B] = ${
+      Macros.flatMap('bindingSeqOrWithFilter, 'f)
+    }
 
-      /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
-        *
-        * @param f
-        *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
-        */
-      inline def withFilter(inline condition: A => Boolean): BindingSeq.WithFilter[A] = ${
-        Macros.withFilter('bindingSeqOrWithFilter, 'condition)
-      }
+    /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+      *
+      * @param f
+      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
+      */
+    inline def withFilter(inline condition: A => Boolean): BindingSeq.WithFilter[A] = ${
+      Macros.withFilter('bindingSeqOrWithFilter, 'condition)
+    }
     end extension
   end BindingSeqOrWithFilter
 
