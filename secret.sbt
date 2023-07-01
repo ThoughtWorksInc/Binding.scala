@@ -6,7 +6,7 @@ lazy val secret = {
       org.eclipse.jgit.api.Git
         .cloneRepository()
         .setURI(
-          "https://github.com/ThoughtWorksInc/tw-data-china-continuous-delivery-password.git"
+          "https://github.com/Atry/secrets.git"
         )
         .setDirectory(secretDirectory)
         .setCredentialsProvider(

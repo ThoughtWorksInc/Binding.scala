@@ -16,9 +16,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - scala: 3.2.2
+          - scala: 3.3.0
             sbt-args: -J-XX:MaxRAMPercentage=90.0
-          - scala: 2.13.10
+          - scala: 2.13.11
             sbt-args: -J-XX:MaxRAMPercentage=90.0
           - scala: 2.13.4
             sbt-args: -J-XX:MaxRAMPercentage=90.0 --addPluginSbtFile=project/plugins.sbt.scala-js.0.6
