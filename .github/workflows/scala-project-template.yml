@@ -20,11 +20,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: template
-          repository: Atry/scala-project-template
-      - run: git config remote.origin.url "https://github.com/${{github.repository}}"
-      - run: git switch -c ${{github.ref_name}}
+      - run: git fetch https://github.com/Atry/scala-project-template.git template
+      - run: git reset --hard FETCH_HEAD
       - uses: peter-evans/create-pull-request@v5
         with:
           delete-branch: true
