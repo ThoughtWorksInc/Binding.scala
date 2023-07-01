@@ -1,5 +1,0 @@
-image: igeolise/scalajs-test-runner:latest
-vscode:
-  extensions:
-    - scala-lang.scala@0.3.8:wQBBM+lKILHBqOqlqW60xA==
-    - scalameta.metals@1.9.0:EyAIfy0ykjUn9htpw3f7GA==
