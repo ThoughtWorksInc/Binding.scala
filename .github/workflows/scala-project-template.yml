@@ -23,6 +23,7 @@ jobs:
       - run: git fetch https://github.com/Atry/scala-project-template.git template
       - run: git reset --hard FETCH_HEAD
       - uses: peter-evans/create-pull-request@v5
+        continue-on-error: true
         with:
           delete-branch: true
           base: ${{github.ref_name}}
