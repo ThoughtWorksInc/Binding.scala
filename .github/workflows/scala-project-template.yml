@@ -11,8 +11,6 @@ name: Update Scala project template
 jobs:
   update-scala-project-template:
     permissions:
-      # for aws-actions/configure-aws-credentials to assume an AWS role
-      id-token: write
       # for peter-evans/create-pull-request to create branch
       contents: write
       # for peter-evans/create-pull-request to create a PR
@@ -23,6 +21,7 @@ jobs:
       - run: git fetch https://github.com/Atry/scala-project-template.git template
       - run: git reset --hard FETCH_HEAD
       - uses: peter-evans/create-pull-request@v5
+        continue-on-error: true
         with:
           delete-branch: true
           base: ${{github.ref_name}}
