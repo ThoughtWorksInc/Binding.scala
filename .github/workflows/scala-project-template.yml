@@ -1,0 +1,31 @@
+on:
+  push:
+    branches-ignore:
+      - "update/**"
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+name: Update Scala project template
+
+jobs:
+  update-scala-project-template:
+    permissions:
+      # for aws-actions/configure-aws-credentials to assume an AWS role
+      id-token: write
+      # for peter-evans/create-pull-request to create branch
+      contents: write
+      # for peter-evans/create-pull-request to create a PR
+      pull-requests: write
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - run: git fetch https://github.com/Atry/scala-project-template.git template
+      - run: git reset --hard FETCH_HEAD
+      - uses: peter-evans/create-pull-request@v5
+        with:
+          delete-branch: true
+          base: ${{github.ref_name}}
+          branch: update/${{github.ref_name}}/scala-project-template
+          title: Update scala-project-template
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
