@@ -63,19 +63,27 @@ object Binding extends Binding2Or3.Companion {
     def unwatch(): Unit
   }
 
-  private[binding] def addChangedListener[A](binding: Binding[A], listener: ChangedListener[A]) = {
+  private[binding] def addChangedListener[A](
+      binding: Binding[A],
+      listener: ChangedListener[A]
+  ) = {
     binding.addChangedListener(listener)
   }
 
-  private[binding] def removeChangedListener[A](binding: Binding[A], listener: ChangedListener[A]) = {
+  private[binding] def removeChangedListener[A](
+      binding: Binding[A],
+      listener: ChangedListener[A]
+  ) = {
     binding.removeChangedListener(listener)
   }
 
   import BindingJvmOrJs._
 
-  final class ChangedEvent[+Value](source: Binding[Value], val newValue: Value) extends EventObject(source) {
+  final class ChangedEvent[+Value](source: Binding[Value], val newValue: Value)
+      extends EventObject(source) {
     override def getSource = super.getSource.asInstanceOf[Binding[Value]]
-    override def toString = raw"""ChangedEvent[source=$source newValue=$newValue]"""
+    override def toString =
+      raw"""ChangedEvent[source=$source newValue=$newValue]"""
 
   }
 
@@ -86,7 +94,8 @@ object Binding extends Binding2Or3.Companion {
       val replaced: Int
   ) extends EventObject(source) {
     override def getSource = super.getSource.asInstanceOf[BindingSeq[Element]]
-    override def toString = raw"""PatchedEvent[source=$source from=$from that=$that replaced=$replaced]"""
+    override def toString =
+      raw"""PatchedEvent[source=$source from=$from that=$that replaced=$replaced]"""
   }
 
   trait ChangedListener[-Value] {
@@ -100,7 +109,8 @@ object Binding extends Binding2Or3.Companion {
   /** A data binding expression that has a stable referecence of [[value]].
     *
     * @note
-    *   Even though [[value]] always references to the same object, the content of the object could be mutable.
+    *   Even though [[value]] always references to the same object, the content
+    *   of the object could be mutable.
     */
   trait Stable[+A] extends Binding[A] {
     val value: A
@@ -113,12 +123,16 @@ object Binding extends Binding2Or3.Companion {
   final case class Constant[+A](override val value: A) extends Stable[A] {
 
     @inline
-    override protected def removeChangedListener(listener: ChangedListener[A]): Unit = {
+    override protected def removeChangedListener(
+        listener: ChangedListener[A]
+    ): Unit = {
       // Do nothing because this Constant never changes
     }
 
     @inline
-    override protected def addChangedListener(listener: ChangedListener[A]): Unit = {
+    override protected def addChangedListener(
+        listener: ChangedListener[A]
+    ): Unit = {
       // Do nothing because this Constant never changes
     }
   }
@@ -140,7 +154,8 @@ object Binding extends Binding2Or3.Companion {
     * bindingVar.value = "changed value"
     * }}}
     *
-    * Then, any data binding expressions that depend on this [[Var]] will be changed automatically.
+    * Then, any data binding expressions that depend on this [[Var]] will be
+    * changed automatically.
     *
     * @group expressions
     */
@@ -151,10 +166,12 @@ object Binding extends Binding2Or3.Companion {
     @inline
     override def value = cache
 
-    /** Changes the current value of this [[Var]], and reevaluates any expressions that depends on this [[Var]].
+    /** Changes the current value of this [[Var]], and reevaluates any
+      * expressions that depends on this [[Var]].
       *
       * @note
-      *   This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block.
+      *   This method must not be invoked inside a `@dom` method body or a
+      *   `Binding { ... }` block.
       */
     def value_=(newValue: A): Unit = {
       if (cache.isInstanceOf[View[_]] || cache != newValue) {
@@ -167,19 +184,25 @@ object Binding extends Binding2Or3.Companion {
     }
 
     @inline
-    override protected def removeChangedListener(listener: ChangedListener[A]): Unit = {
+    override protected def removeChangedListener(
+        listener: ChangedListener[A]
+    ): Unit = {
       publisher.-=(listener)
     }
 
     @inline
-    override protected def addChangedListener(listener: ChangedListener[A]): Unit = {
+    override protected def addChangedListener(
+        listener: ChangedListener[A]
+    ): Unit = {
       publisher.+=(listener)
     }
   }
 
   /** @group expressions
     */
-  final class Map[A, B](upstream: Binding[A], f: A => B) extends Binding[B] with ChangedListener[A] {
+  final class Map[A, B](upstream: Binding[A], f: A => B)
+      extends Binding[B]
+      with ChangedListener[A] {
 
     private val publisher = new SafeBuffer[ChangedListener[B]]
 
@@ -195,7 +218,9 @@ object Binding extends Binding2Or3.Companion {
     }
 
     @inline
-    override protected def addChangedListener(listener: ChangedListener[B]): Unit = {
+    override protected def addChangedListener(
+        listener: ChangedListener[B]
+    ): Unit = {
       if (publisher.isEmpty) {
         upstream.addChangedListener(this)
         refreshCache()
@@ -204,7 +229,9 @@ object Binding extends Binding2Or3.Companion {
     }
 
     @inline
-    override protected def removeChangedListener(listener: ChangedListener[B]): Unit = {
+    override protected def removeChangedListener(
+        listener: ChangedListener[B]
+    ): Unit = {
       publisher.-=(listener)
       if (publisher.isEmpty) {
         upstream.removeChangedListener(this)
@@ -231,14 +258,19 @@ object Binding extends Binding2Or3.Companion {
       )
     def value: Nothing = throwException()
 
-    protected def removeChangedListener(listener: ChangedListener[Nothing]): Unit = throwException()
+    protected def removeChangedListener(
+        listener: ChangedListener[Nothing]
+    ): Unit = throwException()
 
-    protected def addChangedListener(listener: ChangedListener[Nothing]): Unit = throwException()
+    protected def addChangedListener(listener: ChangedListener[Nothing]): Unit =
+      throwException()
   }
 
   /** @group expressions
     */
-  final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B]) extends Binding[B] with ChangedListener[B] {
+  final class FlatMap[A, B](upstream: Binding[A], f: A => Binding[B])
+      extends Binding[B]
+      with ChangedListener[B] {
 
     private val publisher = new SafeBuffer[ChangedListener[B]]
 
@@ -250,7 +282,9 @@ object Binding extends Binding2Or3.Companion {
         val newCache = f(upstreamEvent.newValue)
         cache = newCache
         newCache.addChangedListener(FlatMap.this)
-        if (oldCache.isInstanceOf[View[_]] || oldCache.value != newCache.value) {
+        if (
+          oldCache.isInstanceOf[View[_]] || oldCache.value != newCache.value
+        ) {
           val event = new ChangedEvent(FlatMap.this, newCache.value)
           for (listener <- publisher) {
             listener.changed(event)
@@ -295,7 +329,9 @@ object Binding extends Binding2Or3.Companion {
       tailrecGetValue(cache)
     }
 
-    override protected def removeChangedListener(listener: ChangedListener[B]): Unit = {
+    override protected def removeChangedListener(
+        listener: ChangedListener[B]
+    ): Unit = {
       publisher.-=(listener)
       if (publisher.isEmpty) {
         upstream.removeChangedListener(forwarder)
@@ -326,10 +362,14 @@ object Binding extends Binding2Or3.Companion {
 
   private[binding] val Empty = new BindingSeq[Nothing] {
     @inline
-    override protected def removePatchedListener(listener: PatchedListener[Nothing]): Unit = {}
+    override protected def removePatchedListener(
+        listener: PatchedListener[Nothing]
+    ): Unit = {}
 
     @inline
-    override protected def addPatchedListener(listener: PatchedListener[Nothing]): Unit = {}
+    override protected def addPatchedListener(
+        listener: PatchedListener[Nothing]
+    ): Unit = {}
 
     type All[+A] = List[A]
 
@@ -337,7 +377,9 @@ object Binding extends Binding2Or3.Companion {
     override protected def value = Nil
   }
 
-  private[Binding] abstract class ValueProxy[B] extends SeqView[B] with HasCache[Binding[B]] {
+  private[Binding] abstract class ValueProxy[B]
+      extends SeqView[B]
+      with HasCache[Binding[B]] {
 
     protected def underlying = cacheData
 
@@ -363,9 +405,11 @@ object Binding extends Binding2Or3.Companion {
     */
   object BindingSeq {
 
-    /** A helper to build complicated comprehension expressions for [[BindingSeq]]
+    /** A helper to build complicated comprehension expressions for
+      * [[BindingSeq]]
       */
-    abstract class WithFilter[+A] private[BindingSeq] extends Binding2Or3.BindingSeq2Or3.WithFilter2Or3[A] {
+    abstract class WithFilter[+A] private[BindingSeq]
+        extends Binding2Or3.BindingSeq2Or3.WithFilter2Or3[A] {
 
       /** Underlying implementation of [[withFilter.
         *
@@ -390,8 +434,9 @@ object Binding extends Binding2Or3.Companion {
       def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B]
     }
 
-    private[binding] final class FlatProxy[B](protected val underlying: collection.Seq[BindingSeq[B]])
-        extends SeqView[B] {
+    private[binding] final class FlatProxy[B](
+        protected val underlying: collection.Seq[BindingSeq[B]]
+    ) extends SeqView[B] {
 
       @inline
       override def length: Int = {
@@ -427,15 +472,23 @@ object Binding extends Binding2Or3.Companion {
       }
     }
 
-    private[binding] def addPatchedListener[A](binding: BindingSeq[A], listener: PatchedListener[A]) = {
+    private[binding] def addPatchedListener[A](
+        binding: BindingSeq[A],
+        listener: PatchedListener[A]
+    ) = {
       binding.addPatchedListener(listener)
     }
 
-    private[binding] def removePatchedListener[A](binding: BindingSeq[A], listener: PatchedListener[A]) = {
+    private[binding] def removePatchedListener[A](
+        binding: BindingSeq[A],
+        listener: PatchedListener[A]
+    ) = {
       binding.removePatchedListener(listener)
     }
 
-    private[Binding] abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element]) extends MountPoint {
+    private[Binding] abstract class MultiMountPoint[-Element](
+        upstream: BindingSeq[Element]
+    ) extends MountPoint {
 
       protected def mount(): Unit = {
         upstream.addPatchedListener(upstreamListener)
@@ -449,7 +502,11 @@ object Binding extends Binding2Or3.Companion {
 
       protected def set(children: Iterable[Element]): Unit
 
-      protected def splice(from: Int, that: Iterable[Element], replaced: Int): Unit
+      protected def splice(
+          from: Int,
+          that: Iterable[Element],
+          replaced: Int
+      ): Unit
 
       private val upstreamListener = new PatchedListener[Element] {
 
@@ -480,7 +537,11 @@ object Binding extends Binding2Or3.Companion {
       override protected def value = new FlatProxy(cacheData)
 
       @inline
-      private def flatIndex(oldCache: Cache, upstreamBegin: Int, upstreamEnd: Int): Int = {
+      private def flatIndex(
+          oldCache: Cache,
+          upstreamBegin: Int,
+          upstreamEnd: Int
+      ): Int = {
         oldCache.view.slice(upstreamBegin, upstreamEnd).map(_.value.length).sum
       }
 
@@ -491,8 +552,16 @@ object Binding extends Binding2Or3.Companion {
           } yield f(child))
           val flatNewChildren = new FlatProxy(mappedNewChildren)
           val flattenFrom = flatIndex(cacheData, 0, upstreamEvent.from)
-          val flattenReplaced = flatIndex(cacheData, upstreamEvent.from, upstreamEvent.from + upstreamEvent.replaced)
-          val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
+          val flattenReplaced = flatIndex(
+            cacheData,
+            upstreamEvent.from,
+            upstreamEvent.from + upstreamEvent.replaced
+          )
+          val oldChildren = spliceCache(
+            upstreamEvent.from,
+            mappedNewChildren,
+            upstreamEvent.replaced
+          )
           for (newChild <- mappedNewChildren) {
             newChild.addPatchedListener(childListener)
           }
@@ -500,7 +569,12 @@ object Binding extends Binding2Or3.Companion {
             oldChild.removePatchedListener(childListener)
           }
           if (upstreamEvent.replaced != 0 || flatNewChildren.nonEmpty) {
-            val event = new PatchedEvent(FlatMap.this, flattenFrom, flatNewChildren, flattenReplaced)
+            val event = new PatchedEvent(
+              FlatMap.this,
+              flattenFrom,
+              flatNewChildren,
+              flattenReplaced
+            )
             for (listener <- publisher) {
               listener.patched(event)
             }
@@ -514,8 +588,14 @@ object Binding extends Binding2Or3.Companion {
       private val childListener = new PatchedListener[B] {
         override def patched(upstreamEvent: PatchedEvent[B]): Unit = {
           val source = upstreamEvent.getSource
-          val index = flatIndex(cacheData, 0, indexOfCache(source)) + upstreamEvent.from
-          val event = new PatchedEvent(FlatMap.this, index, upstreamEvent.that, upstreamEvent.replaced)
+          val index =
+            flatIndex(cacheData, 0, indexOfCache(source)) + upstreamEvent.from
+          val event = new PatchedEvent(
+            FlatMap.this,
+            index,
+            upstreamEvent.that,
+            upstreamEvent.replaced
+          )
           for (listener <- publisher) {
             listener.patched(event)
           }
@@ -523,7 +603,9 @@ object Binding extends Binding2Or3.Companion {
       }
 
       @inline
-      override protected def removePatchedListener(listener: PatchedListener[B]): Unit = {
+      override protected def removePatchedListener(
+          listener: PatchedListener[B]
+      ): Unit = {
         publisher.-=(listener)
         if (publisher.isEmpty) {
           upstream.removePatchedListener(upstreamListener)
@@ -534,7 +616,9 @@ object Binding extends Binding2Or3.Companion {
       }
 
       @inline
-      override protected def addPatchedListener(listener: PatchedListener[B]): Unit = {
+      override protected def addPatchedListener(
+          listener: PatchedListener[B]
+      ): Unit = {
         if (publisher.isEmpty) {
           upstream.addPatchedListener(upstreamListener)
           refreshCache()
@@ -546,8 +630,10 @@ object Binding extends Binding2Or3.Companion {
       }
     }
 
-    private[Binding] final class ForeachBinding[A](upstream: BindingSeq[A], f: A => Binding[Any])
-        extends MountPoint
+    private[Binding] final class ForeachBinding[A](
+        upstream: BindingSeq[A],
+        f: A => Binding[Any]
+    ) extends MountPoint
         with PatchedListener[A]
         with HasCache[Binding[Any]] {
       private[binding] var cacheData: Cache = _
@@ -577,7 +663,11 @@ object Binding extends Binding2Or3.Companion {
         val mappedNewChildren: Cache = toCacheData(for {
           child <- upstreamEvent.that /*.view*/
         } yield f(child))
-        val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
+        val oldChildren = spliceCache(
+          upstreamEvent.from,
+          mappedNewChildren,
+          upstreamEvent.replaced
+        )
         for (newChild <- mappedNewChildren) {
           newChild.watch()
         }
@@ -613,7 +703,11 @@ object Binding extends Binding2Or3.Companion {
           val mappedNewChildren: Cache = toCacheData(for {
             child <- upstreamEvent.that /*.view*/
           } yield f(child))
-          val oldChildren = spliceCache(upstreamEvent.from, mappedNewChildren, upstreamEvent.replaced)
+          val oldChildren = spliceCache(
+            upstreamEvent.from,
+            mappedNewChildren,
+            upstreamEvent.replaced
+          )
           for (newChild <- mappedNewChildren) {
             newChild.addChangedListener(childListener)
           }
@@ -624,7 +718,12 @@ object Binding extends Binding2Or3.Companion {
             var cacheData = mappedNewChildren
           }
           val event =
-            new PatchedEvent[B](MapBinding.this, upstreamEvent.from, proxy, upstreamEvent.replaced)
+            new PatchedEvent[B](
+              MapBinding.this,
+              upstreamEvent.from,
+              proxy,
+              upstreamEvent.replaced
+            )
           for (listener <- publisher) {
             listener.patched(event)
           }
@@ -639,12 +738,21 @@ object Binding extends Binding2Or3.Companion {
         override def changed(event: ChangedEvent[B]): Unit = {
           val index = indexOfCache(event.getSource)
           for (listener <- publisher) {
-            listener.patched(new PatchedEvent(MapBinding.this, index, SingleSeq(event.newValue), 1))
+            listener.patched(
+              new PatchedEvent(
+                MapBinding.this,
+                index,
+                SingleSeq(event.newValue),
+                1
+              )
+            )
           }
         }
       }
 
-      override protected def removePatchedListener(listener: PatchedListener[B]): Unit = {
+      override protected def removePatchedListener(
+          listener: PatchedListener[B]
+      ): Unit = {
         publisher.-=(listener)
         if (publisher.isEmpty) {
           upstream.removePatchedListener(upstreamListener)
@@ -654,7 +762,9 @@ object Binding extends Binding2Or3.Companion {
         }
       }
 
-      override protected def addPatchedListener(listener: PatchedListener[B]): Unit = {
+      override protected def addPatchedListener(
+          listener: PatchedListener[B]
+      ): Unit = {
         if (publisher.isEmpty) {
           upstream.addPatchedListener(upstreamListener)
           refreshCache()
@@ -667,7 +777,9 @@ object Binding extends Binding2Or3.Companion {
 
     }
 
-    private[binding] final class Length(bindingSeq: BindingSeq[_]) extends Binding[Int] with PatchedListener[Any] {
+    private[binding] final class Length(bindingSeq: BindingSeq[_])
+        extends Binding[Int]
+        with PatchedListener[Any] {
 
       private val publisher = new SafeBuffer[ChangedListener[Int]]
 
@@ -675,7 +787,9 @@ object Binding extends Binding2Or3.Companion {
       override protected def value: Int = bindingSeq.value.length
 
       @inline
-      override protected def removeChangedListener(listener: ChangedListener[Int]): Unit = {
+      override protected def removeChangedListener(
+          listener: ChangedListener[Int]
+      ): Unit = {
         publisher.-=(listener)
         if (publisher.isEmpty) {
           bindingSeq.removePatchedListener(this)
@@ -683,7 +797,9 @@ object Binding extends Binding2Or3.Companion {
       }
 
       @inline
-      override protected def addChangedListener(listener: ChangedListener[Int]): Unit = {
+      override protected def addChangedListener(
+          listener: ChangedListener[Int]
+      ): Unit = {
         if (publisher.isEmpty) {
           bindingSeq.addPatchedListener(this)
         }
@@ -708,7 +824,9 @@ object Binding extends Binding2Or3.Companion {
     */
   trait BindingSeq[+A] extends Watchable[A] with Binding2Or3.BindingSeq2Or3[A] {
 
-    /** Returns a new [[Binding]] expression of all elements in this [[BindingSeq]]. */
+    /** Returns a new [[Binding]] expression of all elements in this
+      * [[BindingSeq]].
+      */
     final def all: Binding[All[A]] = new Binding[All[A]] { asBinding =>
       private val patchedListener = new PatchedListener[A] {
         @inline
@@ -725,7 +843,9 @@ object Binding extends Binding2Or3.Companion {
       override protected def value: All[A] = BindingSeq.this.value
 
       @inline
-      override protected def removeChangedListener(listener: ChangedListener[All[A]]): Unit = {
+      override protected def removeChangedListener(
+          listener: ChangedListener[All[A]]
+      ): Unit = {
         publisher.-=(listener)
         if (publisher.isEmpty) {
           BindingSeq.this.removePatchedListener(patchedListener)
@@ -733,7 +853,9 @@ object Binding extends Binding2Or3.Companion {
       }
 
       @inline
-      override protected def addChangedListener(listener: ChangedListener[All[A]]): Unit = {
+      override protected def addChangedListener(
+          listener: ChangedListener[All[A]]
+      ): Unit = {
         if (publisher.isEmpty) {
           BindingSeq.this.addPatchedListener(patchedListener)
         }
@@ -743,11 +865,13 @@ object Binding extends Binding2Or3.Companion {
 
     /** Enables automatic recalculation.
       *
-      * You may invoke this method more than once. Then, when you want to disable automatic recalculation, you must
-      * invoke [[unwatch]] same times as the number of calls to this method.
+      * You may invoke this method more than once. Then, when you want to
+      * disable automatic recalculation, you must invoke [[unwatch]] same times
+      * as the number of calls to this method.
       *
       * @note
-      *   This method is recursive, which means that the dependencies of this [[BindingSeq]] will be watched as well.
+      *   This method is recursive, which means that the dependencies of this
+      *   [[BindingSeq]] will be watched as well.
       */
     @inline
     final def watch(): Unit = {
@@ -757,7 +881,8 @@ object Binding extends Binding2Or3.Companion {
     /** Disables automatic recalculation.
       *
       * @note
-      *   This method is recursive, which means that the dependencies of this [[BindingSeq]] will be unwatched as well.
+      *   This method is recursive, which means that the dependencies of this
+      *   [[BindingSeq]] will be unwatched as well.
       */
     @inline
     final def unwatch(): Unit = {
@@ -803,7 +928,8 @@ object Binding extends Binding2Or3.Companion {
       *   Don't use this method in user code.
       */
     @inline
-    final def mapBinding[B](f: A => Binding[B]): BindingSeq[B] = new BindingSeq.MapBinding[A, B](this, f)
+    final def mapBinding[B](f: A => Binding[B]): BindingSeq[B] =
+      new BindingSeq.MapBinding[A, B](this, f)
 
     /** The underlying implementation of [[flatMap]].
       *
@@ -811,8 +937,13 @@ object Binding extends Binding2Or3.Companion {
       *   Don't use this method in user code.
       */
     @inline
-    final def flatMapBinding[B](f: A => Binding[BindingSeq[B]]): BindingSeq[B] = {
-      new BindingSeq.FlatMap[BindingSeq[B], B](new BindingSeq.MapBinding[A, BindingSeq[B]](this, f), locally)
+    final def flatMapBinding[B](
+        f: A => Binding[BindingSeq[B]]
+    ): BindingSeq[B] = {
+      new BindingSeq.FlatMap[BindingSeq[B], B](
+        new BindingSeq.MapBinding[A, BindingSeq[B]](this, f),
+        locally
+      )
     }
 
     /** The underlying implementation of [[withFilter]].
@@ -821,7 +952,9 @@ object Binding extends Binding2Or3.Companion {
       *   Don't use this method in user code.
       */
     @inline
-    final def withFilterBinding(condition: A => Binding[Boolean]): BindingSeq.WithFilter[A] = {
+    final def withFilterBinding(
+        condition: A => Binding[Boolean]
+    ): BindingSeq.WithFilter[A] = {
       new BindingSeq.WithFilter[A] {
 
         /** Underlying implementation of [[withFilter.
@@ -830,7 +963,9 @@ object Binding extends Binding2Or3.Companion {
           *   Don't use this method in user code.
           */
         @inline
-        def withFilterBinding(nextCondition: A => Binding[Boolean]): BindingSeq.WithFilter[A] = {
+        def withFilterBinding(
+            nextCondition: A => Binding[Boolean]
+        ): BindingSeq.WithFilter[A] = {
           BindingSeq.this.withFilterBinding { (a: A) =>
             condition(a).flatMap {
               case true =>
@@ -864,7 +999,9 @@ object Binding extends Binding2Or3.Companion {
           *   Don't use this method in user code.
           */
         @inline
-        def flatMapBinding[B](f: (A) => Binding[BindingSeq[B]]): BindingSeq[B] = {
+        def flatMapBinding[B](
+            f: (A) => Binding[BindingSeq[B]]
+        ): BindingSeq[B] = {
           BindingSeq.this.flatMapBinding { (a: A) =>
             condition(a).flatMap {
               case true =>
@@ -884,17 +1021,22 @@ object Binding extends Binding2Or3.Companion {
     *
     * @group expressions
     */
-  final class Constants[+A] private[Binding] (underlying: ConstantsData[A]) extends BindingSeq[A] {
+  final class Constants[+A] private[Binding] (underlying: ConstantsData[A])
+      extends BindingSeq[A] {
     type All[+A] = collection.Seq[A]
 
     @inline
     override def value: collection.Seq[A] = underlying
 
     @inline
-    override protected def removePatchedListener(listener: PatchedListener[A]): Unit = {}
+    override protected def removePatchedListener(
+        listener: PatchedListener[A]
+    ): Unit = {}
 
     @inline
-    override protected def addPatchedListener(listener: PatchedListener[A]): Unit = {}
+    override protected def addPatchedListener(
+        listener: PatchedListener[A]
+    ): Unit = {}
 
   }
 
@@ -931,21 +1073,24 @@ object Binding extends Binding2Or3.Companion {
     *
     * @group expressions
     */
-  final class Vars[A] private (private[binding] var cacheData: HasCache[A]#Cache)
-      extends BindingSeq[A]
+  final class Vars[A] private (
+      private[binding] var cacheData: HasCache[A]#Cache
+  ) extends BindingSeq[A]
       with HasCache[A] {
 
     private[binding] val publisher = new SafeBuffer[PatchedListener[A]]
 
     type All[+A] = Buffer[_ <: A] with SeqOpsIterable[A]
 
-    /** Returns a [[scala.collection.mutable.Buffer]] that allow you change the content of this [[Vars]].
+    /** Returns a [[scala.collection.mutable.Buffer]] that allow you change the
+      * content of this [[Vars]].
       *
-      * Whenever you change the returned data, other binding expressions that depend on this [[Vars]] will be
-      * automatically changed.
+      * Whenever you change the returned data, other binding expressions that
+      * depend on this [[Vars]] will be automatically changed.
       *
       * @note
-      *   This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
+      *   This method must not be invoked inside a `@dom` method body or a
+      *   `Binding { ... }` block..
       */
     @inline
     override def value: Buffer[A] = new Proxy
@@ -953,7 +1098,11 @@ object Binding extends Binding2Or3.Companion {
     private[binding] final class Proxy extends Buffer[A] {
 
       @inline
-      override def patchInPlace(from: Int, patch: IterableOnce[A], replaced: Int): this.type = {
+      override def patchInPlace(
+          from: Int,
+          patch: IterableOnce[A],
+          replaced: Int
+      ): this.type = {
         val result = spliceCache(from, patch, replaced)
         for (listener <- publisher) {
           listener.patched(new PatchedEvent(Vars.this, from, result, replaced))
@@ -970,7 +1119,9 @@ object Binding extends Binding2Or3.Companion {
       override def update(n: Int, newelem: A): Unit = {
         updateCache(n, newelem)
         for (listener <- publisher) {
-          listener.patched(new PatchedEvent(Vars.this, n, SingleSeq(newelem), 1))
+          listener.patched(
+            new PatchedEvent(Vars.this, n, SingleSeq(newelem), 1)
+          )
         }
       }
 
@@ -1032,7 +1183,9 @@ object Binding extends Binding2Or3.Companion {
         val oldLength = cacheLength
         appendCache(elem)
         for (listener <- publisher) {
-          listener.patched(new PatchedEvent(Vars.this, oldLength, SingleSeq(elem), 0))
+          listener.patched(
+            new PatchedEvent(Vars.this, oldLength, SingleSeq(elem), 0)
+          )
         }
         Proxy.this
       }
@@ -1061,12 +1214,16 @@ object Binding extends Binding2Or3.Companion {
     }
 
     @inline
-    override protected def removePatchedListener(listener: PatchedListener[A]): Unit = {
+    override protected def removePatchedListener(
+        listener: PatchedListener[A]
+    ): Unit = {
       publisher.-=(listener)
     }
 
     @inline
-    override protected def addPatchedListener(listener: PatchedListener[A]): Unit = {
+    override protected def addPatchedListener(
+        listener: PatchedListener[A]
+    ): Unit = {
       publisher.+=(listener)
     }
 
@@ -1076,14 +1233,20 @@ object Binding extends Binding2Or3.Companion {
     *
     * @group expressions
     */
-  final case class SingletonBindingSeq[A](upstream: Binding[A]) extends BindingSeq[A] {
+  final case class SingletonBindingSeq[A](upstream: Binding[A])
+      extends BindingSeq[A] {
 
     private val publisher = new SafeBuffer[PatchedListener[A]]
 
     private val changedListener = new ChangedListener[A] {
 
       override def changed(event: ChangedEvent[A]) = {
-        val patchedEvent = new PatchedEvent[A](SingletonBindingSeq.this, 0, SingleSeq(event.newValue), 1)
+        val patchedEvent = new PatchedEvent[A](
+          SingletonBindingSeq.this,
+          0,
+          SingleSeq(event.newValue),
+          1
+        )
         for (listener <- publisher) {
           listener.patched(patchedEvent)
         }
@@ -1099,7 +1262,9 @@ object Binding extends Binding2Or3.Companion {
     override protected def value = SingleSeq(upstream.value)
 
     @inline
-    override protected def removePatchedListener(listener: PatchedListener[A]): Unit = {
+    override protected def removePatchedListener(
+        listener: PatchedListener[A]
+    ): Unit = {
       publisher.-=(listener)
       if (publisher.isEmpty) {
         upstream.removeChangedListener(changedListener)
@@ -1107,7 +1272,9 @@ object Binding extends Binding2Or3.Companion {
     }
 
     @inline
-    override protected def addPatchedListener(listener: PatchedListener[A]): Unit = {
+    override protected def addPatchedListener(
+        listener: PatchedListener[A]
+    ): Unit = {
       if (publisher.isEmpty) {
         upstream.addChangedListener(changedListener)
       }
@@ -1116,7 +1283,8 @@ object Binding extends Binding2Or3.Companion {
 
   }
 
-  /** A mechanism that mounts the result of a data binding expression into DOM or other system.
+  /** A mechanism that mounts the result of a data binding expression into DOM
+    * or other system.
     *
     * @group expressions
     */
@@ -1129,7 +1297,9 @@ object Binding extends Binding2Or3.Companion {
     protected def unmount(): Unit
 
     @inline
-    override protected def addChangedListener(listener: ChangedListener[Unit]): Unit = {
+    override protected def addChangedListener(
+        listener: ChangedListener[Unit]
+    ): Unit = {
       if (referenceCount == 0) {
         mount()
       }
@@ -1137,7 +1307,9 @@ object Binding extends Binding2Or3.Companion {
     }
 
     @inline
-    override protected def removeChangedListener(listener: ChangedListener[Unit]): Unit = {
+    override protected def removeChangedListener(
+        listener: ChangedListener[Unit]
+    ): Unit = {
       referenceCount -= 1
       if (referenceCount == 0) {
         unmount()
@@ -1149,21 +1321,25 @@ object Binding extends Binding2Or3.Companion {
 
   }
 
-  /** A mechanism that mounts the result of a data binding expression of a sequence into DOM or other system.
+  /** A mechanism that mounts the result of a data binding expression of a
+    * sequence into DOM or other system.
     *
     * @group expressions
     */
   abstract class MultiMountPoint[-Element](upstream: BindingSeq[Element])
       extends BindingSeq.MultiMountPoint[Element](upstream)
 
-  /** A mechanism that mounts the result of a data binding expression of a single value into DOM or other system.
+  /** A mechanism that mounts the result of a data binding expression of a
+    * single value into DOM or other system.
     *
-    * Use this class only if you must override [[mount]] or [[unmount]]. If you only want to override [[set]], you can
-    * use `Binding[Unit] { onUpstreamChange(upstream.bind) }` instead.
+    * Use this class only if you must override [[mount]] or [[unmount]]. If you
+    * only want to override [[set]], you can use `Binding[Unit] {
+    * onUpstreamChange(upstream.bind) }` instead.
     *
     * @group expressions
     */
-  abstract class SingleMountPoint[-Value](upstream: Binding[Value]) extends MountPoint {
+  abstract class SingleMountPoint[-Value](upstream: Binding[Value])
+      extends MountPoint {
 
     protected def set(value: Value): Unit
 
@@ -1195,7 +1371,9 @@ object Binding extends Binding2Or3.Companion {
     override def changed(event: ChangedEvent[Any]): Unit = {}
   }
 
-  private class RxDefer[A](upstream: => Rx.Observable[A]) extends Rx.Observable[A] with ChangedListener[Option[A]] {
+  private class RxDefer[A](upstream: => Rx.Observable[A])
+      extends Rx.Observable[A]
+      with ChangedListener[Option[A]] {
 
     def changed(upstream: ChangedEvent[Option[A]]): Unit = {
       val event = new ChangedEvent(this, upstream.newValue)
@@ -1216,7 +1394,9 @@ object Binding extends Binding2Or3.Companion {
       }
     }
 
-    override protected def removeChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+    override protected def removeChangedListener(
+        listener: ChangedListener[Option[A]]
+    ): Unit = {
       publisher -= listener
       if (publisher.isEmpty) {
         val upstreamLocal = upstreamCache
@@ -1225,7 +1405,9 @@ object Binding extends Binding2Or3.Companion {
       }
     }
 
-    override protected def addChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+    override protected def addChangedListener(
+        listener: ChangedListener[Option[A]]
+    ): Unit = {
       if (publisher.isEmpty) {
         val upstreamLocal = upstream
         upstreamLocal.addChangedListener(this)
@@ -1236,7 +1418,9 @@ object Binding extends Binding2Or3.Companion {
 
   }
 
-  private class RxMerge[A](upstream: BindingSeq[A]) extends Rx.Observable[A] with PatchedListener[A] {
+  private class RxMerge[A](upstream: BindingSeq[A])
+      extends Rx.Observable[A]
+      with PatchedListener[A] {
 
     private var cache: Option[A] = None
 
@@ -1264,7 +1448,9 @@ object Binding extends Binding2Or3.Companion {
 
     private val publisher = new SafeBuffer[ChangedListener[Option[A]]]
     protected def value: Option[A] = cache
-    protected def addChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+    protected def addChangedListener(
+        listener: ChangedListener[Option[A]]
+    ): Unit = {
       if (publisher.isEmpty) {
         BindingSeq.addPatchedListener(upstream, this)
         cache = upstream.get.headOption
@@ -1272,7 +1458,9 @@ object Binding extends Binding2Or3.Companion {
       publisher += listener
     }
 
-    protected def removeChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+    protected def removeChangedListener(
+        listener: ChangedListener[Option[A]]
+    ): Unit = {
       publisher -= listener
       if (publisher.isEmpty) {
         BindingSeq.removePatchedListener(upstream, this)
@@ -1308,14 +1496,18 @@ object Binding extends Binding2Or3.Companion {
 
     override protected def value: All[A] = cacheData
 
-    override protected def removePatchedListener(listener: PatchedListener[A]): Unit = {
+    override protected def removePatchedListener(
+        listener: PatchedListener[A]
+    ): Unit = {
       publisher -= listener
       if (publisher.isEmpty) {
         observable.removeChangedListener(this)
       }
     }
 
-    override protected def addPatchedListener(listener: PatchedListener[A]): Unit = {
+    override protected def addPatchedListener(
+        listener: PatchedListener[A]
+    ): Unit = {
       if (publisher.isEmpty) {
         observable.value.foreach(appendCache)
         observable.addChangedListener(this)
@@ -1383,13 +1575,17 @@ object Binding extends Binding2Or3.Companion {
 
     private val publisher = new SafeBuffer[ChangedListener[Option[A]]]
     protected def value: Option[A] = observables.headOption.flatMap(_.value)
-    protected def addChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+    protected def addChangedListener(
+        listener: ChangedListener[Option[A]]
+    ): Unit = {
       if (publisher.isEmpty) {
         nextLivingValue()
       }
       publisher += listener
     }
-    protected def removeChangedListener(listener: ChangedListener[Option[A]]): Unit = {
+    protected def removeChangedListener(
+        listener: ChangedListener[Option[A]]
+    ): Unit = {
       publisher -= listener
       observables match {
         case head #:: _ if publisher.isEmpty =>
@@ -1405,19 +1601,23 @@ object Binding extends Binding2Or3.Companion {
     * @see
     *   [[http://reactivex.io/ ReactiveX]]
     * @note
-    *   [[Rx]] operators are incomplete. Feel free to create a Pull Request if you need a certain operator.
+    *   [[Rx]] operators are incomplete. Feel free to create a Pull Request if
+    *   you need a certain operator.
     */
   object Rx {
 
     /** A [[Binding]] that can be terminated.
       *
-      * Once the value turned into a [[scala.None]], this [[Observable]] would be considered as terminated, and any
-      * future changes of this [[Observable]] will be ignored by any [[Rx]] operators derived from this [[Observable]],
-      * even if this [[Observable]] turns into a [[scala.Some]] value again.
+      * Once the value turned into a [[scala.None]], this [[Observable]] would
+      * be considered as terminated, and any future changes of this
+      * [[Observable]] will be ignored by any [[Rx]] operators derived from this
+      * [[Observable]], even if this [[Observable]] turns into a [[scala.Some]]
+      * value again.
       *
       * @note
-      *   Even though an [[Observable]] is technically a [[Binding]], an [[Observable]] created from a [[Rx]] operator
-      *   does not actually indicates data-binding.
+      *   Even though an [[Observable]] is technically a [[Binding]], an
+      *   [[Observable]] created from a [[Rx]] operator does not actually
+      *   indicates data-binding.
       *
       * For example, given an [[Observable]] created from [[Rx.concat]],
       * {{{
@@ -1442,14 +1642,17 @@ object Binding extends Binding2Or3.Companion {
       *   sourceObservable0.value = Some("0")
       * }}}
       *
-      * then the value of the derived observable might not be the original value.
+      * then the value of the derived observable might not be the original
+      * value.
       *
       * {{{
       *   derivedObservable.get shouldNot be(originalDerivedObservableValue)
       * }}}
       *
-      * In contrast, if the `concat` operator is implemented by ordinary [[Binding.bind]] macros, the derived Binding is
-      * indeed a data-binding, i.e. it always perform the same calculation for the same values of source [[Binding]]s.
+      * In contrast, if the `concat` operator is implemented by ordinary
+      * [[Binding.bind]] macros, the derived Binding is indeed a data-binding,
+      * i.e. it always perform the same calculation for the same values of
+      * source [[Binding]]s.
       *
       * {{{
       *   import com.thoughtworks.binding.Binding._
@@ -1483,7 +1686,8 @@ object Binding extends Binding2Or3.Companion {
       */
     type Observable[A] = Binding[Option[A]]
 
-    /** Emit the emissions from two or more [[Observable]]s without interleaving them.
+    /** Emit the emissions from two or more [[Observable]]s without interleaving
+      * them.
       *
       * @see
       *   [[http://reactivex.io/documentation/operators/concat.html ReactiveX - Concat operator]]
@@ -1526,7 +1730,8 @@ object Binding extends Binding2Or3.Companion {
       * concatenated.watch()
       * }}}
       *
-      * the concatenated value should be the first [[scala.Some]] value in the sequence of observables;
+      * the concatenated value should be the first [[scala.Some]] value in the
+      * sequence of observables;
       *
       * {{{
       * concatenated.get should be(Some("1"))
@@ -1537,20 +1742,23 @@ object Binding extends Binding2Or3.Companion {
       * observable1.value = None
       * }}}
       *
-      * the concatenated value should be the next [[scala.Some]] value in the sequence of observables,
+      * the concatenated value should be the next [[scala.Some]] value in the
+      * sequence of observables,
       *
       * {{{
       * concatenated.get should be(Some("2"))
       * }}}
       *
-      * even when the next [[scala.Some]] value is derived from another [[Binding]];
+      * even when the next [[scala.Some]] value is derived from another
+      * [[Binding]];
       *
       * {{{
       * observable2.value = None
       * concatenated.get should be(Some("5-7-derived"))
       * }}}
       *
-      * when the value of the upstream [[Binding]] is changed to another [[scala.Some]] value,
+      * when the value of the upstream [[Binding]] is changed to another
+      * [[scala.Some]] value,
       *
       * {{{
       * observable7.value = Some("7-running")
@@ -1617,11 +1825,13 @@ object Binding extends Binding2Or3.Companion {
       *
       * @note
       *   This [[defer]] is slightly different from other implementation the
-      *   [[http://reactivex.io/documentation/operators/defer.html ReactiveX Defer]] operator, because this [[defer]]
-      *   shares the same upstream [[Observable]] instance for all subscribes.
+      *   [[http://reactivex.io/documentation/operators/defer.html ReactiveX Defer]]
+      *   operator, because this [[defer]] shares the same upstream
+      *   [[Observable]] instance for all subscribes.
       *
       * @example
-      *   Circular referenced [[Observable]]s can be created with the help of [[defer]]
+      *   Circular referenced [[Observable]]s can be created with the help of
+      *   [[defer]]
       *   {{{
       *   import Binding._
       *   val source = Var("init")
@@ -1642,7 +1852,8 @@ object Binding extends Binding2Or3.Companion {
       *   )
       *   }}}
       *
-      * Initially, `observable1` did not subscribe `observable2` because `source` is `init`,
+      * Initially, `observable1` did not subscribe `observable2` because
+      * `source` is `init`,
       * {{{
       *   observable1.watch()
       * }}}
@@ -1655,13 +1866,14 @@ object Binding extends Binding2Or3.Companion {
       * {{{
       *   source.value = "changed"
       * }}}
-      * `observable1` should subscribe `observable2`, and there should be `Some` values.
+      * `observable1` should subscribe `observable2`, and there should be `Some`
+      * values.
       * {{{
       *   observable1.get should be (Some("FlatMap_changed"))
       *   observable2.get should be (Some("FlatMap"))
       * }}}
-      * Even though circular referenced [[Observable]]s can be created in this way, their calculation must not be
-      * mutually dependent.
+      * Even though circular referenced [[Observable]]s can be created in this
+      * way, their calculation must not be mutually dependent.
       */
     def defer[A](upstream: => Observable[A]): Observable[A] = {
       new RxDefer(upstream)
@@ -1710,7 +1922,8 @@ object Binding extends Binding2Or3.Companion {
       * merged.watch()
       * }}}
       *
-      * the merged value should be the first [[scala.Some]] value in the sequence of observables;
+      * the merged value should be the first [[scala.Some]] value in the
+      * sequence of observables;
       *
       * {{{
       * merged.get should be(Some("1"))
@@ -1746,7 +1959,8 @@ object Binding extends Binding2Or3.Companion {
       * observable3.value = Some("3-previous-None")
       * }}}
       *
-      * the merged value should be the new value of the previous `None` observable,
+      * the merged value should be the new value of the previous `None`
+      * observable,
       *
       * {{{
       * merged.get should be(Some("3-previous-None"))
@@ -1818,7 +2032,8 @@ object Binding extends Binding2Or3.Companion {
       *   result.watch()
       * }}}
       *
-      * then result should have the values corresponding to the source observable,
+      * then result should have the values corresponding to the source
+      * observable,
       * {{{
       *   result.get.toSeq should contain theSameElementsInOrderAs Seq("the value is", "1")
       * }}}
@@ -1854,16 +2069,19 @@ object Binding extends Binding2Or3.Companion {
 
 }
 
-/** A data binding expression that represents a value that automatically recalculates when its dependencies change.
+/** A data binding expression that represents a value that automatically
+  * recalculates when its dependencies change.
   *
   * @example
-  *   You may create a data binding expression via `Binding { ??? }` block annotation.
+  *   You may create a data binding expression via `Binding { ??? }` block
+  *   annotation.
   *
   * {{{
   *           val bindingInt: Binding[Int] = Binding { 100 }
   * }}}
   *
-  * A data binding expression may depend on other binding expressions via [[bind]] method:
+  * A data binding expression may depend on other binding expressions via
+  * [[bind]] method:
   *
   * {{{
   *           val bindingString: Binding[String] = Binding { bindingInt.bind.toString }
@@ -1879,21 +2097,26 @@ trait Binding[+A] extends Binding.Watchable[A] with Binding2Or3[A] {
   /** Returns the current value of this [[Binding]]
     *
     * @note
-    *   This method must not be invoked inside a `@dom` method body or a `Binding { ... }` block..
+    *   This method must not be invoked inside a `@dom` method body or a
+    *   `Binding { ... }` block..
     */
   protected def value: A
 
-  protected def removeChangedListener(listener: Binding.ChangedListener[A]): Unit
+  protected def removeChangedListener(
+      listener: Binding.ChangedListener[A]
+  ): Unit
 
   protected def addChangedListener(listener: Binding.ChangedListener[A]): Unit
 
   /** Enable automatic recalculation.
     *
-    * You may invoke this method more than once. Then, when you want to disable automatic recalculation, you must invoke
-    * [[#unwatch unwatch]] same times as the number of calls to this method.
+    * You may invoke this method more than once. Then, when you want to disable
+    * automatic recalculation, you must invoke [[#unwatch unwatch]] same times
+    * as the number of calls to this method.
     *
     * @note
-    *   This method is recursive, which means that the dependencies of this [[Binding]] will be watched as well.
+    *   This method is recursive, which means that the dependencies of this
+    *   [[Binding]] will be watched as well.
     */
   @inline
   final def watch(): Unit = {
@@ -1903,7 +2126,8 @@ trait Binding[+A] extends Binding.Watchable[A] with Binding2Or3[A] {
   /** Disable automatic recalculation.
     *
     * @note
-    *   This method is recursive, which means that the dependencies of this [[Binding]] will be unwatched as well.
+    *   This method is recursive, which means that the dependencies of this
+    *   [[Binding]] will be unwatched as well.
     */
   @inline
   final def unwatch(): Unit = {
