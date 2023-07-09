@@ -51,7 +51,9 @@ private[binding] object BindingJvmOrJs {
     }
 
     @inline
-    private[binding] final def appendCache(elements: IterableOnce[A]): Seq[A] = {
+    private[binding] final def appendCache(
+        elements: IterableOnce[A]
+    ): Seq[A] = {
       val seq = Seq.from(elements)
       cacheData ++= seq
       seq
@@ -74,7 +76,10 @@ private[binding] object BindingJvmOrJs {
     }
 
     @inline
-    private[binding] final def insertCache(n: Int, elems: IterableOnce[A]): Seq[A] = {
+    private[binding] final def insertCache(
+        n: Int,
+        elems: IterableOnce[A]
+    ): Seq[A] = {
       val seq = Seq.from(elems)
       cacheData.insertAll(n, elems)
       seq
@@ -86,12 +91,24 @@ private[binding] object BindingJvmOrJs {
     }
 
     @inline
-    private[binding] final def spliceCache(from: Int, mappedNewChildren: Cache, replaced: Int) = {
-      cacheData.splice(from, replaced, scalajs.runtime.toScalaVarArgs(mappedNewChildren): _*)
+    private[binding] final def spliceCache(
+        from: Int,
+        mappedNewChildren: Cache,
+        replaced: Int
+    ) = {
+      cacheData.splice(
+        from,
+        replaced,
+        scalajs.runtime.toScalaVarArgs(mappedNewChildren): _*
+      )
     }
 
     @inline
-    private[binding] final def spliceCache(from: Int, mappedNewChildren: IterableOnce[A], replaced: Int) = {
+    private[binding] final def spliceCache(
+        from: Int,
+        mappedNewChildren: IterableOnce[A],
+        replaced: Int
+    ) = {
       cacheData.splice(from, replaced, Seq.from(mappedNewChildren): _*)
     }
 
