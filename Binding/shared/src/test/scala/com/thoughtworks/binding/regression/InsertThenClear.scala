@@ -43,7 +43,10 @@ final class InsertThenClear extends AnyFreeSpec with Matchers {
     assert(mapped.get sameElements Seq(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10))
 
     items.value.insertAll(3, 100 to 103)
-    assert(mapped.get sameElements Seq(-1, -2, -3, -100, -101, -102, -103, -4, -5, -6, -7, -8, -9, -10))
+    assert(
+      mapped.get sameElements Seq(-1, -2, -3, -100, -101, -102, -103, -4, -5,
+        -6, -7, -8, -9, -10)
+    )
 
     items.value.clear()
     assert(mapped.get sameElements Seq.empty)
