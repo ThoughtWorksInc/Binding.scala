@@ -14,20 +14,25 @@ import scala.annotation.nowarn
 
 private[binding] object Binding2Or3 {
 
-  private[binding] type SeqOpsIterable[+A] = Iterable[A] with SeqOps[A, CC, CC[A]] forSome {
-    type CC[+A] <: Iterable[A]
-  }
+  private[binding] type SeqOpsIterable[+A] =
+    Iterable[A] with SeqOps[A, CC, CC[A]] forSome {
+      type CC[+A] <: Iterable[A]
+    }
 
   final class Macros(val c: scala.reflect.macros.blackbox.Context) {
 
     import c.universe._
 
-    lazy val functionOrFunctionLiteral: PartialFunction[Tree, (List[ValDef], Tree)] = {
+    lazy val functionOrFunctionLiteral
+        : PartialFunction[Tree, (List[ValDef], Tree)] = {
       case Function(vparams, body) =>
         (vparams, body)
       case f =>
         val elementName = TermName(c.freshName("bindingElement"))
-        (List(q"val $elementName: ${TypeTree()} = $EmptyTree"), atPos(f.pos)(q"$f($elementName)"))
+        (
+          List(q"val $elementName: ${TypeTree()} = $EmptyTree"),
+          atPos(f.pos)(q"$f($elementName)")
+        )
     }
 
     final def foreach(f: Tree): Tree = {
@@ -72,7 +77,10 @@ private[binding] object Binding2Or3 {
     }
 
     final def withFilter(condition: Tree): Tree = {
-      val apply @ Apply(Select(self, TermName("withFilter")), List(f @ functionOrFunctionLiteral(vparams, body))) =
+      val apply @ Apply(
+        Select(self, TermName("withFilter")),
+        List(f @ functionOrFunctionLiteral(vparams, body))
+      ) =
         c.macroApplication
       val monadicBody =
         q"""_root_.com.thoughtworks.binding.Binding.apply[_root_.scala.Boolean]($body)"""
@@ -102,33 +110,48 @@ private[binding] object Binding2Or3 {
     @inline
     override def point[A](a: => A): Binding[A] = Binding.Constant(a)
 
-    override def ifM[B](value: Binding[Boolean], ifTrue: => Binding[B], ifFalse: => Binding[B]): Binding[B] = {
+    override def ifM[B](
+        value: Binding[Boolean],
+        ifTrue: => Binding[B],
+        ifFalse: => Binding[B]
+    ): Binding[B] = {
       bind(value)(if (_) ifTrue else ifFalse)
     }
 
-    override def whileM[G[_], A](p: Binding[Boolean], body: => Binding[A])(implicit
-        G: MonadPlus[G]
+    override def whileM[G[_], A](p: Binding[Boolean], body: => Binding[A])(
+        implicit G: MonadPlus[G]
     ): Binding[G[A]] = {
-      ifM(p, bind(body)(x => map(whileM(p, body))(xs => G.plus(G.point(x), xs))), point(G.empty))
+      ifM(
+        p,
+        bind(body)(x => map(whileM(p, body))(xs => G.plus(G.point(x), xs))),
+        point(G.empty)
+      )
     }
 
-    override def whileM_[A](p: Binding[Boolean], body: => Binding[A]): Binding[Unit] = {
+    override def whileM_[A](
+        p: Binding[Boolean],
+        body: => Binding[A]
+    ): Binding[Unit] = {
       ifM(p, bind(body)(_ => whileM_(p, body)), point(()))
     }
 
-    override def untilM[G[_], A](f: Binding[A], cond: => Binding[Boolean])(implicit
-        G: MonadPlus[G]
+    override def untilM[G[_], A](f: Binding[A], cond: => Binding[Boolean])(
+        implicit G: MonadPlus[G]
     ): Binding[G[A]] = {
       bind(f)(x => map(whileM(map(cond)(!_), f))(xs => G.plus(G.point(x), xs)))
     }
 
-    override def untilM_[A](f: Binding[A], cond: => Binding[Boolean]): Binding[Unit] = {
+    override def untilM_[A](
+        f: Binding[A],
+        cond: => Binding[Boolean]
+    ): Binding[Unit] = {
       bind(f)(_ => whileM_(map(cond)(!_), f))
     }
 
   }
 
-  trait Companion extends MonadicFactory.WithTypeClass[Monad, binding.Binding] { this: binding.Binding.type =>
+  trait Companion extends MonadicFactory.WithTypeClass[Monad, binding.Binding] {
+    this: binding.Binding.type =>
     @nowarn
     implicit override val typeClass = BindingInstances
   }
@@ -136,43 +159,55 @@ private[binding] object Binding2Or3 {
   trait BindingSeq2Or3[+A] { this: BindingSeq[A] =>
     def foreach[U](f: A => U): Unit = macro Macros.foreach
 
-    /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+    /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]]
+      * via `f`
       *
       * @param f
-      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
+      *   The mapper function, which may contain magic [[Binding#bind bind]]
+      *   calls.
       */
     def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
-    /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+    /** Returns a [[BindingSeq]] that flat-maps each element of this
+      * [[BindingSeq]] via `f`
       *
       * @param f
-      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
+      *   The mapper function, which may contain magic [[Binding#bind bind]]
+      *   calls.
       */
     def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
 
-    /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+    /** Returns a view of this [[BindingSeq]] that applied a filter of
+      * `condition`
       *
       * @param f
-      *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
+      *   The mapper function, which may contain magic [[Binding#bind bind]]
+      *   calls.
       */
-    def withFilter(condition: A => Boolean): BindingSeq.WithFilter[A] = macro Macros.withFilter
+    def withFilter(condition: A => Boolean): BindingSeq.WithFilter[A] = macro
+      Macros.withFilter
 
   }
 
   object BindingSeq2Or3 {
     trait WithFilter2Or3[+A] {
 
-      /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+      /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]]
+        * via `f`
         */
       def map[B](f: A => B): BindingSeq[B] = macro Macros.map
 
-      /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+      /** Returns a [[BindingSeq]] that flat-maps each element of this
+        * [[BindingSeq]] via `f`
         */
-      def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro Macros.flatMap
+      def flatMap[B](f: A => BindingSeq[B]): BindingSeq[B] = macro
+        Macros.flatMap
 
-      /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+      /** Returns a view of this [[BindingSeq]] that applied a filter of
+        * `condition`
         */
-      def withFilter(condition: A => Boolean): BindingSeq.WithFilter[A] = macro Macros.withFilter
+      def withFilter(condition: A => Boolean): BindingSeq.WithFilter[A] = macro
+        Macros.withFilter
 
     }
   }
@@ -180,15 +215,20 @@ private[binding] object Binding2Or3 {
 
 private[binding] trait Binding2Or3[+A] { this: binding.Binding[A] =>
 
-  /** Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].
+  /** Returns the current value of this [[Binding]] and marks the current `@dom`
+    * method depend on this [[Binding]].
     *
-    * Each time the value changes, in the current `@dom` method, all code after the current `bind` expression will be
-    * re-evaluated if the current `@dom` method is [[#watch watch]]ing. However, code in current `@dom` method and
-    * before the current `bind` expression will not be re-evaluated. The above rule is not applied to DOM nodes created
-    * by XHTML literal. A `bind` expression under a DOM node does not affect siblings and parents of that node.
+    * Each time the value changes, in the current `@dom` method, all code after
+    * the current `bind` expression will be re-evaluated if the current `@dom`
+    * method is [[#watch watch]]ing. However, code in current `@dom` method and
+    * before the current `bind` expression will not be re-evaluated. The above
+    * rule is not applied to DOM nodes created by XHTML literal. A `bind`
+    * expression under a DOM node does not affect siblings and parents of that
+    * node.
     *
     * @note
-    *   This method must be invoked inside a `@dom` method body or a `Binding { ... }` block..
+    *   This method must be invoked inside a `@dom` method body or a `Binding {
+    *   ... }` block..
     */
   final def bind: A = macro Binding2Or3.Macros.bind
 
