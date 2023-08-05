@@ -11,7 +11,8 @@ import com.thoughtworks.dsl.macros.Reset
 import Binding.BindingSeq
 
 private[binding] object Binding2Or3:
-  type SeqOpsIterable[+A] = Iterable[A] with SeqOps[A, _ <: Iterable, _ <: Iterable[A]]
+  type SeqOpsIterable[+A] = Iterable[A]
+    with SeqOps[A, _ <: Iterable, _ <: Iterable[A]]
 
   trait BindingInstances2Or3
 
@@ -24,9 +25,12 @@ private[binding] object Binding2Or3:
 
     inline def apply[A](inline a: A): Binding[A] = BindingReset.*[Binding](a)
 
-    opaque type Bind[+A] <: Dsl.Keyword.Opaque = Dsl.Keyword.Opaque.Of[Binding[A]]
+    opaque type Bind[+A] <: Dsl.Keyword.Opaque =
+      Dsl.Keyword.Opaque.Of[Binding[A]]
 
-    final def Bind[A](using dummyImplicit: DummyImplicit = DummyImplicit.dummyImplicit): Binding[A] =:= Bind[A] =
+    final def Bind[A](using
+        dummyImplicit: DummyImplicit = DummyImplicit.dummyImplicit
+    ): Binding[A] =:= Bind[A] =
       Dsl.Keyword.Opaque.Of
     end Bind
 
@@ -41,16 +45,20 @@ private[binding] object Binding2Or3:
     @inline given [A]: Dsl.Lift.OneStep[A, Binding[A]] = Constant(_)
 
     extension [A](inline binding: Binding[A])
-      /** Returns the current value of this [[Binding]] and marks the current `@dom` method depend on this [[Binding]].
+      /** Returns the current value of this [[Binding]] and marks the current
+        * `@dom` method depend on this [[Binding]].
         *
-        * Each time the value changes, in the current `@dom` method, all code after the current `bind` expression will
-        * be re-evaluated if the current `@dom` method is [[#watch watch]]ing. However, code in current `@dom` method
-        * and before the current `bind` expression will not be re-evaluated. The above rule is not applied to DOM nodes
-        * created by XHTML literal. A `bind` expression under a DOM node does not affect siblings and parents of that
-        * node.
+        * Each time the value changes, in the current `@dom` method, all code
+        * after the current `bind` expression will be re-evaluated if the
+        * current `@dom` method is [[#watch watch]]ing. However, code in current
+        * `@dom` method and before the current `bind` expression will not be
+        * re-evaluated. The above rule is not applied to DOM nodes created by
+        * XHTML literal. A `bind` expression under a DOM node does not affect
+        * siblings and parents of that node.
         *
         * @note
-        *   This method must be invoked inside a `@dom` method body or a `Binding { ... }` block..
+        *   This method must be invoked inside a `@dom` method body or a
+        *   `Binding { ... }` block..
         */
       transparent inline def bind: A =
         Dsl.shift[Binding.Bind[A], A](Binding.Bind(binding))
@@ -59,7 +67,9 @@ private[binding] object Binding2Or3:
   end Companion
 
   object Macros:
-    private def bindingFunctionBody[A: quoted.Type, B: quoted.Type](f: quoted.Expr[A => B])(using Quotes) =
+    private def bindingFunctionBody[A: quoted.Type, B: quoted.Type](
+        f: quoted.Expr[A => B]
+    )(using Quotes) =
       import quoted.quotes.reflect.*
       f.asTerm match
         case inlined @ Inlined(
@@ -69,7 +79,11 @@ private[binding] object Binding2Or3:
                 List(
                   defDef @ DefDef(
                     name,
-                    paramss @ List(TermParamClause(List(param @ ValDef(paramName, paramTpt, _)))),
+                    paramss @ List(
+                      TermParamClause(
+                        List(param @ ValDef(paramName, paramTpt, _))
+                      )
+                    ),
                     tpt,
                     Some(rhs)
                   )
@@ -90,7 +104,9 @@ private[binding] object Binding2Or3:
                         .changeOwner(Symbol.spliceOwner)
                     ),
                     '{
-                      Binding(${ rhs.changeOwner(Symbol.spliceOwner).asExprOf[B] })
+                      Binding(${
+                        rhs.changeOwner(Symbol.spliceOwner).asExprOf[B]
+                      })
                     }.asTerm.changeOwner(Symbol.spliceOwner)
                   )
                     .asExprOf[Binding[B]]
@@ -103,20 +119,32 @@ private[binding] object Binding2Or3:
       end match
     end bindingFunctionBody
 
-    def foreach[A: quoted.Type, U: quoted.Type](self: quoted.Expr[BindingSeq[A]], f: quoted.Expr[A => U])(using
+    def foreach[A: quoted.Type, U: quoted.Type](
+        self: quoted.Expr[BindingSeq[A]],
+        f: quoted.Expr[A => U]
+    )(using
         qctx: Quotes
-    ): quoted.Expr[Unit] = '{ $self.foreachBinding(${ bindingFunctionBody(f) }).bind }
+    ): quoted.Expr[Unit] = '{
+      $self.foreachBinding(${ bindingFunctionBody(f) }).bind
+    }
 
-    def map[A: quoted.Type, B: quoted.Type](self: quoted.Expr[BindingSeqOrWithFilter[A]], f: quoted.Expr[A => B])(using
+    def map[A: quoted.Type, B: quoted.Type](
+        self: quoted.Expr[BindingSeqOrWithFilter[A]],
+        f: quoted.Expr[A => B]
+    )(using
         qctx: Quotes
-    ): quoted.Expr[BindingSeq[B]] = '{ $self.mapBinding(${ bindingFunctionBody(f) }) }
+    ): quoted.Expr[BindingSeq[B]] = '{
+      $self.mapBinding(${ bindingFunctionBody(f) })
+    }
 
     def flatMap[A: quoted.Type, B: quoted.Type](
         self: quoted.Expr[BindingSeqOrWithFilter[A]],
         f: quoted.Expr[A => BindingSeq[B]]
     )(using
         qctx: Quotes
-    ): quoted.Expr[BindingSeq[B]] = '{ $self.flatMapBinding(${ bindingFunctionBody(f) }) }
+    ): quoted.Expr[BindingSeq[B]] = '{
+      $self.flatMapBinding(${ bindingFunctionBody(f) })
+    }
 
     def withFilter[A: quoted.Type](
         self: quoted.Expr[BindingSeqOrWithFilter[A]],
@@ -130,28 +158,38 @@ private[binding] object Binding2Or3:
   object BindingSeqOrWithFilter:
     extension [A](inline bindingSeqOrWithFilter: BindingSeqOrWithFilter[A])
 
-      /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]] via `f`
+      /** Returns a [[BindingSeq]] that maps each element of this [[BindingSeq]]
+        * via `f`
         *
         * @param f
-        *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
+        *   The mapper function, which may contain magic [[Binding#bind bind]]
+        *   calls.
         */
-      inline def map[B](inline f: A => B): BindingSeq[B] = ${ Macros.map('bindingSeqOrWithFilter, 'f) }
+      inline def map[B](inline f: A => B): BindingSeq[B] = ${
+        Macros.map('bindingSeqOrWithFilter, 'f)
+      }
 
-      /** Returns a [[BindingSeq]] that flat-maps each element of this [[BindingSeq]] via `f`
+      /** Returns a [[BindingSeq]] that flat-maps each element of this
+        * [[BindingSeq]] via `f`
         *
         * @param f
-        *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
+        *   The mapper function, which may contain magic [[Binding#bind bind]]
+        *   calls.
         */
       inline def flatMap[B](inline f: A => BindingSeq[B]): BindingSeq[B] = ${
         Macros.flatMap('bindingSeqOrWithFilter, 'f)
       }
 
-      /** Returns a view of this [[BindingSeq]] that applied a filter of `condition`
+      /** Returns a view of this [[BindingSeq]] that applied a filter of
+        * `condition`
         *
         * @param f
-        *   The mapper function, which may contain magic [[Binding#bind bind]] calls.
+        *   The mapper function, which may contain magic [[Binding#bind bind]]
+        *   calls.
         */
-      inline def withFilter(inline condition: A => Boolean): BindingSeq.WithFilter[A] = ${
+      inline def withFilter(
+          inline condition: A => Boolean
+      ): BindingSeq.WithFilter[A] = ${
         Macros.withFilter('bindingSeqOrWithFilter, 'condition)
       }
     end extension
@@ -160,12 +198,16 @@ private[binding] object Binding2Or3:
   trait BindingSeqOrWithFilter[+A]:
     def mapBinding[B](f: A => Binding[B]): BindingSeq[B]
     def flatMapBinding[B](f: A => Binding[BindingSeq[B]]): BindingSeq[B]
-    def withFilterBinding(condition: A => Binding[Boolean]): BindingSeq.WithFilter[A]
+    def withFilterBinding(
+        condition: A => Binding[Boolean]
+    ): BindingSeq.WithFilter[A]
   end BindingSeqOrWithFilter
 
   object BindingSeq2Or3:
     extension [A](inline bindingSeq: BindingSeq[A])
-      transparent inline def foreach[U](inline f: A => U): Unit = ${ Macros.foreach('bindingSeq, 'f) }
+      transparent inline def foreach[U](inline f: A => U): Unit = ${
+        Macros.foreach('bindingSeq, 'f)
+      }
     end extension
 
     trait WithFilter2Or3[+A] extends BindingSeqOrWithFilter[A]:
