@@ -17,12 +17,13 @@ private[binding] object SafeBuffer {
 
 }
 
-/** Similar to [[scala.collection.mutable.ArrayBuffer]], except that this [[SafeBuffer]] allows adding or removing
-  * elements via [[+=]] and [[-=]] inside a [[foreach]] block.
+/** Similar to [[scala.collection.mutable.ArrayBuffer]], except that this
+  * [[SafeBuffer]] allows adding or removing elements via [[+=]] and [[-=]]
+  * inside a [[foreach]] block.
   *
   * @note
-  *   A [[java.lang.IllegalStateException]] will be thrown when invoking methods other than [[+=]] and [[-=]] in a
-  *   [[foreach]] block.
+  *   A [[java.lang.IllegalStateException]] will be thrown when invoking methods
+  *   other than [[+=]] and [[-=]] in a [[foreach]] block.
   */
 final class SafeBuffer[A] extends mutable.Buffer[A] {
 
@@ -75,7 +76,9 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
           case CleanForeach =>
             state = Idle
           case Idle =>
-            throw new IllegalStateException("Expect CleanForeach or DirtyForeach")
+            throw new IllegalStateException(
+              "Expect CleanForeach or DirtyForeach"
+            )
         }
       case CleanForeach | DirtyForeach =>
         foreachNonHole()
@@ -128,7 +131,11 @@ final class SafeBuffer[A] extends mutable.Buffer[A] {
     data.insertAll(idx, elems)
   }
 
-  def patchInPlace(from: Int, patch: scala.collection.IterableOnce[A], replaced: Int): this.type = {
+  def patchInPlace(
+      from: Int,
+      patch: scala.collection.IterableOnce[A],
+      replaced: Int
+  ): this.type = {
     checkIdle()
     data.patchInPlace(from, patch, replaced)
     this

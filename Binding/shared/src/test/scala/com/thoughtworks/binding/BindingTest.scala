@@ -224,7 +224,13 @@ final class BindingTest extends AnyFreeSpec with Matchers {
         assert(event.getSource == mapped)
         assert(event.from == 9)
         assert(event.replaced == 0)
-        assert(event.that sameElements Seq("ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
+        assert(
+          event.that sameElements Seq(
+            "ForYield 0/3",
+            "ForYield 1/3",
+            "ForYield 2/3"
+          )
+        )
     }
     assert(
       mapped.get sameElements Seq(
@@ -244,7 +250,16 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     )
     prefix.value = "3"
     assert(sourceEvents.length == 4)
-    assert(mapped.get sameElements Seq("3 0/2", "3 1/2", "3 0/4", "3 1/4", "3 2/4", "3 3/4"))
+    assert(
+      mapped.get sameElements Seq(
+        "3 0/2",
+        "3 1/2",
+        "3 0/4",
+        "3 1/4",
+        "3 2/4",
+        "3 3/4"
+      )
+    )
 
     removePatchedListener(mapped, mappedEvents.listener)
     removePatchedListener(source, sourceEvents.listener)
@@ -340,13 +355,32 @@ final class BindingTest extends AnyFreeSpec with Matchers {
         assert(event.getSource == mapped)
         assert(event.from == 9)
         assert(event.replaced == 0)
-        assert(event.that sameElements Seq("ForYield 0/3", "ForYield 1/3", "ForYield 2/3"))
+        assert(
+          event.that sameElements Seq(
+            "ForYield 0/3",
+            "ForYield 1/3",
+            "ForYield 2/3"
+          )
+        )
     }
     prefix.value = "p"
     assert(sourceEvents.length == 4)
     assert(mappedEvents.length == 15)
     val expected =
-      Seq("p 0/2", "p 1/2", "p 0/3", "p 1/3", "p 2/3", "p 0/4", "p 1/4", "p 2/4", "p 3/4", "p 0/3", "p 1/3", "p 2/3")
+      Seq(
+        "p 0/2",
+        "p 1/2",
+        "p 0/3",
+        "p 1/3",
+        "p 2/3",
+        "p 0/4",
+        "p 1/4",
+        "p 2/4",
+        "p 3/4",
+        "p 0/3",
+        "p 1/3",
+        "p 2/3"
+      )
     for (i <- 0 until 12) {
       mappedEvents(i + 3) match {
         case event: PatchedEvent[_] =>
@@ -420,7 +454,19 @@ final class BindingTest extends AnyFreeSpec with Matchers {
         assert(event.getSource == mapped)
         assert(event.from == 0)
         assert(event.replaced == 0)
-        assert(event.that sameElements Seq("2", "2", "3", "3", "3", "4", "4", "4", "4"))
+        assert(
+          event.that sameElements Seq(
+            "2",
+            "2",
+            "3",
+            "3",
+            "3",
+            "4",
+            "4",
+            "4",
+            "4"
+          )
+        )
     }
     source.value += 0
     assert(sourceEvents.length == 3)
@@ -452,7 +498,20 @@ final class BindingTest extends AnyFreeSpec with Matchers {
     prefix.value = "p"
     assert(sourceEvents.length == 4)
     assert(mappedEvents.length == 15)
-    val expected = Seq("p2", "p2", "p3", "p3", "p3", "p4", "p4", "p4", "p4", "p3", "p3", "p3")
+    val expected = Seq(
+      "p2",
+      "p2",
+      "p3",
+      "p3",
+      "p3",
+      "p4",
+      "p4",
+      "p4",
+      "p4",
+      "p3",
+      "p3",
+      "p3"
+    )
     for (i <- 0 until 12) {
       mappedEvents(i + 3) match {
         case event: PatchedEvent[_] =>
@@ -703,7 +762,8 @@ final class BindingTest extends AnyFreeSpec with Matchers {
   }
 
   "flatMap" in {
-    val flatMapped = Constants(Constants(1, 2), Constants(), Constants(3)).flatMap(identity)
+    val flatMapped =
+      Constants(Constants(1, 2), Constants(), Constants(3)).flatMap(identity)
     flatMapped.watch()
     assert(flatMapped.get sameElements Seq(1, 2, 3))
   }
@@ -815,7 +875,8 @@ mount 2000
   }
 
   "bindingSeq.all.bind" in {
-    val bindingSeq: BindingSeq[String] = Constants[String]("one", "two", "three")
+    val bindingSeq: BindingSeq[String] =
+      Constants[String]("one", "two", "three")
     val seqOpsIterableBinding = Binding {
       val seq = bindingSeq.all.bind
       seq
