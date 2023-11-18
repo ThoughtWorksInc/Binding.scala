@@ -25,7 +25,12 @@ SOFTWARE.
 package com.thoughtworks.binding
 
 import Binding.{PatchedEvent, ChangedEvent, PatchedListener, ChangedListener}
-import com.thoughtworks.binding.Binding.{PatchedEvent, ChangedEvent, PatchedListener, ChangedListener}
+import com.thoughtworks.binding.Binding.{
+  PatchedEvent,
+  ChangedEvent,
+  PatchedListener,
+  ChangedListener
+}
 
 import scala.collection.mutable.ArrayBuffer
 
