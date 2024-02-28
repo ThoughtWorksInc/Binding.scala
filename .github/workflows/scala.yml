@@ -18,7 +18,7 @@ jobs:
         include:
           - scala: 3.3.0
             sbt-args: -J-XX:MaxRAMPercentage=90.0
-          - scala: 2.13.11
+          - scala: 2.13.13
             sbt-args: -J-XX:MaxRAMPercentage=90.0
           - scala: 2.13.4
             sbt-args: -J-XX:MaxRAMPercentage=90.0 --addPluginSbtFile=project/plugins.sbt.scala-js.0.6
