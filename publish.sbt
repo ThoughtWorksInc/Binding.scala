@@ -1,0 +1,1 @@
+ThisBuild / publishTo := localStaging.value
