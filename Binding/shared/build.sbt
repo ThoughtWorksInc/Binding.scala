@@ -10,7 +10,7 @@ libraryDependencies ++= {
   }
 }
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.19" % Test
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.20" % Test
 
 libraryDependencies ++= {
   if (scalaBinaryVersion.value == "2.13") {
