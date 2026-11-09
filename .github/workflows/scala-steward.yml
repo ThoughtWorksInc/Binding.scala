@@ -1,9 +1,4 @@
 on:
-  push:
-    branches-ignore:
-      - "update/**"
-  schedule:
-    - cron: "0 0 * * 0"
   workflow_dispatch:
 
 name: Launch Scala Steward
