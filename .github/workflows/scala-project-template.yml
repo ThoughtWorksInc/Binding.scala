@@ -10,7 +10,7 @@ name: Update Scala project template
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   update-scala-project-template:
