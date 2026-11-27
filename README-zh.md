@@ -3,9 +3,7 @@
 [![Join the chat at https://gitter.im/ThoughtWorksInc/Binding.scala](https://badges.gitter.im/ThoughtWorksInc/Binding.scala.svg)](https://gitter.im/ThoughtWorksInc/Binding.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/Binding.scala.svg)](https://travis-ci.org/ThoughtWorksInc/Binding.scala)
 [![Maven Central (core funtionality)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/binding_2.11.svg?label=maven-central%20%28Binding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/binding_2.11)
-[![Maven Central (DOM integration)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/dom_sjs0.6_2.11.svg?label=maven-central%20%28dom.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/dom_sjs0.6_2.11)
 [![Maven Central (remote data-binding for scala.concurrent.Future)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/futurebinding_2.11.svg?label=maven-central%20%28FutureBinding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/futurebinding_2.11)
-[![Maven Central (remote data-binding for ECMAScript 2015 Promise)](https://img.shields.io/maven-central/v/com.thoughtworks.binding/jspromisebinding_sjs0.6_2.11.svg?label=maven-central%20%28JsPromiseBinding.scala%29)](https://maven-badges.herokuapp.com/maven-central/com.thoughtworks.binding/jspromisebinding_sjs0.6_2.11)
 
 **Binding.scala** 是一个用 [Scala](http://www.scala-lang.org/) 语言编写的数据绑定框架，可以在 JVM 和 [Scala.js](http://www.scala-js.org/) 上运行。
 
