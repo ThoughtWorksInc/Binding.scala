@@ -43,7 +43,9 @@ private[binding] object BindingJvmOrJs {
       cacheData = cacheData.patch(idx, Nil, count)
     }
 
-    private[binding] final def appendCache(elements: IterableOnce[A]): Seq[A] = {
+    private[binding] final def appendCache(
+        elements: IterableOnce[A]
+    ): Seq[A] = {
       val seq = Seq.from(elements)
       cacheData = cacheData ++ seq
       seq
@@ -57,7 +59,10 @@ private[binding] object BindingJvmOrJs {
       cacheData = elem +: cacheData
     }
 
-    private[binding] final def insertCache(n: Int, elems: IterableOnce[A]): Seq[A] = {
+    private[binding] final def insertCache(
+        n: Int,
+        elems: IterableOnce[A]
+    ): Seq[A] = {
       val seq = Seq.from(elems)
       cacheData = cacheData.patch(n, seq, 0)
       seq
@@ -73,7 +78,11 @@ private[binding] object BindingJvmOrJs {
       cacheData.iterator
     }
 
-    private[binding] final def spliceCache(from: Int, mappedNewChildren: IterableOnce[A], replaced: Int) = {
+    private[binding] final def spliceCache(
+        from: Int,
+        mappedNewChildren: IterableOnce[A],
+        replaced: Int
+    ) = {
       val oldCache = cacheData
       if (from == 0) {
         cacheData = mappedNewChildren ++: oldCache.drop(replaced)
