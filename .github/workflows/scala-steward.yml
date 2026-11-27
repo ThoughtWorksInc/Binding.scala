@@ -8,6 +8,10 @@ on:
 
 name: Launch Scala Steward
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   scala-steward:
     runs-on: ubuntu-26.04
