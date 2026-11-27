@@ -11,7 +11,7 @@
 
 **Binding.scala** is a data-binding library for [Scala](http://www.scala-lang.org/), running on both JVM and [Scala.js](http://www.scala-js.org/).
 
-Binding.scala can be used as the basis of UI frameworks, however latest Binding.scala 12.x does not contain any build-in UI frameworks any more. For creating reactive HTML UI, you may want to check out [html.scala](https://github.com/Atry/html.scala), which is an UI framework based on Binding.scala, and it is also the successor of previously built-in [dom](https://javadoc.io/page/com.thoughtworks.binding/dom_sjs0.6_2.12/latest/com/thoughtworks/binding/dom.html) library. See also [React / Binding.scala / html.scala Interoperability](https://github.com/Atry/ReactToBindingHtml.scala) for using existing React components with Binding.scala, 
+Binding.scala can be used as the basis of UI frameworks, however latest Binding.scala 12.x does not contain any build-in UI frameworks any more. For creating reactive HTML UI, you may want to check out [html.scala](https://github.com/Atry/html.scala), which is an UI framework based on Binding.scala, and it is also the successor of the previously built-in `dom` library. See also [React / Binding.scala / html.scala Interoperability](https://github.com/Atry/ReactToBindingHtml.scala) for using existing React components with Binding.scala,
 
 See [Binding.scala • TodoMVC](http://todomvc.com/examples/binding-scala/) or [ScalaFiddle DEMOs](https://github.com/ThoughtWorksInc/Binding.scala/wiki/ScalaFiddle-DEMOs) as examples for common tasks when working with Binding.scala.
 
@@ -549,9 +549,9 @@ See [FutureBinding](https://github.com/Atry/JsPromiseBinding.scala) for more inf
 
 ## Requirements
 
-Due to collection API changes, Binding.scala 12.x only works on Scala 2.13, targeting JVM, Scala.js 0.6 and Scala.js 1.x.
+Due to collection API changes, Binding.scala 12.x only works on Scala 2.13, targeting JVM and Scala.js 1.x.
 
-For Scala 2.10, 2.11 and 2.12 on JVM or Scala.js 0.6, use [Binding.scala 11.x](https://github.com/ThoughtWorksInc/Binding.scala/tree/11.9.x) instead.
+For Scala 2.10, 2.11 and 2.12, use [Binding.scala 11.x](https://github.com/ThoughtWorksInc/Binding.scala/tree/11.9.x) instead.
 
 ## Related projects
 
